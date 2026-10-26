@@ -229,6 +229,16 @@ def build_app() -> gr.Blocks:
     all_choice_map: dict[str, dict[str, object]] = _build_finding_choice_map(findings)
     default_finding_label: str = _default_finding_label(all_choice_map)
     default_finding_panel: FindingPanelState = _render_finding_panel(all_choice_map[default_finding_label])
+    starlette_finding: dict[str, object] = next(
+        (finding for finding in findings if str(finding.get("finding_key", "")) == "starlette-400000/DD-1"),
+        {},
+    )
+    starlette_status: str = str(starlette_finding.get("upstream_status", "status unavailable"))
+    starlette_status_url: str = str(starlette_finding.get("upstream_url", "")).strip()
+    if starlette_status_url:
+        starlette_status_markdown: str = f"[{starlette_status}]({starlette_status_url})"
+    else:
+        starlette_status_markdown = starlette_status
     finding_map_state = gr.State(value=all_choice_map)
     finding_issue_draft_state = gr.State(value=default_finding_panel["issue_draft_text"])
 
@@ -276,8 +286,9 @@ def build_app() -> gr.Blocks:
             "**Worked example (starlette):** docs line `receive_json(data, mode=\"binary\")`; code signature "
             "`receive_json(self, mode: str = \"text\")`; following the docs can raise `TypeError`.\n\n"
             "Headline story: Beam read starlette (~395k tokens) in one call, found this drift, verified by hand, and the "
-            "fix was **submitted upstream (PR #3746, open)** on "
-            "[github.com/Kludex/starlette](https://github.com/Kludex/starlette)."
+            f"upstream status is **{starlette_status_markdown}** on "
+            "[github.com/Kludex/starlette](https://github.com/Kludex/starlette), sourced from "
+            "`results_live/upstream_status.json`."
         )
         gr.Markdown(_build_summary_markdown(summary))
 
