@@ -17,6 +17,16 @@ import pandas as pd
 
 from repoatlas.analyser import analyse_repository
 from repoatlas.config import RepoAtlasConfig
+from repoatlas.hybrid_view import (
+    build_comparison_table,
+    build_notes_markdown,
+    compute_hero_stats,
+    headline_sentence,
+    load_hybrid_payload,
+    merge_hybrid_true_findings,
+    render_hero_html as render_hybrid_hero_html,
+    render_pipeline_html,
+)
 from repoatlas.packer import estimate_prompt_tokens, pack_repository
 
 
@@ -280,12 +290,18 @@ def build_app() -> gr.Blocks:
     repros_map, repro_summary = _load_repro_results()
     recall_panel_data: RecallPanelData = _load_recall_panel_data()
     baseline_panel_data: BaselinePanelData = _load_baseline_panel_data()
+    hybrid_payload = load_hybrid_payload()
+    hybrid_stats = compute_hero_stats(hybrid_payload) if hybrid_payload["available"] else None
     findings: list[dict[str, object]] = _attach_repro_records(live_index["findings"], repros_map=repros_map)
     runs: list[dict[str, object]] = live_index["runs"]
     summary: dict[str, object] = live_index["summary"]
-    hero_html: str = _render_hero_html(summary)
-    true_findings: list[dict[str, object]] = _filter_findings(findings, "true")
-    bug_wall_html: str = _render_bug_wall_html(true_findings)
+    hero_html: str = (
+        render_hybrid_hero_html(hybrid_stats) if hybrid_stats is not None else _render_hero_html(summary)
+    )
+    hybrid_true_findings: list[dict[str, object]] = (
+        merge_hybrid_true_findings(findings, hybrid_payload) if hybrid_payload["available"] else _filter_findings(findings, "true")
+    )
+    bug_wall_html: str = _render_bug_wall_html(hybrid_true_findings)
     live_enabled, live_status_message = get_live_mode_status()
     live_mode_summary: str = (
         f"🟢 **Live mode enabled** — {live_status_message}"
@@ -344,15 +360,22 @@ def build_app() -> gr.Blocks:
     example_starlette_button: gr.Button | None = None
 
     with gr.Blocks(title="RepoAtlas-1M") as demo:
+        hybrid_headline: str = (
+            headline_sentence(hybrid_stats)
+            if hybrid_stats is not None
+            else "Recorded DocDrift results from whole-repo Beam runs."
+        )
         gr.Markdown(
-            "# RepoAtlas-1M\n"
-            "### 11 hand-verified docs bugs in popular Python libraries, found by Beam reading each library's docs and source "
-            "(up to ~400k tokens) in one call.\n\n"
+            "# RepoAtlas-1M · DocDrift v2\n"
+            f"### {hybrid_headline}.\n\n"
             "**What is docs drift?** Documentation says one thing, but the code actually does another.\n\n"
             "**Worked example (starlette):** docs line `receive_json(data, mode=\"binary\")`; code signature "
             "`receive_json(self, mode: str = \"text\")`; following the docs can raise `TypeError`.\n\n"
-            "Headline story: Beam read starlette (~395k tokens) in one call, found this drift, verified by hand, and the "
-            f"upstream status is **{starlette_status_markdown}** on "
+            "Pipeline: a free symbol check proposes candidates; Beam then reads each library's docs and source "
+            "(~300–400k tokens) in one call to triage those candidates and add cross-file/prose drifts; "
+            "an executable repro keeps the ones that raise a real API error.\n\n"
+            "Starlette status remains **"
+            f"{starlette_status_markdown}** on "
             "[github.com/Kludex/starlette](https://github.com/Kludex/starlette), sourced from "
             "`results_live/upstream_status.json`."
         )
@@ -363,13 +386,15 @@ def build_app() -> gr.Blocks:
 
         with gr.Tab("Recorded runs"):
             gr.HTML(hero_html)
+            gr.Markdown("### DocDrift v2 pipeline")
+            gr.HTML(render_pipeline_html())
             gr.Markdown(
                 "### Why long context matters\n"
                 "Most true drifts need a docs line and a far-away code line in the same prompt. "
                 "A single long-context call can compare those directly."
             )
             gr.HTML(_render_long_context_diagram_html())
-            gr.Markdown("### Bug wall (true drifts)")
+            gr.Markdown("### Bug wall (true drifts, hybrid + earlier recorded runs)")
             gr.HTML(bug_wall_html)
             with gr.Accordion("Full run table", open=False):
                 gr.Dataframe(
@@ -453,8 +478,20 @@ def build_app() -> gr.Blocks:
                 gr.Markdown("Atlas rows are unavailable for this run set.")
 
         with gr.Tab("Benchmark"):
+            if hybrid_payload["available"]:
+                hybrid_headers, hybrid_rows = build_comparison_table(hybrid_payload)
+                gr.Markdown("### DocDrift v2 comparison")
+                gr.Markdown(headline_sentence(hybrid_stats) + "." if hybrid_stats is not None else "")
+                gr.Dataframe(
+                    headers=hybrid_headers,
+                    value=hybrid_rows,
+                    interactive=False,
+                    wrap=True,
+                )
+                gr.Markdown(build_notes_markdown(hybrid_payload))
             gr.Markdown(
-                "Token scales are split to avoid mixing prompt and completion counts on one axis."
+                "Token scales below are the earlier recorded whole-repo sweep. "
+                "Prompt and completion counts stay on separate axes."
             )
             gr.BarPlot(
                 value=benchmark_plot_rows,

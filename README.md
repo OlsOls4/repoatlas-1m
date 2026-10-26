@@ -5,7 +5,7 @@ colorFrom: indigo
 colorTo: emerald
 sdk: gradio
 app_file: app.py
-short_description: Beam-powered docs-vs-code drift finder with recorded long-context evidence.
+short_description: DocDrift v2 — symbol check + Beam whole-repo triage + executable repro.
 tags:
   - beam
   - long-context
@@ -21,7 +21,15 @@ tags:
 
 ## Headline result
 
-**11 hand-verified docs bugs in popular Python libraries, found by Beam reading each library's docs and source (up to ~400k tokens) in one call.**
+**34 real docs bugs across 12 Python libraries at 75% precision; 29 confirmed by running the docs (92.3% precision).**
+
+Numbers above come from `results_live/hybrid/hybrid.json` / `hybrid.csv` (DocDrift v2). The 12 libraries are starlette, httpx, click, structlog, nox, arrow, cattrs, marshmallow, attrs, jinja, werkzeug and pydantic-settings.
+
+DocDrift v2 pipeline:
+
+1. A free symbol check proposes candidates (name and signature mismatches).
+2. Beam reads each library's docs and source (~300–400k tokens) in one call, triages each candidate with cited evidence and a suggested fix, and adds cross-file/prose drifts the script missed.
+3. An executable repro keeps findings that raise a real API error (TypeError / AttributeError / ImportError / NameError).
 
 Starlette story (canonical upstream repo):
 
@@ -53,8 +61,32 @@ Example from starlette:
    Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens.
 5. **Why long context rather than chunked RAG**  
    Many true drifts require a docs citation and a far-away code citation in the same pass. A single packed prompt keeps those relationships available without retrieval misses.
+6. **DocDrift v2 hybrid**  
+   Beam is not used as a raw detector. A free checker proposes candidates; one whole-repo Beam call triages them and can add missed cross-file/prose drift; a later executable check confirms the ones that raise a real API error.
 
-## Results (real live runs only)
+## DocDrift v2 comparison
+
+From `results_live/hybrid/hybrid.csv` (12 libraries; distinct true measured against a 45-drift union) plus the earlier 9-repo chunked baselines in `results_live/baselines/baselines.csv`:
+
+| Method | True drifts found | Findings | Precision | Tokens |
+|---|---|---|---|---|
+| Symbol check alone | 24 of 45 | 43 | 58.1% | 0 |
+| Whole-repo Beam alone | 11 of 45 | 19 | 57.9% | 4,424,575 |
+| Chunked Beam (~32k, 9-repo baseline) | 3 of 11 known | 25 | 60% | 3,529,945 |
+| Chunked Beam (~128k, 9-repo baseline) | 4 of 11 known | 13 | 69.2% | 3,342,201 |
+| Hybrid (symbol + whole-repo Beam triage) | **34 of 45** | 60 | **75%** | 4,739,392 |
+| Hybrid + repro-confirmed (strict) | **29 of 45** | 39 | **92.3%** | 4,877,530 |
+
+Honest notes, also from `hybrid.json`:
+
+- The **45-drift reference set** is the union of what the methods found, so it favours them.
+- Beam triage judged **56** candidates and rejected **0** hand-true candidates, while keeping **9** false or unclear ones.
+- **structlog triage failed** (no JSON; 8,794 chars of prose), so its 6 candidates stay untriaged and have no repro.
+- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.
+- The strict repro rule was set after the first repro run.
+- No prompt caching was observed on triage calls.
+
+## Earlier whole-repo-only sweep (recorded runs)
 
 All values below are from `results_live/index.json`, generated from:
 - `results_live/benchmark_results_combined.csv`
@@ -112,10 +144,11 @@ Practical recipe supported by this data: **use whole-repo context for a docs-foc
 
 ## Space behaviour
 
-- Default view is recorded data from `results_live/index.json` (no inference cost).
-- Hero, bug wall, findings, atlas, and benchmark numbers are all derived from that same index.
+- Default view is recorded data (no inference cost).
+- Hero, comparison table, and hybrid notes come from `results_live/hybrid/hybrid.json` / `hybrid.csv`.
+- Bug wall includes hybrid true drifts plus earlier recorded-run cards, sorted cross-file first.
+- Findings, atlas, recall, and earlier baselines stay available below the v2 headline.
 - Findings tab defaults to starlette and shows verifier status separately from hand-check verdict.
-- True-finding cards include SHA-pinned doc/code permalinks and issue-draft copy text.
 
 ## Live tab guardrails
 
