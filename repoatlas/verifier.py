@@ -17,7 +17,11 @@ from repoatlas.models import (
 )
 
 
+LINE_SHIFT_WINDOW: int = 3
+
 # Private function prototypes:
+# - _match_quote(quote: str, lines: list[str], start_line: int, end_line: int) -> str | None
+# - _shift_offsets(window: int) -> list[int]
 # - _build_file_lookup(pack: RepoPack) -> dict[str, list[str]]
 # - _normalise_path(path: str) -> str
 # - _verify_probe(probe: RunnableProbe, repo_root: Path) -> ProbeVerification
@@ -36,18 +40,68 @@ def verify_citation(citation: Citation, file_lookup: dict[str, list[str]]) -> Ci
     lines: list[str] = file_lookup[normalised_path]
     if citation.start_line > citation.end_line:
         return CitationVerification(citation=citation, verified=False, reason="invalid-line-range")
-    if citation.end_line > len(lines):
+    in_bounds: bool = citation.start_line >= 1 and citation.end_line <= len(lines)
+    if in_bounds:
+        match_label: str | None = _match_quote(citation.quote, lines, citation.start_line, citation.end_line)
+        if match_label is not None:
+            return CitationVerification(
+                citation=citation,
+                verified=True,
+                reason=None if match_label == "exact" else match_label,
+            )
+    # Models often cite a range one or two lines away from the real quote. Search the same-length range
+    # shifted by up to LINE_SHIFT_WINDOW lines (nearest first) and accept only a contiguous exact or
+    # whitespace-normalised match there, recording where it really is.
+    for offset in _shift_offsets(LINE_SHIFT_WINDOW):
+        shifted_start: int = citation.start_line + offset
+        shifted_end: int = citation.end_line + offset
+        if shifted_start < 1 or shifted_end > len(lines):
+            continue
+        if _match_quote(citation.quote, lines, shifted_start, shifted_end) is not None:
+            return CitationVerification(
+                citation=citation,
+                verified=True,
+                reason="line-shifted-match",
+                corrected_start_line=shifted_start,
+                corrected_end_line=shifted_end,
+                line_offset=offset,
+            )
+    if not in_bounds:
         return CitationVerification(citation=citation, verified=False, reason="line-range-out-of-bounds")
-    start_index: int = citation.start_line - 1
-    end_index: int = citation.end_line
-    selected_text: str = "\n".join(lines[start_index:end_index])
-    if citation.quote in selected_text:
-        return CitationVerification(citation=citation, verified=True)
+    return CitationVerification(citation=citation, verified=False, reason="quote-not-found-in-range")
+
+
+def _match_quote(quote: str, lines: list[str], start_line: int, end_line: int) -> str | None:
+    """
+    @brief Match a quote against a contiguous 1-based inclusive line range.
+    @param quote Quoted text from the citation.
+    @param lines File lines.
+    @param start_line First line of the range.
+    @param end_line Last line of the range.
+    @return "exact", "whitespace-normalised-match", or None when the quote is absent.
+    """
+
+    selected_text: str = "\n".join(lines[start_line - 1 : end_line])
+    if quote.strip() and quote in selected_text:
+        return "exact"
     # Models often drop leading indentation on continuation lines of a multi-line quote.
     # Accept a match that differs only in per-line leading/trailing whitespace, and say so.
-    if _strip_lines(citation.quote) and _strip_lines(citation.quote) in _strip_lines(selected_text):
-        return CitationVerification(citation=citation, verified=True, reason="whitespace-normalised-match")
-    return CitationVerification(citation=citation, verified=False, reason="quote-not-found-in-range")
+    stripped_quote: str = _strip_lines(quote)
+    if stripped_quote.strip() and stripped_quote in _strip_lines(selected_text):
+        return "whitespace-normalised-match"
+    return None
+
+
+def _shift_offsets(window: int) -> list[int]:
+    """
+    @brief Return non-zero line offsets ordered nearest first, earlier before later: -1, 1, -2, 2, ...
+    @param window Maximum absolute offset.
+    """
+
+    offsets: list[int] = []
+    for distance in range(1, window + 1):
+        offsets.extend((-distance, distance))
+    return offsets
 
 
 def _strip_lines(text: str) -> str:

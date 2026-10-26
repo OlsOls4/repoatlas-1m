@@ -154,12 +154,18 @@ class CitationVerification(BaseModel):
     @brief Deterministic verification result for one citation.
     @param citation Original citation.
     @param verified Whether the citation passed.
-    @param reason Failure reason when unverified.
+    @param reason Failure reason when unverified, or a match label when verified leniently.
+    @param corrected_start_line First line of the shifted range that matched, for line-shifted matches.
+    @param corrected_end_line Last line of the shifted range that matched, for line-shifted matches.
+    @param line_offset Corrected start line minus cited start line, for line-shifted matches.
     """
 
     citation: Citation
     verified: bool
     reason: str | None = None
+    corrected_start_line: int | None = None
+    corrected_end_line: int | None = None
+    line_offset: int | None = None
 
 
 class ProbeVerification(BaseModel):
