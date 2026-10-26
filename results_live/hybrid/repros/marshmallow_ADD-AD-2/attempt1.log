@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-marshmallow_ADD-AD-2-odem3y8e/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-marshmallow_ADD-AD-2-odem3y8e/repro.py\", line 3, in <module>\n    u = fields.Url(default=\"http://example.com\")  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/marshmallow-b762ea2d59ca-base/lib/python3.13/site-packages/marshmallow/fields.py\", line 1772, in __init__\n    super().__init__(**kwargs)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^\nTypeError: Field.__init__() got an unexpected keyword argument 'default'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Field.__init__() got an unexpected keyword argument 'default'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-marshmallow_ADD-AD-2-odem3y8e/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "u = fields.Url(default=\"http://example.com\")  # DOC-LITERAL"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/marshmallow-b762ea2d59ca-base/lib/python3.13/site-packages/marshmallow/fields.py",
+          "line": 1772,
+          "name": "__init__",
+          "source": "super().__init__(**kwargs)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-marshmallow_ADD-AD-2-odem3y8e/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-marshmallow_ADD-AD-2-odem3y8e/repro.py\", line 3, in <module>\n    u = fields.Url(default=\"http://example.com\")  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/marshmallow-b762ea2d59ca-base/lib/python3.13/site-packages/marshmallow/fields.py\", line 1772, in __init__\n    super().__init__(**kwargs)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^\nTypeError: Field.__init__() got an unexpected keyword argument 'default'\n"
+    }
+  }
+}

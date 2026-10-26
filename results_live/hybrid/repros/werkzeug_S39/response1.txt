@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The phrase appears in the ProxyFix docstring alongside references to WSGI environ keys, and the implementation stores the value under environ['werkzeug.proxy_fix.orig']; a reader could correctly treat the backticks as naming that string key rather than a Python attribute path.",
+  "model_verdict": "true",
+  "doc_literal_usage": "werkzeug.proxy_fix.orig",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import werkzeug\n\nvalue = werkzeug.proxy_fix.orig  # DOC-LITERAL\nassert isinstance(value, dict), \"docs say values are stored in this dict\"\nprint(\"DOCS_OK\")\n"
+}

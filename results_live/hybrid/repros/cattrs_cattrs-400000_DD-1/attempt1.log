@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-cattrs_cattrs-400000_DD-1-mmjvxq94/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-cattrs_cattrs-400000_DD-1-mmjvxq94/repro.py\", line 3, in <module>\n    from cattrs.errors import ForbiddenExtraKeyError  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/errors.py). Did you mean: 'ForbiddenExtraKeysError'?\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ImportError",
+      "qualified_type": "builtins.ImportError",
+      "mro": [
+        "builtins.ImportError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/errors.py)",
+      "missing_module": "cattrs.errors",
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-cattrs_cattrs-400000_DD-1-mmjvxq94/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "from cattrs.errors import ForbiddenExtraKeyError  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-cattrs_cattrs-400000_DD-1-mmjvxq94/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-cattrs_cattrs-400000_DD-1-mmjvxq94/repro.py\", line 3, in <module>\n    from cattrs.errors import ForbiddenExtraKeyError  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/errors.py). Did you mean: 'ForbiddenExtraKeysError'?\n"
+    }
+  }
+}

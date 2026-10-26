@@ -1,0 +1,67 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "  + Exception Group Traceback (most recent call last):\n  |   File \"/tmp/repro-cattrs_S25-33vm6h6v/_harness.py\", line 9, in <module>\n  |     runpy.run_path(script_path, run_name=\"__main__\")\n  |     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  |   File \"<frozen runpy>\", line 287, in run_path\n  |   File \"<frozen runpy>\", line 98, in _run_module_code\n  |   File \"<frozen runpy>\", line 88, in _run_code\n  |   File \"/tmp/repro-cattrs_S25-33vm6h6v/repro.py\", line 11, in <module>\n  |     c.structure({\"nummber\": 2}, TestClass)\n  |     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  |   File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/converters.py\", line 638, in structure\n  |     return self._structure_func.dispatch(cl)(obj, cl)\n  |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  |   File \"<cattrs generated structure __main__.TestClass>\", line 13, in structure_TestClass\n  |     if errors: raise __c_cve('While structuring ' + 'TestClass', errors, __cl)\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  | cattrs.errors.ClassValidationError: While structuring TestClass (1 sub-exception)\n  +-+---------------- 1 ----------------\n    | cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for TestClass: nummber\n    +------------------------------------\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ClassValidationError",
+      "qualified_type": "cattrs.errors.ClassValidationError",
+      "mro": [
+        "cattrs.errors.ClassValidationError",
+        "cattrs.errors.BaseValidationError",
+        "builtins.ExceptionGroup",
+        "builtins.BaseExceptionGroup",
+        "cattrs.errors.CattrsError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "While structuring TestClass (1 sub-exception)",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-cattrs_S25-33vm6h6v/repro.py",
+          "line": 11,
+          "name": "<module>",
+          "source": "c.structure({\"nummber\": 2}, TestClass)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/converters.py",
+          "line": 638,
+          "name": "structure",
+          "source": "return self._structure_func.dispatch(cl)(obj, cl)"
+        },
+        {
+          "file": "<cattrs generated structure __main__.TestClass>",
+          "line": 13,
+          "name": "structure_TestClass",
+          "source": "if errors: raise __c_cve('While structuring ' + 'TestClass', errors, __cl)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "  + Exception Group Traceback (most recent call last):\n  |   File \"/tmp/repro-cattrs_S25-33vm6h6v/_harness.py\", line 9, in <module>\n  |     runpy.run_path(script_path, run_name=\"__main__\")\n  |     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  |   File \"<frozen runpy>\", line 287, in run_path\n  |   File \"<frozen runpy>\", line 98, in _run_module_code\n  |   File \"<frozen runpy>\", line 88, in _run_code\n  |   File \"/tmp/repro-cattrs_S25-33vm6h6v/repro.py\", line 11, in <module>\n  |     c.structure({\"nummber\": 2}, TestClass)\n  |     ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  |   File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/converters.py\", line 638, in structure\n  |     return self._structure_func.dispatch(cl)(obj, cl)\n  |            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^\n  |   File \"<cattrs generated structure __main__.TestClass>\", line 13, in structure_TestClass\n  |     if errors: raise __c_cve('While structuring ' + 'TestClass', errors, __cl)\n  |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  | cattrs.errors.ClassValidationError: While structuring TestClass (1 sub-exception)\n  +-+---------------- 1 ----------------\n    | cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for TestClass: nummber\n    +------------------------------------\n"
+    }
+  }
+}

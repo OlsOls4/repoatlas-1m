@@ -1,0 +1,45 @@
+{
+  "repo": "pydantic-settings",
+  "ref": "7e2dacb6db07b41abb0c80d0608e46e197265554",
+  "candidates": [
+    {
+      "source": "whole_repo",
+      "source_id": "pydantic-settings-400000:DD-1",
+      "doc_path": "docs/index.md",
+      "doc_line": 1895,
+      "doc_end": 1895,
+      "doc_text": "Change whether CLI arguments should use kebab case by enabling `cli_kebab_case`. By default, `cli_kebab_case=True` will",
+      "claim": "Documentation states that CLI kebab case is enabled by default, while the code defaults `cli_kebab_case` to `False`.",
+      "code_hint": "pydantic_settings/main.py:726-726 'cli_kebab_case=False,'",
+      "candidate_id": "C01"
+    }
+  ],
+  "estimate_tokens": 381776,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 366358,
+  "completion_tokens": 2677,
+  "latency_seconds": 13.299473343999125,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "The quoted prose describes the behaviour of setting cli_kebab_case=True, not a claim that kebab case is enabled by default; BaseSettings.model_config defaults it to False.",
+      "code_citation": {
+        "path": "pydantic_settings/main.py",
+        "start_line": 726,
+        "end_line": 726,
+        "quote": "cli_kebab_case=False,"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "pydantic-settings-400000:DD-1"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

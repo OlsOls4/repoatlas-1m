@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.08,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_S5-fw9g72ac/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_S5-fw9g72ac/repro.py\", line 4, in <module>\n    response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)  # DOC-LITERAL\nTypeError: request() got an unexpected keyword argument 'extensions'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "request() got an unexpected keyword argument 'extensions'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-httpx_S5-fw9g72ac/repro.py",
+          "line": 4,
+          "name": "<module>",
+          "source": "response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_S5-fw9g72ac/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_S5-fw9g72ac/repro.py\", line 4, in <module>\n    response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)  # DOC-LITERAL\nTypeError: request() got an unexpected keyword argument 'extensions'\n"
+    }
+  }
+}

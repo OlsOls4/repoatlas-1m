@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The finding is not a false positive: Environment.__init__ has no parameter named commend_end_string, so following the documentation exactly raises TypeError rather than constructing the intended Mako-like environment. No alias, kwargs passthrough, or deprecated spelling is present in the inspected signature.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Environment(\n    block_start_string=\"<%\",\n    block_end_string=\"%>\",\n    variable_start_string=\"${\",\n    variable_end_string=\"}\",\n    comment_start_string=\"<%doc>\",\n    commend_end_string=\"</%doc>\",\n    line_statement_prefix=\"%\",\n    line_comment_prefix=\"##\",\n)",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "Environment() rejects the misspelled commend_end_string keyword argument.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from jinja2 import Environment\n\n# DOC-LITERAL-BEGIN\nenv = Environment(\n    block_start_string=\"<%\",\n    block_end_string=\"%>\",\n    variable_start_string=\"${\",\n    variable_end_string=\"}\",\n    comment_start_string=\"<%doc>\",\n    commend_end_string=\"</%doc>\",\n    line_statement_prefix=\"%\",\n    line_comment_prefix=\"##\",\n)\n# DOC-LITERAL-END\n\nprint(\"DOCS_OK\")\n"
+}

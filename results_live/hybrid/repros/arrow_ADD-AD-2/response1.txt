@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The formatter uses dt.timetuple().tm_yday directly, which returns 366 for 2020-12-31, so the documented 1..365 range is incomplete rather than merely imprecise.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Format a leap-year date with the documented DDD token and assert its numeric value stays within the documented 1..365 range.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow\n\ndt = arrow.get(\"2020-12-31\")\nvalue = dt.format(\"DDD\")\nassert int(value) <= 365, \"documented DDD range is 1..365\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

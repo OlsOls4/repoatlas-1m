@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The Url docstring could theoretically inherit a generic field-parameter description, and kwargs might historically have accepted `default` as an alias or passthrough; however the installed field kwargs TypedDict and Field constructor expose only `dump_default` and `load_default`, with no `default` handling, so that argument is weak.",
+  "model_verdict": "true",
+  "doc_literal_usage": "fields.Url(default=\"http://example.com\")",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "TypeError raised because Url does not accept a `default` keyword argument.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from marshmallow import fields\n\nu = fields.Url(default=\"http://example.com\")  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

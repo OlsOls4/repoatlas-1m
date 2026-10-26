@@ -1,0 +1,280 @@
+{
+  "repo": "marshmallow",
+  "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S29",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 14,
+      "doc_end": 14,
+      "doc_text": "class AppError(Exception):",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S30",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 24,
+      "doc_end": 24,
+      "doc_text": "raise AppError(\"An error occurred with input: {0}\".format(data))",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S31",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 28,
+      "doc_end": 28,
+      "doc_text": "schema.load({\"email\": \"invalid-email\"})  # raises AppError",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "marshmallow-400000:DD-1",
+      "doc_path": "docs/extending/custom_options.rst",
+      "doc_line": 40,
+      "doc_end": 41,
+      "doc_text": "        def __init__(self, meta, **kwargs):\n            SchemaOpts.__init__(self, meta, **kwargs)",
+      "claim": "The docs show a custom `SchemaOpts` subclass accepting and forwarding `**kwargs` to `SchemaOpts.__init__`, but the implementation accepts only `meta`.",
+      "code_hint": "src/marshmallow/schema.py:205-205 '    def __init__(self, meta: type):'",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S32",
+      "doc_path": "docs/extending/overriding_attribute_access.rst",
+      "doc_line": 17,
+      "doc_end": 17,
+      "doc_text": "return obj.get(key, default)",
+      "claim": "method-call-signature: `obj.get(...)`: 2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)",
+      "code_hint": "",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S33",
+      "doc_path": "docs/extending/pre_and_post_processing.rst",
+      "doc_line": 61,
+      "doc_end": 61,
+      "doc_text": "@pre_load(pass_many=True)",
+      "claim": "call-signature: `marshmallow.pre_load(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)",
+      "code_hint": "",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S34",
+      "doc_path": "docs/extending/pre_and_post_processing.rst",
+      "doc_line": 66,
+      "doc_end": 66,
+      "doc_text": "@post_dump(pass_many=True)",
+      "claim": "call-signature: `marshmallow.post_dump(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)",
+      "code_hint": "",
+      "candidate_id": "C07"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "marshmallow-400000:DD-2",
+      "doc_path": "docs/top_level.rst",
+      "doc_line": 10,
+      "doc_end": 14,
+      "doc_text": ".. data:: missing\n\n   Singleton value that indicates that a field's value is missing from input\n   dict passed to `Schema.load <marshmallow.Schema.load>`. If the field's value is not required,\n   its ``default`` value is used.",
+      "claim": "The top-level docs describe the missing singleton as falling back to a field's \"default\" value, while deserialization uses the `load_default` parameter.",
+      "code_hint": "src/marshmallow/fields.py:380-381 '        if value is missing_:\\n            _miss = self.load_default'",
+      "candidate_id": "C08"
+    }
+  ],
+  "estimate_tokens": 310962,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 295439,
+  "completion_tokens": 6664,
+  "latency_seconds": 22.36749314502231,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "AppError is a user-defined exception shown inline in the documentation example.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "    class AppError(Exception):\n        pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S29"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "The example consistently uses the same user-defined AppError exception.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "    class AppError(Exception):\n        pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S30"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "The example consistently uses the same user-defined AppError exception.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "    class AppError(Exception):\n        pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S31"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The documentation forwards extra keyword arguments to SchemaOpts.__init__, but the implementation accepts only meta.",
+      "code_citation": {
+        "path": "src/marshmallow/schema.py",
+        "start_line": 205,
+        "end_line": 205,
+        "quote": "    def __init__(self, meta: type):"
+      },
+      "suggested_doc_fix": "Change the example to `def __init__(self, meta):\\n    SchemaOpts.__init__(self, meta)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "marshmallow-400000:DD-1"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "The documented override receives a user object and may legitimately call that object's own get method; marshmallow only defines get_attribute itself.",
+      "code_citation": {
+        "path": "src/marshmallow/schema.py",
+        "start_line": 500,
+        "end_line": 506,
+        "quote": "    def get_attribute(\n        self,\n        obj: typing.Any,\n        attr: str,\n        default: typing.Any,\n    ):\n        return get_value(obj, attr, default)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S32"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "pre_load has no pass_many parameter in marshmallow 4; the parameter is named pass_collection.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 175,
+        "end_line": 179,
+        "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "suggested_doc_fix": "Replace `pass_many=True` with `pass_collection=True`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S33"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "post_dump has no pass_many parameter in marshmallow 4; the parameter is named pass_collection.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 152,
+        "end_line": 157,
+        "quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n    pass_original: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "suggested_doc_fix": "Replace `pass_many=True` with `pass_collection=True`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S34"
+    },
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "Deserialization uses load_default when a field's value is missing, not a generic default.",
+      "code_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 380,
+        "end_line": 383,
+        "quote": "        self._validate_missing(value)\n        if value is missing_:\n            _miss = self.load_default\n            return _miss() if callable(_miss) else _miss"
+      },
+      "suggested_doc_fix": "Change `its ``default`` value is used` to `its ``load_default`` value is used`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "marshmallow-400000:DD-2"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": [
+    {
+      "finding_id": "AD-1",
+      "drift_kind": "flag",
+      "explanation": "The prose instructs users to use pass_many=True, but the decorators now use pass_collection.",
+      "doc_citation": {
+        "path": "docs/extending/pre_and_post_processing.rst",
+        "start_line": 34,
+        "end_line": 34,
+        "quote": "In cases where your pre- and post-processing methods needs to handle the input collection when processing multiple objects, add ``pass_many=True`` to the method decorators."
+      },
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 175,
+        "end_line": 179,
+        "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "proposed_fix": "Replace `pass_many=True` with `pass_collection=True` in the prose.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "AD-2",
+      "drift_kind": "default",
+      "explanation": "The API documentation references a default parameter that the fields do not accept; fields use dump_default and load_default.",
+      "doc_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 1750,
+        "end_line": 1750,
+        "quote": ":param default: Default value for the field if the attribute is not set."
+      },
+      "code_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 91,
+        "end_line": 93,
+        "quote": "class _BaseFieldKwargs(typing.TypedDict, total=False):\n    load_default: typing.Any\n    dump_default: typing.Any"
+      },
+      "proposed_fix": "Replace the outdated `:param default:` documentation with `:param dump_default:`.",
+      "fully_verified": true
+    }
+  ]
+}

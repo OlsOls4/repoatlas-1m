@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-arrow_ADD-AD-1-kcikxb70/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-arrow_ADD-AD-1-kcikxb70/repro.py\", line 5, in <module>\n    assert 1 <= int(formatted) <= 365, f\"docs say DDDD outputs 001..365, got {formatted}\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say DDDD outputs 001..365, got 366\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "docs say DDDD outputs 001..365, got 366",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-arrow_ADD-AD-1-kcikxb70/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "assert 1 <= int(formatted) <= 365, f\"docs say DDDD outputs 001..365, got {formatted}\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-arrow_ADD-AD-1-kcikxb70/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-arrow_ADD-AD-1-kcikxb70/repro.py\", line 5, in <module>\n    assert 1 <= int(formatted) <= 365, f\"docs say DDDD outputs 001..365, got {formatted}\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say DDDD outputs 001..365, got 366\n"
+    }
+  }
+}

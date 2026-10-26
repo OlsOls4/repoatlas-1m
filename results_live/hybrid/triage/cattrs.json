@@ -1,0 +1,214 @@
+{
+  "repo": "cattrs",
+  "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+  "attempt": 2,
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S25",
+      "doc_path": "docs/customizing.md",
+      "doc_line": 279,
+      "doc_end": 279,
+      "doc_text": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber",
+      "claim": "exception-name:undefined: `ForbiddenExtraKeyError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "cattrs-400000:DD-1",
+      "doc_path": "docs/customizing.md",
+      "doc_line": 279,
+      "doc_end": 279,
+      "doc_text": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber",
+      "claim": "The documentation example names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError.",
+      "code_hint": "src/cattrs/errors.py:118-118 'class ForbiddenExtraKeysError(CattrsError):'",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S26",
+      "doc_path": "docs/validation.md",
+      "doc_line": 107,
+      "doc_end": 107,
+      "doc_text": "...     if isinstance(exc, MyInterestingException):",
+      "claim": "exception-name:undefined: `MyInterestingException`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S27",
+      "doc_path": "src/cattrs/converters.py",
+      "doc_line": 502,
+      "doc_end": 502,
+      "doc_text": ":param cache: Whether to cache the returned hook.",
+      "claim": "docstring-param: `get_unstructure_hook(cache)`: documented param 'cache' not in signature of get_unstructure_hook (src/cattrs/converters.py:491)",
+      "code_hint": "",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "cattrs-400000:DD-2",
+      "doc_path": "src/cattrs/converters.py",
+      "doc_line": 502,
+      "doc_end": 502,
+      "doc_text": ":param cache: Whether to cache the returned hook.",
+      "claim": "The get_unstructure_hook docstring documents the caching parameter as `cache`, while the actual signature uses `cache_result`.",
+      "code_hint": "src/cattrs/converters.py:492-492 'self, type: Any, cache_result: bool = True'",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "cattrs-400000:DD-3",
+      "doc_path": "src/cattrs/converters.py",
+      "doc_line": 650,
+      "doc_end": 650,
+      "doc_text": ":param cache: Whether to cache the returned hook.",
+      "claim": "The get_structure_hook docstring documents the caching parameter as `cache`, while the actual signature uses `cache_result`.",
+      "code_hint": "src/cattrs/converters.py:641-641 'self, type: TypeForm[T], cache_result: bool = True'",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S28",
+      "doc_path": "src/cattrs/converters.py",
+      "doc_line": 651,
+      "doc_end": 651,
+      "doc_text": ":param cache: Whether to cache the returned hook.",
+      "claim": "docstring-param: `get_structure_hook(cache)`: documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)",
+      "code_hint": "",
+      "candidate_id": "C07"
+    }
+  ],
+  "estimate_tokens": 322827,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 307347,
+  "completion_tokens": 4835,
+  "latency_seconds": 15.49330342997564,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The docs call the exception ForbiddenExtraKeyError, but the package defines ForbiddenExtraKeysError.",
+      "code_citation": {
+        "path": "src/cattrs/errors.py",
+        "start_line": 118,
+        "end_line": 118,
+        "quote": "class ForbiddenExtraKeysError(CattrsError):"
+      },
+      "suggested_doc_fix": "Change `ForbiddenExtraKeyError` to `ForbiddenExtraKeysError` in docs/customizing.md line 279.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S25"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The docs name the exception ForbiddenExtraKeyError, while src/cattrs/errors.py defines ForbiddenExtraKeysError.",
+      "code_citation": {
+        "path": "src/cattrs/errors.py",
+        "start_line": 118,
+        "end_line": 118,
+        "quote": "class ForbiddenExtraKeysError(CattrsError):"
+      },
+      "suggested_doc_fix": "Change `ForbiddenExtraKeyError` to `ForbiddenExtraKeysError` in docs/customizing.md line 279.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-1"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "MyInterestingException is an illustrative user-defined exception in the example, not an undocumented cattrs API.",
+      "code_citation": {
+        "path": "docs/validation.md",
+        "start_line": 107,
+        "end_line": 107,
+        "quote": "    if isinstance(exc, MyInterestingException):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S26"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The docstring says `cache`, but get_unstructure_hook's parameter is `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 491,
+        "end_line": 493,
+        "quote": "    def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:` in the get_unstructure_hook docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S27"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "The docstring documents the caching option as `cache`, while the actual signature uses `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 491,
+        "end_line": 493,
+        "quote": "    def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:` in the get_unstructure_hook docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-2"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The docstring says `cache`, but get_structure_hook's parameter is `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 640,
+        "end_line": 642,
+        "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:` in the get_structure_hook docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-3"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The docstring documents the caching option as `cache`, while the actual signature uses `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 640,
+        "end_line": 642,
+        "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:` in the get_structure_hook docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S28"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "A defender might argue the snippet is only illustrative pseudocode using `...` placeholders, so it was never meant to be executable Python; however, the documented expression still misplaces `httpx.HTTPTransport(proxy=...)` where a URL-pattern key should be, so the reported drift is substantive.",
+  "model_verdict": "finding confirmed",
+  "doc_literal_usage": "Compile the exact mapping example quoted from docs/compatibility.md as Python source.",
+  "expected_exception_type": "SyntaxError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import httpx\n\n# DOC-LITERAL-BEGIN\nsnippet = 'mounts={\"all://\": ..., httpx.HTTPTransport(proxy=\"all://www.example.com\": None})'\ncompile(snippet, \"docs/compatibility.md:168\", \"exec\")\n# DOC-LITERAL-END\n\nprint(\"DOCS_OK\")\n"
+}

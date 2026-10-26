@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1610,
+      "output_tokens": 2420,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "ForbiddenExtraKeysError",
+      "expected_failure": "True",
+      "doc_literal_usage": "c.structure({\"nummber\": 2}, TestClass) raises ForbiddenExtraKeysError (plural), not the singular ForbiddenExtraKeyError shown in docs/customizing.md",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unexpected_exception",
+      "exception_type": "ClassValidationError",
+      "error_excerpt": "ClassValidationError: While structuring TestClass (1 sub-exception)",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2299,
+      "output_tokens": 1059,
+      "cached_input_tokens": 1600
+    },
+    "plan": {
+      "expected_exception_type": "ClassValidationError",
+      "expected_failure": "True",
+      "doc_literal_usage": "c.structure({\"nummber\": 2}, TestClass) raises ClassValidationError (wrapping ForbiddenExtraKeysError), not the singular ForbiddenExtraKeyError shown in docs/customizing.md",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "ClassValidationError",
+      "error_excerpt": "ClassValidationError: While structuring TestClass (1 sub-exception)",
+      "evidence": "other_exception",
+      "retryable": false
+    }
+  }
+]

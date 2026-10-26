@@ -1,0 +1,10 @@
+{
+  "repro_script": "import arrow\n\narrow.locale  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "Accessing `arrow.locale` raises `AttributeError: module 'arrow' has no attribute 'locale'`, so the script never reaches `DOCS_OK`.",
+  "doc_literal_usage": "arrow.locale",
+  "argument_finding_is_false": "The mismatch is confined to the section heading/cross-reference label: the directive itself uses `.. automodule:: arrow.locales`, so the rendered members come from the real module. However, the `:mod:`arrow.locale`` role still names a module that does not exist, so a literal reference to `arrow.locale` fails.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

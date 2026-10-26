@@ -1,0 +1,10 @@
+{
+  "repro_script": "from cattrs import Converter\n\nconverter = Converter()\nhook = converter.get_structure_hook(int, cache=False)  # DOC-LITERAL\nassert callable(hook), \"documented call should return a callable hook\"\n\nif __name__ == \"__main__\":\n    print(\"DOCS_OK\")\n",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "TypeError: get_structure_hook() got an unexpected keyword argument 'cache'",
+  "doc_literal_usage": "converter.get_structure_hook(int, cache=False)",
+  "argument_finding_is_false": "The only plausible defense is that 'cache' is merely a shortened prose label for 'cache_result' rather than an actual keyword argument; however, ':param cache:' is a standard parameter directive, and the visible signature has no 'cache' parameter and no **kwargs through which such a name could be accepted.",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

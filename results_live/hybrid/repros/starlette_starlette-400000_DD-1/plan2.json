@@ -1,0 +1,10 @@
+{
+  "repro_script": "import asyncio\nfrom starlette.websockets import WebSocket\n\nasync def main():\n    async def receive():\n        return {\"type\": \"websocket.receive\", \"bytes\": b'{\"ok\": true}'}\n    async def send(message):\n        pass\n    scope = {\"type\": \"websocket\", \"path\": \"/ws\", \"headers\": []}\n    websocket = WebSocket(scope, receive, send)\n    await websocket.accept()\n    data = b'{\"ok\": true}'\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n    print(\"DOCS_OK\")\n\nasyncio.run(main())\n",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "TypeError because receive_json() gets multiple values for mode",
+  "doc_literal_usage": "await websocket.receive_json(data, mode=\"binary\")",
+  "argument_finding_is_false": "No. The documented call passes a positional `data` value to `receive_json`, whose implementation only defines `mode`; this cannot be rescued by aliases or passthrough behavior.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,28 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1585,
+      "output_tokens": 830,
+      "cached_input_tokens": 64,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "conv.get_unstructure_hook(int, cache=True)",
+      "argument_finding_is_false": "The mismatch is real for keyword-based calls: Python parameter names are part of the callable API, and calling `get_unstructure_hook(int, cache=True)` does not match the actual `cache_result` parameter.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: BaseConverter.get_unstructure_hook() got an unexpected keyword argument 'cache'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

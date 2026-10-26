@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1661,
+      "output_tokens": 1088,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "TypeError: get_unstructure_hook() got an unexpected keyword argument 'cache'",
+      "doc_literal_usage": "Converter().get_unstructure_hook(int, cache=False)",
+      "argument_finding_is_false": "No credible false-positive argument: get_unstructure_hook has an explicit `cache_result` parameter with no `cache` alias, kwargs passthrough, or documented alternate call shape, so following `:param cache:` literally cannot work.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: BaseConverter.get_unstructure_hook() got an unexpected keyword argument 'cache'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

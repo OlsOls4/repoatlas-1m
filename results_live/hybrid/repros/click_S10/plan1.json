@@ -1,0 +1,10 @@
+{
+  "repro_script": "import click\n_ = click.FileType  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "Docs reference `{class}`FileType``, but click has no `FileType` attribute at the pinned commit, so accessing it raises AttributeError.",
+  "doc_literal_usage": "click.FileType",
+  "argument_finding_is_false": "The docs might intend a loosely named class rather than an exact public symbol, and PyPI versions could expose FileType elsewhere; however at this pinned commit there is no evidence of any alias or re-export, so the symbol is genuinely missing.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

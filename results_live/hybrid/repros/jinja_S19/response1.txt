@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "Instantiate LoopContext and access the documented cache attribute `_last` after a peek.",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from jinja2 import Environment\nfrom jinja2.runtime import LoopContext\n\nenvironment = Environment()\nloop = LoopContext([1, 2, 3], environment.undefined)\nloop._peek_next()\nloop._last  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

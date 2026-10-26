@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.08,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-997n2rqr/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-997n2rqr/repro.py\", line 3, in <module>\n    from starlette.testclient import TestClient\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/testclient.py\", line 34, in <module>\n    raise RuntimeError(\n    ...<3 lines>...\n    ) from None\nRuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "RuntimeError",
+      "qualified_type": "builtins.RuntimeError",
+      "mro": [
+        "builtins.RuntimeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-starlette_starlette-400000_DD-1-997n2rqr/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "from starlette.testclient import TestClient"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/testclient.py",
+          "line": 34,
+          "name": "<module>",
+          "source": "raise RuntimeError("
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-997n2rqr/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-997n2rqr/repro.py\", line 3, in <module>\n    from starlette.testclient import TestClient\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/testclient.py\", line 34, in <module>\n    raise RuntimeError(\n    ...<3 lines>...\n    ) from None\nRuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n\n"
+    }
+  }
+}

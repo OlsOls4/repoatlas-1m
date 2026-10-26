@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1710,
+      "output_tokens": 2189,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AttributeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "werkzeug.proxy_fix.orig",
+      "argument_finding_is_false": "The phrase appears in the ProxyFix docstring alongside references to WSGI environ keys, and the implementation stores the value under environ['werkzeug.proxy_fix.orig']; a reader could correctly treat the backticks as naming that string key rather than a Python attribute path.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: module 'werkzeug' has no attribute 'proxy_fix'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The arrow package exposes only a small set of module-level factory helpers (such as now, utcnow, and get); fromordinal is implemented solely as an Arrow classmethod, and there is no evidence of an alias or passthrough exporting it at module level. Even if Arrow were attached in a way that superficially made attributes reachable, the documented call shape arrow.fromordinal(737741) is not a supported public API path described elsewhere.",
+  "model_verdict": "true",
+  "doc_literal_usage": "arrow.fromordinal(737741)",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow\n\nresult = arrow.fromordinal(737741)  # DOC-LITERAL\nassert repr(result) == \"<Arrow [2020-11-12T00:00:00+00:00]>\", \"documented fromordinal output\"\nprint(\"DOCS_OK\")\n"
+}

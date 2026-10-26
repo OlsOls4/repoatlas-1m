@@ -1,0 +1,12 @@
+{
+  "argument_finding_is_false": "The cited snippet is in the requests compatibility section: it creates session = requests.Session() and request = requests.Request(...).prepare(). requests.Session.send accepts allow_redirects, so the parameter is valid there. The referenced httpx.Client.send parameter name is follow_redirects, but that is a different API and is not what this compatibility example calls.",
+  "model_verdict": "false_positive",
+  "doc_literal_usage": "requests.Session.send(request, allow_redirects=False)",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [
+    "requests"
+  ],
+  "needs_network_or_server": false,
+  "repro_script": "import requests\nfrom requests.adapters import HTTPAdapter\n\nclass NoNetworkAdapter(HTTPAdapter):\n    def send(self, request, stream=False, timeout=None, verify=True, cert=None, proxies=None):\n        response = requests.Response()\n        response.status_code = 200\n        response.url = request.url\n        response.request = request\n        response._content = b\"\"\n        return response\n\nsession = requests.Session()\nsession.mount(\"http://\", NoNetworkAdapter())\nsession.mount(\"https://\", NoNetworkAdapter())\n\nrequest = requests.Request(\"GET\", \"http://example.test/\").prepare()\nresponse = session.send(request, allow_redirects=False)  # DOC-LITERAL\nassert response.status_code == 200\nprint(\"DOCS_OK\")\n"
+}

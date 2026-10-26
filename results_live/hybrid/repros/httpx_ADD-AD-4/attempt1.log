@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.08,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_ADD-AD-4-q7ic3il5/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_ADD-AD-4-q7ic3il5/repro.py\", line 5, in <module>\n    compile(snippet, \"docs/compatibility.md:168\", \"exec\")\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"docs/compatibility.md:168\", line 1\n    mounts={\"all://\": ..., httpx.HTTPTransport(proxy=\"all://www.example.com\": None})\n                                                                                  ^\nSyntaxError: closing parenthesis '}' does not match opening parenthesis '('\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "SyntaxError",
+      "qualified_type": "builtins.SyntaxError",
+      "mro": [
+        "builtins.SyntaxError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "closing parenthesis '}' does not match opening parenthesis '(' (compatibility.md:168, line 1)",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-httpx_ADD-AD-4-q7ic3il5/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "compile(snippet, \"docs/compatibility.md:168\", \"exec\")"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_ADD-AD-4-q7ic3il5/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_ADD-AD-4-q7ic3il5/repro.py\", line 5, in <module>\n    compile(snippet, \"docs/compatibility.md:168\", \"exec\")\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"docs/compatibility.md:168\", line 1\n    mounts={\"all://\": ..., httpx.HTTPTransport(proxy=\"all://www.example.com\": None})\n                                                                                  ^\nSyntaxError: closing parenthesis '}' does not match opening parenthesis '('\n"
+    }
+  }
+}

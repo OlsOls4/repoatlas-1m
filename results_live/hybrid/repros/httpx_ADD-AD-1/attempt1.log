@@ -1,0 +1,75 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.17,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_ADD-AD-1-dfrr51z_/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_ADD-AD-1-dfrr51z_/repro.py\", line 25, in <module>\n    response = client.get(\"http://example.com/\")\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 1053, in get\n    return self.request(\n           ~~~~~~~~~~~~^\n        \"GET\",\n        ^^^^^^\n    ...<7 lines>...\n        extensions=extensions,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 825, in request\n    return self.send(request, auth=auth, follow_redirects=follow_redirects)\n           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 914, in send\n    response = self._send_handling_auth(\n        request,\n    ...<2 lines>...\n        history=[],\n    )\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 942, in _send_handling_auth\n    response = self._send_handling_redirects(\n        request,\n        follow_redirects=follow_redirects,\n        history=history,\n    )\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 979, in _send_handling_redirects\n    response = self._send_single_request(request)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 1014, in _send_single_request\n    response = transport.handle_request(request)\nTypeError: HTTPSRedirectTransport.handle_request() missing 4 required positional arguments: 'url', 'headers', 'stream', and 'extensions'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "HTTPSRedirectTransport.handle_request() missing 4 required positional arguments: 'url', 'headers', 'stream', and 'extensions'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-httpx_ADD-AD-1-dfrr51z_/repro.py",
+          "line": 25,
+          "name": "<module>",
+          "source": "response = client.get(\"http://example.com/\")"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 1053,
+          "name": "get",
+          "source": "return self.request("
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 825,
+          "name": "request",
+          "source": "return self.send(request, auth=auth, follow_redirects=follow_redirects)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 914,
+          "name": "send",
+          "source": "response = self._send_handling_auth("
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 942,
+          "name": "_send_handling_auth",
+          "source": "response = self._send_handling_redirects("
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 979,
+          "name": "_send_handling_redirects",
+          "source": "response = self._send_single_request(request)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py",
+          "line": 1014,
+          "name": "_send_single_request",
+          "source": "response = transport.handle_request(request)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-httpx_ADD-AD-1-dfrr51z_/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-httpx_ADD-AD-1-dfrr51z_/repro.py\", line 25, in <module>\n    response = client.get(\"http://example.com/\")\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 1053, in get\n    return self.request(\n           ~~~~~~~~~~~~^\n        \"GET\",\n        ^^^^^^\n    ...<7 lines>...\n        extensions=extensions,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 825, in request\n    return self.send(request, auth=auth, follow_redirects=follow_redirects)\n           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 914, in send\n    response = self._send_handling_auth(\n        request,\n    ...<2 lines>...\n        history=[],\n    )\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 942, in _send_handling_auth\n    response = self._send_handling_redirects(\n        request,\n        follow_redirects=follow_redirects,\n        history=history,\n    )\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 979, in _send_handling_redirects\n    response = self._send_single_request(request)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/httpx-b5addb64f016-base/lib/python3.13/site-packages/httpx/_client.py\", line 1014, in _send_single_request\n    response = transport.handle_request(request)\nTypeError: HTTPSRedirectTransport.handle_request() missing 4 required positional arguments: 'url', 'headers', 'stream', and 'extensions'\n"
+    }
+  }
+}

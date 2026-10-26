@@ -1,0 +1,10 @@
+{
+  "repro_script": "from marshmallow import Schema, fields\n\nclass S(Schema):\n    x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")\n\ndata = S().load({})\nassert data[\"x\"] == \"DEFAULT\", \"docs say default value is used\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Construct a field with distinct `default` and `load_default` values, load an empty mapping, and assert the documented `default` value is returned.",
+  "argument_finding_is_false": "In recent marshmallow versions, `default` and `load_default` may be aliases or one may feed the other, so a field constructed with both can conflate the two concepts. The docs may refer to the historical `default` argument/attribute while the implementation's internal name is `load_default`, making the finding a naming cleanup rather than a behavioral contradiction.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

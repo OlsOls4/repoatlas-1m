@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The table's ellipsis could be read as a representative non-leap-year range rather than an exhaustive parser/output contract, and the omission may be cosmetic truncation in the table rather than a behavioral mismatch. However, the final explicit endpoint is 365 while the formatter can emit 366 on December 31 of a leap year.",
+  "model_verdict": "finding is true: the documented DDDD output range is wrong",
+  "doc_literal_usage": "Use arrow.get, format a leap-year date with 'DDDD', and assert the output is within the documented 001..365 range.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError because leap-year day 366 is formatted by Arrow but excluded by docs",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow\n\ndt = arrow.get(\"2020-12-31\")\nformatted = dt.format(\"DDDD\")  # DOC-LITERAL\nassert 1 <= int(formatted) <= 365, f\"docs say DDDD outputs 001..365, got {formatted}\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

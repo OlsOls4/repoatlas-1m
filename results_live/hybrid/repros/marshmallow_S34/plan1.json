@@ -1,0 +1,10 @@
+{
+  "repro_script": "from marshmallow import Schema, fields, post_dump\n\n\nclass BadSchema(Schema):\n    name = fields.Str()\n\n    @post_dump(pass_many=True)  # DOC-LITERAL\n    def wrap_with_envelope(self, data, many, **kwargs):\n        return {\"key\": data}\n\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "True",
+  "doc_literal_usage": "@post_dump(pass_many=True)",
+  "argument_finding_is_false": "The cited decorator has no pass_many parameter in this commit; marshmallow 4 renamed it to pass_collection, so the documentation example is genuinely outdated. No alias or kwargs passthrough is visible in post_dump.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,271 @@
+{
+  "repo": "arrow",
+  "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S23",
+      "doc_path": "arrow/arrow.py",
+      "doc_line": 396,
+      "doc_end": 396,
+      "doc_text": ">>> arrow.fromordinal(737741)",
+      "claim": "dotted: `arrow.fromordinal`: 'fromordinal' not found on arrow",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S24",
+      "doc_path": "arrow/arrow.py",
+      "doc_line": 1349,
+      "doc_end": 1349,
+      "doc_text": ":param timestring: a ``str`` representing a humanized relative time.",
+      "claim": "docstring-param: `dehumanize(timestring)`: documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "arrow-400000:DD-1",
+      "doc_path": "arrow/arrow.py",
+      "doc_line": 1349,
+      "doc_end": 1349,
+      "doc_text": ":param timestring: a ``str`` representing a humanized relative time.",
+      "claim": "The dehumanize docstring names the first parameter timestring, while its actual signature parameter is input_string.",
+      "code_hint": "arrow/arrow.py:1344-1344 '    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":'",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "arrow-400000:DD-2",
+      "doc_path": "arrow/arrow.py",
+      "doc_line": 1350,
+      "doc_end": 1350,
+      "doc_text": ":param locale: (optional) a ``str`` specifying a locale. Defaults to 'en-us'.",
+      "claim": "The dehumanize docstring says the locale defaults to 'en-us', but the implementation defaults to the underscore form 'en_us'.",
+      "code_hint": "arrow/arrow.py:1344-1344 '    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":'",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S22",
+      "doc_path": "docs/api-guide.rst",
+      "doc_line": 23,
+      "doc_end": 23,
+      "doc_text": ":mod:`arrow.locale`",
+      "claim": "role: `arrow.locale`: 'locale' not found on arrow",
+      "code_hint": "",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "arrow-400000:DD-3",
+      "doc_path": "docs/guide.rst",
+      "doc_line": 416,
+      "doc_end": 416,
+      "doc_text": "||                                |HH            |00, 01, 02 ... 23, 24                      |",
+      "claim": "The supported-token table lists HH as producing hours through 24, but the formatter only renders the datetime hour field, whose valid range is 00-23.",
+      "code_hint": "arrow/formatter.py:81-81 '            return f\"{dt.hour:02d}\"'",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "arrow-400000:DD-4",
+      "doc_path": "docs/guide.rst",
+      "doc_line": 418,
+      "doc_end": 418,
+      "doc_text": "||                                |H             |0, 1, 2 ... 23, 24                         |",
+      "claim": "The supported-token table lists H as producing hours through 24, while the formatter renders the datetime hour field without zero padding.",
+      "code_hint": "arrow/formatter.py:83-83 '            return f\"{dt.hour}\"'",
+      "candidate_id": "C07"
+    }
+  ],
+  "estimate_tokens": 345313,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 329861,
+  "completion_tokens": 6425,
+  "latency_seconds": 20.669703704013955,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "`fromordinal` is defined as a classmethod on `Arrow`, not as a module-level `arrow.fromordinal` function.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 387,
+        "end_line": 388,
+        "quote": "    @classmethod\n    def fromordinal(cls, ordinal: int) -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Use `arrow.Arrow.fromordinal(737741)` in the docstring example.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S23"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The dehumanize docstring uses parameter name `timestring`, but the method signature uses `input_string`.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Rename the documented parameter from `timestring` to `input_string`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S24"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The dehumanize documentation names the first parameter `timestring`, while the implementation declares it as `input_string`.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Rename the documented parameter from `timestring` to `input_string`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-1"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The documented default locale `'en-us'` does not match the implementation default `'en_us'`.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Change the documented default from 'en-us' to 'en_us'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-2"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "The module reference uses the singular `arrow.locale`, but the implementation module is `arrow.locales`.",
+      "code_citation": {
+        "path": "arrow/locales.py",
+        "start_line": 1,
+        "end_line": 1,
+        "quote": "\"\"\"Provides internationalization for arrow in over 60 languages and dialects.\"\"\""
+      },
+      "suggested_doc_fix": "Change `arrow.locale` to `arrow.locales` in the API guide.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S22"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The token table claims `HH` can output `24`, but formatting returns `dt.hour`, whose valid values are 00-23.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": "            return f\"{dt.hour:02d}\""
+      },
+      "suggested_doc_fix": "Change the `HH` output range to `00, 01, 02 ... 22, 23`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-3"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The token table claims `H` can output `24`, but formatting returns the un-padded hour, whose valid values are 0-23.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 83,
+        "end_line": 83,
+        "quote": "            return f\"{dt.hour}\""
+      },
+      "suggested_doc_fix": "Change the `H` output range to `0, 1, 2 ... 22, 23`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-4"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": [
+    {
+      "finding_id": "AD-1",
+      "drift_kind": "other",
+      "explanation": "The supported-token table omits day-of-year 366, which the formatter can produce for leap years.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 398,
+        "end_line": 398,
+        "quote": "||                                |DDDD          |001, 002, 003 ... 364, 365                 |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 61,
+        "end_line": 62,
+        "quote": "        if token == \"DDDD\":\n            return f\"{dt.timetuple().tm_yday:03d}\""
+      },
+      "proposed_fix": "Update the `DDDD` output range to include `366`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "AD-2",
+      "drift_kind": "other",
+      "explanation": "The supported-token table omits day-of-year 366, which the formatter can produce for leap years.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 400,
+        "end_line": 400,
+        "quote": "||                                |DDD           |1, 2, 3 ... 364, 365                       |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 63,
+        "end_line": 64,
+        "quote": "        if token == \"DDD\":\n            return f\"{dt.timetuple().tm_yday}\""
+      },
+      "proposed_fix": "Update the `DDD` output range to include `366`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "AD-3",
+      "drift_kind": "other",
+      "explanation": "The supported-token table's `W` example omits the weekday component, but formatting always includes it.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 414,
+        "end_line": 414,
+        "quote": "||**ISO week date**               |W             |2011-W05-4, 2019-W17                       |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 138,
+        "end_line": 140,
+        "quote": "        if token == \"W\":\n            year, week, day = dt.isocalendar()\n            return f\"{year}-W{week:02d}-{day}\""
+      },
+      "proposed_fix": "Change the `W` example output to consistently include the weekday, e.g. `2019-W17-3`.",
+      "fully_verified": false
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1757,
+      "output_tokens": 613,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "setlist() got an unexpected keyword argument 'value'",
+      "doc_literal_usage": "Headers().setlist(key='X', value=['a', 'b'])",
+      "argument_finding_is_false": "The docstring's parameter name does not affect runtime behavior; the method works correctly when called with 'values'. The mismatch is purely cosmetic documentation drift, so a keyword call with 'value=' is not a documented contract in the API usage sense, and no runtime failure occurs for normal positional usage.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: Headers.setlist() got an unexpected keyword argument 'value'. Did you mean 'values'?",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,79 @@
+{
+  "repo": "structlog",
+  "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+  "candidates": [
+    {
+      "source": "whole_repo",
+      "source_id": "structlog-400000:DD-2",
+      "doc_path": "docs/standard-library.md",
+      "doc_line": 116,
+      "doc_end": 117,
+      "doc_text": "  The mapping of names to numbers is in\n  ``structlog.stdlib._log_levels._NAME_TO_LEVEL``.",
+      "claim": "The standard library documentation points to structlog.stdlib._log_levels._NAME_TO_LEVEL, but stdlib code imports NAME_TO_LEVEL from the top-level structlog._log_levels module and uses the public NAME_TO_LEVEL name.",
+      "code_hint": "src/structlog/stdlib.py:39-39 'from ._log_levels import LEVEL_TO_NAME, NAME_TO_LEVEL, add_log_level'",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S13",
+      "doc_path": "docs/standard-library.md",
+      "doc_line": 117,
+      "doc_end": 117,
+      "doc_text": "The mapping of names to numbers is in `structlog.stdlib._NAME_TO_LEVEL`.",
+      "claim": "dotted: `structlog.stdlib._NAME_TO_LEVEL`: '_NAME_TO_LEVEL' not found on structlog.stdlib",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "structlog-400000:DD-1",
+      "doc_path": "src/structlog/_native.py",
+      "doc_line": 121,
+      "doc_end": 123,
+      "doc_text": "            If you pass a string, it must be one of: ``critical``, ``error``,\n            ``warning``, ``info``, ``debug``, ``notset`` (upper/lower case\n            doesn't matter).",
+      "claim": "The documentation for make_filtering_bound_logger says a string min_level must be one of a limited set of names, but the implementation passes the string through NAME_TO_LEVEL, which also accepts \"warn\", \"exception\", and \"notset\".",
+      "code_hint": "src/structlog/_log_levels.py:27-36 'NAME_TO_LEVEL = {\\n    \"critical\": CRITICAL,\\n    \"exception\": ERROR,\\n    \"error\": ERROR,\\n    \"warn\": WARNING,\\n    \"warning\": WARNING,\\n    \"info\": INFO,\\n    \"debug\": DEBUG,\\n    \"notset\": NOTSET,\\n}'",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S16",
+      "doc_path": "src/structlog/dev.py",
+      "doc_line": 1008,
+      "doc_end": 1008,
+      "doc_text": "value:",
+      "claim": "docstring-param: `columns(value)`: documented param 'value' not in signature of columns (src/structlog/dev.py:999)",
+      "code_hint": "",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S14",
+      "doc_path": "src/structlog/stdlib.py",
+      "doc_line": 862,
+      "doc_end": 862,
+      "doc_text": "``structlog.stdlib._log_levels._NAME_TO_LEVEL``.",
+      "claim": "dotted: `structlog.stdlib._log_levels._NAME_TO_LEVEL`: '_log_levels' not found on structlog.stdlib",
+      "code_hint": "",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S15",
+      "doc_path": "src/structlog/twisted.py",
+      "doc_line": 235,
+      "doc_end": 235,
+      "doc_text": ":class:`PlainFileObserver` or Twisted's stock `FileLogObserver",
+      "claim": "role:undefined: `PlainFileObserver`: :class: target defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C06"
+    }
+  ],
+  "estimate_tokens": 420131,
+  "error": "parse: no JSON object in content; content_len=8794",
+  "cached": false,
+  "prompt_tokens": 404652,
+  "completion_tokens": 2745,
+  "latency_seconds": 14.89834379599779,
+  "finish_reason": "stop"
+}

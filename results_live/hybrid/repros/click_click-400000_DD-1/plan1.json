@@ -1,0 +1,10 @@
+{
+  "repro_script": "import click\n\n# DOC-LITERAL-BEGIN\nfile_type_class = click.FileType\n# DOC-LITERAL-END\nassert file_type_class is click.File, \"docs name the file parameter type as FileType\"\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "True",
+  "doc_literal_usage": "click.FileType",
+  "argument_finding_is_false": "No. The implementation and public API expose click.File; there is no FileType alias or deprecated compatibility name in the cited installed version, so the documentation reference is not supported elsewhere.",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

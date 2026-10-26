@@ -1,0 +1,28 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1881,
+      "output_tokens": 1984,
+      "cached_input_tokens": 0,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "The set of H outputs for hours 0 through 23 does not include '24', contradicting the documented range.",
+      "doc_literal_usage": "Construct Arrow objects for every representable hour and assert that formatting with H can produce every value listed in the documented range, including 24.",
+      "argument_finding_is_false": "The table might be describing a conventional 24-hour clock range rather than values actually representable by one datetime, and Arrow's hour field is inherently limited by Python datetime to 0-23, so '24' can only appear as midnight of the following day. However, the reported discrepancy specifically concerns the formatter's output for token H, which returns f'{dt.hour}' and therefore cannot produce 24 for any representable Arrow, making the documentation claim unfulfillable as stated.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say H produces 0, 1, 2 ... 23, 24",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

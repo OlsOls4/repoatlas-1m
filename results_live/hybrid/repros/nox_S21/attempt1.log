@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-nox_S21-us__utuw/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-nox_S21-us__utuw/repro.py\", line 3, in <module>\n    nox.options.reuse_venvs  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoxfileOptions' object has no attribute 'reuse_venvs'. Did you mean: 'reuse_venv'?\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'NoxfileOptions' object has no attribute 'reuse_venvs'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-nox_S21-us__utuw/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "nox.options.reuse_venvs  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-nox_S21-us__utuw/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-nox_S21-us__utuw/repro.py\", line 3, in <module>\n    nox.options.reuse_venvs  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoxfileOptions' object has no attribute 'reuse_venvs'. Did you mean: 'reuse_venv'?\n"
+    }
+  }
+}

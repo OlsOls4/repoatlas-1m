@@ -1,0 +1,10 @@
+{
+  "repro_script": "import asyncio\nimport httpx\n\nasync def main() -> None:\n    response = httpx.Response(200)\n    response.next()  # DOC-LITERAL\n    response.anext()  # DOC-LITERAL\n\nasyncio.run(main())\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "Response has no attribute 'next' or 'anext'.",
+  "doc_literal_usage": "httpx.Response(200).next() and httpx.Response(200).anext(), as listed in the Response API reference.",
+  "argument_finding_is_false": "No strong false-positive argument exists at this commit: httpx.Response is defined in httpx/_models.py, exposes next_request as an attribute, and has no next() or anext() methods, inherited aliases, or documented passthrough that would provide them.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

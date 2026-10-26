@@ -1,0 +1,8 @@
+{
+  "prompt_tokens": 79217,
+  "completion_tokens": 58921,
+  "calls": 44,
+  "cached_calls": 17,
+  "http_429": 0,
+  "errors": []
+}

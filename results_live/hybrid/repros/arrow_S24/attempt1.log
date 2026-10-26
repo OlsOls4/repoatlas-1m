@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.07,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-arrow_S24-wyfcazs8/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-arrow_S24-wyfcazs8/repro.py\", line 4, in <module>\n    earlier = arw.dehumanize(timestring=\"2 days ago\")  # DOC-LITERAL\nTypeError: Arrow.dehumanize() got an unexpected keyword argument 'timestring'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Arrow.dehumanize() got an unexpected keyword argument 'timestring'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-arrow_S24-wyfcazs8/repro.py",
+          "line": 4,
+          "name": "<module>",
+          "source": "earlier = arw.dehumanize(timestring=\"2 days ago\")  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-arrow_S24-wyfcazs8/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-arrow_S24-wyfcazs8/repro.py\", line 4, in <module>\n    earlier = arw.dehumanize(timestring=\"2 days ago\")  # DOC-LITERAL\nTypeError: Arrow.dehumanize() got an unexpected keyword argument 'timestring'\n"
+    }
+  }
+}

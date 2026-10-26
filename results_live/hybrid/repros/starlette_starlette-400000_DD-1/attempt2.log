@@ -1,0 +1,75 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py\", line 16, in <module>\n    asyncio.run(main())\n    ~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete\n    return future.result()\n           ~~~~~~~~~~~~~^^\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py\", line 11, in main\n    await websocket.accept()\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py\", line 115, in accept\n    await self.receive()\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py\", line 49, in receive\n    raise RuntimeError(f'Expected ASGI message \"websocket.connect\", but got {message_type!r}')\nRuntimeError: Expected ASGI message \"websocket.connect\", but got 'websocket.receive'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "RuntimeError",
+      "qualified_type": "builtins.RuntimeError",
+      "mro": [
+        "builtins.RuntimeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Expected ASGI message \"websocket.connect\", but got 'websocket.receive'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py",
+          "line": 16,
+          "name": "<module>",
+          "source": "asyncio.run(main())"
+        },
+        {
+          "file": "/usr/lib/python3.13/asyncio/runners.py",
+          "line": 195,
+          "name": "run",
+          "source": "return runner.run(main)"
+        },
+        {
+          "file": "/usr/lib/python3.13/asyncio/runners.py",
+          "line": 118,
+          "name": "run",
+          "source": "return self._loop.run_until_complete(task)"
+        },
+        {
+          "file": "/usr/lib/python3.13/asyncio/base_events.py",
+          "line": 725,
+          "name": "run_until_complete",
+          "source": "return future.result()"
+        },
+        {
+          "file": "/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py",
+          "line": 11,
+          "name": "main",
+          "source": "await websocket.accept()"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py",
+          "line": 115,
+          "name": "accept",
+          "source": "await self.receive()"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py",
+          "line": 49,
+          "name": "receive",
+          "source": "raise RuntimeError(f'Expected ASGI message \"websocket.connect\", but got {message_type!r}')"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py\", line 16, in <module>\n    asyncio.run(main())\n    ~~~~~~~~~~~^^^^^^^^\n  File \"/usr/lib/python3.13/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/usr/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete\n    return future.result()\n           ~~~~~~~~~~~~~^^\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-nsu4ucto/repro.py\", line 11, in main\n    await websocket.accept()\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py\", line 115, in accept\n    await self.receive()\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-base/lib/python3.13/site-packages/starlette/websockets.py\", line 49, in receive\n    raise RuntimeError(f'Expected ASGI message \"websocket.connect\", but got {message_type!r}')\nRuntimeError: Expected ASGI message \"websocket.connect\", but got 'websocket.receive'\n"
+    }
+  }
+}

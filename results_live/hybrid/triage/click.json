@@ -1,0 +1,73 @@
+{
+  "repo": "click",
+  "ref": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "candidates": [
+    {
+      "source": "whole_repo",
+      "source_id": "click-400000:DD-1",
+      "doc_path": "docs/exceptions.md",
+      "doc_line": 109,
+      "doc_end": 110,
+      "doc_text": "- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file.",
+      "claim": "The documentation calls Click's file parameter type `FileType`, but the implemented public type class is named `File`.",
+      "code_hint": "src/click/types.py:915-915 'class File(ParamType[t.IO[t.Any]]):'",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S10",
+      "doc_path": "docs/exceptions.md",
+      "doc_line": 110,
+      "doc_end": 110,
+      "doc_text": "{class}`FileType` if Click encounters issues opening the file.",
+      "claim": "role:undefined: `FileType`: :class: target defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C02"
+    }
+  ],
+  "estimate_tokens": 404517,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 389086,
+  "completion_tokens": 1149,
+  "latency_seconds": 15.725143182993634,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The docs refer to a non-existent `FileType` class, while Click's public file type is named `File`.",
+      "code_citation": {
+        "path": "src/click/types.py",
+        "start_line": 915,
+        "end_line": 915,
+        "quote": "class File(ParamType[t.IO[t.Any]]):"
+      },
+      "suggested_doc_fix": "Change `{class}\\`FileType\\`` to `{class}\\`File\\`` in docs/exceptions.md.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "click-400000:DD-1"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "`FileType` is not defined or re-exported anywhere in the package, so the role target is undefined.",
+      "code_citation": {
+        "path": "src/click/types.py",
+        "start_line": 915,
+        "end_line": 915,
+        "quote": "class File(ParamType[t.IO[t.Any]]):"
+      },
+      "suggested_doc_fix": "Replace the undefined `FileType` reference with `File`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S10"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

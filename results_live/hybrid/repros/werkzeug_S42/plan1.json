@@ -1,0 +1,10 @@
+{
+  "repro_script": "from werkzeug.datastructures import Headers\nh = Headers()\nh.setlist(key=\"X\", value=[\"a\", \"b\"])  # DOC-LITERAL\nassert h.getlist(\"X\") == [\"a\", \"b\"], \"header values not set as documented\"\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "setlist() got an unexpected keyword argument 'value'",
+  "doc_literal_usage": "Headers().setlist(key='X', value=['a', 'b'])",
+  "argument_finding_is_false": "The docstring's parameter name does not affect runtime behavior; the method works correctly when called with 'values'. The mismatch is purely cosmetic documentation drift, so a keyword call with 'value=' is not a documented contract in the API usage sense, and no runtime failure occurs for normal positional usage.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

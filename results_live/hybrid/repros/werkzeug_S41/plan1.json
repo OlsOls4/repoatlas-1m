@@ -1,0 +1,10 @@
+{
+  "repro_script": "import werkzeug\n\nattr = werkzeug.FileWrapper  # DOC-LITERAL\nassert attr is not None\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "Accessing `werkzeug.FileWrapper` fails because `FileWrapper` is only available as `werkzeug.wsgi.FileWrapper`.",
+  "doc_literal_usage": "werkzeug.FileWrapper",
+  "argument_finding_is_false": "The cited code only proves that `werkzeug.wsgi` exposes `FileWrapper` lazily with a deprecation warning; it does not itself prove that the top-level `werkzeug` package lacks a convenience alias or re-export. Werkzeug has historically re-exported selected WSGI helpers at the package root, so `werkzeug.FileWrapper` could still resolve indirectly or through another deprecated-name shim not shown in the excerpt.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The mismatch is only in Sphinx parameter documentation; Python keyword argument names are not contractually required to match docstring parameter names, and the documented behavior can still be obtained positionally via cache_result. No runtime alias is guaranteed or needed.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Call `converter.get_structure_hook(int, cache=False)` exactly as documented by the docstring parameter name.",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from cattrs import Converter\n\nconverter = Converter()\n\n# The docstring names the option `cache`, so use it as a keyword.\nconverter.get_structure_hook(int, cache=False)  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1288,
+      "output_tokens": 1037,
+      "cached_input_tokens": 0
+    },
+    "plan": {
+      "expected_exception_type": "AttributeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "transports.md L178: uses httpx.Mounts to mount a custom transport",
+      "argument_finding_is_false": "The citation points at transports.md and httpx/_transports/__init__.py; nothing in the provided evidence shows an alias or kwargs passthrough defining httpx.Mounts, and the main transports __all__ omits it. A weak counter-argument would be that older httpx versions once provided Mounts, but at the pinned commit the export is absent, so the documentation drift stands.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: module 'httpx' has no attribute 'Mounts'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

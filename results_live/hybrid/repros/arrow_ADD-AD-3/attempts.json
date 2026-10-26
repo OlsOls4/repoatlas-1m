@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1509,
+      "output_tokens": 2209,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "Formatting with W always returns the ISO weekday, so the result is 2019-W17-3 rather than the documented 2019-W17.",
+      "doc_literal_usage": "arrow.get('2019-04-24').format('W') should equal the documented example '2019-W17'",
+      "argument_finding_is_false": "false",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "lint",
+      "exception_type": null,
+      "error_excerpt": "no `# DOC-LITERAL` marker on a code line: mark the statement(s) that perform the documented usage",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1849,
+      "output_tokens": 340,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "Code always appends the weekday, producing 2019-W17-3.",
+      "doc_literal_usage": "arrow formatting with token W examples 2011-W05-4 and 2019-W17",
+      "argument_finding_is_false": "false",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "AssertionError",
+      "error_excerpt": "[script line 12, not a DOC-LITERAL line] AssertionError: docs example 2019-W17",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

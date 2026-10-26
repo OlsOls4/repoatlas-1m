@@ -1,0 +1,28 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1590,
+      "output_tokens": 1228,
+      "cached_input_tokens": 64,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "ImportError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Import `ForbiddenExtraKeyError` from `cattrs.errors` exactly as the documentation traceback names it, then run the documented `Converter(...).structure(...)` call.",
+      "argument_finding_is_false": "The traceback's exception name is produced by the exception class's __qualname__/__name__, so it cannot differ from code by documentation alone; however, one could argue cattrs might expose a deprecated/alias singular spelling at the public API level. Given the cited source defines only the plural class and no alias is visible in errors.py, that argument is weak, but it is the only plausible false-positive route.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "ImportError",
+      "error_excerpt": "ImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/errors.py)",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

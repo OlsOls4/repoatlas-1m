@@ -1,0 +1,73 @@
+{
+  "repo": "attrs",
+  "ref": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S11",
+      "doc_path": "docs/api.rst",
+      "doc_line": 702,
+      "doc_end": 702,
+      "doc_text": "x = attrs.field(converter=attrs.converter.pipe(c1, c2, c3))",
+      "claim": "dotted: `attrs.converter.pipe`: 'converter' not found on attrs",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S12",
+      "doc_path": "docs/extending.md",
+      "doc_line": 255,
+      "doc_end": 255,
+      "doc_text": "You can use the `attrs.Attribute.alias_is_default` flag to detect whether an alias was explicitly provided by the user or auto-generated.",
+      "claim": "dotted: `attrs.Attribute.alias_is_default`: 'alias_is_default' not found on attrs.Attribute",
+      "code_hint": "",
+      "candidate_id": "C02"
+    }
+  ],
+  "estimate_tokens": 416402,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 400979,
+  "completion_tokens": 3057,
+  "latency_seconds": 17.247988668998005,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "attrs exposes a `converters` submodule, not a singular `converter` module, so `attrs.converter.pipe` does not exist as documented.",
+      "code_citation": {
+        "path": "src/attr/__init__.py",
+        "start_line": 83,
+        "end_line": 83,
+        "quote": "_LAZY_SUBMODULES = {\"converters\", \"validators\", \"filters\"}"
+      },
+      "suggested_doc_fix": "Change `attrs.converter.pipe(c1, c2, c3)` to `attrs.converters.pipe(c1, c2, c3)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S11"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "The `Attribute` class has an `alias_is_default` slot populated at runtime, so the documented flag exists.",
+      "code_citation": {
+        "path": "src/attr/_make.py",
+        "start_line": 2528,
+        "end_line": 2529,
+        "quote": "\"alias\",\n        \"alias_is_default\","
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "S12"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

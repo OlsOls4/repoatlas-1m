@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "No credible false-positive argument: get_unstructure_hook has an explicit `cache_result` parameter with no `cache` alias, kwargs passthrough, or documented alternate call shape, so following `:param cache:` literally cannot work.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Converter().get_unstructure_hook(int, cache=False)",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "TypeError: get_unstructure_hook() got an unexpected keyword argument 'cache'",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from cattrs import Converter\n\nconverter = Converter()\nhook = converter.get_unstructure_hook(int, cache=False)  # DOC-LITERAL\nassert callable(hook), \"documented call should return a hook\"\nprint(\"DOCS_OK\")\n"
+}

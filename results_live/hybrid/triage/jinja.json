@@ -1,0 +1,168 @@
+{
+  "repo": "jinja",
+  "ref": "5ef70112a1ff19c05324ff889dd30405b1002044",
+  "candidates": [
+    {
+      "source": "whole_repo",
+      "source_id": "jinja-400000:DD-1",
+      "doc_path": "docs/extensions.rst",
+      "doc_line": 52,
+      "doc_end": 76,
+      "doc_text": ".. method:: jinja2.Environment.install_gettext_translations(translations, newstyle=False)\n..\n.. method:: jinja2.Environment.install_null_translations(newstyle=False)\n..\n.. method:: jinja2.Environment.install_gettext_callables(gettext, ngettext, newstyle=False, pgettext=None, npgettext=None)",
+      "claim": "The documentation lists newstyle=False as the default for three i18n installation methods, but the implementations use newstyle=None, leaving the existing environment setting unchanged rather than forcing false.",
+      "code_hint": "src/jinja2/ext.py:268-301 '    def _install(\\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\\n    ) -> None:\\n...\\n    def _install_null(self, newstyle: bool | None = None) -> None:\\n...\\n    def _install_callables(\\n        self,\\n        gettext: t.Callable[[str], str],\\n        ngettext: t.Callable[[str, str, int], str],\\n        newstyle: bool | None = None,\\n'",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S17",
+      "doc_path": "docs/extensions.rst",
+      "doc_line": 230,
+      "doc_end": 230,
+      "doc_text": "**Import name:** ``jinja2.ext.with_``",
+      "claim": "dotted: `jinja2.ext.with_`: 'with_' not found on jinja2.ext",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S18",
+      "doc_path": "docs/extensions.rst",
+      "doc_line": 241,
+      "doc_end": 241,
+      "doc_text": "**Import name:** ``jinja2.ext.autoescape``",
+      "claim": "dotted: `jinja2.ext.autoescape`: 'autoescape' not found on jinja2.ext",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S19",
+      "doc_path": "src/jinja2/runtime.py",
+      "doc_line": 490,
+      "doc_end": 490,
+      "doc_text": "the result in :attr:`_last` for use in subsequent checks. The",
+      "claim": "role:undefined: `_last`: :attr: target defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C04"
+    }
+  ],
+  "estimate_tokens": 372947,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 357482,
+  "completion_tokens": 5194,
+  "latency_seconds": 17.12618563702563,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The documented method signatures show newstyle=False, but the implementations default to None to preserve the current environment setting.",
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 268,
+        "end_line": 270,
+        "quote": "    def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\n    ) -> None:"
+      },
+      "suggested_doc_fix": "Change all three documented method signatures from newstyle=False to newstyle=None.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "jinja-400000:DD-1"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "The page intentionally documents the removed built-in with_ extension for historical context; jinja2.ext intentionally no longer exports it.",
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 840,
+        "end_line": 844,
+        "quote": "#: nicer import names\ni18n = InternationalizationExtension\ndo = ExprStmtExtension\nloopcontrols = LoopControlExtension\ndebug = DebugExtension"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S17"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "The page intentionally documents the removed built-in autoescape extension for historical context; jinja2.ext intentionally no longer exports it.",
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 840,
+        "end_line": 844,
+        "quote": "#: nicer import names\ni18n = InternationalizationExtension\ndo = ExprStmtExtension\nloopcontrols = LoopControlExtension\ndebug = DebugExtension"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S18"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The docstring refers to _last, but the implementation caches the peeked element in _after.",
+      "code_citation": {
+        "path": "src/jinja2/runtime.py",
+        "start_line": 493,
+        "end_line": 497,
+        "quote": "        if self._after is not missing:\n            return self._after\n\n        self._after = next(self._iterator, missing)\n        return self._after"
+      },
+      "suggested_doc_fix": "Replace :attr:`_last` with :attr:`_after` in the LoopContext._peek_next docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S19"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": [
+    {
+      "finding_id": "AD-1",
+      "drift_kind": "name",
+      "explanation": "The documentation tells users to pass newstyle=True to env.install_translations, but the environment installs gettext translations through install_gettext_translations.",
+      "doc_citation": {
+        "path": "docs/extensions.rst",
+        "start_line": 160,
+        "end_line": 162,
+        "quote": "You can use \"new style\" gettext calls by setting\nenv.newstyle_gettext = True or passing newstyle=True to\nenv.install_translations. They are fully supported by the Babel"
+      },
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 260,
+        "end_line": 260,
+        "quote": "            install_gettext_translations=self._install,"
+      },
+      "proposed_fix": "Change env.install_translations to env.install_gettext_translations.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "AD-2",
+      "drift_kind": "other",
+      "explanation": "The Mako configuration example uses the misspelled keyword commend_end_string instead of the Environment parameter comment_end_string.",
+      "doc_citation": {
+        "path": "docs/switching.rst",
+        "start_line": 141,
+        "end_line": 141,
+        "quote": "        commend_end_string=\"</%doc>\","
+      },
+      "code_citation": {
+        "path": "src/jinja2/environment.py",
+        "start_line": 301,
+        "end_line": 302,
+        "quote": "        comment_start_string: str = COMMENT_START_STRING,\n        comment_end_string: str = COMMENT_END_STRING,"
+      },
+      "proposed_fix": "Change commend_end_string to comment_end_string in the example.",
+      "fully_verified": true
+    }
+  ]
+}

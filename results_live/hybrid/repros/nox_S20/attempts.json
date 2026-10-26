@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1783,
+      "output_tokens": 1620,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+      "argument_finding_is_false": "",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: Session.conda_install() got an unexpected keyword argument 'channels'. Did you mean 'channel'?",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

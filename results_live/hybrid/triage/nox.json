@@ -1,0 +1,101 @@
+{
+  "repo": "nox",
+  "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S20",
+      "doc_path": "docs/tutorial.rst",
+      "doc_line": 488,
+      "doc_end": 488,
+      "doc_text": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+      "claim": "method-call-signature: `session.conda_install(...)`: no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S21",
+      "doc_path": "docs/usage.rst",
+      "doc_line": 219,
+      "doc_end": 219,
+      "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+      "claim": "dotted:name-not-in-code: `nox.options.reuse_venvs`: 'reuse_venvs' appears nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "nox-400000:DD-1",
+      "doc_path": "docs/usage.rst",
+      "doc_line": 219,
+      "doc_end": 219,
+      "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+      "claim": "The usage documentation refers to a misspelled Noxfile option, `nox.options.reuse_venvs`, while the code defines the option as `reuse_venv`.",
+      "code_hint": "nox/_options.py:333-333 'reuse_venv: ReuseVenvType = attrs.field('",
+      "candidate_id": "C03"
+    }
+  ],
+  "estimate_tokens": 362334,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 346908,
+  "completion_tokens": 2807,
+  "latency_seconds": 14.376510425994638,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "conda_install accepts `channel` (singular), not `channels`, so the documented call would raise an unexpected keyword argument error.",
+      "code_citation": {
+        "path": "nox/sessions.py",
+        "start_line": 717,
+        "end_line": 721,
+        "quote": "    def conda_install(\n        self,\n        *args: str,\n        auto_offline: bool = True,\n        channel: str | Sequence[str] = \"\","
+      },
+      "suggested_doc_fix": "Change `channels=[\"conda-forge\"]` to `channel=\"conda-forge\"`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S20"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The Noxfile option defined by code is `reuse_venv`, not `reuse_venvs`, so referencing `nox.options.reuse_venvs` is invalid.",
+      "code_citation": {
+        "path": "nox/_options.py",
+        "start_line": 333,
+        "end_line": 333,
+        "quote": "    reuse_venv: ReuseVenvType = attrs.field("
+      },
+      "suggested_doc_fix": "Replace `nox.options.reuse_venvs` with `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S21"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The docs misspell the noxfile option name; the code defines it as `reuse_venv`.",
+      "code_citation": {
+        "path": "nox/_options.py",
+        "start_line": 333,
+        "end_line": 333,
+        "quote": "    reuse_venv: ReuseVenvType = attrs.field("
+      },
+      "suggested_doc_fix": "Replace `nox.options.reuse_venvs` with `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "nox-400000:DD-1"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

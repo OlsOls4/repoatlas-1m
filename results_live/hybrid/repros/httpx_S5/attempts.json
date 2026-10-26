@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 2124,
+      "output_tokens": 692,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "httpx.request() got an unexpected keyword argument 'extensions'",
+      "doc_literal_usage": "httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)",
+      "argument_finding_is_false": "No. The installed httpx.request signature in httpx/_api.py has no extensions parameter and no **kwargs passthrough, so passing extensions=... at the top level is genuinely invalid; the documentation example cannot work as written.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: request() got an unexpected keyword argument 'extensions'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

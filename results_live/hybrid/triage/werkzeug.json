@@ -1,0 +1,289 @@
+{
+  "repo": "werkzeug",
+  "ref": "b73dce5a2ce14f7c7fd645699d1d878de48d2948",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S35",
+      "doc_path": "docs/routing.rst",
+      "doc_line": 24,
+      "doc_end": 24,
+      "doc_text": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect",
+      "claim": "import: `werkzeug.routing.NotFound`: 'NotFound' not found on werkzeug.routing",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S36",
+      "doc_path": "docs/routing.rst",
+      "doc_line": 64,
+      "doc_end": 64,
+      "doc_text": "or :exc:`~werkzeug.exceptions.RequestRedirect`.  For more details about those",
+      "claim": "role: `werkzeug.exceptions.RequestRedirect`: 'RequestRedirect' not found on werkzeug.exceptions",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S37",
+      "doc_path": "src/werkzeug/datastructures/headers.py",
+      "doc_line": 58,
+      "doc_end": 58,
+      "doc_text": "The :meth:`linked` function was removed without replacement as it",
+      "claim": "role:undefined: `linked`: :meth: target defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S42",
+      "doc_path": "src/werkzeug/datastructures/headers.py",
+      "doc_line": 433,
+      "doc_end": 433,
+      "doc_text": ":param value: An iterable of header values. Newlines are not allowed and",
+      "claim": "docstring-param: `setlist(value)`: documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)",
+      "code_hint": "",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "werkzeug-400000:DD-1",
+      "doc_path": "src/werkzeug/http.py",
+      "doc_line": 1464,
+      "doc_end": 1465,
+      "doc_text": ".. versionchanged:: 2.3\n    The ``path`` parameter is ``None`` by default.",
+      "claim": "The docstring for dump_cookie says the path parameter was None by default as of version 2.3, but the function signature initializes path to '/'.",
+      "code_hint": "src/werkzeug/http.py:1401-1401 '    path: str | None = \"/\" ,'",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S38",
+      "doc_path": "src/werkzeug/middleware/proxy_fix.py",
+      "doc_line": 55,
+      "doc_end": 55,
+      "doc_text": "environ as ``werkzeug.proxy_fix.orig``, a dict.",
+      "claim": "dotted: `werkzeug.proxy_fix.orig`: 'proxy_fix' not found on werkzeug",
+      "code_hint": "",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S39",
+      "doc_path": "src/werkzeug/middleware/proxy_fix.py",
+      "doc_line": 83,
+      "doc_end": 83,
+      "doc_text": "Original WSGI environ values are stored in the ``werkzeug.proxy_fix.orig`` dict.",
+      "claim": "dotted: `werkzeug.proxy_fix.orig`: 'proxy_fix' not found on werkzeug",
+      "code_hint": "",
+      "candidate_id": "C07"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S40",
+      "doc_path": "src/werkzeug/serving.py",
+      "doc_line": 1021,
+      "doc_end": 1021,
+      "doc_text": ":class:`~werkzeug.middleware.SharedDataMiddleware`.",
+      "claim": "role: `werkzeug.middleware.SharedDataMiddleware`: 'SharedDataMiddleware' not found on werkzeug.middleware",
+      "code_hint": "",
+      "candidate_id": "C08"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S41",
+      "doc_path": "src/werkzeug/test.py",
+      "doc_line": 1103,
+      "doc_end": 1103,
+      "doc_text": "consistency with :class:`werkzeug.FileWrapper`.",
+      "claim": "role: `werkzeug.FileWrapper`: 'FileWrapper' not found on werkzeug",
+      "code_hint": "",
+      "candidate_id": "C09"
+    }
+  ],
+  "estimate_tokens": 402723,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 387250,
+  "completion_tokens": 7394,
+  "latency_seconds": 25.194841845019255,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "NotFound is defined in werkzeug.exceptions and is not re-exported from werkzeug.routing; the routing example imports it from the wrong module.",
+      "code_citation": {
+        "path": "src/werkzeug/routing/__init__.py",
+        "start_line": 116,
+        "end_line": 122,
+        "quote": "from .exceptions import BuildError as BuildError\nfrom .exceptions import NoMatch as NoMatch\nfrom .exceptions import RequestAliasRedirect as RequestAliasRedirect\nfrom .exceptions import RequestPath as RequestPath\nfrom .exceptions import RequestRedirect as RequestRedirect\nfrom .exceptions import RoutingException as RoutingException\nfrom .exceptions import WebsocketMismatch as WebsocketMismatch"
+      },
+      "suggested_doc_fix": "Change the example import to `from werkzeug.exceptions import NotFound` or keep `from werkzeug.routing import Map, Rule, RequestRedirect` and import `NotFound` separately.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "S35"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "RequestRedirect is a routing exception, not a werkzeug.exceptions exception; the cross-reference points to the wrong module.",
+      "code_citation": {
+        "path": "src/werkzeug/routing/exceptions.py",
+        "start_line": 48,
+        "end_line": 50,
+        "quote": "class RequestRedirect(HTTPException, RoutingException):\n    \"\"\"Raise if the map requests a redirect. This is for example the case if"
+      },
+      "suggested_doc_fix": "Change `:exc:`~werkzeug.exceptions.RequestRedirect`` to `:exc:`~werkzeug.routing.RequestRedirect``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S36"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "The note is historically documenting the removal of a prior `linked` method and does not claim that `linked` currently exists.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 18,
+        "end_line": 19,
+        "quote": "class Headers:"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S37"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "MultiDict.setlist's parameter is named `values`, but its docstring documents it as `value`.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 428,
+        "end_line": 428,
+        "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+      },
+      "suggested_doc_fix": "Change `:param value:` to `:param values:` in the setlist docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S42"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "The `path=None` statement is a historical versionchanged note; the current default `\"/\"` is documented separately under versionchanged 2.3.3 and matches the signature.",
+      "code_citation": {
+        "path": "src/werkzeug/http.py",
+        "start_line": 1401,
+        "end_line": 1401,
+        "quote": "    path: str | None = \"/\" ,"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "werkzeug-400000:DD-1"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The documented `werkzeug.proxy_fix.orig` text reads like a module attribute, but ProxyFix stores the original environ under the string key `werkzeug.proxy_fix.orig`.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/proxy_fix.py",
+        "start_line": 138,
+        "end_line": 138,
+        "quote": "                \"werkzeug.proxy_fix.orig\": {"
+      },
+      "suggested_doc_fix": "Quote it as the WSGI environ key, e.g. `environ[\"werkzeug.proxy_fix.orig\"]`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S38"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The same wording repeats the misleading dotted-name reference; the actual value is the `werkzeug.proxy_fix.orig` environ key.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/proxy_fix.py",
+        "start_line": 138,
+        "end_line": 138,
+        "quote": "                \"werkzeug.proxy_fix.orig\": {"
+      },
+      "suggested_doc_fix": "Quote it as the WSGI environ key, e.g. `environ[\"werkzeug.proxy_fix.orig\"]`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S39"
+    },
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "SharedDataMiddleware lives in werkzeug.middleware.shared_data, not werkzeug.middleware.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/shared_data.py",
+        "start_line": 29,
+        "end_line": 29,
+        "quote": "class SharedDataMiddleware:"
+      },
+      "suggested_doc_fix": "Change the reference to `:class:`~werkzeug.middleware.shared_data.SharedDataMiddleware``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S40"
+    },
+    {
+      "candidate_id": "C09",
+      "verdict": "true_drift",
+      "reason": "FileWrapper is provided by werkzeug.wsgi, not by the top-level werkzeug package.",
+      "code_citation": {
+        "path": "src/werkzeug/wsgi.py",
+        "start_line": 623,
+        "end_line": 623,
+        "quote": "        if name == \"FileWrapper\":"
+      },
+      "suggested_doc_fix": "Change the reference to `:class:`~werkzeug.wsgi.FileWrapper``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S41"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": [
+    {
+      "finding_id": "AD-1",
+      "drift_kind": "other",
+      "explanation": "The deprecated `input_stream` property is documented as replacing the wrong feature; it should point to `stream`, not `REMOTE_USER`.",
+      "doc_citation": {
+        "path": "src/werkzeug/wrappers/request.py",
+        "start_line": 585,
+        "end_line": 586,
+        "quote": "    .. deprecated:: 3.2\n        Will be removed in Werkzeug 4.0. Use ``environ[\"REMOTE_USER\"]`` instead."
+      },
+      "code_citation": {
+        "path": "src/werkzeug/wrappers/request.py",
+        "start_line": 595,
+        "end_line": 595,
+        "quote": "        return self.environ[\"wsgi.input\"]  # type: ignore[no-any-return]"
+      },
+      "proposed_fix": "Change the deprecation note to use ``stream`` instead.",
+      "fully_verified": true
+    }
+  ]
+}

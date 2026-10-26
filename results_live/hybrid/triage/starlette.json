@@ -1,0 +1,101 @@
+{
+  "repo": "starlette",
+  "ref": "master",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S0",
+      "doc_path": "docs/testclient.md",
+      "doc_line": 53,
+      "doc_end": 53,
+      "doc_text": "response = client.get(\"/\", headers={\"Authorization\": \"...\"})",
+      "claim": "method-call-signature: `client.get(...)`: no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "starlette-400000:DD-1",
+      "doc_path": "docs/websockets.md",
+      "doc_line": 73,
+      "doc_end": 73,
+      "doc_text": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+      "claim": "The WebSocket documentation calls `receive_json` with a positional `data` argument, but the implementation only accepts `mode`.",
+      "code_hint": "starlette/websockets.py:136-136 'async def receive_json(self, mode: str = \"text\") -> Any:'",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S1",
+      "doc_path": "docs/websockets.md",
+      "doc_line": 74,
+      "doc_end": 74,
+      "doc_text": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+      "claim": "method-call-signature: `websocket.receive_json(...)`: keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)",
+      "code_hint": "",
+      "candidate_id": "C03"
+    }
+  ],
+  "estimate_tokens": 410527,
+  "error": null,
+  "cached": false,
+  "prompt_tokens": 395056,
+  "completion_tokens": 3228,
+  "latency_seconds": 16.80324317299528,
+  "finish_reason": "stop",
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "TestClient inherits httpx's client API, where request methods such as get accept a `headers` argument.",
+      "code_citation": {
+        "path": "starlette/testclient.py",
+        "start_line": 440,
+        "end_line": 440,
+        "quote": "class TestClient(httpx.Client):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S0"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documented call passes a positional `data` argument, but `WebSocket.receive_json` accepts only `mode`.",
+      "code_citation": {
+        "path": "starlette/websockets.py",
+        "start_line": 136,
+        "end_line": 136,
+        "quote": "async def receive_json(self, mode: str = \"text\") -> Any:"
+      },
+      "suggested_doc_fix": "Change `websocket.receive_json(data, mode=\"binary\")` to `websocket.receive_json(mode=\"binary\")`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "starlette-400000:DD-1"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The WebSocket test session's `receive_json` also accepts only `mode` and has no `data` parameter.",
+      "code_citation": {
+        "path": "starlette/testclient.py",
+        "start_line": 188,
+        "end_line": 188,
+        "quote": "def receive_json(self, mode: Literal[\"text\", \"binary\"] = \"text\") -> Any:"
+      },
+      "suggested_doc_fix": "Change `websocket.receive_json(data, mode=\"binary\")` to `websocket.receive_json(mode=\"binary\")`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S1"
+    }
+  ],
+  "missing_verdicts": [],
+  "additional_findings": []
+}

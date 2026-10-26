@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-werkzeug_S35-p47ybjie/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-werkzeug_S35-p47ybjie/repro.py\", line 1, in <module>\n    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'NotFound' from 'werkzeug.routing' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/routing/__init__.py)\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ImportError",
+      "qualified_type": "builtins.ImportError",
+      "mro": [
+        "builtins.ImportError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "cannot import name 'NotFound' from 'werkzeug.routing' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/routing/__init__.py)",
+      "missing_module": "werkzeug.routing",
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-werkzeug_S35-p47ybjie/repro.py",
+          "line": 1,
+          "name": "<module>",
+          "source": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-werkzeug_S35-p47ybjie/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-werkzeug_S35-p47ybjie/repro.py\", line 1, in <module>\n    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'NotFound' from 'werkzeug.routing' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/routing/__init__.py)\n"
+    }
+  }
+}

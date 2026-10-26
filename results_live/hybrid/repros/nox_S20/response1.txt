@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import nox.sessions\n\nsession = nox.sessions.Session.__new__(nox.sessions.Session)\nsession.conda_install(\"pytest\", channels=[\"conda-forge\"])  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

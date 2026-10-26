@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1592,
+      "output_tokens": 1633,
+      "cached_input_tokens": 0
+    },
+    "plan": {
+      "expected_exception_type": "AttributeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "arrow.fromordinal(737741)",
+      "argument_finding_is_false": "The arrow package exposes only a small set of module-level factory helpers (such as now, utcnow, and get); fromordinal is implemented solely as an Arrow classmethod, and there is no evidence of an alias or passthrough exporting it at module level. Even if Arrow were attached in a way that superficially made attributes reachable, the documented call shape arrow.fromordinal(737741) is not a supported public API path described elsewhere.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: module 'arrow' has no attribute 'fromordinal'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

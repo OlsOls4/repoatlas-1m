@@ -1,0 +1,10 @@
+{
+  "repro_script": "import httpx\n\nresponse = httpx.Response(200, content=b\"hello\")\n_ = list(response.iter_content())  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Calling response.iter_content() exactly as named in docs/advanced/clients.md line 183 on an httpx.Response object.",
+  "argument_finding_is_false": "The finding could be considered narrow: httpx never promised a requests-compatible iter_content API, and the rest of the passage correctly discusses compression-aware progress via iter_bytes/iter_raw; however, the cited sentence literally names response.iter_content() as an available method, and httpx.Response defines no such attribute or alias, so within the doc's own wording the reference is unresolvable.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

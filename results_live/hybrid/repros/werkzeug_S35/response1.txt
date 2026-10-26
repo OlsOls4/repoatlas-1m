@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The finding could only be a false positive if werkzeug.routing exposed NotFound through another mechanism not visible in the explicit import block, such as __all__ wildcard re-export or a lazy module attribute loader. The pinned source shown imports only RoutingException and related routing exceptions, not werkzeug.exceptions.NotFound, so the exact documented import has no valid source-level path.",
+  "model_verdict": "true",
+  "doc_literal_usage": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect  # DOC-LITERAL",
+  "expected_exception_type": "ImportError",
+  "expected_failure": "ImportError: cannot import name 'NotFound' from 'werkzeug.routing'",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}
