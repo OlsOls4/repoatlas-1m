@@ -423,8 +423,9 @@ def build_beam_did_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_h
         f"- **New finds.** Beam added {stats['additions_true']} true drifts the script missed "
         f"({stats['additions_new']} new to the union, mostly cross-file or prose), taking the distinct-true count "
         f"from {stats['symbol_true']} (symbol check) to {stats['hybrid_true']}.\n"
-        f"- **Repro author.** Beam wrote every doc-literal repro script "
-        f"({stats['repro_tokens']:,} tokens). {stats['repro_true']} distinct bugs reproduce a real API error; "
+        f"- **Repro author.** Beam wrote the doc-literal repro scripts "
+        f"({stats['repro_tokens']:,} tokens). The starlette headline script was written by hand from Beam's verdict. "
+        f"{stats['repro_true']} distinct bugs reproduce a real API error; "
         f"{stats['repro_true_findings']} of {stats['repro_findings']} badged findings were real. "
         f"{non_bug_badge_phrase(stats)} received a strict repro badge.\n"
         f"- **Long context, as an observation (small samples, one run per configuration):** "
@@ -628,12 +629,9 @@ def _apply_hybrid_repro(
     card["repro_error_excerpt"] = excerpt
     card["repro_is_strict_api_error"] = is_strict
     card["repro_reason"] = str(repro.get("reason", ""))
-    if str(card.get("finding_key", "")) == "starlette-400000/DD-1" or str(item.get("drift_id", "")) == "T1":
-        card["repro_is_strict_api_error"] = False
-        card["repro_badge_override"] = (
-            "Reproduced in our earlier docs-runner (TypeError). "
-            "The v2 strict repro couldn't start the test session, so it isn't counted in the 29."
-        )
+    origin: str = str(repro.get("script_origin", "")).strip()
+    if origin:
+        card["repro_script_origin"] = origin
 
 
 def _polish_bug_card(
@@ -719,8 +717,8 @@ def build_v2_replay_rows(payload: HybridPayload, stats: HybridHeroStats, pack_to
             "v2 steps (starlette)",
             (
                 f"Symbol check: {symbol_candidates} candidates → Beam triage: kept {kept}, "
-                f"rejected {rejected}, added {added} → Repro: could not run "
-                "(earlier docs-runner only; not counted in the 29)"
+                f"rejected {rejected}, added {added} → Repro: "
+                f"{'TypeError on DOC-LITERAL receive_json' if stats['repro_true'] else 'could not run'}"
             ),
         ],
         [

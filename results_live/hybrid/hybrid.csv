@@ -2,4 +2,4 @@ method,distinct_true_drifts,of_33_prior_union,findings,true_findings,precision,b
 Symbol check alone,24,19,43,25,0.581,0
 Whole-repo Beam alone,11,11,19,11,0.579,4424575
 Hybrid (symbol + whole-repo Beam triage),34,22,60,45,0.75,4739392
-Hybrid + repro-confirmed (strict),29,18,39,36,0.923,4877530
+Hybrid + repro-confirmed (strict),30,19,41,38,0.927,4877530

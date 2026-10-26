@@ -1893,12 +1893,6 @@ def _rewrite_finding_display_fields(finding: dict[str, object]) -> dict[str, obj
         if url:
             rewritten["upstream_status"] = already_reported_status(url)
             rewritten["upstream_prior_reported"] = True
-    if str(rewritten.get("finding_key", "")) == "starlette-400000/DD-1":
-        rewritten["repro_is_strict_api_error"] = False
-        rewritten["repro_badge_override"] = (
-            "Reproduced in our earlier docs-runner (TypeError). "
-            "The v2 strict repro couldn't start the test session, so it isn't counted in the 29."
-        )
     return rewritten
 
 

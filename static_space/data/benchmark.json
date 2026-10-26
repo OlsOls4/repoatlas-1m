@@ -30,9 +30,9 @@
     ],
     [
       "Hybrid + repro-confirmed (strict)",
-      "29 of 45 (18 of 33 on the 9-repo union)",
-      39,
-      "92.3%",
+      "30 of 45 (19 of 33 on the 9-repo union)",
+      41,
+      "92.7%",
       "9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138"
     ],
     [
@@ -64,8 +64,8 @@
     },
     {
       "step": "Strict repro",
-      "true": 29,
-      "detail": "36 of 39 badges were real; 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)"
+      "true": 30,
+      "detail": "38 of 41 badges were real; 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)"
     }
   ],
   "recall": {

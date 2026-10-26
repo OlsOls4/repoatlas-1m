@@ -1,0 +1,13 @@
+{
+  "expected_exception_type": "TypeError",
+  "expected_failure": "receive_json() got multiple values for argument 'mode'",
+  "doc_literal_usage": "websocket.receive_json(data, mode=\"binary\")",
+  "argument_finding_is_false": "No. The documented call passes a positional data value to receive_json, whose implementation only defines mode.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [
+    "httpx",
+    "httpx2"
+  ],
+  "needs_network_or_server": false,
+  "script_origin": "script written by hand from Beam's verdict"
+}

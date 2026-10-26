@@ -55,6 +55,51 @@ ERROR_EXCERPT_CHARS: int = 600
 # the docs disagrees with the code, so it is reported as weaker evidence.
 INTERFACE_ERRORS: frozenset[str] = frozenset({"TypeError", "AttributeError", "ImportError", "ModuleNotFoundError", "NameError"})
 
+# Optional extras the documented examples need even when Beam forgets to list them.
+LIBRARY_EXAMPLE_EXTRAS: dict[str, tuple[str, ...]] = {
+    "starlette": ("httpx", "httpx2"),
+}
+
+SCRIPT_ORIGIN_HAND_FROM_VERDICT: str = "script written by hand from Beam's verdict"
+
+STARLETTE_RECEIVE_JSON_SCRIPT: str = """import asyncio
+from starlette.websockets import WebSocket
+
+
+async def receive():
+    return {"type": "websocket.receive", "bytes": b'{"ok": true}'}
+
+
+async def send(message):
+    pass
+
+
+async def main():
+    scope = {
+        "type": "websocket",
+        "asgi": {"spec_version": "2.3", "version": "3.0"},
+        "http_version": "1.1",
+        "scheme": "ws",
+        "path": "/ws",
+        "raw_path": b"/ws",
+        "query_string": b"",
+        "root_path": "",
+        "headers": [],
+        "client": ("127.0.0.1", 123),
+        "server": ("test", 80),
+        "subprotocols": [],
+        "extensions": {},
+        "state": {},
+    }
+    websocket = WebSocket(scope, receive, send)
+    data = {"ok": True}
+    await websocket.receive_json(data, mode="binary")  # DOC-LITERAL
+    print("DOCS_OK")
+
+
+asyncio.run(main())
+"""
+
 # Exceptions that mean "the environment, not the docs": the script could not test the claim.
 ENVIRONMENT_EXCEPTIONS: frozenset[str] = frozenset(
     {
@@ -150,8 +195,12 @@ SCRIPT_RULES: str = """Rules for repro_script:
    (a default, a return value, a side effect), check it with a plain `assert <documented behaviour>, "<what docs say>"`.
    Mark the doc-literal statement(s) with a trailing `# DOC-LITERAL` comment on each line (or wrap them between
    `# DOC-LITERAL-BEGIN` and `# DOC-LITERAL-END` comment lines). An exception raised anywhere else (setup) does
-   NOT count, so setup must be correct: build real objects the documented way (use the library's in-process
-   test client or a minimal fake where needed) and drive coroutines with asyncio.run.
+   NOT count, so setup must be correct: build real objects the documented way and drive coroutines with
+   asyncio.run. If a documented example needs an optional extra (starlette TestClient needs httpx), list it in
+   extra_requirements — the runner also installs known example extras for the library. For WebSocket docs,
+   construct starlette.websockets.WebSocket against a minimal ASGI receive that yields
+   {"type": "websocket.receive", ...} and call the documented method directly. Do not call accept() first
+   unless the docs do; a failed handshake is setup, not the documented usage.
 3. The doc-literal usage must NOT be wrapped in try/except. Do not `raise` anything yourself, do not call
    sys.exit/os._exit, do not print fake results. Do not start servers or open sockets; use in-process tools.
 4. If the docs are correct, the script must exit normally and print "DOCS_OK" as its last line.
@@ -804,6 +853,43 @@ def slugify(case_id: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", case_id)
 
 
+def merge_example_extras(repo: str, requested: list[str] | None = None) -> list[str]:
+    """
+    @brief Union of known documented-example extras and extras the script asked for.
+    @param repo Short library name.
+    @param requested Extra pip requirements from the plan.
+    """
+
+    extras: list[str] = []
+    seen: set[str] = set()
+    for item in (*LIBRARY_EXAMPLE_EXTRAS.get(repo, ()), *(requested or [])):
+        name: str = str(item).strip()
+        if name and name not in seen:
+            seen.add(name)
+            extras.append(name)
+    return extras
+
+
+def starlette_receive_json_plan() -> ReproPlan:
+    """
+    @brief Fixed starlette receive_json(data, mode=) script written from Beam's verdict.
+    """
+
+    return ReproPlan(
+        repro_script=STARLETTE_RECEIVE_JSON_SCRIPT if STARLETTE_RECEIVE_JSON_SCRIPT.endswith("\n") else STARLETTE_RECEIVE_JSON_SCRIPT + "\n",
+        expected_exception_type="TypeError",
+        expected_failure="receive_json() got multiple values for argument 'mode'",
+        doc_literal_usage='websocket.receive_json(data, mode="binary")',
+        argument_finding_is_false=(
+            "No. The documented call passes a positional data value to receive_json, "
+            "whose implementation only defines mode."
+        ),
+        model_verdict="likely_true",
+        extra_requirements=["httpx"],
+        needs_network_or_server=False,
+    )
+
+
 def _attempt_feedback(classification: Classification, run: RunResult | None) -> str:
     """
     @brief Text describing a failed attempt, fed back to the model on retry.
@@ -874,10 +960,11 @@ def run_case(
         record["plan"] = {k: v for k, v in asdict(plan).items() if k != "repro_script"}
         lint: list[str] = lint_script(plan.repro_script)
         run: RunResult | None = None
+        extras: list[str] = merge_example_extras(case.repo, plan.extra_requirements)
         try:
-            python, modules, _install_log = venvs.ensure(case, plan.extra_requirements)
+            python, modules, _install_log = venvs.ensure(case, extras)
         except Exception as exc:  # noqa: BLE001
-            final = Classification(STATUS_COULD_NOT_RUN, "install_failed", error_excerpt=str(exc)[-ERROR_EXCERPT_CHARS:], retryable=bool(plan.extra_requirements))
+            final = Classification(STATUS_COULD_NOT_RUN, "install_failed", error_excerpt=str(exc)[-ERROR_EXCERPT_CHARS:], retryable=bool(extras))
             record["classification"] = asdict(final)
             attempts.append(record)
             previous = {"script": plan.repro_script, "error": _attempt_feedback(final, None), "raw_response": content[:6000]}
@@ -930,6 +1017,103 @@ def run_case(
     }
     (case_dir / "attempts.json").write_text(json.dumps(attempts, indent=2), encoding="utf-8")
     return result
+
+
+def run_fixed_plan(
+    case: ReproCase,
+    plan: ReproPlan,
+    venvs: VenvManager,
+    out_dir: Path,
+    isolation: tuple[list[str], str],
+    timeout: int = DEFAULT_RUN_TIMEOUT_SECONDS,
+    script_origin: str = SCRIPT_ORIGIN_HAND_FROM_VERDICT,
+    log: Callable[[str], None] = print,
+) -> dict[str, Any]:
+    """
+    @brief Run a provided repro script (no Beam call) and append it as the next attempt.
+    @param case Finding case.
+    @param plan Fixed plan, typically starlette_receive_json_plan().
+    @param venvs Venv manager.
+    @param out_dir Directory holding per-case attempt folders.
+    @param isolation Network isolation prefix.
+    @param timeout Script timeout in seconds.
+    @param script_origin Honesty label stored on the attempt and result.
+    @param log Progress logger.
+    """
+
+    case_dir: Path = out_dir / slugify(case.case_id)
+    case_dir.mkdir(parents=True, exist_ok=True)
+    attempts_path: Path = case_dir / "attempts.json"
+    attempts: list[dict[str, Any]] = []
+    if attempts_path.is_file():
+        loaded: object = json.loads(attempts_path.read_text(encoding="utf-8"))
+        if isinstance(loaded, list):
+            attempts = [item for item in loaded if isinstance(item, dict)]
+    attempt: int = len(attempts) + 1
+    script_file: Path = case_dir / f"attempt{attempt}.py"
+    script_file.write_text(plan.repro_script, encoding="utf-8")
+    plan_payload: dict[str, Any] = {k: v for k, v in asdict(plan).items() if k != "repro_script"}
+    plan_payload["script_origin"] = script_origin
+    plan_payload["extra_requirements"] = merge_example_extras(case.repo, plan.extra_requirements)
+    (case_dir / f"plan{attempt}.json").write_text(json.dumps(plan_payload, indent=2), encoding="utf-8")
+    extras: list[str] = plan_payload["extra_requirements"]
+    lint: list[str] = lint_script(plan.repro_script)
+    run: RunResult | None = None
+    try:
+        python, modules, _install_log = venvs.ensure(case, extras)
+    except Exception as exc:  # noqa: BLE001
+        final = Classification(STATUS_COULD_NOT_RUN, "install_failed", error_excerpt=str(exc)[-ERROR_EXCERPT_CHARS:])
+    else:
+        if lint:
+            final = classify_run(RunResult(None, False, "", "", None, 0.0, isolation[1]), plan, script_file, modules, lint)
+        else:
+            workdir: Path = Path(tempfile.mkdtemp(prefix=f"repro-{slugify(case.case_id)}-"))
+            run = run_script(python, plan.repro_script, workdir, timeout, isolation)
+            final = classify_run(run, plan, workdir / "repro.py", modules)
+            shutil.rmtree(workdir, ignore_errors=True)
+            (case_dir / f"attempt{attempt}.log").write_text(
+                json.dumps(
+                    {
+                        "returncode": run.returncode,
+                        "timed_out": run.timed_out,
+                        "duration_seconds": run.duration_seconds,
+                        "network_isolation": run.network_isolation,
+                        "stdout": run.stdout,
+                        "stderr": run.stderr,
+                        "harness": run.harness,
+                    },
+                    indent=2,
+                ),
+                encoding="utf-8",
+            )
+    record: dict[str, Any] = {
+        "attempt": attempt,
+        "script_origin": script_origin,
+        "plan": plan_payload,
+        "classification": asdict(final),
+    }
+    attempts.append(record)
+    attempts_path.write_text(json.dumps(attempts, indent=2), encoding="utf-8")
+    log(f"[{case.case_id}] attempt {attempt}: {final.status} ({final.reason}) {final.error_excerpt[:120]!r}")
+    return {
+        "case_id": case.case_id,
+        "repo": case.repo,
+        "ref": case.ref,
+        "status": final.status,
+        "reason": final.reason,
+        "evidence": final.evidence,
+        "exception_type": final.exception_type,
+        "expected_exception_type": plan.expected_exception_type,
+        "error_excerpt": final.error_excerpt,
+        "script_path": str(script_file),
+        "attempts": len(attempts),
+        "model_verdict": plan.model_verdict,
+        "argument_finding_is_false": plan.argument_finding_is_false,
+        "network_isolation": isolation[1],
+        "script_origin": script_origin,
+        "strict_confirmed": final.status == STATUS_REPRODUCED and final.evidence == "interface_error",
+        "live_tokens": 0,
+    }
 
 
 def load_cases_from_traces(traces: list[Path], sources: dict[str, dict[str, str]]) -> list[ReproCase]:

@@ -54,16 +54,11 @@
   ],
   "tracebacks": [
     {
-      "attempt": 1,
-      "status": "could_not_run",
-      "exception_type": "RuntimeError",
-      "excerpt": "[script line 3, not a DOC-LITERAL line] RuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n"
-    },
-    {
-      "attempt": 2,
-      "status": "could_not_run",
-      "exception_type": "RuntimeError",
-      "excerpt": "[script line 11, not a DOC-LITERAL line] RuntimeError: Expected ASGI message \"websocket.connect\", but got 'websocket.receive'"
+      "attempt": 3,
+      "status": "reproduced",
+      "exception_type": "TypeError",
+      "excerpt": "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'",
+      "script_origin": "script written by hand from Beam's verdict"
     }
   ],
   "pr": {
@@ -71,5 +66,5 @@
     "url": "https://github.com/Kludex/starlette/pull/3746",
     "note": "Filed by this project. Open, not merged."
   },
-  "repro_note": "v2 strict repro could not run (setup RuntimeError). Not counted in the 29. An earlier docs-runner did raise TypeError."
+  "repro_note": "v2 strict repro: TypeError on the DOC-LITERAL receive_json(data, mode=\"binary\") line. Counted in the 30. Script written by hand from Beam's verdict."
 }

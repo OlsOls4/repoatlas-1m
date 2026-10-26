@@ -15,7 +15,7 @@ The run covers 12 repos: starlette, httpx, click, structlog, nox, arrow, cattrs,
 | Symbol check alone | 24 | 19 | 43 | 25 | 58.1% | 0 |
 | Whole-repo Beam alone | 11 | 11 | 19 | 11 | 57.9% | 4,424,575 (earlier 400k sweep) |
 | Hybrid (symbol + Beam triage) | **34** | **22** | 60 | 45 | **75.0%** | 4,739,392 new (triage) |
-| Hybrid + repro-confirmed (strict) | 29 | 18 | 39 | 36 | **92.3%** | 4,877,530 new (triage + 138,138 repro) |
+| Hybrid + repro-confirmed (strict) | 30 | 19 | 41 | 38 | **92.7%** | 4,877,530 new (triage + 138,138 repro) |
 
 Cost caveat: the hybrid's candidate list includes the whole-repo findings, and those findings came from the earlier sweep (4,424,575 tokens). Triage-only end-to-end is 4,424,575 + 4,739,392 = 9,163,967 (~9.2M). End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Of the 9 true drifts Beam added during triage, 2 were already known (chunked-only items).
@@ -53,14 +53,14 @@ structlog failed (no JSON). cattrs needed 2 calls (attempt 1 returned empty).
 ## Strict repro badge
 
 The badge requires `status == reproduced` with interface_error evidence: TypeError, AttributeError, ImportError or NameError raised on doc-usage lines.
-- **Coverage:** 54 repro cases ran, one for each Beam true_drift verdict and each addition. 39 got the badge.
-- **Precision:** 36 of the 39 badged findings are true.
+- **Coverage:** 54 repro cases ran, one for each Beam true_drift verdict and each addition. 41 got the badge.
+- **Precision:** 38 of the 41 badged findings are true.
 - **The badge is not an oracle.** werkzeug S38 and S39 were "confirmed" by a script that ran `werkzeug.proxy_fix.orig` as a dotted attribute, even though the docs call it an environ key. S41 was confirmed through a removed top-level alias that the docs mention only as history.
 - **True drifts the badge lost:**
-  - T1 starlette (could_not_run: RuntimeError in the test-session setup);
   - T11 marshmallow (could_not_run);
   - T5 and S15 structlog (no triage, so no repro);
   - werkzeug `input_stream` (a prose drift, assertion evidence only).
+- T1 starlette now has the badge: TypeError on the DOC-LITERAL `receive_json(data, mode="binary")` line. The script was written by hand from Beam's verdict after the TestClient extras (httpx / httpx2) and a direct WebSocket construction were fixed. No extra Beam tokens.
 - T8 kept the badge through cattrs DD-1 (ImportError). The S25 script instead raised a ClassValidationError.
 
 ## Misses
@@ -76,7 +76,7 @@ The badge requires `status == reproduced` with interface_error evidence: TypeErr
   - the 2 attrs items.
 
   These were never candidates, and the whole-repo pass did not add them.
-- **Hybrid + strict** additionally misses T1, T5, T11, S15 and werkzeug input_stream.
+- **Hybrid + strict** additionally misses T5, T11, S15 and werkzeug input_stream.
 - **Symbol alone** misses T11, all 13 chunked-only items and the 7 Beam-added items. The full lists are in `hybrid.json` under `missed_known`.
 
 ## Errors and disclosures

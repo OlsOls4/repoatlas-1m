@@ -352,6 +352,28 @@
     "ref": "afa3983"
   },
   {
+    "id": "starlette:S1",
+    "library": "starlette",
+    "verdict": "true",
+    "status": "reproduced",
+    "evidence": "interface_error",
+    "exception_type": "TypeError",
+    "error_excerpt": "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'",
+    "strict_confirmed": true,
+    "ref": "8aa828c"
+  },
+  {
+    "id": "starlette:starlette-400000:DD-1",
+    "library": "starlette",
+    "verdict": "true",
+    "status": "reproduced",
+    "evidence": "interface_error",
+    "exception_type": "TypeError",
+    "error_excerpt": "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'",
+    "strict_confirmed": true,
+    "ref": "8aa828c"
+  },
+  {
     "id": "werkzeug:S35",
     "library": "werkzeug",
     "verdict": "true",
@@ -559,28 +581,6 @@
     "error_excerpt": "[script line 4, not a DOC-LITERAL line] TypeError: Field.__init__() got an unexpected keyword argument 'default'",
     "strict_confirmed": false,
     "ref": "b762ea2"
-  },
-  {
-    "id": "starlette:S1",
-    "library": "starlette",
-    "verdict": "true",
-    "status": "could_not_run",
-    "evidence": "",
-    "exception_type": "RuntimeError",
-    "error_excerpt": "[script line 3, not a DOC-LITERAL line] RuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n",
-    "strict_confirmed": false,
-    "ref": "8aa828c"
-  },
-  {
-    "id": "starlette:starlette-400000:DD-1",
-    "library": "starlette",
-    "verdict": "true",
-    "status": "could_not_run",
-    "evidence": "",
-    "exception_type": "RuntimeError",
-    "error_excerpt": "[script line 11, not a DOC-LITERAL line] RuntimeError: Expected ASGI message \"websocket.connect\", but got 'websocket.receive'",
-    "strict_confirmed": false,
-    "ref": "8aa828c"
   },
   {
     "id": "werkzeug:ADD-AD-1",

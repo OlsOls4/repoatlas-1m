@@ -1,0 +1,75 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.11,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n  File \"<frozen runpy>\", line 286, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py\", line 36, in <module>\n    asyncio.run(main())\n  File \"/usr/lib/python3.12/asyncio/runners.py\", line 194, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/asyncio/base_events.py\", line 687, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py\", line 32, in main\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: WebSocket.receive_json() got multiple values for argument 'mode'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "WebSocket.receive_json() got multiple values for argument 'mode'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 286,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py",
+          "line": 36,
+          "name": "<module>",
+          "source": "asyncio.run(main())"
+        },
+        {
+          "file": "/usr/lib/python3.12/asyncio/runners.py",
+          "line": 194,
+          "name": "run",
+          "source": "return runner.run(main)"
+        },
+        {
+          "file": "/usr/lib/python3.12/asyncio/runners.py",
+          "line": 118,
+          "name": "run",
+          "source": "return self._loop.run_until_complete(task)"
+        },
+        {
+          "file": "/usr/lib/python3.12/asyncio/base_events.py",
+          "line": 687,
+          "name": "run_until_complete",
+          "source": "return future.result()"
+        },
+        {
+          "file": "/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py",
+          "line": 32,
+          "name": "main",
+          "source": "await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n  File \"<frozen runpy>\", line 286, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py\", line 36, in <module>\n    asyncio.run(main())\n  File \"/usr/lib/python3.12/asyncio/runners.py\", line 194, in run\n    return runner.run(main)\n           ^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/asyncio/base_events.py\", line 687, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"/tmp/repro-starlette_starlette-400000_DD-1-a4sfmtth/repro.py\", line 32, in main\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: WebSocket.receive_json() got multiple values for argument 'mode'\n"
+    }
+  }
+}

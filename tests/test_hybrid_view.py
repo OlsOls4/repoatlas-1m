@@ -27,9 +27,9 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     stats = compute_hero_stats(payload)
     headline = headline_sentence(stats)
     assert headline == (
-        "34 real docs bugs in 12 Python libraries. "
-        "3 in 4 flagged findings were real (45 of 60); "
-        "29 bugs reproduce a real API error when you run the docs"
+        f"{stats['hybrid_true']} real docs bugs in {stats['repo_count']} Python libraries. "
+        f"3 in 4 flagged findings were real ({stats['hybrid_true_findings']} of {stats['hybrid_findings']}); "
+        f"{stats['repro_true']} bugs reproduce a real API error when you run the docs"
     )
     assert stats["rejected_true"] == 0
     assert stats["true_candidates_judged"] == 32
@@ -129,8 +129,8 @@ def test_hybrid_bug_wall_includes_new_true_drifts() -> None:
     assert any(key.startswith("hybrid/") for key in keys)
     assert any(bool(item.get("repro_is_strict_api_error")) for item in merged)
     starlette = next(item for item in merged if str(item.get("finding_key", "")) == "starlette-400000/DD-1")
-    assert starlette.get("repro_is_strict_api_error") is False
-    assert "isn't counted in the 29" in str(starlette.get("repro_badge_override", ""))
+    assert starlette.get("repro_is_strict_api_error") is True
+    assert "isn't counted in the 29" not in str(starlette.get("repro_badge_override", ""))
     jinja = next(
         item
         for item in merged
@@ -195,5 +195,5 @@ def test_upstream_badges_use_also_reported_wording() -> None:
         }
     )
     assert starlette["repo_url"] == "https://github.com/Kludex/starlette"
-    assert starlette["repro_is_strict_api_error"] is False
-    assert "isn't counted in the 29" in str(starlette["repro_badge_override"])
+    assert starlette["repro_is_strict_api_error"] is True
+    assert "isn't counted in the 29" not in str(starlette.get("repro_badge_override", ""))

@@ -9,6 +9,8 @@ import sys
 import pytest
 
 from repoatlas.repro import (
+    LIBRARY_EXAMPLE_EXTRAS,
+    STARLETTE_RECEIVE_JSON_SCRIPT,
     STATUS_COULD_NOT_RUN,
     STATUS_NOT_REPRODUCED,
     STATUS_REPRODUCED,
@@ -21,10 +23,13 @@ from repoatlas.repro import (
     classify_run,
     lint_script,
     load_cases_from_traces,
+    merge_example_extras,
     parse_repro_response,
     read_region,
     run_case,
+    run_fixed_plan,
     run_script,
+    starlette_receive_json_plan,
     summarise,
 )
 
@@ -187,8 +192,10 @@ class _StubVenvs:
 
     def __init__(self, case: ReproCase) -> None:
         self.case = case
+        self.extras: list[str] = []
 
     def ensure(self, case: ReproCase, extras: list[str]) -> tuple[Path, set[str], str]:
+        self.extras = list(extras)
         return Path(sys.executable), {"fakelib"}, ""
 
 
@@ -313,6 +320,51 @@ def test_doc_literal_block_markers(tmp_path: Path) -> None:
 
 def test_marker_on_comment_only_is_rejected() -> None:
     assert any("DOC-LITERAL" in p for p in lint_script("import json\n# DOC-LITERAL\nprint('DOCS_OK')\n"))
+
+
+def test_merge_example_extras_adds_starlette_httpx() -> None:
+    assert merge_example_extras("starlette", []) == ["httpx", "httpx2"]
+    assert merge_example_extras("starlette", ["httpx", "itsdangerous"]) == ["httpx", "httpx2", "itsdangerous"]
+    assert merge_example_extras("httpx", ["rich"]) == ["rich"]
+    assert "httpx" in LIBRARY_EXAMPLE_EXTRAS["starlette"]
+    assert "httpx2" in LIBRARY_EXAMPLE_EXTRAS["starlette"]
+
+
+def test_run_case_installs_library_example_extras(tmp_path: Path) -> None:
+    case = _make_case(tmp_path)
+    case.repo = "starlette"
+    client = _StubClient([_response("print('DOCS_OK')  # DOC-LITERAL\n", "none")])
+    venvs = _StubVenvs(case)
+    run_case(case, client, venvs, tmp_path / "out", NO_ISOLATION, timeout=20, log=lambda _: None)
+    assert venvs.extras == ["httpx", "httpx2"]
+
+
+def test_starlette_receive_json_script_is_doc_literal_and_lints() -> None:
+    assert lint_script(STARLETTE_RECEIVE_JSON_SCRIPT) == []
+    assert "receive_json(data, mode=\"binary\")" in STARLETTE_RECEIVE_JSON_SCRIPT
+    assert "# DOC-LITERAL" in STARLETTE_RECEIVE_JSON_SCRIPT
+    plan = starlette_receive_json_plan()
+    assert plan.expected_exception_type == "TypeError"
+    assert "httpx" in plan.extra_requirements
+
+
+def test_run_fixed_plan_appends_without_calling_beam(tmp_path: Path) -> None:
+    case = _make_case(tmp_path)
+    (tmp_path / "out" / "fakelib-1_DD-1").mkdir(parents=True)
+    (tmp_path / "out" / "fakelib-1_DD-1" / "attempts.json").write_text("[]", encoding="utf-8")
+    plan = ReproPlan(
+        "print('DOCS_OK')  # DOC-LITERAL\n",
+        "none",
+        "",
+        "",
+        "",
+        "likely_true",
+    )
+    record = run_fixed_plan(case, plan, _StubVenvs(case), tmp_path / "out", NO_ISOLATION, timeout=20, log=lambda _: None)
+    assert record["status"] == STATUS_NOT_REPRODUCED
+    assert record["script_origin"] == "script written by hand from Beam's verdict"
+    assert record["live_tokens"] == 0
+    assert (tmp_path / "out" / "fakelib-1_DD-1" / "attempt1.py").is_file()
 
 
 def test_other_exception_evidence(tmp_path: Path) -> None:

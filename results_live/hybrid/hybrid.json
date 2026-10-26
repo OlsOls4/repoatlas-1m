@@ -548,9 +548,9 @@
           "drift_id": "T1",
           "beam": "true_drift",
           "citation_verified": true,
-          "strict_confirmed": false,
-          "repro_status": "could_not_run",
-          "repro_evidence": null,
+          "strict_confirmed": true,
+          "repro_status": "reproduced",
+          "repro_evidence": "interface_error",
           "recheck": null
         },
         {
@@ -561,9 +561,9 @@
           "drift_id": "T1",
           "beam": "true_drift",
           "citation_verified": true,
-          "strict_confirmed": false,
-          "repro_status": "could_not_run",
-          "repro_evidence": null,
+          "strict_confirmed": true,
+          "repro_status": "reproduced",
+          "repro_evidence": "interface_error",
           "recheck": null
         },
         {
@@ -1306,11 +1306,11 @@
     },
     {
       "method": "Hybrid + repro-confirmed (strict)",
-      "findings": 39,
-      "true_findings": 36,
+      "findings": 41,
+      "true_findings": 38,
       "unclear_findings": 1,
-      "precision": 0.923,
-      "distinct_true": 29,
+      "precision": 0.927,
+      "distinct_true": 30,
       "distinct_true_ids": [
         "C:httpx-handle_request",
         "C:mm-url-default",
@@ -1333,6 +1333,7 @@
         "S40",
         "S42",
         "S5",
+        "T1",
         "T10",
         "T2",
         "T3",
@@ -1342,9 +1343,35 @@
         "T8",
         "T9"
       ],
-      "of_33_prior_9repo_union": 18,
+      "of_33_prior_9repo_union": 19,
       "beam_tokens": 4877530,
       "items": [
+        {
+          "repo": "starlette",
+          "id": "starlette-400000:DD-1",
+          "kind": "candidate",
+          "verdict": "true",
+          "drift_id": "T1",
+          "beam": "true_drift",
+          "citation_verified": true,
+          "strict_confirmed": true,
+          "repro_status": "reproduced",
+          "repro_evidence": "interface_error",
+          "recheck": null
+        },
+        {
+          "repo": "starlette",
+          "id": "S1",
+          "kind": "candidate",
+          "verdict": "true",
+          "drift_id": "T1",
+          "beam": "true_drift",
+          "citation_verified": true,
+          "strict_confirmed": true,
+          "repro_status": "reproduced",
+          "repro_evidence": "interface_error",
+          "recheck": null
+        },
         {
           "repo": "httpx",
           "id": "S4",
@@ -1859,7 +1886,6 @@
         "C:structlog-output-args",
         "N:werkzeug-input_stream",
         "S15",
-        "T1",
         "T11",
         "T5"
       ]

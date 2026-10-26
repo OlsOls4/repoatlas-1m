@@ -24,7 +24,7 @@ Repo name: **RepoAtlas-1M**.
 
 **DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) to triage them and add cross-file or prose drift. 11 of 12 libraries were triaged in one call; structlog failed; cattrs needed 2 calls. A generated script then runs the documented usage and keeps the ones that raise a real API error.
 
-**Results:** 34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 29 bugs reproduce a real API error when you run the docs. Beam's triage threw away 0 of 32 real bugs. Baselines: `results_live/baselines/baselines.md`. Context probe up to 947,446 tokens: `results_live/recall/recall.md`.
+**Results:** 34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 30 bugs reproduce a real API error when you run the docs. Beam's triage threw away 0 of 32 real bugs. Baselines: `results_live/baselines/baselines.md`. Context probe up to 947,446 tokens: `results_live/recall/recall.md`.
 
 The 12 libraries are starlette, httpx, click, structlog, nox, arrow, cattrs, marshmallow, attrs, jinja, werkzeug and pydantic-settings. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`. The 45-drift reference set is the union of what the methods found, so it favours them.
 
@@ -34,7 +34,7 @@ Starlette story (canonical upstream repo):
 - Recorded run prompt size: **394,577** tokens.
 - Drift: docs line used `receive_json(data, mode="binary")` while code signature has no `data` parameter.
 - Result: checked against the source (file:line evidence); true drift.
-- The v2 strict repro could not start the test session, so starlette is **not** one of the 29. It did reproduce in an earlier docs-runner (`TypeError`).
+- The v2 strict repro raises `TypeError: WebSocket.receive_json() got multiple values for argument 'mode'` on the DOC-LITERAL `receive_json(data, mode="binary")` line, so starlette **is** one of the 30. The script was written by hand from Beam's verdict (no extra Beam tokens).
 - Upstream state: **fix submitted upstream (PR #3746, open)**  
   https://github.com/Kludex/starlette/pull/3746
 - Nox: **fix submitted upstream (PR #1216, open)**  
@@ -59,7 +59,7 @@ Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live
 2. **New finds Beam added**  
    Beam wrote additional cross-file and prose drifts the checker missed: **13** additions, **9** true, **7** new to the union (for example httpx docs list `Response.next()`, which does not exist). Distinct true drifts go from 24 (symbol check) to 34.
 3. **Repro author**  
-   Beam wrote every doc-literal repro script (138,138 tokens). **29** distinct bugs reproduce a real API error (`TypeError` / `AttributeError` / `ImportError` / `NameError`). **36 of 39** badged findings were real. **2 false + 1 unclear** received a strict badge (werkzeug S38, S39 false; S41 unclear). The earlier v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2.
+   Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. **30** distinct bugs reproduce a real API error (`TypeError` / `AttributeError` / `ImportError` / `NameError`). **38 of 41** badged findings were real. **2 false + 1 unclear** received a strict badge (werkzeug S38, S39 false; S41 unclear). The earlier v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2.
 4. **Token calibration**  
    Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens. On the recall mix the observed ratio was about **1.187**.
 5. **Where long context helps (measured)**  
@@ -78,7 +78,7 @@ From `results_live/hybrid/hybrid.csv` (12 libraries; distinct true measured agai
 | Chunked Beam (~32k, 9-repo union) | 15 of 33 | 25 | 60% | 3,529,945 |
 | Chunked Beam (~128k, 9-repo union) | 9 of 33 | 13 | 69.2% | 3,342,201 |
 | Hybrid (symbol + whole-repo Beam triage) | **34 of 45** (22 of 33) | 60 | **75%** | 4,739,392 triage-only + 4,424,575 earlier whole-repo sweep = **9,163,967 (~9.2M triage-only)** |
-| Hybrid + repro-confirmed (strict) | **29 of 45** (18 of 33) | 39 | **92.3%** | **9,302,105 (~9.3M)** = 4,424,575 + 4,739,392 + 138,138 |
+| Hybrid + repro-confirmed (strict) | **30 of 45** (19 of 33) | 41 | **92.7%** | **9,302,105 (~9.3M)** = 4,424,575 + 4,739,392 + 138,138 |
 
 Honest notes, also from `hybrid.json`:
 

@@ -374,7 +374,7 @@ def _badge_for_card(card: dict[str, object], stats: HybridHeroStats) -> tuple[st
         excerpt: str = strip_local_paths(str(card.get("repro_error_excerpt", "")).strip())
         return "reproduced", excerpt[:180]
     if str(card.get("repro_status", "")) == "reproduced":
-        return "checked", "Ran, but not a strict API error (not counted in the 29)."
+        return "checked", f"Ran, but not a strict API error (not counted in the {stats['repro_true']})."
     return "checked", "Checked against the source (file:line evidence); no strict v2 repro badge."
 
 
@@ -569,12 +569,14 @@ def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]
             if not isinstance(attempt, dict):
                 continue
             classification = _as_dict(attempt.get("classification"))
+            origin = str(attempt.get("script_origin") or _as_dict(attempt.get("plan")).get("script_origin") or "")
             tracebacks.append(
                 {
                     "attempt": _as_int(attempt.get("attempt")),
                     "status": str(classification.get("status", "")),
                     "exception_type": str(classification.get("exception_type", "")),
                     "excerpt": strip_local_paths(str(classification.get("error_excerpt", ""))),
+                    "script_origin": origin,
                 }
             )
     packed_at: str = str(pack.get("packed_at") or "")
@@ -601,17 +603,37 @@ def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]
         "kept": kept,
         "rejected": rejected,
         "candidates": candidates,
-        "tracebacks": tracebacks,
+        "tracebacks": [row for row in tracebacks if str(row.get("status")) == "reproduced"] or tracebacks,
         "pr": {
             "label": "Open PR #3746",
             "url": pr_url,
             "note": "Filed by this project. Open, not merged.",
         },
-        "repro_note": (
-            f"v2 strict repro could not run (setup RuntimeError). "
-            f"Not counted in the {stats['repro_true']}. An earlier docs-runner did raise TypeError."
-        ),
+        "repro_note": _starlette_repro_note(tracebacks, stats),
     }
+
+
+def _starlette_repro_note(tracebacks: list[dict[str, object]], stats: HybridHeroStats) -> str:
+    """
+    @brief Player caption for the starlette strict repro.
+    """
+
+    reproduced = [row for row in tracebacks if str(row.get("status")) == "reproduced"]
+    if reproduced:
+        origin = str(reproduced[-1].get("script_origin") or "script written by hand from Beam's verdict")
+        kind = str(reproduced[-1].get("exception_type") or "TypeError")
+        origin_sentence = origin[:1].upper() + origin[1:]
+        if not origin_sentence.endswith("."):
+            origin_sentence += "."
+        return (
+            f"v2 strict repro: {kind} on the DOC-LITERAL "
+            f"receive_json(data, mode=\"binary\") line. Counted in the {stats['repro_true']}. "
+            f"{origin_sentence}"
+        )
+    return (
+        f"v2 strict repro could not run (setup RuntimeError). "
+        f"Not counted in the {stats['repro_true']}. An earlier docs-runner did raise TypeError."
+    )
 
 
 def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
@@ -634,7 +656,8 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                 f"{stats['symbol_true']} to {stats['hybrid_true']}."
             ),
             (
-                f"Repro author. Beam wrote every doc-literal repro script ({stats['repro_tokens']:,} tokens). "
+                f"Repro author. Beam wrote the doc-literal repro scripts ({stats['repro_tokens']:,} tokens). "
+                "The starlette headline script was written by hand from Beam's verdict. "
                 f"{stats['repro_true']} distinct bugs reproduce a real API error. "
                 f"{stats['repro_true_findings']} of {stats['repro_findings']} badges were real. "
                 f"{non_bug_badge_phrase(stats)} received a strict badge."
@@ -652,7 +675,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "The 45-drift universe is the union of method output, so it favours those methods.",
             f"Labels were {LABEL_SOURCE}. The stored field is still hand_verdict.",
             "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
-            "A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug input_stream).",
+            "A true drift can still fail the strict repro rule (marshmallow T11, structlog untriaged, werkzeug input_stream).",
             f"{non_bug_badge_phrase(stats)} received a strict repro badge.",
             NOX_PR_NOTE,
             "httpx #3774 and arrow #1355 were already reported upstream by others.",

@@ -19,7 +19,7 @@ tags:
 
 Repo name: RepoAtlas-1M. **DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) to triage them and add cross-file or prose drift. 11 of 12 libraries were triaged in one call; structlog failed; cattrs needed 2 calls. A generated script then runs the documented usage and keeps the ones that raise a real API error.
 
-**Results:** 34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 29 bugs reproduce a real API error when you run the docs. Beam's triage threw away 0 of 32 real bugs.
+**Results:** 34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 30 bugs reproduce a real API error when you run the docs. Beam's triage threw away 0 of 32 real bugs.
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
@@ -35,7 +35,7 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 
 1. Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.
 2. New finds. Beam added 9 true drifts the checker missed (7 new to the union), taking distinct trues from 24 to 34.
-3. Repro author. Beam wrote every doc-literal repro script (138,138 tokens). 29 distinct bugs reproduce a real API error. 36 of 39 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.
+3. Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.
 4. Long context, measured. Beam accepted prompts up to 947,446 tokens. Focused whole-context passes hit 5/6 plants 700k+ tokens apart vs 0/6 for chunking on seed 1 only, at ~4.8× tokens (4,755,853 vs ~1.0M). A single whole-prompt call alone is not a better detector than chunking or a symbol check. Docstring single-call score: 1/32 pooled over 2 seeds (0/18 + 1/14).
 
 ## Glossary
@@ -50,7 +50,7 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 - The 45-drift universe is the union of method output, so it favours those methods.
 - Labels were checked against the source by an AI reviewer. The stored field is still hand_verdict.
 - Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.
-- A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug input_stream).
+- A true drift can still fail the strict repro rule (marshmallow T11, structlog untriaged, werkzeug input_stream).
 - 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict repro badge.
 - Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.
 - httpx #3774 and arrow #1355 were already reported upstream by others.

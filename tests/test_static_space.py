@@ -84,6 +84,9 @@ def test_static_upstream_and_replay_are_honest(tmp_path: Path) -> None:
     assert replay["rejected"] == 1
     assert replay["pr"]["url"].endswith("/3746")
     assert replay["tracebacks"]
+    assert any(str(row.get("status")) == "reproduced" and str(row.get("exception_type")) == "TypeError" for row in replay["tracebacks"])
+    assert "written by hand from Beam's verdict" in replay["repro_note"]
+    assert "could not run" not in replay["repro_note"]
     dumped = json.dumps(documents)
     assert "file only lists starlette" not in dumped
     assert "after results_live/upstream_status.json was written" not in dumped
