@@ -47,3 +47,23 @@ def test_packer_honours_token_limit_by_truncating(tmp_path: Path) -> None:
     pack = build_pack_from_directory("https://github.com/example/repo", "main", tmp_path, token_limit=120)
     assert pack.total_tokens <= 120
     assert pack.truncated is True
+
+
+def test_packer_keeps_code_and_docs_under_small_budget(tmp_path: Path) -> None:
+    """
+    @brief Ensure a tight budget holds both source and docs, and skips uv.lock.
+    @param tmp_path Temporary directory provided by pytest.
+    """
+
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "src").mkdir()
+    for index in range(5):
+        (tmp_path / "docs" / f"a{index}.rst").write_text("doc line\n" * 40, encoding="utf-8")
+        (tmp_path / "src" / f"m{index}.py").write_text("x = 1\n" * 40, encoding="utf-8")
+    (tmp_path / "uv.lock").write_text("lock\n", encoding="utf-8")
+    pack = build_pack_from_directory("https://github.com/example/repo", "main", tmp_path, token_limit=900)
+    paths: list[str] = [file_snapshot.path for file_snapshot in pack.files]
+    assert any(path.startswith("src/") for path in paths)
+    assert any(path.startswith("docs/") for path in paths)
+    assert "uv.lock" not in paths
+    assert pack.total_tokens <= 900

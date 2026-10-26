@@ -20,7 +20,7 @@ from repoatlas.models import RepoFileSnapshot, RepoPack
 
 
 PACK_FORMAT_VERSION: str = "1"
-FILTER_SIGNATURE: str = "v1"
+FILTER_SIGNATURE: str = "v2"
 SKIP_DIRECTORY_NAMES: set[str] = {
     ".git",
     ".hg",
@@ -43,6 +43,10 @@ SKIP_FILE_NAMES: set[str] = {
     "composer.lock",
     "Gemfile.lock",
     "go.sum",
+    "uv.lock",
+    "pdm.lock",
+    "bun.lockb",
+    "Package.resolved",
 }
 SKIP_FILE_SUFFIXES: tuple[str, ...] = (
     ".png",
@@ -170,7 +174,7 @@ def build_pack_from_directory(repo_url: str, ref: str, repo_root: Path, token_li
     """
 
     bounded_limit: int = max(1, min(token_limit, MAX_TOKEN_LIMIT))
-    sorted_paths: list[Path] = sorted(_iter_text_files(repo_root), key=lambda item: str(item.relative_to(repo_root)))
+    sorted_paths: list[Path] = _priority_order(repo_root, _iter_text_files(repo_root), repo_url=repo_url)
     file_snapshots: list[RepoFileSnapshot] = []
     skipped_paths: list[str] = []
 
@@ -217,22 +221,11 @@ def build_pack_from_directory(repo_url: str, ref: str, repo_root: Path, token_li
             )
             continue
 
-        remaining_tokens: int = bounded_limit - running_tokens - _encode_tokens(header_suffix)
-        if remaining_tokens > 0:
-            truncated_lines, line_token_count = _truncate_file_lines_to_limit(relative_path, lines, remaining_tokens)
-            if truncated_lines:
-                truncated_block: str = _make_file_block(relative_path, truncated_lines)
-                running_text += truncated_block
-                running_tokens += line_token_count
-                file_snapshots.append(
-                    RepoFileSnapshot(
-                        path=relative_path,
-                        lines=truncated_lines,
-                        token_count=line_token_count,
-                    )
-                )
+        # File does not fit: skip it and keep filling with later (smaller) files so
+        # that both code and docs make it into the budget.
         truncated = True
-        break
+        if bounded_limit - running_tokens < 64:
+            break
 
     running_text += header_suffix
     running_tokens = _encode_tokens(running_text)
@@ -407,3 +400,69 @@ def _truncate_file_lines_to_limit(path: str, lines: list[str], remaining_tokens:
         else:
             high = mid - 1
     return best_lines, best_tokens
+
+
+DOC_DIRECTORY_NAMES: set[str] = {"docs", "doc", "documentation"}
+LOW_PRIORITY_DIRECTORY_NAMES: set[str] = {
+    "tests", "test", "testing", "examples", "example", "benchmarks", "bench",
+    ".github", ".devcontainer", ".circleci", ".gitlab", "ci", "scripts", "docs_src",
+}
+DOC_SUFFIXES: tuple[str, ...] = (".md", ".rst", ".txt", ".adoc")
+LOW_PRIORITY_ROOT_NAMES: set[str] = {"CHANGES.rst", "CHANGES.md", "CHANGELOG.md", "CHANGELOG.rst", "HISTORY.md", "HISTORY.rst", "NEWS.md"}
+
+
+def _priority_order(repo_root: Path, paths: Iterable[Path], repo_url: str = "") -> list[Path]:
+    """
+    @brief Deterministically order files so a small budget holds both docs and code.
+    @param repo_root Repository root path.
+    @param paths Candidate file paths.
+    Order: root files, then source code and documentation interleaved one file at a time,
+    then tests, examples, CI config and changelogs.
+    """
+
+    root_files: list[tuple[str, Path]] = []
+    code_files: list[tuple[str, Path]] = []
+    doc_files: list[tuple[str, Path]] = []
+    low_files: list[tuple[str, Path]] = []
+    for path in paths:
+        rel: str = str(path.relative_to(repo_root)).replace("\\", "/")
+        parts: list[str] = rel.split("/")
+        if len(parts) == 1:
+            (low_files if parts[0] in LOW_PRIORITY_ROOT_NAMES else root_files).append((rel, path))
+        elif any(part in LOW_PRIORITY_DIRECTORY_NAMES for part in parts[:-1]):
+            low_files.append((rel, path))
+        elif parts[0] in DOC_DIRECTORY_NAMES or rel.endswith(DOC_SUFFIXES):
+            doc_files.append((rel, path))
+        else:
+            code_files.append((rel, path))
+    repo_name: str = repo_url.rstrip("/").split("/")[-1].removesuffix(".git").lower().replace("-", "_")
+    primary_code_dirs: set[str] = {"src", "lib", repo_name}
+    root_files.sort(key=lambda item: item[0])
+    low_files.sort(key=lambda item: item[0])
+    # Main package code first; English / untranslated docs before translations.
+    code_files.sort(key=lambda item: (item[0].split("/")[0].lower() not in primary_code_dirs, item[0]))
+    doc_files.sort(key=lambda item: (_is_translation_path(item[0]), item[0]))
+    interleaved: list[tuple[str, Path]] = []
+    for index in range(max(len(code_files), len(doc_files))):
+        if index < len(code_files):
+            interleaved.append(code_files[index])
+        if index < len(doc_files):
+            interleaved.append(doc_files[index])
+    return [path for _, path in root_files + interleaved + low_files]
+
+
+def _is_translation_path(rel_path: str) -> bool:
+    """
+    @brief Detect localised documentation trees such as docs/de/ or docs/pt-BR/.
+    @param rel_path Repository-relative path.
+    """
+
+    for part in rel_path.split("/")[:-1]:
+        lowered: str = part.lower()
+        if lowered in {"en", "en-us", "en_us"}:
+            return False
+        if (len(lowered) == 2 and lowered.isalpha()) or (
+            len(lowered) == 5 and lowered[2] in "-_" and lowered[:2].isalpha() and lowered[3:].isalpha()
+        ):
+            return True
+    return False

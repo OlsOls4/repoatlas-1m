@@ -7,6 +7,7 @@ from dataclasses import dataclass
 import fcntl
 import hashlib
 import json
+import os
 from pathlib import Path
 import time
 from typing import Iterator, Protocol
@@ -20,7 +21,8 @@ from repoatlas.prompts import SYSTEM_PROMPT, build_analysis_user_prompt
 
 
 REQUEST_TIMEOUT_SECONDS: int = 600
-MAX_RETRY_ATTEMPTS: int = 5
+MAX_RETRY_ATTEMPTS: int = int(os.environ.get("REPOATLAS_MAX_RETRIES", "2"))
+MAX_PROMPT_TOKENS: int = int(os.environ.get("REPOATLAS_MAX_PROMPT_TOKENS", "0"))
 INITIAL_BACKOFF_SECONDS: float = 1.0
 
 
@@ -154,6 +156,10 @@ class OpenAICompatibleAnalysisClient:
             "max_tokens": self._config.max_tokens,
             "reasoning_effort": self._config.reasoning_effort,
         }
+        if MAX_PROMPT_TOKENS and pack.total_tokens > MAX_PROMPT_TOKENS:
+            raise ValueError(
+                f"Packed context is {pack.total_tokens} tokens, above REPOATLAS_MAX_PROMPT_TOKENS={MAX_PROMPT_TOKENS}; refusing live call."
+            )
         cache_key: str = _cache_key(self._config.base_url, self._config.model, payload)
         cached_response: dict[str, object] | None = self._read_cached_response(cache_key)
         if cached_response is not None:
@@ -199,6 +205,10 @@ class OpenAICompatibleAnalysisClient:
                     },
                     json=payload,
                 )
+            except requests.Timeout as exc:
+                # A timed-out long-context request may still be processed (and counted) server-side,
+                # so never resend it automatically.
+                raise RuntimeError(f"Live request timed out after {REQUEST_TIMEOUT_SECONDS}s; not retrying: {exc}") from exc
             except requests.RequestException as exc:
                 if attempt == MAX_RETRY_ATTEMPTS:
                     raise RuntimeError(f"Live request failed after {MAX_RETRY_ATTEMPTS} attempts: {exc}") from exc
