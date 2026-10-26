@@ -1,0 +1,50 @@
+# Sweep 2026-10-26: repos pinned to the default-branch HEAD SHA at shallow-clone time.
+repos:
+- name: httpx
+  repo_url: https://github.com/encode/httpx
+  ref: b5addb64f0161ff6bfe94c124ef76f6a1fba5254
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch master pinned at b5addb6; mid-size library with prose docs, ~300-420k real tokens.'
+- name: click
+  repo_url: https://github.com/pallets/click
+  ref: 2247b35ea1c47c727d7a06e51fa280e12a863ff6
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at 2247b35; mid-size library with prose docs, ~300-420k real tokens.'
+- name: attrs
+  repo_url: https://github.com/python-attrs/attrs
+  ref: c8bb9bfaa2843e7844b5bb13bed4370b51feec4f
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at c8bb9bf; mid-size library with prose docs, ~300-420k real tokens.'
+- name: pydantic-settings
+  repo_url: https://github.com/pydantic/pydantic-settings
+  ref: 7e2dacb6db07b41abb0c80d0608e46e197265554
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at 7e2dacb; mid-size library with prose docs, ~300-420k real tokens.'
+- name: structlog
+  repo_url: https://github.com/hynek/structlog
+  ref: 19c4f21059e853114efa7a93b6e675d93bf7934e
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at 19c4f21; mid-size library with prose docs, ~300-420k real tokens.'
+- name: jinja
+  repo_url: https://github.com/pallets/jinja
+  ref: 5ef70112a1ff19c05324ff889dd30405b1002044
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at 5ef7011; mid-size library with prose docs, ~300-420k real tokens.'
+- name: nox
+  repo_url: https://github.com/wntrblm/nox
+  ref: afa3983bbac3143bab5c8406244327581f76a3d7
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at afa3983; mid-size library with prose docs, ~300-420k real tokens.'
+- name: arrow
+  repo_url: https://github.com/arrow-py/arrow
+  ref: 2224255c4acc594d734cef0bbc83360452a67983
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch master pinned at 2224255; mid-size library with prose docs, ~300-420k real tokens.'
+- name: cattrs
+  repo_url: https://github.com/python-attrs/cattrs
+  ref: 7a24f770fd6f4d946dd0512d912b2a96556095cd
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at 7a24f77; mid-size library with prose docs, ~300-420k real tokens.'
+- name: marshmallow
+  repo_url: https://github.com/marshmallow-code/marshmallow
+  ref: b762ea2d59ca52fe5df76b90de14bed7e5ec5607
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch dev pinned at b762ea2; mid-size library with prose docs, ~300-420k real tokens.'
+- name: werkzeug
+  repo_url: https://github.com/pallets/werkzeug
+  ref: b73dce5a2ce14f7c7fd645699d1d878de48d2948
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch main pinned at b73dce5; mid-size library with prose docs, ~300-420k real tokens.'
+- name: loguru
+  repo_url: https://github.com/Delgan/loguru
+  ref: 874aa41019f8a9f943647a0c74445fb7844157da
+  reason: 'DocDrift sweep 2026-10-26: shallow clone of default branch master pinned at 874aa41; mid-size library with prose docs, ~300-420k real tokens.'
