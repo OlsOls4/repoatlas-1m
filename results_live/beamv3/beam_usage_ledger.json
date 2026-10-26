@@ -1,0 +1,1184 @@
+{
+  "calls": 168,
+  "prompt_tokens": 7214307,
+  "completion_tokens": 499146,
+  "total_tokens": 7713453,
+  "entries": [
+    {
+      "kind": "py32k",
+      "label": "starlette#0",
+      "prompt": 23026,
+      "completion": 2316,
+      "at": "2026-10-26T22:32:45.287788+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "starlette#1",
+      "prompt": 30543,
+      "completion": 1681,
+      "at": "2026-10-26T22:32:55.358544+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "starlette#2",
+      "prompt": 30109,
+      "completion": 2091,
+      "at": "2026-10-26T22:33:05.771678+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "starlette#3",
+      "prompt": 19613,
+      "completion": 1306,
+      "at": "2026-10-26T22:33:11.978005+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "httpx#0",
+      "prompt": 31357,
+      "completion": 1963,
+      "at": "2026-10-26T22:33:22.676025+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "httpx#1",
+      "prompt": 29175,
+      "completion": 2703,
+      "at": "2026-10-26T22:33:36.780518+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "httpx#2",
+      "prompt": 26424,
+      "completion": 2715,
+      "at": "2026-10-26T22:33:50.466007+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "httpx#3",
+      "prompt": 14585,
+      "completion": 2755,
+      "at": "2026-10-26T22:34:01.928247+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#0",
+      "prompt": 16530,
+      "completion": 2749,
+      "at": "2026-10-26T22:34:13.127806+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#1",
+      "prompt": 31294,
+      "completion": 2033,
+      "at": "2026-10-26T22:34:31.070277+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#2",
+      "prompt": 27599,
+      "completion": 2262,
+      "at": "2026-10-26T22:34:42.411584+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#3",
+      "prompt": 26911,
+      "completion": 3921,
+      "at": "2026-10-26T22:34:56.030705+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#4",
+      "prompt": 23721,
+      "completion": 3381,
+      "at": "2026-10-26T22:35:09.298364+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#5",
+      "prompt": 24652,
+      "completion": 1857,
+      "at": "2026-10-26T22:35:18.994168+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "click#6",
+      "prompt": 10698,
+      "completion": 1950,
+      "at": "2026-10-26T22:35:27.536497+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "structlog#0",
+      "prompt": 20360,
+      "completion": 2395,
+      "at": "2026-10-26T22:35:40.588418+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "structlog#1",
+      "prompt": 30073,
+      "completion": 2787,
+      "at": "2026-10-26T22:35:54.116715+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "structlog#2",
+      "prompt": 31021,
+      "completion": 2713,
+      "at": "2026-10-26T22:36:08.469415+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "structlog#3",
+      "prompt": 7696,
+      "completion": 1637,
+      "at": "2026-10-26T22:36:15.964747+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "nox#0",
+      "prompt": 26528,
+      "completion": 3662,
+      "at": "2026-10-26T22:36:32.081744+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "nox#1",
+      "prompt": 30007,
+      "completion": 1987,
+      "at": "2026-10-26T22:36:42.481130+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "nox#2",
+      "prompt": 30386,
+      "completion": 2730,
+      "at": "2026-10-26T22:36:54.609923+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "nox#3",
+      "prompt": 18152,
+      "completion": 1680,
+      "at": "2026-10-26T22:37:04.610681+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#0",
+      "prompt": 2736,
+      "completion": 313,
+      "at": "2026-10-26T22:37:07.363645+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#1",
+      "prompt": 31383,
+      "completion": 1957,
+      "at": "2026-10-26T22:37:14.743866+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#2",
+      "prompt": 30147,
+      "completion": 1859,
+      "at": "2026-10-26T22:37:23.183914+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#3",
+      "prompt": 20903,
+      "completion": 2632,
+      "at": "2026-10-26T22:37:32.924540+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#4",
+      "prompt": 25771,
+      "completion": 5004,
+      "at": "2026-10-26T22:37:49.632394+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "arrow#5",
+      "prompt": 21913,
+      "completion": 2662,
+      "at": "2026-10-26T22:38:00.778660+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "cattrs#0",
+      "prompt": 18401,
+      "completion": 2585,
+      "at": "2026-10-26T22:38:09.629394+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "cattrs#1",
+      "prompt": 28039,
+      "completion": 1984,
+      "at": "2026-10-26T22:38:17.981809+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "cattrs#2",
+      "prompt": 28488,
+      "completion": 2579,
+      "at": "2026-10-26T22:38:27.652118+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "cattrs#3",
+      "prompt": 15821,
+      "completion": 1680,
+      "at": "2026-10-26T22:38:36.445001+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "marshmallow#0",
+      "prompt": 27665,
+      "completion": 2760,
+      "at": "2026-10-26T22:38:48.869505+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "marshmallow#1",
+      "prompt": 27832,
+      "completion": 3366,
+      "at": "2026-10-26T22:38:59.826912+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "marshmallow#2",
+      "prompt": 12215,
+      "completion": 2117,
+      "at": "2026-10-26T22:39:08.249234+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "attrs#0",
+      "prompt": 7917,
+      "completion": 2365,
+      "at": "2026-10-26T22:39:16.454927+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "attrs#1",
+      "prompt": 31741,
+      "completion": 3036,
+      "at": "2026-10-26T22:39:28.485915+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "attrs#2",
+      "prompt": 30801,
+      "completion": 2490,
+      "at": "2026-10-26T22:39:41.377715+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "attrs#3",
+      "prompt": 27071,
+      "completion": 2743,
+      "at": "2026-10-26T22:39:52.519743+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#0",
+      "prompt": 30355,
+      "completion": 3030,
+      "at": "2026-10-26T22:40:03.768141+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#1",
+      "prompt": 27429,
+      "completion": 2328,
+      "at": "2026-10-26T22:40:14.121565+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#2",
+      "prompt": 25386,
+      "completion": 2629,
+      "at": "2026-10-26T22:40:24.251485+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#3",
+      "prompt": 25246,
+      "completion": 2343,
+      "at": "2026-10-26T22:40:35.843878+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#4",
+      "prompt": 22557,
+      "completion": 2590,
+      "at": "2026-10-26T22:40:50.955397+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#5",
+      "prompt": 31365,
+      "completion": 2542,
+      "at": "2026-10-26T22:41:03.162623+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "jinja#6",
+      "prompt": 13798,
+      "completion": 2599,
+      "at": "2026-10-26T22:41:14.912615+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#0",
+      "prompt": 25826,
+      "completion": 2629,
+      "at": "2026-10-26T22:41:27.333064+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#1",
+      "prompt": 22591,
+      "completion": 3370,
+      "at": "2026-10-26T22:41:44.028381+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#2",
+      "prompt": 29287,
+      "completion": 2601,
+      "at": "2026-10-26T22:41:55.568779+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#3",
+      "prompt": 30391,
+      "completion": 1947,
+      "at": "2026-10-26T22:42:05.052491+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#4",
+      "prompt": 26300,
+      "completion": 2874,
+      "at": "2026-10-26T22:42:17.198218+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#5",
+      "prompt": 28147,
+      "completion": 1826,
+      "at": "2026-10-26T22:42:25.645355+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#6",
+      "prompt": 29940,
+      "completion": 1907,
+      "at": "2026-10-26T22:42:38.284511+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#7",
+      "prompt": 29446,
+      "completion": 2497,
+      "at": "2026-10-26T22:42:49.865122+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#8",
+      "prompt": 29846,
+      "completion": 2324,
+      "at": "2026-10-26T22:42:59.665025+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#9",
+      "prompt": 29067,
+      "completion": 2718,
+      "at": "2026-10-26T22:43:11.497853+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "werkzeug#10",
+      "prompt": 27739,
+      "completion": 3513,
+      "at": "2026-10-26T22:43:23.696663+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "pydantic-settings#0",
+      "prompt": 26961,
+      "completion": 2705,
+      "at": "2026-10-26T22:43:34.842616+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "pydantic-settings#1",
+      "prompt": 18159,
+      "completion": 2214,
+      "at": "2026-10-26T22:43:44.318748+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "pydantic-settings#2",
+      "prompt": 28609,
+      "completion": 2361,
+      "at": "2026-10-26T22:43:54.329048+00:00"
+    },
+    {
+      "kind": "py32k",
+      "label": "pydantic-settings#3",
+      "prompt": 19704,
+      "completion": 2162,
+      "at": "2026-10-26T22:44:05.881093+00:00"
+    },
+    {
+      "kind": "triage",
+      "label": "httpx",
+      "prompt": 393820,
+      "completion": 9808,
+      "at": "2026-10-26T22:44:57.495422+00:00"
+    },
+    {
+      "kind": "triage",
+      "label": "click",
+      "prompt": 389086,
+      "completion": 2174,
+      "at": "2026-10-26T22:45:12.391733+00:00"
+    },
+    {
+      "kind": "triage",
+      "label": "cattrs",
+      "prompt": 307347,
+      "completion": 6407,
+      "at": "2026-10-26T22:45:27.386234+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "starlette",
+      "prompt": 394860,
+      "completion": 5016,
+      "at": "2026-10-26T22:45:54.171296+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "httpx",
+      "prompt": 392905,
+      "completion": 5784,
+      "at": "2026-10-26T22:46:15.532229+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "click",
+      "prompt": 389076,
+      "completion": 23041,
+      "at": "2026-10-26T22:47:24.589401+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "structlog",
+      "prompt": 404142,
+      "completion": 13539,
+      "at": "2026-10-26T22:48:09.381191+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "nox",
+      "prompt": 346594,
+      "completion": 11372,
+      "at": "2026-10-26T22:48:53.570989+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "arrow",
+      "prompt": 329222,
+      "completion": 6900,
+      "at": "2026-10-26T22:49:16.591528+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "cattrs",
+      "prompt": 306854,
+      "completion": 17005,
+      "at": "2026-10-26T22:50:11.884577+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "marshmallow",
+      "prompt": 295001,
+      "completion": 9582,
+      "at": "2026-10-26T22:50:44.101425+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "attrs",
+      "prompt": 401006,
+      "completion": 8888,
+      "at": "2026-10-26T22:51:13.544124+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "jinja",
+      "prompt": 357115,
+      "completion": 6368,
+      "at": "2026-10-26T22:51:34.187228+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "werkzeug",
+      "prompt": 386824,
+      "completion": 4297,
+      "at": "2026-10-26T22:51:55.749170+00:00"
+    },
+    {
+      "kind": "docs",
+      "label": "pydantic-settings",
+      "prompt": 366187,
+      "completion": 4346,
+      "at": "2026-10-26T22:52:13.353470+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:starlette:DD-2",
+      "prompt": 1256,
+      "completion": 1731,
+      "at": "2026-10-26T22:55:36.512768+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:starlette:DD-3",
+      "prompt": 1522,
+      "completion": 1776,
+      "at": "2026-10-26T22:55:44.515961+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:httpx:DD-1",
+      "prompt": 3819,
+      "completion": 3377,
+      "at": "2026-10-26T22:56:11.096811+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:httpx:DD-5",
+      "prompt": 1608,
+      "completion": 2324,
+      "at": "2026-10-26T22:56:30.496264+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:httpx:DD-8",
+      "prompt": 4018,
+      "completion": 4150,
+      "at": "2026-10-26T22:56:54.412028+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:httpx#2:DD-1",
+      "prompt": 1986,
+      "completion": 2540,
+      "at": "2026-10-26T22:57:10.652275+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:httpx#2:DD-2",
+      "prompt": 3800,
+      "completion": 3108,
+      "at": "2026-10-26T22:57:35.687826+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:httpx#3:DD-1",
+      "prompt": 1842,
+      "completion": 932,
+      "at": "2026-10-26T22:57:45.703698+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:click:DD-1",
+      "prompt": 3967,
+      "completion": 3685,
+      "at": "2026-10-26T22:58:14.606432+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:click:DD-2",
+      "prompt": 1677,
+      "completion": 1866,
+      "at": "2026-10-26T22:58:27.469551+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:click:DD-4",
+      "prompt": 1954,
+      "completion": 1835,
+      "at": "2026-10-26T22:58:39.862784+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#0:DD-1",
+      "prompt": 1881,
+      "completion": 2512,
+      "at": "2026-10-26T22:58:55.944304+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#2:DD-1",
+      "prompt": 1827,
+      "completion": 915,
+      "at": "2026-10-26T22:59:04.860449+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#3:DD-1",
+      "prompt": 1795,
+      "completion": 1458,
+      "at": "2026-10-26T22:59:15.502089+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#3:DD-2",
+      "prompt": 1590,
+      "completion": 2093,
+      "at": "2026-10-26T22:59:30.414344+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#3:DD-3",
+      "prompt": 4070,
+      "completion": 1769,
+      "at": "2026-10-26T22:59:54.533531+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#4:DD-1",
+      "prompt": 1726,
+      "completion": 771,
+      "at": "2026-10-26T23:00:10.525484+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#4:DD-2",
+      "prompt": 1878,
+      "completion": 2516,
+      "at": "2026-10-26T23:00:26.925463+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:click#4:DD-3",
+      "prompt": 4406,
+      "completion": 4732,
+      "at": "2026-10-26T23:00:58.394330+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:structlog:DD-2",
+      "prompt": 1740,
+      "completion": 1039,
+      "at": "2026-10-26T23:01:14.463558+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:structlog:DD-3",
+      "prompt": 4466,
+      "completion": 5397,
+      "at": "2026-10-26T23:01:47.511087+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:structlog#0:DD-1",
+      "prompt": 1574,
+      "completion": 2028,
+      "at": "2026-10-26T23:01:57.725993+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:structlog#0:DD-2",
+      "prompt": 3353,
+      "completion": 2874,
+      "at": "2026-10-26T23:02:17.765267+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:structlog#2:DD-1",
+      "prompt": 1233,
+      "completion": 2734,
+      "at": "2026-10-26T23:02:33.719374+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:structlog#3:DD-1",
+      "prompt": 1620,
+      "completion": 1833,
+      "at": "2026-10-26T23:02:44.987693+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:nox:DD-1",
+      "prompt": 3742,
+      "completion": 3324,
+      "at": "2026-10-26T23:03:03.035537+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:nox:DD-2",
+      "prompt": 3752,
+      "completion": 4195,
+      "at": "2026-10-26T23:03:22.990411+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:nox:DD-3",
+      "prompt": 1870,
+      "completion": 2148,
+      "at": "2026-10-26T23:03:35.813308+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#0:DD-1",
+      "prompt": 3768,
+      "completion": 5890,
+      "at": "2026-10-26T23:04:14.151195+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#0:DD-2",
+      "prompt": 3505,
+      "completion": 2110,
+      "at": "2026-10-26T23:04:41.210944+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#0:DD-3",
+      "prompt": 1788,
+      "completion": 1843,
+      "at": "2026-10-26T23:04:53.422039+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#0:DD-4",
+      "prompt": 3651,
+      "completion": 2449,
+      "at": "2026-10-26T23:05:25.250787+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#1:DD-1",
+      "prompt": 1549,
+      "completion": 1505,
+      "at": "2026-10-26T23:05:43.456899+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#2:DD-1",
+      "prompt": 4031,
+      "completion": 2823,
+      "at": "2026-10-26T23:06:05.811583+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#2:DD-2",
+      "prompt": 3711,
+      "completion": 3329,
+      "at": "2026-10-26T23:06:37.405972+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#2:DD-3",
+      "prompt": 3609,
+      "completion": 620,
+      "at": "2026-10-26T23:06:52.775298+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:nox#3:DD-1",
+      "prompt": 1570,
+      "completion": 1833,
+      "at": "2026-10-26T23:07:08.685596+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#3:DD-1",
+      "prompt": 1725,
+      "completion": 2716,
+      "at": "2026-10-26T23:07:21.804666+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#3:DD-2",
+      "prompt": 1711,
+      "completion": 2487,
+      "at": "2026-10-26T23:07:38.291788+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#4:DD-2",
+      "prompt": 1881,
+      "completion": 2049,
+      "at": "2026-10-26T23:08:01.754341+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#4:DD-3",
+      "prompt": 1713,
+      "completion": 2815,
+      "at": "2026-10-26T23:08:23.025528+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#4:DD-4",
+      "prompt": 1877,
+      "completion": 1211,
+      "at": "2026-10-26T23:08:35.898710+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#4:DD-5",
+      "prompt": 1961,
+      "completion": 1579,
+      "at": "2026-10-26T23:08:42.620006+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:arrow#5:DD-1",
+      "prompt": 3389,
+      "completion": 3373,
+      "at": "2026-10-26T23:08:57.014552+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:cattrs:DD-1",
+      "prompt": 1940,
+      "completion": 1447,
+      "at": "2026-10-26T23:09:02.910618+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:cattrs:DD-2",
+      "prompt": 4041,
+      "completion": 3206,
+      "at": "2026-10-26T23:09:17.016746+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:cattrs:DD-4",
+      "prompt": 1634,
+      "completion": 1797,
+      "at": "2026-10-26T23:09:24.787297+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:cattrs:DD-5",
+      "prompt": 1420,
+      "completion": 859,
+      "at": "2026-10-26T23:09:28.022392+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:cattrs#0:DD-1",
+      "prompt": 1772,
+      "completion": 1690,
+      "at": "2026-10-26T23:09:35.446375+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:cattrs#0:DD-2",
+      "prompt": 1752,
+      "completion": 1840,
+      "at": "2026-10-26T23:09:42.531783+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:cattrs#2:DD-1",
+      "prompt": 1658,
+      "completion": 1369,
+      "at": "2026-10-26T23:09:48.881307+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:cattrs#2:DD-2",
+      "prompt": 1813,
+      "completion": 2888,
+      "at": "2026-10-26T23:10:01.408553+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:cattrs#3:DD-1",
+      "prompt": 3784,
+      "completion": 1251,
+      "at": "2026-10-26T23:10:07.660039+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:marshmallow:DD-4",
+      "prompt": 3858,
+      "completion": 3611,
+      "at": "2026-10-26T23:10:29.044040+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:marshmallow#0:DD-2",
+      "prompt": 1714,
+      "completion": 1852,
+      "at": "2026-10-26T23:10:37.136929+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:marshmallow#1:DD-1",
+      "prompt": 4857,
+      "completion": 2929,
+      "at": "2026-10-26T23:11:44.976085+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:marshmallow#1:DD-2",
+      "prompt": 1758,
+      "completion": 1377,
+      "at": "2026-10-26T23:12:07.038079+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:attrs:DD-1",
+      "prompt": 1773,
+      "completion": 1476,
+      "at": "2026-10-26T23:12:14.797540+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:attrs:DD-2",
+      "prompt": 1681,
+      "completion": 3066,
+      "at": "2026-10-26T23:12:26.545911+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:attrs#0:DD-1",
+      "prompt": 1511,
+      "completion": 1779,
+      "at": "2026-10-26T23:12:34.283010+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:attrs#1:DD-1",
+      "prompt": 1799,
+      "completion": 2364,
+      "at": "2026-10-26T23:12:44.832283+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:attrs#2:DD-1",
+      "prompt": 3699,
+      "completion": 4502,
+      "at": "2026-10-26T23:13:01.107672+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:attrs#2:DD-2",
+      "prompt": 1725,
+      "completion": 2843,
+      "at": "2026-10-26T23:13:11.982620+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:attrs#3:DD-1",
+      "prompt": 3827,
+      "completion": 2638,
+      "at": "2026-10-26T23:13:24.585867+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:jinja:DD-2",
+      "prompt": 3407,
+      "completion": 2026,
+      "at": "2026-10-26T23:13:33.172491+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:jinja:DD-3",
+      "prompt": 1714,
+      "completion": 2563,
+      "at": "2026-10-26T23:13:42.796421+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:jinja:DD-4",
+      "prompt": 4035,
+      "completion": 2772,
+      "at": "2026-10-26T23:13:52.761541+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:jinja:DD-5",
+      "prompt": 1650,
+      "completion": 1286,
+      "at": "2026-10-26T23:13:58.040649+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:jinja#0:DD-1",
+      "prompt": 4303,
+      "completion": 3333,
+      "at": "2026-10-26T23:14:11.628657+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:jinja#2:DD-1",
+      "prompt": 1804,
+      "completion": 2843,
+      "at": "2026-10-26T23:14:26.424780+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:jinja#3:DD-1",
+      "prompt": 1824,
+      "completion": 1040,
+      "at": "2026-10-26T23:14:32.587304+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:jinja#5:DD-1",
+      "prompt": 3889,
+      "completion": 3383,
+      "at": "2026-10-26T23:14:48.433067+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:jinja#6:DD-1",
+      "prompt": 1675,
+      "completion": 2352,
+      "at": "2026-10-26T23:14:58.487925+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:werkzeug:DD-1",
+      "prompt": 1708,
+      "completion": 1408,
+      "at": "2026-10-26T23:15:04.200933+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#0:DD-1",
+      "prompt": 1838,
+      "completion": 1889,
+      "at": "2026-10-26T23:15:10.785172+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#0:DD-2",
+      "prompt": 1960,
+      "completion": 2363,
+      "at": "2026-10-26T23:15:20.356003+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#1:DD-1",
+      "prompt": 2069,
+      "completion": 1933,
+      "at": "2026-10-26T23:15:29.216281+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#2:DD-1",
+      "prompt": 1829,
+      "completion": 1674,
+      "at": "2026-10-26T23:15:36.585046+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#4:DD-1",
+      "prompt": 1698,
+      "completion": 1240,
+      "at": "2026-10-26T23:15:43.090931+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#5:DD-1",
+      "prompt": 1654,
+      "completion": 1368,
+      "at": "2026-10-26T23:15:49.169468+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#5:DD-2",
+      "prompt": 1840,
+      "completion": 1983,
+      "at": "2026-10-26T23:15:57.055767+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#6:DD-1",
+      "prompt": 1599,
+      "completion": 1825,
+      "at": "2026-10-26T23:16:04.912758+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#7:DD-1",
+      "prompt": 3615,
+      "completion": 2326,
+      "at": "2026-10-26T23:16:14.643749+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#7:DD-2",
+      "prompt": 3825,
+      "completion": 1428,
+      "at": "2026-10-26T23:16:21.391117+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#9:DD-1",
+      "prompt": 1606,
+      "completion": 1934,
+      "at": "2026-10-26T23:16:29.334407+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#10:DD-1",
+      "prompt": 1623,
+      "completion": 2457,
+      "at": "2026-10-26T23:16:39.165449+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#10:DD-3",
+      "prompt": 1758,
+      "completion": 1491,
+      "at": "2026-10-26T23:16:45.247693+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:werkzeug#10:DD-4",
+      "prompt": 3551,
+      "completion": 2874,
+      "at": "2026-10-26T23:16:56.785731+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "docs:pydantic-settings:DD-1",
+      "prompt": 4144,
+      "completion": 4177,
+      "at": "2026-10-26T23:17:11.957161+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:pydantic-settings#2:DD-1",
+      "prompt": 2074,
+      "completion": 1252,
+      "at": "2026-10-26T23:17:17.133936+00:00"
+    },
+    {
+      "kind": "repro",
+      "label": "py:pydantic-settings#2:DD-2",
+      "prompt": 4696,
+      "completion": 3206,
+      "at": "2026-10-26T23:17:30.113150+00:00"
+    }
+  ]
+}

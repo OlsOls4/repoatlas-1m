@@ -1,0 +1,63 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.41,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_cattrs_DD-2-4ljkfwdk/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_cattrs_DD-2-4ljkfwdk/repro.py\", line 5, in <module>\n    with pytest.raises(Exception):\n         ~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/raises.py\", line 699, in __exit__\n    fail(f\"DID NOT RAISE {self.expected_exceptions[0].__name__}\")\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/outcomes.py\", line 162, in __call__\n    raise Failed(msg=reason, pytrace=pytrace)\nFailed: DID NOT RAISE Exception\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "Failed",
+      "qualified_type": "builtins.Failed",
+      "mro": [
+        "builtins.Failed",
+        "_pytest.outcomes.OutcomeException",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "DID NOT RAISE Exception",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_cattrs_DD-2-4ljkfwdk/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "with pytest.raises(Exception):"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/raises.py",
+          "line": 699,
+          "name": "__exit__",
+          "source": "fail(f\"DID NOT RAISE {self.expected_exceptions[0].__name__}\")"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/outcomes.py",
+          "line": 162,
+          "name": "__call__",
+          "source": "raise Failed(msg=reason, pytrace=pytrace)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_cattrs_DD-2-4ljkfwdk/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_cattrs_DD-2-4ljkfwdk/repro.py\", line 5, in <module>\n    with pytest.raises(Exception):\n         ~~~~~~~~~~~~~^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/raises.py\", line 699, in __exit__\n    fail(f\"DID NOT RAISE {self.expected_exceptions[0].__name__}\")\n    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-bb859aef/lib/python3.13/site-packages/_pytest/outcomes.py\", line 162, in __call__\n    raise Failed(msg=reason, pytrace=pytrace)\nFailed: DID NOT RAISE Exception\n"
+    }
+  }
+}

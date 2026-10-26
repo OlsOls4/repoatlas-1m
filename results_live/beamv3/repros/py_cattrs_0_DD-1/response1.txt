@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "One could argue that `override()` is a shared, direction-agnostic mechanism and that the note is merely describing a broader customization capability rather than the exact operation of this function. However, `make_dict_structure_fn_from_attrs` only generates a structuring hook, so describing that version change as customizing unstructuring is inaccurate for this function.",
+  "model_verdict": "finding confirmed",
+  "doc_literal_usage": "Inspect the generated-function docstring and require the version note to say `structuring.` instead of `unstructuring.`.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nimport cattrs.gen\n\n# DOC-LITERAL-BEGIN\ndoc = inspect.getdoc(cattrs.gen.make_dict_structure_fn_from_attrs)\n# DOC-LITERAL-END\nassert \"structuring.\" in doc, \"docs should say structuring.\"\nprint(\"DOCS_OK\")\n"
+}

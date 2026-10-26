@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The citation only shows that these names appear in __all__; it does not itself promise that every __all__ entry is importable by normal attribute access, and __doc__ is genuinely available as a module attribute. Still, __all__ is conventionally treated as the public API inventory, so most of the listed names are unusable.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Access each metadata dunder name advertised in attrs.__all__ directly on the attrs package.",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import attrs\n\nattrs.__author__        # DOC-LITERAL\nattrs.__copyright__     # DOC-LITERAL\nattrs.__description__   # DOC-LITERAL\nattrs.__doc__           # DOC-LITERAL\nattrs.__email__         # DOC-LITERAL\nattrs.__license__       # DOC-LITERAL\nattrs.__title__         # DOC-LITERAL\nattrs.__url__           # DOC-LITERAL\nattrs.__version__       # DOC-LITERAL\nattrs.__version_info__  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

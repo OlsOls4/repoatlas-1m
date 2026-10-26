@@ -1,0 +1,6 @@
+[httpx] candidates=10 est=409331 ledger=1680568
+  -> repeat httpx: verdicts=10 adds=5 err=None ledger=2084196
+[click] candidates=2 est=404517 ledger=2084196
+  -> repeat click: verdicts=2 adds=0 err=None ledger=2475456
+[cattrs] candidates=7 est=322827 ledger=2475456
+  -> repeat cattrs: verdicts=7 adds=0 err=None ledger=2789210

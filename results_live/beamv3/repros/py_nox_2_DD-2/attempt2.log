@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.11,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_2_DD-2-aiptqh7u/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_2_DD-2-aiptqh7u/repro.py\", line 21, in <module>\n    manifest = Manifest([hidden], config, None)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/manifest.py\", line 81, in __init__\n    for name, func in session_functions.items():\n                      ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'items'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'list' object has no attribute 'items'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_nox_2_DD-2-aiptqh7u/repro.py",
+          "line": 21,
+          "name": "<module>",
+          "source": "manifest = Manifest([hidden], config, None)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/manifest.py",
+          "line": 81,
+          "name": "__init__",
+          "source": "for name, func in session_functions.items():"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_2_DD-2-aiptqh7u/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_2_DD-2-aiptqh7u/repro.py\", line 21, in <module>\n    manifest = Manifest([hidden], config, None)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/manifest.py\", line 81, in __init__\n    for name, func in session_functions.items():\n                      ^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'list' object has no attribute 'items'\n"
+    }
+  }
+}

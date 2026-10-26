@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1511,
+      "output_tokens": 1779,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AttributeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Access each metadata dunder name advertised in attrs.__all__ directly on the attrs package.",
+      "argument_finding_is_false": "The citation only shows that these names appear in __all__; it does not itself promise that every __all__ entry is importable by normal attribute access, and __doc__ is genuinely available as a module attribute. Still, __all__ is conventionally treated as the public API inventory, so most of the listed names are unusable.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: module attrs has no attribute __author__",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

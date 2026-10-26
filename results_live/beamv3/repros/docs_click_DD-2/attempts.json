@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1677,
+      "output_tokens": 1866,
+      "cached_input_tokens": 0
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "The documented claim that any other value deactivates the flag fails; Click raises an invalid boolean error instead.",
+      "doc_literal_usage": "Create a paired boolean flag with envvar=\"FLAG\", invoke it with FLAG=definitely-not-a-bool, and assert it exits successfully with RESULT=False.",
+      "argument_finding_is_false": "A false positive could be argued if env conversion only applies to a non-paired boolean flag or a specific flag_value configuration, but the cited code path is the shared BoolParamType.convert used for flag env values, so unrecognized values are rejected rather than treated as deactivation.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: Usage: cmd [OPTIONS]\nTry 'cmd --help' for help.\n\nError: Invalid value for '--flag': 'definitely-not-a-bool' is not a valid boolean. Recognized values: , 0, 1, f, false, n, no, off, on, t, true, y, yes\n",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.04,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_attrs_2_DD-1-atj3l8k9/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_attrs_2_DD-1-atj3l8k9/repro.py\", line 4, in <module>\n    cls = attr._make.make_class(\"C\", [\"x\"], attributes_arguments=args)  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/_make.py\", line 3356, in make_class\n    cls = _attrs(these=cls_dict, **attributes_arguments)(type_)\n          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: attrs() got an unexpected keyword argument 'attributes_arguments'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "attrs() got an unexpected keyword argument 'attributes_arguments'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_attrs_2_DD-1-atj3l8k9/repro.py",
+          "line": 4,
+          "name": "<module>",
+          "source": "cls = attr._make.make_class(\"C\", [\"x\"], attributes_arguments=args)  # DOC-LITERAL"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/_make.py",
+          "line": 3356,
+          "name": "make_class",
+          "source": "cls = _attrs(these=cls_dict, **attributes_arguments)(type_)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_attrs_2_DD-1-atj3l8k9/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_attrs_2_DD-1-atj3l8k9/repro.py\", line 4, in <module>\n    cls = attr._make.make_class(\"C\", [\"x\"], attributes_arguments=args)  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/_make.py\", line 3356, in make_class\n    cls = _attrs(these=cls_dict, **attributes_arguments)(type_)\n          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nTypeError: attrs() got an unexpected keyword argument 'attributes_arguments'\n"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_2_DD-1-355w9ij2/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_2_DD-1-355w9ij2/repro.py\", line 12, in <module>\n    result = run_manifest(manifest, global_config)  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/tasks.py\", line 436, in run_manifest\n    for session in manifest:\n                   ^^^^^^^^\nTypeError: 'Manifest' object is not iterable\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'Manifest' object is not iterable",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_nox_2_DD-1-355w9ij2/repro.py",
+          "line": 12,
+          "name": "<module>",
+          "source": "result = run_manifest(manifest, global_config)  # DOC-LITERAL"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/tasks.py",
+          "line": 436,
+          "name": "run_manifest",
+          "source": "for session in manifest:"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_2_DD-1-355w9ij2/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_2_DD-1-355w9ij2/repro.py\", line 12, in <module>\n    result = run_manifest(manifest, global_config)  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/tasks.py\", line 436, in run_manifest\n    for session in manifest:\n                   ^^^^^^^^\nTypeError: 'Manifest' object is not iterable\n"
+    }
+  }
+}

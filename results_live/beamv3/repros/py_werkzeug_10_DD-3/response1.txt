@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding is true; the docstring names nonexistent environ keys instead of the actual dict",
+  "doc_literal_usage": "After calling ProxyFix, access environ[\"werkzeug.proxy_fix.orig_REMOTE_ADDR\"] expecting the original REMOTE_ADDR to be stored there.",
+  "expected_exception_type": "KeyError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from io import BytesIO\nfrom werkzeug.middleware.proxy_fix import ProxyFix\n\n\ndef app(environ, start_response):\n    start_response(\"200 OK\", [])\n    return [b\"\"]\n\n\nwrapped = ProxyFix(app, x_for=1)\nenviron = {\n    \"REMOTE_ADDR\": \"127.0.0.1\",\n    \"wsgi.url_scheme\": \"http\",\n    \"HTTP_HOST\": \"localhost\",\n    \"SCRIPT_NAME\": \"\",\n    \"REQUEST_METHOD\": \"GET\",\n    \"SERVER_NAME\": \"localhost\",\n    \"SERVER_PORT\": \"80\",\n    \"wsgi.input\": BytesIO(b\"\"),\n    \"wsgi.errors\": BytesIO(),\n}\nwrapped(environ, lambda status, headers: None)\nassert environ[\"werkzeug.proxy_fix.orig_REMOTE_ADDR\"] == \"127.0.0.1\", \"docs say original values are in werkzeug.proxy_fix.orig_{key}\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

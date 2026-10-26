@@ -1,0 +1,128 @@
+{
+  "repo": "httpx",
+  "ref": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "chunks": {
+    "0": {
+      "paths": [
+        "httpx/__init__.py",
+        "httpx/_transports/__init__.py",
+        "httpx/_models.py",
+        "httpx/__version__.py",
+        "httpx/_types.py",
+        "httpx/_exceptions.py",
+        "httpx/_urls.py",
+        "httpx/_utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31357,
+      "completion_tokens": 1963,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "1": {
+      "paths": [
+        "httpx/_transports/base.py",
+        "httpx/_config.py",
+        "httpx/_status_codes.py",
+        "httpx/_client.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29175,
+      "completion_tokens": 2703,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "httpx/_urlparse.py",
+        "httpx/_decoders.py",
+        "httpx/_auth.py",
+        "httpx/_multipart.py",
+        "httpx/_transports/default.py",
+        "httpx/_content.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 26424,
+      "completion_tokens": 2715,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The encode_request docstring lists only content, data, files, and json, but the function signature also accepts boundary.",
+          "doc_citation": {
+            "path": "httpx/_content.py",
+            "start_line": 194,
+            "end_line": 196,
+            "quote": "Handles encoding the given `content`, `data`, `files`, and `json`,\nreturning a two-tuple of (<headers>, <stream>)."
+          },
+          "code_citation": {
+            "path": "httpx/_content.py",
+            "start_line": 186,
+            "end_line": 192,
+            "quote": "def encode_request(\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: Any | None = None,\n    boundary: bytes | None = None,\n) -> tuple[dict[str, str], SyncByteStream | AsyncByteStream]:"
+          },
+          "proposed_fix": "Update the docstring to read \"Handles encoding the given `content`, `data`, `files`, `json`, and `boundary`, returning a two-tuple of (<headers>, <stream>).\"",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "The module docstring lists only uds, local_address, and retries as additional httpcore keyword arguments, but HTTPTransport and AsyncHTTPTransport also accept socket_options.",
+          "doc_citation": {
+            "path": "httpx/_transports/default.py",
+            "start_line": 4,
+            "end_line": 8,
+            "quote": "The following additional keyword arguments are currently supported by httpcore...\n\n* uds: str\n* local_address: str\n* retries: int"
+          },
+          "code_citation": {
+            "path": "httpx/_transports/default.py",
+            "start_line": 148,
+            "end_line": 148,
+            "quote": "        socket_options: typing.Iterable[SOCKET_OPTION] | None = None,"
+          },
+          "proposed_fix": "Add `* socket_options: typing.Iterable[SOCKET_OPTION] | None` to the supported additional keyword arguments list in the module docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "httpx/_main.py",
+        "httpx/_api.py",
+        "httpx/_transports/asgi.py",
+        "httpx/_transports/wsgi.py",
+        "httpx/_transports/mock.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 14585,
+      "completion_tokens": 2755,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The request docstring says verify accepts True, False, or an ssl.SSLContext, but the code signature also accepts a str.",
+          "doc_citation": {
+            "path": "httpx/_api.py",
+            "start_line": 85,
+            "end_line": 87,
+            "quote": "* **verify** - *(optional)* Either `True` to use an SSL context with the\n    default CA bundle, `False` to disable verification, or an instance of\n    `ssl.SSLContext` to use a custom context."
+          },
+          "code_citation": {
+            "path": "httpx/_api.py",
+            "start_line": 54,
+            "end_line": 54,
+            "quote": "    verify: ssl.SSLContext | str | bool = True,"
+          },
+          "proposed_fix": "Update the `verify` documentation to include `str` (for a CA bundle path) alongside `True`, `False`, and `ssl.SSLContext`.",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

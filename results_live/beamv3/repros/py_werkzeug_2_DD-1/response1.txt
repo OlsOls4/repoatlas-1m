@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "A backticked version note could be read as a generic historical description rather than the exact keyword argument, and Werkzeug's convention of using a capitalized injected class parameter means the note may intentionally describe the role rather than the identifier. However, there is no lowercase 'response' keyword accepted by redirect, so the documented wording does not match the usable API.",
+  "model_verdict": "true",
+  "doc_literal_usage": "redirect('/', response=None)",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from werkzeug.utils import redirect\n\nredirect(\"/\", response=None)  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

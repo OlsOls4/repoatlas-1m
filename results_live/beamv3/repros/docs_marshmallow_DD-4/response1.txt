@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The term 'default' may be a documented shorthand for a field's load-time default, and marshmallow historically accepted `default` as an alias; however, the cited code path explicitly reads `self.load_default`, and setting only `default` does not necessarily populate `load_default`, so the finding is likely accurate for this commit.",
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "Create a schema with a non-required field declared using `default`, load an empty dict, and assert the documented default value appears in the result.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from marshmallow import Schema, fields\n\nclass S(Schema):\n    value = fields.String(default=\"DOC_DEFAULT\")  # DOC-LITERAL\n\nschema = S()\nresult = schema.load({})  # DOC-LITERAL\nassert result == {\"value\": \"DOC_DEFAULT\"}, \"docs say a missing value uses its default\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

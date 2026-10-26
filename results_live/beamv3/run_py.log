@@ -1,0 +1,136 @@
+[py starlette] chunks=4
+  starlette#0: prompt=23026 completion=2316 est_prompt=23943 finish=stop 12s ledger=25342
+  -> starlette#0: 0 findings err=None
+  starlette#1: prompt=30543 completion=1681 est_prompt=31969 finish=stop 10s ledger=57566
+  -> starlette#1: 0 findings err=None
+  starlette#2: prompt=30109 completion=2091 est_prompt=31568 finish=stop 10s ledger=89766
+  -> starlette#2: 0 findings err=None
+  starlette#3: prompt=19613 completion=1306 est_prompt=21054 finish=stop 6s ledger=110685
+  -> starlette#3: 0 findings err=None
+[py httpx] chunks=4
+  httpx#0: prompt=31357 completion=1963 est_prompt=31779 finish=stop 11s ledger=144005
+  -> httpx#0: 0 findings err=None
+  httpx#1: prompt=29175 completion=2703 est_prompt=29478 finish=stop 14s ledger=175883
+  -> httpx#1: 0 findings err=None
+  httpx#2: prompt=26424 completion=2715 est_prompt=27206 finish=stop 14s ledger=205022
+  -> httpx#2: 2 findings err=None
+  httpx#3: prompt=14585 completion=2755 est_prompt=15130 finish=stop 11s ledger=222362
+  -> httpx#3: 1 findings err=None
+[py click] chunks=7
+  click#0: prompt=16530 completion=2749 est_prompt=17068 finish=stop 11s ledger=241641
+  -> click#0: 1 findings err=None
+  click#1: prompt=31294 completion=2033 est_prompt=32146 finish=stop 18s ledger=274968
+  -> click#1: 0 findings err=None
+  click#2: prompt=27599 completion=2262 est_prompt=28545 finish=stop 11s ledger=304829
+  -> click#2: 1 findings err=None
+  click#3: prompt=26911 completion=3921 est_prompt=27405 finish=stop 14s ledger=335661
+  -> click#3: 3 findings err=None
+  click#4: prompt=23721 completion=3381 est_prompt=24410 finish=stop 13s ledger=362763
+  -> click#4: 3 findings err=None
+  click#5: prompt=24652 completion=1857 est_prompt=25257 finish=stop 10s ledger=389272
+  -> click#5: 0 findings err=None
+  click#6: prompt=10698 completion=1950 est_prompt=11217 finish=stop 9s ledger=401920
+  -> click#6: 0 findings err=None
+[py structlog] chunks=4
+  structlog#0: prompt=20360 completion=2395 est_prompt=20929 finish=stop 13s ledger=424675
+  -> structlog#0: 2 findings err=None
+  structlog#1: prompt=30073 completion=2787 est_prompt=30333 finish=stop 14s ledger=457535
+  -> structlog#1: 0 findings err=None
+  structlog#2: prompt=31021 completion=2713 est_prompt=31630 finish=stop 14s ledger=491269
+  -> structlog#2: 1 findings err=None
+  structlog#3: prompt=7696 completion=1637 est_prompt=8175 finish=stop 7s ledger=500602
+  -> structlog#3: 1 findings err=None
+[py nox] chunks=4
+  nox#0: prompt=26528 completion=3662 est_prompt=27130 finish=stop 16s ledger=530792
+  -> nox#0: 4 findings err=None
+  nox#1: prompt=30007 completion=1987 est_prompt=30867 finish=stop 10s ledger=562786
+  -> nox#1: 1 findings err=None
+  nox#2: prompt=30386 completion=2730 est_prompt=31711 finish=stop 12s ledger=595902
+  -> nox#2: 3 findings err=None
+  nox#3: prompt=18152 completion=1680 est_prompt=19228 finish=stop 10s ledger=615734
+  -> nox#3: 1 findings err=None
+[py arrow] chunks=6
+  arrow#0: prompt=2736 completion=313 est_prompt=3120 finish=stop 2s ledger=618783
+  -> arrow#0: 0 findings err=None
+  arrow#1: prompt=31383 completion=1957 est_prompt=32100 finish=stop 7s ledger=652123
+  -> arrow#1: 0 findings err=None
+  arrow#2: prompt=30147 completion=1859 est_prompt=32138 finish=stop 8s ledger=684129
+  -> arrow#2: 0 findings err=None
+  arrow#3: prompt=20903 completion=2632 est_prompt=24156 finish=stop 10s ledger=707664
+  -> arrow#3: 2 findings err=None
+  arrow#4: prompt=25771 completion=5004 est_prompt=25508 finish=stop 17s ledger=738439
+  -> arrow#4: 5 findings err=None
+  arrow#5: prompt=21913 completion=2662 est_prompt=22506 finish=stop 11s ledger=763014
+  -> arrow#5: 1 findings err=None
+[py cattrs] chunks=4
+  cattrs#0: prompt=18401 completion=2585 est_prompt=19281 finish=stop 9s ledger=784000
+  -> cattrs#0: 2 findings err=None
+  cattrs#1: prompt=28039 completion=1984 est_prompt=28807 finish=stop 8s ledger=814023
+  -> cattrs#1: 2 findings err=None
+  cattrs#2: prompt=28488 completion=2579 est_prompt=29800 finish=stop 10s ledger=845090
+  -> cattrs#2: 2 findings err=None
+  cattrs#3: prompt=15821 completion=1680 est_prompt=17467 finish=stop 9s ledger=862591
+  -> cattrs#3: 1 findings err=None
+[py marshmallow] chunks=3
+  marshmallow#0: prompt=27665 completion=2760 est_prompt=28228 finish=stop 12s ledger=893016
+  -> marshmallow#0: 2 findings err=None
+  marshmallow#1: prompt=27832 completion=3366 est_prompt=28724 finish=stop 11s ledger=924214
+  -> marshmallow#1: 2 findings err=None
+  marshmallow#2: prompt=12215 completion=2117 est_prompt=13335 finish=stop 8s ledger=938546
+  -> marshmallow#2: 0 findings err=None
+[py attrs] chunks=4
+  attrs#0: prompt=7917 completion=2365 est_prompt=8192 finish=stop 8s ledger=948828
+  -> attrs#0: 1 findings err=None
+  attrs#1: prompt=31741 completion=3036 est_prompt=32131 finish=stop 12s ledger=983605
+  -> attrs#1: 1 findings err=None
+  attrs#2: prompt=30801 completion=2490 est_prompt=31423 finish=stop 13s ledger=1016896
+  -> attrs#2: 2 findings err=None
+  attrs#3: prompt=27071 completion=2743 est_prompt=27957 finish=stop 11s ledger=1046710
+  -> attrs#3: 1 findings err=None
+[py jinja] chunks=7
+  jinja#0: prompt=30355 completion=3030 est_prompt=30978 finish=stop 11s ledger=1080095
+  -> jinja#0: 1 findings err=None
+  jinja#1: prompt=27429 completion=2328 est_prompt=27687 finish=stop 10s ledger=1109852
+  -> jinja#1: 1 findings err=None
+  jinja#2: prompt=25386 completion=2629 est_prompt=26049 finish=stop 10s ledger=1137867
+  -> jinja#2: 1 findings err=None
+  jinja#3: prompt=25246 completion=2343 est_prompt=25953 finish=stop 12s ledger=1165456
+  -> jinja#3: 1 findings err=None
+  jinja#4: prompt=22557 completion=2590 est_prompt=22909 finish=stop 15s ledger=1190603
+  -> jinja#4: 0 findings err=None
+  jinja#5: prompt=31365 completion=2542 est_prompt=32064 finish=stop 12s ledger=1224510
+  -> jinja#5: 1 findings err=None
+  jinja#6: prompt=13798 completion=2599 est_prompt=15615 finish=stop 12s ledger=1240907
+  -> jinja#6: 1 findings err=None
+[py werkzeug] chunks=11
+  werkzeug#0: prompt=25826 completion=2629 est_prompt=26458 finish=stop 12s ledger=1269362
+  -> werkzeug#0: 2 findings err=None
+  werkzeug#1: prompt=22591 completion=3370 est_prompt=23028 finish=stop 17s ledger=1295323
+  -> werkzeug#1: 1 findings err=None
+  werkzeug#2: prompt=29287 completion=2601 est_prompt=30046 finish=stop 12s ledger=1327211
+  -> werkzeug#2: 2 findings err=None
+  werkzeug#3: prompt=30391 completion=1947 est_prompt=31186 finish=stop 9s ledger=1359549
+  -> werkzeug#3: 0 findings err=parse: no JSON object in content; content_len=0
+  werkzeug#4: prompt=26300 completion=2874 est_prompt=27018 finish=stop 12s ledger=1388723
+  -> werkzeug#4: 1 findings err=None
+  werkzeug#5: prompt=28147 completion=1826 est_prompt=28792 finish=stop 8s ledger=1418696
+  -> werkzeug#5: 2 findings err=None
+  werkzeug#6: prompt=29940 completion=1907 est_prompt=30765 finish=stop 13s ledger=1450543
+  -> werkzeug#6: 1 findings err=None
+  werkzeug#7: prompt=29446 completion=2497 est_prompt=30362 finish=stop 12s ledger=1482486
+  -> werkzeug#7: 2 findings err=None
+  werkzeug#8: prompt=29846 completion=2324 est_prompt=30414 finish=stop 10s ledger=1514656
+  -> werkzeug#8: 0 findings err=None
+  werkzeug#9: prompt=29067 completion=2718 est_prompt=30300 finish=stop 12s ledger=1546441
+  -> werkzeug#9: 1 findings err=None
+  werkzeug#10: prompt=27739 completion=3513 est_prompt=29746 finish=stop 12s ledger=1577693
+  -> werkzeug#10: 4 findings err=None
+[py pydantic-settings] chunks=4
+  pydantic-settings#0: prompt=26961 completion=2705 est_prompt=28492 finish=stop 11s ledger=1607359
+  -> pydantic-settings#0: 0 findings err=None
+  pydantic-settings#1: prompt=18159 completion=2214 est_prompt=19172 finish=stop 9s ledger=1627732
+  -> pydantic-settings#1: 0 findings err=None
+  pydantic-settings#2: prompt=28609 completion=2361 est_prompt=30036 finish=stop 10s ledger=1658702
+  -> pydantic-settings#2: 2 findings err=None
+  pydantic-settings#3: prompt=19704 completion=2162 est_prompt=21214 finish=stop 12s ledger=1680568
+  -> pydantic-settings#3: 0 findings err=None

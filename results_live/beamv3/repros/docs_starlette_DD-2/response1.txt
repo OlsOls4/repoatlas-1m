@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The None default is only an internal sentinel; BackgroundTasks() still exposes an empty tasks list, so the documentation can be read as describing the effective default rather than the Python default object. But the cited Signature line does name tasks=[] as the parameter default, while the implementation's parameter default is None.",
+  "model_verdict": "true",
+  "doc_literal_usage": "inspect.signature(BackgroundTasks).parameters['tasks'].default == []",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from inspect import signature\n\nfrom starlette.background import BackgroundTasks\n\nassert signature(BackgroundTasks).parameters[\"tasks\"].default == [], \"docs say Signature: BackgroundTasks(tasks=[])\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

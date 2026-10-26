@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The footnote already clarifies that the documented 'string' includes bytes and bytearray, so only dict is genuinely missing from the documentation.",
+  "model_verdict": "true",
+  "doc_literal_usage": "assert set(observed) == {str, bytes, bytearray, tuple}",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import structlog\nfrom structlog.testing import CapturingLoggerFactory\n\nRETURN = None\n\ndef proc(logger, method, event_dict):\n    return RETURN\n\nstructlog.configure(processors=[proc], logger_factory=CapturingLoggerFactory())\nlog = structlog.get_logger()\n\nobserved = []\nfor value in (\"x\", b\"x\", bytearray(b\"x\"), (\"a\",), {\"event\": \"x\"}):\n    RETURN = value\n    log.info(\"x\")\n    observed.append(type(value))\n\nassert set(observed) == {str, bytes, bytearray, tuple}  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

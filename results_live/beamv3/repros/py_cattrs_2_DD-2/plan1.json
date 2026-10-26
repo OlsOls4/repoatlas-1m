@@ -1,0 +1,10 @@
+{
+  "repro_script": "import linecache\nfrom typing import TypedDict\nfrom cattrs import Converter\nfrom cattrs.gen.typeddicts import make_dict_structure_fn\n\nclass TD(TypedDict):\n    x: int\n\nconv = Converter()\nfn = make_dict_structure_fn(TD, conv, _cattrs_detailed_validation=False)  # DOC-LITERAL\nassert not linecache.getlines(fn.__code__.co_filename), \"_cattrs_detailed_validation should control linecache storage\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The documented `_cattrs_detailed_validation` name does not control linecache storage; `_cattrs_use_linecache` does, so disabling detailed validation leaves the generated function in linecache.",
+  "doc_literal_usage": "make_dict_structure_fn(TD, conv, _cattrs_detailed_validation=False) should, per the docs, disable linecache storage; assert linecache.getlines(fn.__code__.co_filename) is empty.",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

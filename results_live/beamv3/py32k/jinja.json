@@ -1,0 +1,230 @@
+{
+  "repo": "jinja",
+  "ref": "5ef70112a1ff19c05324ff889dd30405b1002044",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/jinja2/__init__.py",
+        "src/jinja2/environment.py",
+        "src/jinja2/utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30355,
+      "completion_tokens": 3030,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The docstring says `dumps` defaults to and `kwargs` are merged onto values in `env.policies`, but the function has no `env` parameter and the code simply uses `json.dumps` when `dumps is None`, passing `kwargs` directly.",
+          "doc_citation": {
+            "path": "src/jinja2/utils.py",
+            "start_line": 654,
+            "end_line": 658,
+            "quote": ":param dumps: The ``dumps`` function to use. Defaults to\n        ``env.policies[\"json.dumps_function\"]``, which defaults to\n        :func:`json.dumps`.\n    :param kwargs: Extra arguments to pass to ``dumps``. Merged onto\n        ``env.policies[\"json.dumps_kwargs\"]``."
+          },
+          "code_citation": {
+            "path": "src/jinja2/utils.py",
+            "start_line": 665,
+            "end_line": 666,
+            "quote": "    if dumps is None:\n        dumps = json.dumps"
+          },
+          "proposed_fix": "Update the docstring so `dumps` defaults to `json.dumps` and `kwargs` are passed directly to `dumps`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/jinja2/nodes.py",
+        "src/jinja2/exceptions.py",
+        "src/jinja2/runtime.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 27429,
+      "completion_tokens": 2328,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The LoopContext._peek_next docstring says the peeked value is cached in `_last`, but the implementation caches it in `_after`.",
+          "doc_citation": {
+            "path": "src/jinja2/runtime.py",
+            "start_line": 490,
+            "end_line": 490,
+            "quote": "the result in :attr:`_last` for use in subsequent checks. The"
+          },
+          "code_citation": {
+            "path": "src/jinja2/runtime.py",
+            "start_line": 493,
+            "end_line": 493,
+            "quote": "if self._after is not missing:"
+          },
+          "proposed_fix": "Change `:attr:`_last`` to `:attr:`_after`` in the `_peek_next` docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "src/jinja2/compiler.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 25386,
+      "completion_tokens": 2629,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The blockvisit docstring claims a dummy `if 0: yield None` is written automatically, but the implementation writes a `pass` statement.",
+          "doc_citation": {
+            "path": "src/jinja2/compiler.py",
+            "start_line": 441,
+            "end_line": 443,
+            "quote": "        \"\"\"Visit a list of nodes as block in a frame.  If the current frame\n        is no buffer a dummy ``if 0: yield None`` is written automatically.\n        \"\"\""
+          },
+          "code_citation": {
+            "path": "src/jinja2/compiler.py",
+            "start_line": 445,
+            "end_line": 445,
+            "quote": "            self.writeline(\"pass\")"
+          },
+          "proposed_fix": "Update the blockvisit docstring to state that a `pass` statement is written automatically instead of a dummy `if 0: yield None`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/jinja2/lexer.py",
+        "src/jinja2/visitor.py",
+        "src/jinja2/parser.py",
+        "src/jinja2/async_utils.py",
+        "src/jinja2/defaults.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 25246,
+      "completion_tokens": 2343,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The parse_tuple docstring refers to a `no_condexpr` parameter, but the method signature defines it as `with_condexpr`.",
+          "doc_citation": {
+            "path": "src/jinja2/parser.py",
+            "start_line": 696,
+            "end_line": 697,
+            "quote": "        attr refs as well. The `no_condexpr` parameter is forwarded to\n        :meth:`parse_expression`."
+          },
+          "code_citation": {
+            "path": "src/jinja2/parser.py",
+            "start_line": 684,
+            "end_line": 684,
+            "quote": "        with_condexpr: bool = True,"
+          },
+          "proposed_fix": "Replace `no_condexpr` with `with_condexpr` in the parse_tuple docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "4": {
+      "paths": [
+        "src/jinja2/filters.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 22557,
+      "completion_tokens": 2590,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "5": {
+      "paths": [
+        "src/jinja2/ext.py",
+        "src/jinja2/loaders.py",
+        "src/jinja2/sandbox.py",
+        "src/jinja2/bccache.py",
+        "src/jinja2/idtracking.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31365,
+      "completion_tokens": 2542,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The docstring claims `is_internal_attribute` returns `True` for `func_code`, but the implementation only returns `True` for attributes found in the relevant unsafe-attribute sets or names beginning with two underscores.",
+          "doc_citation": {
+            "path": "src/jinja2/sandbox.py",
+            "start_line": 117,
+            "end_line": 117,
+            "quote": "example this function returns `True` for the `func_code` attribute of"
+          },
+          "code_citation": {
+            "path": "src/jinja2/sandbox.py",
+            "start_line": 149,
+            "end_line": 149,
+            "quote": "return attr.startswith(\"__\")"
+          },
+          "proposed_fix": "Correct the docstring by removing the claim that `func_code` returns `True`, since only configured unsafe attributes and names starting with `__` are treated as internal.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "6": {
+      "paths": [
+        "src/jinja2/tests.py",
+        "src/jinja2/debug.py",
+        "src/jinja2/_identifier.py",
+        "src/jinja2/optimizer.py",
+        "src/jinja2/constants.py",
+        "src/jinja2/meta.py",
+        "docs/conf.py",
+        "src/jinja2/nativetypes.py",
+        "docs/examples/inline_gettext_extension.py",
+        "scripts/generate_identifier_pattern.py",
+        "docs/examples/cache_extension.py",
+        "examples/basic/test.py",
+        "examples/basic/translate.py",
+        "examples/basic/inheritance.py",
+        "examples/basic/cycle.py",
+        "examples/basic/debugger.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 13798,
+      "completion_tokens": 2599,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The docstring describes sequences only as iterable objects, but the implementation only accepts objects that support len() and __getitem__.",
+          "doc_citation": {
+            "path": "src/jinja2/tests.py",
+            "start_line": 167,
+            "end_line": 170,
+            "quote": "def test_sequence(value: t.Any) -> bool:\n    \"\"\"Return true if the variable is a sequence. Sequences are variables\n    that are iterable.\n    \"\"\""
+          },
+          "code_citation": {
+            "path": "src/jinja2/tests.py",
+            "start_line": 171,
+            "end_line": 177,
+            "quote": "    try:\n        len(value)\n        value.__getitem__  # noqa B018\n    except Exception:\n        return False\n\n    return True"
+          },
+          "proposed_fix": "Update the docstring for test_sequence to state that sequences are objects supporting `len()` and item access, rather than merely iterable objects.",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

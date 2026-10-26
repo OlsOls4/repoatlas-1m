@@ -1,0 +1,43 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1654,
+      "output_tokens": 254,
+      "cached_input_tokens": 64
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unparseable_response",
+      "exception_type": null,
+      "error_excerpt": "Model response is not JSON.",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1753,
+      "output_tokens": 1772,
+      "cached_input_tokens": 1600
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "jinja2.Environment install_gettext_translations(translations) with newstyle omitted; then assert env.newstyle_gettext is False",
+      "argument_finding_is_false": "No credible false positive: the code default is genuinely Optional[bool] = None, and _install_callables only updates environment.newstyle_gettext when newstyle is not None. There is no alias or passthrough making the documented False default hold.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "AssertionError",
+      "error_excerpt": "[script line 8, not a DOC-LITERAL line] AssertionError: docs default newstyle=False",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The docstring enumerates the primary expiry types (datetime/int) that developers actually use, while the implementation additionally coerces str and float. Narrower documentation is not behaviorally wrong: every documented expiration form works, and following the docs literally does not raise or produce an incorrect cookie. The extra accepted forms are implementation flexibility, not a broken documented contract.",
+  "model_verdict": "false",
+  "doc_literal_usage": "expires parameter used as datetime or int timestamp only, as documented",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import datetime\nfrom werkzeug.http import dump_cookie\n\ncookie_dt = dump_cookie(\"k\", expires=datetime.datetime(2030, 1, 1))  # DOC-LITERAL\nassert isinstance(cookie_dt, str)\nassert \"Expires=\" in cookie_dt\n\ncookie_int = dump_cookie(\"k\", expires=1700000000)  # DOC-LITERAL\nassert isinstance(cookie_int, str)\nassert \"Expires=\" in cookie_int\n\nprint(\"DOCS_OK\")"
+}

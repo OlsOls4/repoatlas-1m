@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The cited docstring only enumerates accepted values; omitting `str` does not make a behavioral claim that passing a CA bundle path fails, so the function remains fully usable as implemented. However, the signature annotation explicitly includes `str` and other call sites/docs likely mention CA bundle paths, so the omission is a real documentation gap rather than merely an implementation detail.",
+  "model_verdict": "true",
+  "doc_literal_usage": "inspect httpx.request.__doc__ for the documented verify accepted types",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import httpx\nimport inspect\ndoc = inspect.getdoc(httpx.request) or \"\"\nsegment = doc.split('**verify**', 1)[1].split('**trust_env**', 1)[0]  # DOC-LITERAL\nassert 'str' in segment, \"verify doc omits str (CA bundle path)\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

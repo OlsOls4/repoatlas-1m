@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_3_DD-1-swyhwrng/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_3_DD-1-swyhwrng/repro.py\", line 1, in <module>\n    from nox.workflow import GlobalConfig  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'GlobalConfig' from 'nox.workflow' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/workflow.py)\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ImportError",
+      "qualified_type": "builtins.ImportError",
+      "mro": [
+        "builtins.ImportError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "cannot import name 'GlobalConfig' from 'nox.workflow' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/workflow.py)",
+      "missing_module": "nox.workflow",
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_nox_3_DD-1-swyhwrng/repro.py",
+          "line": 1,
+          "name": "<module>",
+          "source": "from nox.workflow import GlobalConfig  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_nox_3_DD-1-swyhwrng/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_nox_3_DD-1-swyhwrng/repro.py\", line 1, in <module>\n    from nox.workflow import GlobalConfig  # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nImportError: cannot import name 'GlobalConfig' from 'nox.workflow' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/nox-afa3983bbac3-base/lib/python3.13/site-packages/nox/workflow.py)\n"
+    }
+  }
+}

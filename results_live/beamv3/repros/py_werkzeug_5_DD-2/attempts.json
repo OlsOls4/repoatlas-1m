@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1840,
+      "output_tokens": 1983,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Response.access_control_expose_headers.__doc__ is checked against the corrected header name.",
+      "argument_finding_is_false": "The mismatch is only in human-readable prose; the property is still bound to \"Access-Control-Expose-Headers\" by its first constructor argument, so runtime header mapping and behavior remain correct. A documentation-only wording error has no functional impact and could be considered cosmetic rather than a real library bug.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: ",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

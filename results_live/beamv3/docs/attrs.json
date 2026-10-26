@@ -1,0 +1,80 @@
+{
+  "repo": "attrs",
+  "ref": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+  "doc_files": [
+    "docs/api.rst",
+    "docs/examples.md",
+    "docs/init.md",
+    "docs/why.md",
+    "docs/extending.md",
+    "docs/names.md",
+    "README.md",
+    "docs/types.md",
+    "docs/glossary.md",
+    "docs/api-attr.rst",
+    "docs/how-does-it-work.md",
+    "docs/hashing.md",
+    "docs/index.md",
+    "docs/overview.md",
+    "docs/comparison.md",
+    "typing_tests/README.md",
+    "changelog.d/1592.change.md",
+    "changelog.d/1636.change.md",
+    "changelog.d/1547.change.md",
+    ".git_archival.txt",
+    "changelog.d/1593.change.md",
+    "changelog.d/1606.change.md",
+    "changelog.d/240.change.md",
+    "changelog.d/1571.change.md",
+    "changelog.d/1603.change.md",
+    "changelog.d/1564.change.md",
+    ".github/CONTRIBUTING.md",
+    ".github/AI_POLICY.md",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 401006,
+  "completion_tokens": 8888,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "signature",
+      "explanation": "The documented attr.s() signature omits force_kw_only, although the implementation accepts it and defaults it to True.",
+      "doc_citation": {
+        "path": "docs/api-attr.rst",
+        "start_line": 17,
+        "end_line": 17,
+        "quote": ".. autofunction:: attr.s(these=None, repr_ns=None, repr=None, cmp=None, hash=None, init=None, slots=False, frozen=False, weakref_slot=True, str=False, auto_attribs=False, kw_only=False, cache_hash=False, auto_exc=False, eq=None, order=None, auto_detect=False, collect_by_mro=False, getstate_setstate=None, on_setattr=None, field_transformer=None, match_args=True, unsafe_hash=None)"
+      },
+      "code_citation": {
+        "path": "src/attr/_make.py",
+        "start_line": 1379,
+        "end_line": 1379,
+        "quote": "force_kw_only=True,"
+      },
+      "proposed_fix": "Update the documented attr.s() signature to include force_kw_only=True before the closing parenthesis.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "name",
+      "explanation": "The documented Attribute repr examples include cmp=True and factory=NOTHING, but Attribute has no cmp or factory slots and therefore cannot have those repr fields.",
+      "doc_citation": {
+        "path": "docs/examples.md",
+        "start_line": 468,
+        "end_line": 468,
+        "quote": "TypeError: (\"'x' must be <type 'int'> (got '42' that is a <type 'str'>).\", Attribute(name='x', default=NOTHING, factory=NOTHING, validator=<instance_of validator for type <type 'int'>>, type=None, kw_only=False), <type 'int'>, '42')"
+      },
+      "code_citation": {
+        "path": "src/attr/_make.py",
+        "start_line": 2510,
+        "end_line": 2510,
+        "quote": "    __slots__ = (  # noqa: RUF023"
+      },
+      "proposed_fix": "Replace the stale Attribute repr text with the current runtime representation of attrs.Attribute.",
+      "fully_verified": true
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "repo": "structlog",
+  "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+  "doc_files": [
+    "docs/standard-library.md",
+    "docs/api.rst",
+    "docs/getting-started.md",
+    "docs/recipes.md",
+    "docs/bound-loggers.md",
+    "README.md",
+    "docs/console-output.md",
+    "docs/thread-local.md",
+    "docs/contextvars.md",
+    "docs/processors.md",
+    "docs/configuration.md",
+    "docs/logging-best-practices.md",
+    "docs/why.md",
+    "docs/frameworks.md",
+    "docs/performance.md",
+    "docs/twisted.md",
+    "docs/index.md",
+    "docs/testing.md",
+    "docs/glossary.md",
+    "docs/exceptions.md",
+    "docs/typing.md",
+    "typing_tests/README.md",
+    ".git_archival.txt",
+    ".github/CONTRIBUTING.md",
+    ".github/AI_POLICY.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".github/SECURITY.md",
+    ".github/CODE_OF_CONDUCT.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 404142,
+  "completion_tokens": 13539,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "name",
+      "explanation": "The documentation points to a non-existent `structlog.stdlib._log_levels` module for the mapping used by `add_log_level_number`. The code imports `NAME_TO_LEVEL` from the top-level `structlog._log_levels` module.",
+      "doc_citation": {
+        "path": "docs/standard-library.md",
+        "start_line": 120,
+        "end_line": 120,
+        "quote": "  The mapping of names to numbers is in `structlog.stdlib._log_levels._NAME_TO_LEVEL`."
+      },
+      "code_citation": {
+        "path": "src/structlog/stdlib.py",
+        "start_line": 39,
+        "end_line": 39,
+        "quote": "from ._log_levels import LEVEL_TO_NAME, NAME_TO_LEVEL, add_log_level"
+      },
+      "proposed_fix": "Replace `structlog.stdlib._log_levels._NAME_TO_LEVEL` with `structlog._log_levels.NAME_TO_LEVEL`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "default",
+      "explanation": "The documentation says `plain_traceback` is the default exception formatter when Rich is not installed, but the code also selects `better_traceback` when the optional better-exceptions package is installed.",
+      "doc_citation": {
+        "path": "docs/exceptions.md",
+        "start_line": 43,
+        "end_line": 43,
+        "quote": ": Is the default if [Rich] is not installed."
+      },
+      "code_citation": {
+        "path": "src/structlog/dev.py",
+        "start_line": 531,
+        "end_line": 536,
+        "quote": "if rich is not None:\n    default_exception_formatter = rich_traceback\nelif better_exceptions is not None:\n    default_exception_formatter = default_monochrome_exception_formatter = (\n        better_traceback\n    )"
+      },
+      "proposed_fix": "Change the documentation to state that `plain_traceback` is the default only when neither Rich nor better-exceptions is installed.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "signature",
+      "explanation": "The documentation describes the final processor return value as only a string or a tuple, but the code also accepts bytes, bytearray, and dict return values.",
+      "doc_citation": {
+        "path": "docs/bound-loggers.md",
+        "start_line": 65,
+        "end_line": 65,
+        "quote": "   For flexibility, the final processor can return either a string[^str] that is passed directly as a positional parameter, or a tuple `(args, kwargs)` that are passed as `wrapped_logger.log_method(*args, **kwargs)`."
+      },
+      "code_citation": {
+        "path": "src/structlog/_base.py",
+        "start_line": 176,
+        "end_line": 191,
+        "quote": "        if isinstance(event_dict, (str, bytes, bytearray)):\n            return (event_dict,), {}\n\n        if isinstance(event_dict, tuple):\n            # In this case we assume that the last processor returned a tuple\n            # of ``(args, kwargs)`` and pass it right through.\n            return event_dict\n\n        if isinstance(event_dict, dict):\n            return (), event_dict"
+      },
+      "proposed_fix": "Update the documentation to mention that final processors may also return bytes, bytearray, or a dict.",
+      "fully_verified": true
+    }
+  ]
+}

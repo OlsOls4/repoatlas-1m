@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "nox --json (run in a directory containing a noxfile)",
+  "expected_exception_type": "JSONDecodeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import json\nimport os\nimport subprocess\nimport sys\nimport tempfile\n\ntd = tempfile.mkdtemp()\nwith open(os.path.join(td, \"noxfile.py\"), \"w\") as f:\n    f.write(\"import nox\\n\\n@nox.session\\ndef tests(session):\\n    pass\\n\")\n\nproc = subprocess.run(\n    [sys.executable, \"-m\", \"nox\", \"--json\"],\n    cwd=td,\n    capture_output=True,\n    text=True,\n)\njson.loads(proc.stdout)  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

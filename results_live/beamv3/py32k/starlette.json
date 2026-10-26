@@ -1,0 +1,91 @@
+{
+  "repo": "starlette",
+  "ref": "master",
+  "chunks": {
+    "0": {
+      "paths": [
+        "starlette/middleware/__init__.py",
+        "starlette/__init__.py",
+        "starlette/types.py",
+        "starlette/responses.py",
+        "starlette/requests.py",
+        "starlette/routing.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 23026,
+      "completion_tokens": 2316,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "1": {
+      "paths": [
+        "starlette/datastructures.py",
+        "starlette/applications.py",
+        "starlette/exceptions.py",
+        "starlette/websockets.py",
+        "starlette/testclient.py",
+        "starlette/background.py",
+        "starlette/middleware/base.py",
+        "starlette/middleware/gzip.py",
+        "starlette/endpoints.py",
+        "starlette/middleware/sessions.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30543,
+      "completion_tokens": 1681,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "starlette/middleware/body_limit.py",
+        "starlette/staticfiles.py",
+        "starlette/authentication.py",
+        "starlette/middleware/trustedhost.py",
+        "starlette/convertors.py",
+        "starlette/middleware/cors.py",
+        "starlette/middleware/opentelemetry.py",
+        "starlette/schemas.py",
+        "starlette/templating.py",
+        "starlette/config.py",
+        "starlette/middleware/authentication.py",
+        "starlette/middleware/httpsredirect.py",
+        "starlette/_utils.py",
+        "starlette/concurrency.py",
+        "starlette/status.py",
+        "starlette/formparsers.py",
+        "starlette/_exception_handler.py",
+        "starlette/middleware/errors.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30109,
+      "completion_tokens": 2091,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "3": {
+      "paths": [
+        "starlette/middleware/exceptions.py",
+        "starlette/middleware/wsgi.py",
+        "benchmarks/_utils.py",
+        "benchmarks/gzip_benchmark.py",
+        "benchmarks/multipart_benchmark.py",
+        "benchmarks/json_benchmark.py",
+        "benchmarks/urlencoded_benchmark.py",
+        "benchmarks/file_response_benchmark.py",
+        "benchmarks/websocket_benchmark.py",
+        "benchmarks/request_benchmark.py",
+        "benchmarks/streaming_response_benchmark.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 19613,
+      "completion_tokens": 1306,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    }
+  }
+}

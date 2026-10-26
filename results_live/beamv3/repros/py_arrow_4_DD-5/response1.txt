@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "Call arrow.Arrow.span_range with frame and start only, omitting end and providing limit, because the doc marks end as optional.",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow\nfrom datetime import datetime\n\nstart = datetime(2020, 1, 1)\nspans = list(arrow.Arrow.span_range(\"day\", start, limit=3))  # DOC-LITERAL\nassert len(spans) == 3, \"span_range should return 3 spans\"\nprint(\"DOCS_OK\")\n"
+}

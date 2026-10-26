@@ -1,0 +1,52 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.03,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_nox_DD-2-ntg0kv2y/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_nox_DD-2-ntg0kv2y/repro.py\", line 3, in <module>\n    from click.testing import CliRunner\nModuleNotFoundError: No module named 'click'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ModuleNotFoundError",
+      "qualified_type": "builtins.ModuleNotFoundError",
+      "mro": [
+        "builtins.ModuleNotFoundError",
+        "builtins.ImportError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "No module named 'click'",
+      "missing_module": "click",
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_nox_DD-2-ntg0kv2y/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "from click.testing import CliRunner"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_nox_DD-2-ntg0kv2y/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_nox_DD-2-ntg0kv2y/repro.py\", line 3, in <module>\n    from click.testing import CliRunner\nModuleNotFoundError: No module named 'click'\n"
+    }
+  }
+}

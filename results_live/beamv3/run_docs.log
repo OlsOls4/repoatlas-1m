@@ -1,0 +1,36 @@
+[docs starlette] doc files=28 est_prompt=395473
+  starlette: prompt=394860 completion=5016 est_prompt=395473 finish=stop 26s ledger=3189086
+  -> 3 findings (3 verified) err=None
+[docs httpx] doc files=26 est_prompt=393522
+  httpx: prompt=392905 completion=5784 est_prompt=393522 finish=stop 21s ledger=3587775
+  -> 8 findings (7 verified) err=None
+[docs click] doc files=36 est_prompt=389703
+  click: prompt=389076 completion=23041 est_prompt=389703 finish=stop 69s ledger=3999892
+  -> 4 findings (3 verified) err=None
+[docs structlog] doc files=28 est_prompt=404760
+  structlog: prompt=404142 completion=13539 est_prompt=404760 finish=stop 45s ledger=4417573
+  -> 3 findings (1 verified) err=None
+[docs nox] doc files=11 est_prompt=347190
+  nox: prompt=346594 completion=11372 est_prompt=347190 finish=stop 44s ledger=4775539
+  -> 3 findings (3 verified) err=None
+[docs arrow] doc files=9 est_prompt=329818
+  arrow: prompt=329222 completion=6900 est_prompt=329818 finish=stop 23s ledger=5111661
+  -> 4 findings (0 verified) err=None
+[docs cattrs] doc files=27 est_prompt=307471
+  cattrs: prompt=306854 completion=17005 est_prompt=307471 finish=stop 55s ledger=5435520
+  -> 5 findings (3 verified) err=None
+[docs marshmallow] doc files=37 est_prompt=295645
+  marshmallow: prompt=295001 completion=9582 est_prompt=295645 finish=stop 32s ledger=5740103
+  -> 4 findings (4 verified) err=None
+[docs attrs] doc files=29 est_prompt=401612
+  attrs: prompt=401006 completion=8888 est_prompt=401612 finish=stop 29s ledger=6149997
+  -> 2 findings (2 verified) err=None
+[docs jinja] doc files=16 est_prompt=357719
+  jinja: prompt=357115 completion=6368 est_prompt=357719 finish=stop 21s ledger=6513480
+  -> 5 findings (2 verified) err=None
+[docs werkzeug] doc files=37 est_prompt=387462
+  werkzeug: prompt=386824 completion=4297 est_prompt=387462 finish=stop 22s ledger=6904601
+  -> 1 findings (1 verified) err=None
+[docs pydantic-settings] doc files=3 est_prompt=366771
+  pydantic-settings: prompt=366187 completion=4346 est_prompt=366771 finish=stop 18s ledger=7275134
+  -> 1 findings (1 verified) err=None

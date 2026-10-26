@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": true,
+  "model_verdict": "false_positive",
+  "doc_literal_usage": "attrs.evolve(instance, x=1)",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import attrs\n\n@attrs.define\nclass Point:\n    x: int = 0\n\np = Point()\nq = attrs.evolve(p, x=1)  # DOC-LITERAL\nassert q.x == 1\nassert q is not p\nprint(\"DOCS_OK\")"
+}

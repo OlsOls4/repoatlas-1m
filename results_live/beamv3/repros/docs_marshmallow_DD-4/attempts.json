@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1621,
+      "output_tokens": 2341,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Create a schema with a non-required field declared using `default`, load an empty dict, and assert the documented default value appears in the result.",
+      "argument_finding_is_false": "The term 'default' may be a documented shorthand for a field's load-time default, and marshmallow historically accepted `default` as an alias; however, the cited code path explicitly reads `self.load_default`, and setting only `default` does not necessarily populate `load_default`, so the finding is likely accurate for this commit.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unexpected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: Field.__init__() got an unexpected keyword argument 'default'",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2237,
+      "output_tokens": 1270,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Configure a field using the documented `default` notion, load an empty dict, and assert the default value is present.",
+      "argument_finding_is_false": "Even though `default` is no longer a constructor keyword, the documentation's behavioural claim can still be tested by configuring the legacy `default` attribute; however, deserialization reads `load_default`, so the documented behaviour does not hold.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "AttributeError",
+      "error_excerpt": "[script line 7, not a DOC-LITERAL line] AttributeError: type object 'S' has no attribute 'value'",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

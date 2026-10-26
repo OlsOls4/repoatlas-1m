@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "converter.structure(data, typing.Sequence[int]) returns a list with the same values.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "typing.Sequence[int] structures into a tuple, not a list",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import cattrs\nimport typing\n\nconverter = cattrs.Converter()\ndata = [1, 2, 3]\nstructured = converter.structure(data, typing.Sequence[int])  # DOC-LITERAL\nassert isinstance(structured, list), \"typing.Sequence[T] converts to lists\"  # DOC-LITERAL\nassert structured == [1, 2, 3], \"typing.Sequence[T] converts to lists\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

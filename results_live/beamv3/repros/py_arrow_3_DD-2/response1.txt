@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": true,
+  "doc_literal_usage": "locale.describe(\"seconds\", -5) == locale.describe(\"seconds\", 5)",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow.locales as locales\n\ncandidates = [\n    getattr(locales, name)\n    for name in dir(locales)\n    if name.endswith(\"Locale\") and hasattr(getattr(locales, name), \"timeframes_only_distance\")\n]\nassert candidates\ncandidate = candidates[0]\nlocale = candidate()\n# DOC-LITERAL-BEGIN\nresult_past = locale.describe(\"seconds\", -5)\nresult_future = locale.describe(\"seconds\", 5)\nassert result_past == result_future, \"key is always future when only_distance=False\"\n# DOC-LITERAL-END\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "Access werkzeug.http.HTTP_STATUS_CODES and assert its deprecation warning states removal in Werkzeug 3.3.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import warnings\nimport werkzeug.http as http\n\nwith warnings.catch_warnings(record=True) as caught:\n    warnings.simplefilter(\"always\")\n    _ = http.HTTP_STATUS_CODES  # DOC-LITERAL\n    assert any(\"Werkzeug 3.3\" in str(w.message) for w in caught), \"docs say removed in Werkzeug 3.3\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

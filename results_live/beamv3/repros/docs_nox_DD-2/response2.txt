@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "$ nox --list\nAvailable sessions:",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "Nox prints 'Sessions defined in <noxfile>:' rather than the documented 'Available sessions:'.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from pathlib import Path\n\nfrom click.testing import CliRunner\n\nfrom nox.__main__ import main\n\nrunner = CliRunner()\nwith runner.isolated_filesystem():\n    Path('noxfile.py').write_text(\n        'import nox\\n\\n'\n        '@nox.session\\n'\n        'def tests(session):\\n'\n        '    \"\"\"Run the test suite.\"\"\"\\n'\n        \"    session.run('pytest')\\n\"\n    )\n    result = runner.invoke(main, ['--list'])  # DOC-LITERAL\n    print(result.output, end='')\n    assert result.exit_code == 0\n    assert 'Available sessions:' in result.output  # DOC-LITERAL\n\nprint('DOCS_OK')\n"
+}

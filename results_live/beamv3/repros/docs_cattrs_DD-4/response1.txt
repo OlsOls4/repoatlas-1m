@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "One could argue the sentence describes the underlying cbor2 library's default rather than cattrs' configured converter, but the cited configure_converter explicitly registers timestamp unstructuring, and make_converter calls it unconditionally. Thus the documentation's 'by default' claim is contradicted by the shipped converter behavior.",
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "With the default cbor2 converter, an unstructured datetime is asserted to be a str, as the docs claim text-string serialization.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": ["cbor2"],
+  "needs_network_or_server": false,
+  "repro_script": "from datetime import datetime, timezone\n\nfrom cattrs.preconf.cbor2 import make_converter\n\nconverter = make_converter()\ndt = datetime(2024, 1, 1, tzinfo=timezone.utc)\nunstructured = converter.unstructure(dt)\nassert isinstance(unstructured, str), \"docs say datetimes are serialized as a text string by default\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

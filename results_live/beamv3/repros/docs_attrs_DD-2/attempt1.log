@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.07,
+  "network_isolation": "unshare-netns",
+  "stdout": "**********************************************************************\nFile \"/tmp/repro-docs_attrs_DD-2-4gpuob5d/repro.py\", line 8, in doc\nFailed example:\n    C(\"42\")\nExpected:\n    Traceback (most recent call last):\n       ...\n    TypeError: (\"'x' must be <type 'int'> (got '42' that is a <type 'str'>).\", Attribute(name='x', default=NOTHING, factory=NOTHING, validator=<instance_of validator for type <type 'int'>>, type=None, kw_only=False), <type 'int'>, '42')\nGot:\n    Traceback (most recent call last):\n      File \"/usr/lib/python3.13/doctest.py\", line 1395, in __run\n        exec(compile(example.source, filename, \"single\",\n        ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                     compileflags, True), test.globs)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n      File \"<doctest doc[3]>\", line 1, in <module>\n        C(\"42\")\n        ~^^^^^^\n      File \"<attrs generated methods __main__.C>\", line 26, in __init__\n        __attr_validator_x(self, __attr_x, self.x)\n        ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n      File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/validators.py\", line 103, in __call__\n        raise TypeError(\n        ...<4 lines>...\n        )\n    TypeError: (\"'x' must be <class 'int'> (got '42' that is a <class 'str'>).\", Attribute(name='x', default=NOTHING, validator=<instance_of validator for type <class 'int'>>, repr=True, eq=True, eq_key=None, order=True, order_key=None, hash=None, init=True, metadata=mappingproxy({}), type=<class 'int'>, converter=None, kw_only=False, inherited=False, on_setattr=None, alias='x'), <class 'int'>, '42')\n",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_attrs_DD-2-4gpuob5d/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_attrs_DD-2-4gpuob5d/repro.py\", line 20, in <module>\n    assert result.failed == 0\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_attrs_DD-2-4gpuob5d/repro.py",
+          "line": 20,
+          "name": "<module>",
+          "source": "assert result.failed == 0"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_attrs_DD-2-4gpuob5d/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_attrs_DD-2-4gpuob5d/repro.py\", line 20, in <module>\n    assert result.failed == 0\n           ^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  }
+}

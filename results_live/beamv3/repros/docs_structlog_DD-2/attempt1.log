@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.09,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_structlog_DD-2-393ojzmj/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_structlog_DD-2-393ojzmj/repro.py\", line 5, in <module>\n    assert structlog.dev.default_exception_formatter is structlog.dev.plain_traceback, \"docs say plain_traceback is default if Rich is not installed\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say plain_traceback is default if Rich is not installed\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "docs say plain_traceback is default if Rich is not installed",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_structlog_DD-2-393ojzmj/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "assert structlog.dev.default_exception_formatter is structlog.dev.plain_traceback, \"docs say plain_traceback is default if Rich is not installed\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_structlog_DD-2-393ojzmj/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_structlog_DD-2-393ojzmj/repro.py\", line 5, in <module>\n    assert structlog.dev.default_exception_formatter is structlog.dev.plain_traceback, \"docs say plain_traceback is default if Rich is not installed\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say plain_traceback is default if Rich is not installed\n"
+    }
+  }
+}

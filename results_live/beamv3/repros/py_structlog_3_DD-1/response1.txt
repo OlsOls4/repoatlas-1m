@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "No plausible alias or passthrough is evident: the cited docstring names `wrap`, while the only module-level function is `wrap_dict`, and there is no `wrap` symbol to resolve.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Import `structlog.threadlocal` and access the documented `wrap` symbol.",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "The class docstring references `wrap`, but the module defines `wrap_dict`, so the documented name cannot be resolved.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import structlog.threadlocal as tl\n\ntl.wrap  # DOC-LITERAL\n\nprint(\"DOCS_OK\")"
+}

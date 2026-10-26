@@ -1,0 +1,150 @@
+{
+  "repo": "structlog",
+  "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/structlog/__init__.py",
+        "typing_tests/__init__.py",
+        "src/structlog/twisted.py",
+        "typing_tests/api.py",
+        "src/structlog/typing.py",
+        "src/structlog/_config.py",
+        "src/structlog/contextvars.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 20360,
+      "completion_tokens": 2395,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The get_logger docstring says the default bound logger is structlog.BoundLogger, but the built-in default wrapper class is a filtering bound logger created by make_filtering_bound_logger(0).",
+          "doc_citation": {
+            "path": "src/structlog/_config.py",
+            "start_line": 137,
+            "end_line": 137,
+            "quote": "and is `structlog.BoundLogger` by default."
+          },
+          "code_citation": {
+            "path": "src/structlog/_config.py",
+            "start_line": 61,
+            "end_line": 61,
+            "quote": "_BUILTIN_DEFAULT_WRAPPER_CLASS = make_filtering_bound_logger(0)"
+          },
+          "proposed_fix": "Replace \"and is `structlog.BoundLogger` by default.\" with \"and is a filtering bound logger by default.\"",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "The FilteringBoundLogger.new docstring refers to *initial_values*, but its actual keyword parameter is named *new_values*.",
+          "doc_citation": {
+            "path": "src/structlog/typing.py",
+            "start_line": 191,
+            "end_line": 191,
+            "quote": "Clear context and binds *initial_values* using `bind`."
+          },
+          "code_citation": {
+            "path": "src/structlog/typing.py",
+            "start_line": 189,
+            "end_line": 189,
+            "quote": "    def new(self, **new_values: Any) -> FilteringBoundLogger:"
+          },
+          "proposed_fix": "Replace \"binds *initial_values* using `bind`.\" with \"binds *new_values* using `bind`.\"",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/structlog/processors.py",
+        "src/structlog/_log_levels.py",
+        "src/structlog/_base.py",
+        "src/structlog/_frames.py",
+        "src/structlog/exceptions.py",
+        "src/structlog/dev.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30073,
+      "completion_tokens": 2787,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "src/structlog/tracebacks.py",
+        "src/structlog/_output.py",
+        "src/structlog/_native.py",
+        "src/structlog/_greenlets.py",
+        "src/structlog/_utils.py",
+        "src/structlog/stdlib.py",
+        "docs/conf.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31021,
+      "completion_tokens": 2713,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The BytesLoggerFactory docstring says positional arguments are silently ignored, but __call__ passes the first positional argument as the BytesLogger's name.",
+          "doc_citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 368,
+            "end_line": 368,
+            "quote": "Positional arguments are silently ignored."
+          },
+          "code_citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 379,
+            "end_line": 379,
+            "quote": "return BytesLogger(self._file, name=args[0] if args else None)"
+          },
+          "proposed_fix": "Replace \"Positional arguments are silently ignored.\" in BytesLoggerFactory with \"The first positional argument is used as the logger's optional ``name``; further positional arguments are ignored.\"",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/structlog/threadlocal.py",
+        "src/structlog/testing.py",
+        "src/structlog/_generic.py",
+        "src/structlog/types.py",
+        "show_off.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 7696,
+      "completion_tokens": 1637,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "name",
+          "explanation": "The class docstring refers to a `wrap` function, but the module defines `wrap_dict`.",
+          "doc_citation": {
+            "path": "src/structlog/threadlocal.py",
+            "start_line": 177,
+            "end_line": 178,
+            "quote": "Use :func:`wrap` to instantiate and use\n:func:`structlog.BoundLogger.new` to clear the context."
+          },
+          "code_citation": {
+            "path": "src/structlog/threadlocal.py",
+            "start_line": 84,
+            "end_line": 84,
+            "quote": "def wrap_dict(dict_class: type[Context]) -> type[Context]:"
+          },
+          "proposed_fix": "Change the class docstring from `Use :func:`wrap` to instantiate and use` to `Use :func:`wrap_dict` to instantiate and use`.",
+          "fully_verified": false
+        }
+      ]
+    }
+  }
+}

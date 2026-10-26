@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The cited code is the private `_install_null` implementation, not necessarily the public `Environment.install_null_translations` signature; a public wrapper could intentionally expose `newstyle=False` while passing a sentinel to the internal method. However, the reported drift concerns the documented default of the public method, so the direct signature check remains the relevant test.",
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "Create an Environment with the i18n extension, call install_null_translations() using the documented default, and assert its `newstyle` parameter default is False.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The installed method's `newstyle` parameter defaults to None rather than False.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nimport jinja2\n\nenv = jinja2.Environment(extensions=[\"jinja2.ext.i18n\"])\nenv.install_null_translations()  # DOC-LITERAL\nassert env.newstyle_gettext is False, \"install_null_translations() should make newstyle False\"\nsig = inspect.signature(env.install_null_translations)\nassert sig.parameters[\"newstyle\"].default is False, \"documented default is newstyle=False\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

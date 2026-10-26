@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1870,
+      "output_tokens": 2148,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "nox.project.load_toml('pyproject.toml'); nox.project.python_versions(PYPROJECT); assert ALL_PYTHON == ['3.12', '3.13', '3.14', '3.14t', '3.15', '3.15t']",
+      "argument_finding_is_false": "The cited line is only a code comment, not an executable assertion, so its malformed quote could be dismissed as a trivial typo rather than a behavioral claim. However, its intended ordering still contradicts nox.project.python_versions, which places all non-free-threaded versions first, so the documented illustrative result is wrong.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs list 3.14t before 3.15",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

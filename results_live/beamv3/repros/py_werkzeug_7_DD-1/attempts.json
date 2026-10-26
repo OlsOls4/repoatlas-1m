@@ -1,0 +1,43 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1758,
+      "output_tokens": 309,
+      "cached_input_tokens": 128
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unparseable_response",
+      "exception_type": null,
+      "error_excerpt": "Model response is not JSON.",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1857,
+      "output_tokens": 2017,
+      "cached_input_tokens": 1728
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Generate a PBKDF2 password hash with method='pbkdf2' and assert its method segment is the documented pbkdf2:sha256:600000.",
+      "argument_finding_is_false": "No plausible false positive: generating a hash with method='pbkdf2' embeds the iteration count from DEFAULT_PBKDF2_ITERATIONS, so the documented 600000 value is directly contradicted by the generated hash.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: default PBKDF2 is pbkdf2:sha256:600000",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

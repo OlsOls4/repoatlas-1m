@@ -1,0 +1,69 @@
+{
+  "repo": "werkzeug",
+  "ref": "b73dce5a2ce14f7c7fd645699d1d878de48d2948",
+  "doc_files": [
+    "docs/tutorial.rst",
+    "docs/routing.rst",
+    "docs/quickstart.rst",
+    "docs/serving.rst",
+    "docs/request_data.rst",
+    "docs/debug.rst",
+    "docs/wrappers.rst",
+    "docs/deployment/uwsgi.rst",
+    "docs/deployment/gunicorn.rst",
+    "docs/http.rst",
+    "docs/local.rst",
+    "docs/exceptions.rst",
+    "docs/wsgi.rst",
+    "docs/test.rst",
+    "docs/deployment/apache-httpd.rst",
+    "docs/deployment/mod_wsgi.rst",
+    "docs/deployment/nginx.rst",
+    "README.md",
+    "docs/deployment/index.rst",
+    "docs/deployment/gevent.rst",
+    "docs/deployment/eventlet.rst",
+    "docs/deployment/waitress.rst",
+    "docs/installation.rst",
+    "docs/datastructures.rst",
+    "docs/terms.rst",
+    "docs/deployment/proxy_fix.rst",
+    "docs/utils.rst",
+    "docs/index.rst",
+    "docs/middleware/index.rst",
+    "docs/urls.rst",
+    "docs/middleware/shared_data.rst",
+    "docs/middleware/dispatcher.rst",
+    "docs/middleware/http_proxy.rst",
+    "docs/middleware/proxy_fix.rst",
+    "docs/middleware/profiler.rst",
+    "docs/middleware/lint.rst",
+    ".github/pull_request_template.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 386824,
+  "completion_tokens": 4297,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "The documentation says HTTP_STATUS_CODES will be removed in Werkzeug 3.3, but the deprecation warning in code says it will be removed in Werkzeug 4.0.",
+      "doc_citation": {
+        "path": "docs/http.rst",
+        "start_line": 121,
+        "end_line": 121,
+        "quote": "        Will be removed in Werkzeug 3.3. Use :class:`http.HTTPStatus` instead."
+      },
+      "code_citation": {
+        "path": "src/werkzeug/http.py",
+        "start_line": 1578,
+        "end_line": 1579,
+        "quote": "                \"The 'HTTP_STATUS_CODES' data is deprecated and will be removed in\"\n                \" Werkzeug 4.0. Use Python's built-in 'http.HTTPStatus' instead.\","
+      },
+      "proposed_fix": "In docs/http.rst, change 'Will be removed in Werkzeug 3.3.' to 'Will be removed in Werkzeug 4.0.'",
+      "fully_verified": true
+    }
+  ]
+}

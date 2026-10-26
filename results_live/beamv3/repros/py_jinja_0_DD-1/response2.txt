@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The documented env-policy default could describe the environment-aware tojson filter path (do_tojson), which injects env.policies values into htmlsafe_json_dumps; the function itself is a low-level helper without an env parameter.",
+  "model_verdict": "true",
+  "doc_literal_usage": "htmlsafe_json_dumps(obj) called without dumps while an Environment policy sets a custom dumps function",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import json\nfrom jinja2 import Environment\nfrom jinja2.utils import htmlsafe_json_dumps\n\nenv = Environment()\ndef custom_dumps(obj):\n    return '{\"custom\": true}'\nenv.policies[\"json.dumps_function\"] = custom_dumps\n\nresult = htmlsafe_json_dumps({\"a\": 1})  # DOC-LITERAL\nassert '\"custom\"' in result, \"docs say dumps defaults to env.policies[json.dumps_function]\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

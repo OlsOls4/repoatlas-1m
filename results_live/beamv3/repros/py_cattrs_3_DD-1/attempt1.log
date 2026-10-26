@@ -1,0 +1,58 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_cattrs_3_DD-1-78wzlpz4/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_cattrs_3_DD-1-78wzlpz4/repro.py\", line 2, in <module>\n    from cattrs.preconf.ujson import make_converter\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/preconf/ujson.py\", line 9, in <module>\n    from ujson import dumps, loads\nModuleNotFoundError: No module named 'ujson'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "ModuleNotFoundError",
+      "qualified_type": "builtins.ModuleNotFoundError",
+      "mro": [
+        "builtins.ModuleNotFoundError",
+        "builtins.ImportError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "No module named 'ujson'",
+      "missing_module": "ujson",
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_cattrs_3_DD-1-78wzlpz4/repro.py",
+          "line": 2,
+          "name": "<module>",
+          "source": "from cattrs.preconf.ujson import make_converter"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/preconf/ujson.py",
+          "line": 9,
+          "name": "<module>",
+          "source": "from ujson import dumps, loads"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_cattrs_3_DD-1-78wzlpz4/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_cattrs_3_DD-1-78wzlpz4/repro.py\", line 2, in <module>\n    from cattrs.preconf.ujson import make_converter\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/preconf/ujson.py\", line 9, in <module>\n    from ujson import dumps, loads\nModuleNotFoundError: No module named 'ujson'\n"
+    }
+  }
+}

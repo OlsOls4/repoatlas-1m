@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1866,
+      "output_tokens": 2974,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "htmlsafe_json_dumps(obj) called without dumps, while an Environment policy sets a custom dumps function",
+      "argument_finding_is_false": "The documented env-policy default could be describing the environment-aware tojson filter path (do_tojson), which injects env.policies values into htmlsafe_json_dumps; the function itself is intentionally a low-level helper with no env parameter.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "AssertionError",
+      "error_excerpt": "[script line 11, not a DOC-LITERAL line] AssertionError: docs say dumps defaults to env.policies[json.dumps_function]",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2437,
+      "output_tokens": 359,
+      "cached_input_tokens": 1856
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "htmlsafe_json_dumps(obj) called without dumps while an Environment policy sets a custom dumps function",
+      "argument_finding_is_false": "The documented env-policy default could describe the environment-aware tojson filter path (do_tojson), which injects env.policies values into htmlsafe_json_dumps; the function itself is a low-level helper without an env parameter.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say dumps defaults to env.policies[json.dumps_function]",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "repro_script": "from cattrs.preconf.cbor2 import make_converter\n\nconverter = make_converter()\ns = {1, 2, 3}\nu = converter.unstructure(s)  # DOC-LITERAL\nassert isinstance(u, set), \"Sets are serialized and deserialized to sets.\"  # DOC-LITERAL\nr = converter.structure(u, set)\nassert r == s, \"Sets are serialized and deserialized to sets.\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "converter = make_converter(); u = converter.unstructure({1, 2, 3}); assert isinstance(u, set), \"Sets are serialized and deserialized to sets.\" # DOC-LITERAL",
+  "argument_finding_is_false": "The phrase could be read as referring to CBOR-level encoding (cbor2 can encode Python sets as CBOR sets) rather than cattrs unstructuring, but cattrs' make_converter explicitly sets unstruct_collection_overrides[Set] = list, so a converted set does not round-trip through unstructure as a set.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [
+    "cbor2"
+  ],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,58 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.05,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_click_DD-4-64zim3dv/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_click_DD-4-64zim3dv/repro.py\", line 14, in <module>\n    script = complete.source()  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/click-2247b35ea1c4-base/lib/python3.13/site-packages/click/shell_completion.py\", line 345, in source\n    return self.source_template % self.source_vars()\n           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~\nKeyError: 'foo_bar'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "KeyError",
+      "qualified_type": "builtins.KeyError",
+      "mro": [
+        "builtins.KeyError",
+        "builtins.LookupError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'foo_bar'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_click_DD-4-64zim3dv/repro.py",
+          "line": 14,
+          "name": "<module>",
+          "source": "script = complete.source()  # DOC-LITERAL"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/click-2247b35ea1c4-base/lib/python3.13/site-packages/click/shell_completion.py",
+          "line": 345,
+          "name": "source",
+          "source": "return self.source_template % self.source_vars()"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_click_DD-4-64zim3dv/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_click_DD-4-64zim3dv/repro.py\", line 14, in <module>\n    script = complete.source()  # DOC-LITERAL\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/click-2247b35ea1c4-base/lib/python3.13/site-packages/click/shell_completion.py\", line 345, in source\n    return self.source_template % self.source_vars()\n           ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~\nKeyError: 'foo_bar'\n"
+    }
+  }
+}

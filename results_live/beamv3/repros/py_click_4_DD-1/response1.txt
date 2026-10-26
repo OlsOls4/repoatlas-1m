@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The versionchanged note is historical prose, not a callable contract; no API accepts a 'message' keyword, so the typo cannot mislead a working call. But the note explicitly anchors the conversion behavior to a parameter named 'message', which does not exist, so readers tracing the changelog to the signature hit a mismatch. The substantive claim (non-str converted to str) is true for 'text', so behavior is correct; only wording drifts.",
+  "model_verdict": "finding is a real but cosmetic doc typo; behavior correct",
+  "doc_literal_usage": "click.style(message=42)",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import click\nvalue = click.style(message=42)  # DOC-LITERAL\nassert isinstance(value, str), \"style returns a string\"\nprint(\"DOCS_OK\")\n"
+}

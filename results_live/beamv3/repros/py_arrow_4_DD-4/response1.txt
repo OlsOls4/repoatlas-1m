@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The finding is likely correct: `interval`'s signature has `end: dt_datetime` with no default, and there is no visible `*args`, `**kwargs`, overload, or alias that would make `end` optional. Nothing in the shown signature suggests a hidden default.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Call `arrow.Arrow.interval(\"day\", datetime(2020, 1, 1))`, omitting `end` as the docs imply is allowed.",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from datetime import datetime\nimport arrow\n\nintervals = list(arrow.Arrow.interval(\"day\", datetime(2020, 1, 1)))  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

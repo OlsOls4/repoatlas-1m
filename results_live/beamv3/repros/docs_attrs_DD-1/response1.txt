@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": true,
+  "doc_literal_usage": "inspect.signature(attr.s) is compared against the documented attr.s(...) signature string; the documented one omits force_kw_only",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import attr\nimport inspect\n\ndocumented = \"attr.s(these=None, repr_ns=None, repr=None, cmp=None, hash=None, init=None, slots=False, frozen=False, weakref_slot=True, str=False, auto_attribs=False, kw_only=False, cache_hash=False, auto_exc=False, eq=None, order=None, auto_detect=False, collect_by_mro=False, getstate_setstate=None, on_setattr=None, field_transformer=None, match_args=True, unsafe_hash=None)\"\nactual_params = list(inspect.signature(attr.s).parameters)\n# DOC-LITERAL-BEGIN\nassert \"force_kw_only\" not in actual_params, \"docs omit force_kw_only but implementation accepts it\"\n# DOC-LITERAL-END\nprint(\"DOCS_OK\")\n"
+}

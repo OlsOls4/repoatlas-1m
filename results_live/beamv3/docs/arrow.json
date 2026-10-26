@@ -1,0 +1,98 @@
+{
+  "repo": "arrow",
+  "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+  "doc_files": [
+    "docs/guide.rst",
+    "README.rst",
+    "docs/index.rst",
+    "docs/api-guide.rst",
+    "docs/getting-started.rst",
+    ".github/pull_request_template.md",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/ISSUE_TEMPLATE/documentation.md",
+    ".github/ISSUE_TEMPLATE/feature_request.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 329222,
+  "completion_tokens": 6900,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "The formatter only outputs datetime.hour values from 00 through 23, but the guide lists 24 as a possible HH output.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 416,
+        "end_line": 416,
+        "quote": "||                                |HH            |00, 01, 02 ... 23, 24                      |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": "            return f\"{dt.hour:02d}\""
+      },
+      "proposed_fix": "Change the guide's HH output range from '00, 01, 02 ... 23, 24' to '00, 01, 02 ... 22, 23'.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "default",
+      "explanation": "The formatter only outputs datetime.hour values from 0 through 23, but the guide lists 24 as a possible H output.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 418,
+        "end_line": 418,
+        "quote": "||                                |H             |0, 1, 2 ... 23, 24                         |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 83,
+        "end_line": 83,
+        "quote": "            return f\"{dt.hour}\""
+      },
+      "proposed_fix": "Change the guide's H output range from '0, 1, 2 ... 23, 24' to '0, 1, 2 ... 22, 23'.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "default",
+      "explanation": "The DDDD formatter can produce day-of-year 366 in leap years, but the guide lists 365 as its maximum output.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 398,
+        "end_line": 398,
+        "quote": "||**Day of Year**                 |DDDD          |001, 002, 003 ... 364, 365                 |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 62,
+        "end_line": 62,
+        "quote": "            return f\"{dt.timetuple().tm_yday:03d}\""
+      },
+      "proposed_fix": "Change the guide's DDDD output range to include '366' for leap years, e.g. '001, 002, 003 ... 364, 365, 366'.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "default",
+      "explanation": "The DDD formatter can produce day-of-year 366 in leap years, but the guide lists 365 as its maximum output.",
+      "doc_citation": {
+        "path": "docs/guide.rst",
+        "start_line": 400,
+        "end_line": 400,
+        "quote": "||                                |DDD           |1, 2, 3 ... 364, 365                       |"
+      },
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 64,
+        "end_line": 64,
+        "quote": "            return f\"{dt.timetuple().tm_yday}\""
+      },
+      "proposed_fix": "Change the guide's DDD output range to include '366' for leap years, e.g. '1, 2, 3 ... 365, 366'.",
+      "fully_verified": false
+    }
+  ]
+}

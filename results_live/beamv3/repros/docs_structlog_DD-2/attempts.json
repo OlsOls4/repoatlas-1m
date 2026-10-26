@@ -1,0 +1,29 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1740,
+      "output_tokens": 1039,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "When Rich is unavailable but better-exceptions is installed, the default exception formatter is better_traceback, not plain_traceback, so the assertion fails.",
+      "doc_literal_usage": "assert structlog.dev.default_exception_formatter is structlog.dev.plain_traceback",
+      "argument_finding_is_false": "The docs' claim is specifically scoped to 'if Rich is not installed'. If better-exceptions also happens to be installed, the runtime default switches to better_traceback, so the statement as written is incomplete rather than strictly false. However, the claim is presented as a default guarantee in the docs, and the code path confirms a second optional dependency overrides it.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [
+        "better-exceptions"
+      ],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say plain_traceback is default if Rich is not installed",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

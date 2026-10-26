@@ -1,0 +1,249 @@
+{
+  "repo": "nox",
+  "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+  "chunks": {
+    "0": {
+      "paths": [
+        "nox/__init__.py",
+        "nox/_options.py",
+        "nox/sessions.py",
+        "nox/registry.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 26528,
+      "completion_tokens": 3662,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The help text says download_python defaults to 'auto', but the option field itself defaults to None.",
+          "doc_citation": {
+            "path": "nox/_options.py",
+            "start_line": 206,
+            "end_line": 208,
+            "quote": "\"When should nox download python standalone builds to run the sessions,\"\n                \" defaults to 'auto' which will download when the version requested can't\"\n                \" be found in the running environment. Environment variable: NOX_DOWNLOAD_PYTHON\""
+          },
+          "code_citation": {
+            "path": "nox/_options.py",
+            "start_line": 199,
+            "end_line": 199,
+            "quote": "default=None,"
+          },
+          "proposed_fix": "Change the help text to state that the default is None and is resolved to 'auto'.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "default",
+          "explanation": "The help text states the parallel default is 1, but the option field defaults to None.",
+          "doc_citation": {
+            "path": "nox/_options.py",
+            "start_line": 290,
+            "end_line": 291,
+            "quote": "\" session finishes. Default is 1 (sequential). Environment\"\n                \" variable: NOX_PARALLEL\""
+          },
+          "code_citation": {
+            "path": "nox/_options.py",
+            "start_line": 274,
+            "end_line": 274,
+            "quote": "default=None,"
+          },
+          "proposed_fix": "Change the help text to state that the default is sequential (None resolves to a single job).",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "default",
+          "explanation": "The run() docstring says the external parameter defaults to False, but its signature defaults to None.",
+          "doc_citation": {
+            "path": "nox/sessions.py",
+            "start_line": 489,
+            "end_line": 489,
+            "quote": ":param external: If False (the default) then programs not in the"
+          },
+          "code_citation": {
+            "path": "nox/sessions.py",
+            "start_line": 406,
+            "end_line": 406,
+            "quote": "external: ExternalType | None = None,"
+          },
+          "proposed_fix": "Rewrite the parameter documentation to say the default is None and is resolved based on the session environment.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-4",
+          "drift_kind": "signature",
+          "explanation": "The run() docstring types external as bool, but the signature accepts ExternalType | None.",
+          "doc_citation": {
+            "path": "nox/sessions.py",
+            "start_line": 494,
+            "end_line": 494,
+            "quote": ":type external: bool"
+          },
+          "code_citation": {
+            "path": "nox/sessions.py",
+            "start_line": 406,
+            "end_line": 406,
+            "quote": "external: ExternalType | None = None,"
+          },
+          "proposed_fix": "Change the documented type from bool to ExternalType or None.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "nox/_cli.py",
+        "nox/project.py",
+        "nox/_parametrize.py",
+        "nox/virtualenv.py",
+        "nox/_option_set.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30007,
+      "completion_tokens": 1987,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "name",
+          "explanation": "The Param docstring documents a parameter named `args`, but __init__ accepts the positional arguments as the variadic `*args`, not a named `args` parameter.",
+          "doc_citation": {
+            "path": "nox/_parametrize.py",
+            "start_line": 39,
+            "end_line": 39,
+            "quote": "        args (List[Any]): The list of args to pass to the invoked function."
+          },
+          "code_citation": {
+            "path": "nox/_parametrize.py",
+            "start_line": 49,
+            "end_line": 49,
+            "quote": "        *args: Any,"
+          },
+          "proposed_fix": "Update the Param docstring Args entry from `args (List[Any])` to `*args (Any)` to match the variadic signature of Param.__init__.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "nox/tasks.py",
+        "noxfile.py",
+        "nox/logger.py",
+        "nox/manifest.py",
+        "nox/_decorators.py",
+        "nox/command.py",
+        "nox/popen.py",
+        "nox/_merge.py",
+        "nox/_resolver.py",
+        "nox/_rattler.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30386,
+      "completion_tokens": 2730,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "run_manifest is annotated to return list[Result], but its docstring Returns section describes a tuple of a session and status.",
+          "doc_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 407,
+            "end_line": 408,
+            "quote": "        tuple[~nox.sessions.Session,~.SessionStatus]: A two-tuple of the\n            sessions and the result of each session that was run."
+          },
+          "code_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 399,
+            "end_line": 399,
+            "quote": "def run_manifest(manifest: Manifest, global_config: NoxConfig) -> list[Result]:"
+          },
+          "proposed_fix": "Returns:\n    list[~nox.sessions.Result]: The results of each session that was run.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "filter_manifest can return 0 when no sessions are selected and --list-sessions is not passed, but the docstring only documents returning 3 or the manifest.",
+          "doc_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 200,
+            "end_line": 202,
+            "quote": "        Union[~.Manifest,int]: ``3`` if a specified session is not found,\n            the manifest otherwise (to be sent to the next task).\n"
+          },
+          "code_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 225,
+            "end_line": 228,
+            "quote": "    if not manifest and not global_config.list_sessions:\n        print(\"No sessions selected. Please select a session with -s <session name>.\\n\")\n        _produce_listing(manifest, global_config)\n        return 0"
+          },
+          "proposed_fix": "        Union[~.Manifest,int]: ``3`` if a specified session is not found,\n            ``0`` if no sessions are selected (after printing a listing),\n            the manifest otherwise (to be sent to the next task).",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "signature",
+          "explanation": "load_nox_module can return the integer 2 on version, file-not-found, or OS errors, but its Returns documentation only mentions the module.",
+          "doc_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 113,
+            "end_line": 115,
+            "quote": "    Returns:\n        module: The module designated by the Noxfile path.\n"
+          },
+          "code_citation": {
+            "path": "nox/tasks.py",
+            "start_line": 102,
+            "end_line": 102,
+            "quote": "def load_nox_module(global_config: NoxConfig) -> types.ModuleType | int:"
+          },
+          "proposed_fix": "    Returns:\n        Union[types.ModuleType, int]: The module designated by the Noxfile path,\n            or ``2`` if loading fails.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "nox/_version.py",
+        "nox/_typing.py",
+        "nox/_parallel.py",
+        "nox/_completers.py",
+        "nox/workflow.py",
+        "nox/tox_to_nox.py",
+        "docs/conf.py",
+        "nox/__main__.py",
+        ".github/action_helper.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 18152,
+      "completion_tokens": 1680,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The docstring refers to the parameter's type as GlobalConfig, but the function signature uses NoxConfig.",
+          "doc_citation": {
+            "path": "nox/workflow.py",
+            "start_line": 45,
+            "end_line": 46,
+            "quote": "        global_config (~.GlobalConfig): The global configuration, which\n            is passed to each task."
+          },
+          "code_citation": {
+            "path": "nox/workflow.py",
+            "start_line": 31,
+            "end_line": 31,
+            "quote": "def execute(workflow: Iterable[Callable[..., Any]], global_config: NoxConfig) -> int:"
+          },
+          "proposed_fix": "Update the docstring so the parameter type reads `~.NoxConfig` instead of `~.GlobalConfig`.",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

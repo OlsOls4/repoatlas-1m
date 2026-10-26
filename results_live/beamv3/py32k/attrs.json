@@ -1,0 +1,180 @@
+{
+  "repo": "attrs",
+  "ref": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/attr/__init__.py",
+        "src/attrs/__init__.py",
+        "typing_tests/__init__.py",
+        "typing_tests/mypy.py",
+        "typing_tests/baseline.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 7917,
+      "completion_tokens": 2365,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "name",
+          "explanation": "attrs.__all__ advertises several package metadata names that attrs.__getattr__ does not resolve; accessing them raises AttributeError.",
+          "doc_citation": {
+            "path": "src/attrs/__init__.py",
+            "start_line": 39,
+            "end_line": 46,
+            "quote": "\"__author__\",\n    \"__copyright__\",\n    \"__description__\",\n    \"__doc__\",\n    \"__email__\",\n    \"__license__\",\n    \"__title__\",\n    \"__url__\","
+          },
+          "code_citation": {
+            "path": "src/attr/__init__.py",
+            "start_line": 100,
+            "end_line": 102,
+            "quote": "if name not in (\"__version__\", \"__version_info__\"):\n            msg = f\"module {mod_name} has no attribute {name}\"\n            raise AttributeError(msg)"
+          },
+          "proposed_fix": "Remove the unavailable metadata dunder names from `src/attrs/__init__.py` `__all__`, leaving only `__version__` and `__version_info__` among package metadata entries.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/attr/_make.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31741,
+      "completion_tokens": 3036,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The evolve() docstring claims a TypeError is raised when a named attribute cannot be found in __init__, but the implementation never performs such a lookup; it simply forwards the merged arguments to cls(**changes).",
+          "doc_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 610,
+            "end_line": 611,
+            "quote": "        TypeError:\n            If *attr_name* couldn't be found in the class ``__init__``."
+          },
+          "code_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 635,
+            "end_line": 644,
+            "quote": "    attrs = fields(cls)\n    for a in attrs:\n        if not a.init:\n            continue\n        attr_name = a.name  # To deal with private attributes.\n        init_name = a.alias\n        if init_name not in changes:\n            changes[init_name] = getattr(inst, attr_name)\n\n    return cls(**changes)"
+          },
+          "proposed_fix": "Remove or reword the `Raises` entry for `evolve()` so it no longer claims a special check for `attr_name` in `__init__`; any invalid argument name surfaces through the normal `TypeError` from `cls(**changes)`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "src/attr/_make.py",
+        "src/attr/exceptions.py",
+        "src/attr/_compat.py",
+        "src/attr/_config.py",
+        "src/attr/_funcs.py",
+        "src/attr/setters.py",
+        "src/attr/converters.py",
+        "src/attr/_next_gen.py",
+        "docs/conf.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30801,
+      "completion_tokens": 2490,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "make_class() documents \"attributes_arguments\" as passed unmodified to attr.s, but the implementation removes and transforms the \"cmp\" key before forwarding the remaining arguments.",
+          "doc_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3298,
+            "end_line": 3298,
+            "quote": "        attributes_arguments: Passed unmodified to `attr.s`."
+          },
+          "code_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3345,
+            "end_line": 3345,
+            "quote": "    cmp = attributes_arguments.pop(\"cmp\", None)"
+          },
+          "proposed_fix": "Change the docstring to state that \"cmp\" is normalized before the remaining arguments are passed to attr.s.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "make_class() documents attrs as list | dict, but the implementation also accepts tuples.",
+          "doc_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3285,
+            "end_line": 3285,
+            "quote": "        attrs (list | dict):"
+          },
+          "code_citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3313,
+            "end_line": 3313,
+            "quote": "    elif isinstance(attrs, (list, tuple)):"
+          },
+          "proposed_fix": "Change the documented type to \"list | tuple | dict\".",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/attr/validators.py",
+        "src/attr/_cmp.py",
+        "src/attr/_version_info.py",
+        "src/attr/filters.py",
+        "src/attrs/converters.py",
+        "src/attrs/exceptions.py",
+        "src/attrs/validators.py",
+        "src/attrs/filters.py",
+        "src/attrs/setters.py",
+        "typing_tests/pyrefly.py",
+        "src/attr/__init__.pyi",
+        "src/attrs/__init__.pyi",
+        "src/attr/validators.pyi",
+        "src/attr/converters.pyi",
+        "src/attr/setters.pyi",
+        "src/attr/exceptions.pyi",
+        "src/attr/_typing_compat.pyi",
+        "src/attr/_cmp.pyi",
+        "src/attr/_version_info.pyi",
+        "src/attr/filters.pyi"
+      ],
+      "cached": false,
+      "prompt_tokens": 27071,
+      "completion_tokens": 2743,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The documentation restricts exc_types to tuple[type, ...], but the implementation accepts a single exception type or any iterable and normalizes it into a tuple.",
+          "doc_citation": {
+            "path": "src/attr/validators.py",
+            "start_line": 704,
+            "end_line": 706,
+            "quote": "        exc_types (tuple[type, ...]):\n            Exception type(s) to capture. Other types raised by child\n            validators will not be intercepted and pass through."
+          },
+          "code_citation": {
+            "path": "src/attr/validators.py",
+            "start_line": 716,
+            "end_line": 719,
+            "quote": "    try:\n        exc_types = tuple(exc_types)\n    except TypeError:\n        exc_types = (exc_types,)"
+          },
+          "proposed_fix": "Update the Args documentation to describe exc_types as `type[Exception] | Iterable[type[Exception]]`, matching the accepted input forms.",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

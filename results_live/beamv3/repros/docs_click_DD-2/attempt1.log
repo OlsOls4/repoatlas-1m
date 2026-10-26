@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_click_DD-2-clmf11sd/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_click_DD-2-clmf11sd/repro.py\", line 11, in <module>\n    assert result.exit_code == 0, result.output  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Usage: cmd [OPTIONS]\nTry 'cmd --help' for help.\n\nError: Invalid value for '--flag': 'definitely-not-a-bool' is not a valid boolean. Recognized values: , 0, 1, f, false, n, no, off, on, t, true, y, yes\n\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Usage: cmd [OPTIONS]\nTry 'cmd --help' for help.\n\nError: Invalid value for '--flag': 'definitely-not-a-bool' is not a valid boolean. Recognized values: , 0, 1, f, false, n, no, off, on, t, true, y, yes\n",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_click_DD-2-clmf11sd/repro.py",
+          "line": 11,
+          "name": "<module>",
+          "source": "assert result.exit_code == 0, result.output  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_click_DD-2-clmf11sd/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_click_DD-2-clmf11sd/repro.py\", line 11, in <module>\n    assert result.exit_code == 0, result.output  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Usage: cmd [OPTIONS]\nTry 'cmd --help' for help.\n\nError: Invalid value for '--flag': 'definitely-not-a-bool' is not a valid boolean. Recognized values: , 0, 1, f, false, n, no, off, on, t, true, y, yes\n\n"
+    }
+  }
+}

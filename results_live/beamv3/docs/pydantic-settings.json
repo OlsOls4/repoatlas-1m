@@ -1,0 +1,35 @@
+{
+  "repo": "pydantic-settings",
+  "ref": "7e2dacb6db07b41abb0c80d0608e46e197265554",
+  "doc_files": [
+    "docs/index.md",
+    "README.md",
+    ".github/build-constraints.txt"
+  ],
+  "cached": false,
+  "prompt_tokens": 366187,
+  "completion_tokens": 4346,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "docs/index.md states that kebab case for CLI arguments is enabled by default, but the code sets cli_kebab_case to False by default.",
+      "doc_citation": {
+        "path": "docs/index.md",
+        "start_line": 1893,
+        "end_line": 1897,
+        "quote": "#### CLI Kebab Case for Arguments\n\nChange whether CLI arguments should use kebab case by enabling `cli_kebab_case`. By default, `cli_kebab_case=True` will\nignore enum fields, and is equivalent to `cli_kebab_case='no_enums'`. To apply kebab case to everything, including\nenums, use `cli_kebab_case='all'`."
+      },
+      "code_citation": {
+        "path": "pydantic_settings/main.py",
+        "start_line": 726,
+        "end_line": 726,
+        "quote": "        cli_kebab_case=False,"
+      },
+      "proposed_fix": "In docs/index.md, replace the default claim with documentation-only text: \"Change whether CLI arguments should use kebab case by enabling `cli_kebab_case`. By default, `cli_kebab_case=False`, so arguments use the declared field names. When enabled, `cli_kebab_case=True` ignores enum fields and is equivalent to `cli_kebab_case='no_enums'`. To apply kebab case to everything, including enums, use `cli_kebab_case='all'`.\"",
+      "fully_verified": true
+    }
+  ]
+}

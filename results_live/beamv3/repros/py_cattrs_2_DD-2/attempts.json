@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1813,
+      "output_tokens": 2888,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "The documented `_cattrs_detailed_validation` name does not control linecache storage; `_cattrs_use_linecache` does, so disabling detailed validation leaves the generated function in linecache.",
+      "doc_literal_usage": "make_dict_structure_fn(TD, conv, _cattrs_detailed_validation=False) should, per the docs, disable linecache storage; assert linecache.getlines(fn.__code__.co_filename) is empty.",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: _cattrs_detailed_validation should control linecache storage",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

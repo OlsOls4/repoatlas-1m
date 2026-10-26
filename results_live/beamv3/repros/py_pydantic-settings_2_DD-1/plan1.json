@@ -1,0 +1,10 @@
+{
+  "repro_script": "from pydantic_settings import BaseSettings\nfrom pydantic_settings.sources.providers.cli import CliSettingsSource\n\nclass Settings(BaseSettings):\n    value: int = 1\n\nsource = CliSettingsSource(Settings, cli_parse_args=None)  # DOC-LITERAL\nassert source.cli_prog_name is None, \"cli_prog_name defaults to None when cli_parse_args is None\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Instantiate CliSettingsSource with cli_parse_args=None and no explicit cli_prog_name, then assert source.cli_prog_name is None.",
+  "argument_finding_is_false": "The finding is not a false positive: code path self.cli_prog_name = cli_prog_name if cli_prog_name is not None else settings_cls.model_config.get('cli_prog_name', sys.argv[0]) has no branch keyed on cli_parse_args being None, so omitting both yields sys.argv[0], not None.",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

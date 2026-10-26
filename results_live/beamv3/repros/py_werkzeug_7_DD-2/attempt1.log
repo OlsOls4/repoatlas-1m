@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.08,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_werkzeug_7_DD-2-ehfic17r/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_werkzeug_7_DD-2-ehfic17r/repro.py\", line 3, in <module>\n    request = Request.from_values()\n              ^^^^^^^^^^^^^^^^^^^\nAttributeError: type object 'Request' has no attribute 'from_values'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "type object 'Request' has no attribute 'from_values'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_werkzeug_7_DD-2-ehfic17r/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "request = Request.from_values()"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_werkzeug_7_DD-2-ehfic17r/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_werkzeug_7_DD-2-ehfic17r/repro.py\", line 3, in <module>\n    request = Request.from_values()\n              ^^^^^^^^^^^^^^^^^^^\nAttributeError: type object 'Request' has no attribute 'from_values'\n"
+    }
+  }
+}

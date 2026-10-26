@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\nfrom starlette.requests import Request\n\nsig = inspect.signature(Request.__init__)\nparams = sig.parameters\n\n# DOC-LITERAL-BEGIN\nassert params[\"receive\"].default is inspect.Parameter.empty, \"docs say receive is required\"  # DOC-LITERAL\nassert params[\"send\"].default is inspect.Parameter.empty, \"docs say send is required\"  # DOC-LITERAL\n# DOC-LITERAL-END\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError: docs say receive is required",
+  "doc_literal_usage": "Request(scope, receive, send)",
+  "argument_finding_is_false": "The signature line may be documentation shorthand rather than a complete type signature; Starlette examples only ever pass receive, and the defaults are internal sentinel functions. However, inspecting the actual __init__ shows both receive and send genuinely have non-empty defaults, so the shorthand does imply required parameters and the finding is not merely a style issue.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

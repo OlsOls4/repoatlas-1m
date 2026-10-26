@@ -1,0 +1,12 @@
+{
+  "returncode": 0,
+  "timed_out": false,
+  "duration_seconds": 0.05,
+  "network_isolation": "unshare-netns",
+  "stdout": "DOCS_OK\n",
+  "stderr": "",
+  "harness": {
+    "completed": true,
+    "exception": null
+  }
+}

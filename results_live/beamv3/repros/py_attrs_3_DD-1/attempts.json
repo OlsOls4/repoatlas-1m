@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1713,
+      "output_tokens": 1286,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "none",
+      "expected_failure": "none",
+      "doc_literal_usage": "not_: exc_types as tuple[type, ...]",
+      "argument_finding_is_false": "The documentation is not wrong in any observable way: passing the documented tuple[type, ...] form works perfectly, and the implementation merely normalizes additional convenience inputs (single types or arbitrary iterables) into that same tuple. The documented signature describes the canonical/normalized contract, not an exhaustive whitelist of every accepted input shape, so a user following the docs exactly never hits an error. The extra permissiveness is a backwards-compatible convenience, not a contradiction.",
+      "model_verdict": "likely_false",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "lint",
+      "exception_type": null,
+      "error_excerpt": "line 12: try/except catching ValueError is not allowed; line 15: explicit raise is not allowed",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2114,
+      "output_tokens": 1352,
+      "cached_input_tokens": 1664
+    },
+    "plan": {
+      "expected_exception_type": "none",
+      "expected_failure": "none",
+      "doc_literal_usage": "exc_types=(ValueError,)",
+      "argument_finding_is_false": "The cited docs describe the canonical tuple form, and that form is accepted and works; the implementation additionally normalizes single types and other iterables. Describing the normalized form as tuple[type, ...] is therefore not a runtime error for documented usage.",
+      "model_verdict": "likely_false",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "not_reproduced",
+      "reason": "ran_ok",
+      "exception_type": null,
+      "error_excerpt": "DOCS_OK",
+      "evidence": null,
+      "retryable": false
+    }
+  }
+]

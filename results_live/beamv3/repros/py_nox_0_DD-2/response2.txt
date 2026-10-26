@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The finding conflates the raw attrs default with the user-facing effective default. `_options.parallel` defaults to `None`, but the runtime treats `None` as sequential execution (one job at a time), so the help text's statement that the default is sequential with effective concurrency 1 can still be accurate. Without showing that users observe parallelism other than 1 when omitting `-j`, the reported drift is not substantiated.",
+  "model_verdict": "false",
+  "doc_literal_usage": "nox --help output contains the documented default text.",
+  "expected_exception_type": "none",
+  "expected_failure": "none",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import subprocess\nimport sys\n\n# DOC-LITERAL-BEGIN\ncompleted = subprocess.run(\n    [sys.executable, \"-m\", \"nox\", \"--help\"],\n    check=True,\n    capture_output=True,\n    text=True,\n)\nassert \"Default is 1 (sequential).\" in completed.stdout  # DOC-LITERAL\n# DOC-LITERAL-END\nprint(\"DOCS_OK\")\n"
+}

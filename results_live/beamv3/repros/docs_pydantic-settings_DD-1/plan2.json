@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\n\nimport pydantic_settings\nimport pydantic_settings.main as main\n\ndefaults = []\nfor mod in (pydantic_settings, main):\n    for name in dir(mod):\n        obj = getattr(mod, name)\n        targets = [obj]\n        if isinstance(obj, type):\n            targets.append(obj.__init__)\n        for target in targets:\n            try:\n                sig = inspect.signature(target)\n            except (TypeError, ValueError):\n                continue\n            param = sig.parameters.get('cli_kebab_case')\n            if param is not None:\n                defaults.append(param.default)\n\nassert defaults and defaults[0] is True, 'docs say cli_kebab_case defaults to True'  # DOC-LITERAL\nprint('DOCS_OK')\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Inspect cli_kebab_case default in pydantic-settings signatures and assert it is True.",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

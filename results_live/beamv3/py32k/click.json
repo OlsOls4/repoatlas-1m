@@ -1,0 +1,251 @@
+{
+  "repo": "click",
+  "ref": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/click/__init__.py",
+        "src/click/_compat.py",
+        "src/click/utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 16530,
+      "completion_tokens": 2749,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "open_stream's ValueError tells callers to use a nonexistent 'overwrite' parameter, but open_stream's signature has no overwrite parameter.",
+          "doc_citation": {
+            "path": "src/click/_compat.py",
+            "start_line": 408,
+            "end_line": 408,
+            "quote": "        raise ValueError(\"Use the `overwrite`-parameter instead.\")"
+          },
+          "code_citation": {
+            "path": "src/click/_compat.py",
+            "start_line": 374,
+            "end_line": 380,
+            "quote": "def open_stream(\n    filename: str | os.PathLike[str],\n    mode: str = \"r\",\n    encoding: str | None = None,\n    errors: str | None = \"strict\",\n    atomic: bool = False,\n) -> tuple[t.IO[t.Any], bool]:"
+          },
+          "proposed_fix": "Replace the misleading error text with: raise ValueError(\"Atomic writes do not support 'x' mode.\")",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/click/core.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31294,
+      "completion_tokens": 2033,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "src/click/core.py",
+        "src/click/exceptions.py",
+        "src/click/globals.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 27599,
+      "completion_tokens": 2262,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "env_var",
+          "explanation": "The docstring claims `envvar` with `flag_value` always uses the `flag_value`, but the implementation treats the environment variable value as a boolean activation and can return `False` or `None`.",
+          "doc_citation": {
+            "path": "src/click/core.py",
+            "start_line": 3109,
+            "end_line": 3109,
+            "quote": "``envvar`` used with ``flag_value`` will always use the ``flag_value``,"
+          },
+          "code_citation": {
+            "path": "src/click/core.py",
+            "start_line": 3807,
+            "end_line": 3807,
+            "quote": "            return self.flag_value if parsed else False"
+          },
+          "proposed_fix": "Update the `versionchanged` note to say the environment variable activates the flag when truthy, returns `False` when falsy, returns `flag_value` for an exact `flag_value` match, and returns `None` for an unrecognized value.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/click/shell_completion.py",
+        "src/click/types.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 26911,
+      "completion_tokens": 3921,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The ShellComplete docstring omits the ctx_args parameter that is accepted by __init__.",
+          "doc_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 283,
+            "end_line": 286,
+            "quote": ":param cli: Command being called.\n:param prog_name: Name of the executable in the shell.\n:param complete_var: Name of the environment variable that holds\n    the completion instruction."
+          },
+          "code_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 307,
+            "end_line": 313,
+            "quote": "def __init__(\n        self,\n        cli: Command,\n        ctx_args: cabc.MutableMapping[str, t.Any],\n        prog_name: str,\n        complete_var: str,\n    ) -> None:"
+          },
+          "proposed_fix": "Add a :param ctx_args: Extra arguments to pass to cli.make_context. entry to the ShellComplete class docstring.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "The _is_incomplete_option docstring omits the ctx parameter present in its signature.",
+          "doc_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 674,
+            "end_line": 675,
+            "quote": ":param args: List of complete args before the incomplete value.\n:param param: Option object being checked."
+          },
+          "code_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 671,
+            "end_line": 671,
+            "quote": "def _is_incomplete_option(ctx: Context, args: list[str], param: Parameter) -> bool:"
+          },
+          "proposed_fix": "Add a :param ctx: Invocation context for the command. line to the _is_incomplete_option docstring.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "signature",
+          "explanation": "The _resolve_context docstring omits the ctx_args parameter present in its signature.",
+          "doc_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 708,
+            "end_line": 710,
+            "quote": ":param cli: Command being called.\n:param prog_name: Name of the executable in the shell.\n:param args: List of complete args before the incomplete value."
+          },
+          "code_citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 696,
+            "end_line": 701,
+            "quote": "def _resolve_context(\n    cli: Command,\n    ctx_args: cabc.MutableMapping[str, t.Any],\n    prog_name: str,\n    args: list[str],\n) -> Context:"
+          },
+          "proposed_fix": "Add a :param ctx_args: Extra arguments to pass to cli.make_context. entry to the _resolve_context docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "4": {
+      "paths": [
+        "src/click/termui.py",
+        "src/click/parser.py",
+        "src/click/formatting.py",
+        "src/click/_utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 23721,
+      "completion_tokens": 3381,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "name",
+          "explanation": "The style docstring refers to a parameter named message, but style's parameter is named text.",
+          "doc_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 717,
+            "end_line": 717,
+            "quote": "        A non-string ``message`` is converted to a string."
+          },
+          "code_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 642,
+            "end_line": 642,
+            "quote": "    text: t.Any,"
+          },
+          "proposed_fix": "Replace ``message`` with ``text`` in the style docstring.",
+          "fully_verified": false
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "default",
+          "explanation": "The progressbar hidden parameter defaults to False, but the docstring says setting it to False disables printing the no-tty label, contradicting the default behavior.",
+          "doc_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 525,
+            "end_line": 525,
+            "quote": "        ``False`` also disables that."
+          },
+          "code_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 447,
+            "end_line": 447,
+            "quote": "    hidden: bool = False,"
+          },
+          "proposed_fix": "Change the sentence to say that setting hidden to ``True`` also disables that label output.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "default",
+          "explanation": "The show_percent parameter defaults to None, but the docstring describes the default as a conditional True or False value.",
+          "doc_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 530,
+            "end_line": 531,
+            "quote": "                         default is `True` if the iterable has a length or\n                         `False` if not."
+          },
+          "code_citation": {
+            "path": "src/click/termui.py",
+            "start_line": 449,
+            "end_line": 449,
+            "quote": "    show_percent: bool | None = None,"
+          },
+          "proposed_fix": "Describe the default as ``None``, which is automatically resolved to ``True`` or ``False`` based on whether the iterable has a length.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "5": {
+      "paths": [
+        "src/click/_termui_impl.py",
+        "src/click/decorators.py",
+        "src/click/_winconsole.py",
+        "src/click/_textwrap.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 24652,
+      "completion_tokens": 1857,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "6": {
+      "paths": [
+        "src/click/testing.py",
+        "docs/conf.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 10698,
+      "completion_tokens": 1950,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    }
+  }
+}

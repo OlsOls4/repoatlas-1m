@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\nfrom cattrs.gen.typeddicts import make_dict_unstructure_fn\n\nsig = inspect.signature(make_dict_unstructure_fn)\nassert \"_cattrs_detailed_validation\" in sig.parameters, \"documented parameter is absent\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError: documented parameter _cattrs_detailed_validation is absent from make_dict_unstructure_fn's signature",
+  "doc_literal_usage": "inspect.signature(make_dict_unstructure_fn) must contain the documented parameter '_cattrs_detailed_validation'.",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

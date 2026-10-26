@@ -1,0 +1,10 @@
+{
+  "repro_script": "import httpx\n\nlimits = httpx.Limits(max_keepalive_connections=5, max_connections=10)  # DOC-LITERAL\nclient = httpx.Client(limits=limits)  # DOC-LITERAL\nassert client.limits == limits, \"doc example should apply limits\"  # DOC-LITERAL\n\ndefault_limits = httpx.Client().limits  # DOC-LITERAL\nassert default_limits.max_keepalive_connections == 20, \"Docs say Defaults 20\"  # DOC-LITERAL\nassert default_limits.max_connections == 100, \"Docs say Default 100\"  # DOC-LITERAL\nassert default_limits.keepalive_expiry == 5, \"Docs say Default 5\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "none",
+  "expected_failure": "",
+  "doc_literal_usage": "httpx.Client().limits defaults",
+  "argument_finding_is_false": "The documented values match the client's actual default Limits (max_keepalive_connections=20, max_connections=100, keepalive_expiry=5); the doc describes default client behavior, not necessarily Limits(...) constructor defaults, so the report misreads the documented scope.",
+  "model_verdict": "likely_false",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

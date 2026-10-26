@@ -1,0 +1,98 @@
+{
+  "repo": "starlette",
+  "ref": "master",
+  "doc_files": [
+    "docs/middleware.md",
+    "docs/testclient.md",
+    "docs/routing.md",
+    "docs/third-party-packages.md",
+    "docs/responses.md",
+    "docs/requests.md",
+    "docs/config.md",
+    "docs/contributing.md",
+    "docs/authentication.md",
+    "docs/exceptions.md",
+    "docs/index.md",
+    "README.md",
+    "docs/websockets.md",
+    "docs/templates.md",
+    "docs/lifespan.md",
+    "docs/endpoints.md",
+    "docs/schemas.md",
+    "docs/early-hints.md",
+    "docs/staticfiles.md",
+    "docs/background.md",
+    "docs/applications.md",
+    "docs/threadpool.md",
+    "docs/server-push.md",
+    "docs/database.md",
+    "docs/graphql.md",
+    "AI_POLICY.md",
+    "AGENTS.md",
+    "benchmarks/README.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 394860,
+  "completion_tokens": 5016,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "signature",
+      "explanation": "The WebSocket documentation shows `receive_json()` accepting an extra positional argument, but the implementation only accepts an optional `mode` keyword.",
+      "doc_citation": {
+        "path": "docs/websockets.md",
+        "start_line": 74,
+        "end_line": 74,
+        "quote": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames."
+      },
+      "code_citation": {
+        "path": "starlette/websockets.py",
+        "start_line": 136,
+        "end_line": 136,
+        "quote": "    async def receive_json(self, mode: str = \"text\") -> Any:"
+      },
+      "proposed_fix": "Use `websocket.receive_json(mode=\"binary\")` to receive JSON over binary data frames.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "default",
+      "explanation": "The documented default for `BackgroundTasks(tasks=...)` uses an empty list, while the implementation defaults to `None`.",
+      "doc_citation": {
+        "path": "docs/background.md",
+        "start_line": 45,
+        "end_line": 45,
+        "quote": "Signature: `BackgroundTasks(tasks=[])`"
+      },
+      "code_citation": {
+        "path": "starlette/background.py",
+        "start_line": 27,
+        "end_line": 27,
+        "quote": "    def __init__(self, tasks: Sequence[BackgroundTask] | None = None):"
+      },
+      "proposed_fix": "Signature: `BackgroundTasks(tasks=None)`",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "signature",
+      "explanation": "The documented `Request` signature omits the defaults for `receive` and `send`, although both parameters are optional in the implementation.",
+      "doc_citation": {
+        "path": "docs/requests.md",
+        "start_line": 7,
+        "end_line": 7,
+        "quote": "Signature: `Request(scope, receive, send)`"
+      },
+      "code_citation": {
+        "path": "starlette/requests.py",
+        "start_line": 218,
+        "end_line": 218,
+        "quote": "    def __init__(self, scope: Scope, receive: Receive = empty_receive, send: Send = empty_send):"
+      },
+      "proposed_fix": "Signature: `Request(scope, receive=empty_receive, send=empty_send)`",
+      "fully_verified": true
+    }
+  ]
+}

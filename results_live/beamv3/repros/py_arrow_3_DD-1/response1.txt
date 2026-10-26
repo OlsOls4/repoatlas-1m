@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": true,
+  "doc_literal_usage": "assert negative == positive, \"key is always future when only_distance=False\"  # DOC-LITERAL",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The Sinhala locale passes the signed delta to the base describe when only_distance is False, so a negative delta produces a past form rather than always using the future key.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from arrow import locales\n\nloc = locales.get_locale(\"si\")\nnegative = loc.describe(\"second\", -5, only_distance=False)\npositive = loc.describe(\"second\", 5, only_distance=False)\nassert negative == positive, \"key is always future when only_distance=False\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

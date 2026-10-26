@@ -1,0 +1,10 @@
+{
+  "repro_script": "import click\nfrom click.shell_completion import ShellComplete\n\n_mysh_source = \"\"\"\\\n%(complete_func)s {\n    response=$(%(complete_var)s=mysh_complete %(foo_bar)s)\n}\n\"\"\"\n\nclass MyShellComplete(ShellComplete):\n    source_template = _mysh_source\n\ncomplete = MyShellComplete(click.Command(\"foo\"), {}, \"foo\", \"_FOO_COMPLETE\")  # DOC-LITERAL\nscript = complete.source()  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "KeyError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Subclass ShellComplete with source_template using %(foo_bar)s, then call source().",
+  "argument_finding_is_false": "false",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

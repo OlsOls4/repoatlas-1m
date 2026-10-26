@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "No credible false positive: the code default is genuinely Optional[bool] = None, and _install_callables only updates environment.newstyle_gettext when newstyle is not None. There is no alias or passthrough making the documented False default hold.",
+  "model_verdict": "true",
+  "doc_literal_usage": "jinja2.Environment install_gettext_translations(translations) with newstyle omitted; then assert env.newstyle_gettext is False",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import gettext\nimport jinja2\n\nenv = jinja2.Environment(extensions=[\"jinja2.ext.i18n\"])\nenv.newstyle_gettext = True\ntranslations = gettext.NullTranslations()\nenv.install_gettext_translations(translations)  # DOC-LITERAL\nassert env.newstyle_gettext is False, \"docs default newstyle=False\"\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "Inspect Session.run's 'external' parameter default and assert it is False, as documented.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nfrom nox.sessions import Session\n\ndefault = inspect.signature(Session.run).parameters[\"external\"].default  # DOC-LITERAL\nassert default is False, \"run() docstring says external defaults to False\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

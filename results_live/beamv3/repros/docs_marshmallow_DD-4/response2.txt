@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "Even though `default` is no longer a constructor keyword, the documentation's behavioural claim can still be tested by configuring the legacy `default` attribute; however, deserialization reads `load_default`, so the documented behaviour does not hold.",
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "Configure a field using the documented `default` notion, load an empty dict, and assert the default value is present.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from marshmallow import Schema, fields\n\nclass S(Schema):\n    value = fields.String()\n\n# Docs refer to the field's default value.\nS.value.default = \"DOC_DEFAULT\"\n\nresult = S().load({})  # DOC-LITERAL\nassert result == {\"value\": \"DOC_DEFAULT\"}, \"docs say a missing value uses its default\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

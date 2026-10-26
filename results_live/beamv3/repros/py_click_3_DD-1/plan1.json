@@ -1,0 +1,10 @@
+{
+  "repro_script": "from click.shell_completion import ShellComplete\n\ndoc = ShellComplete.__doc__ or \"\"\nassert \":param ctx_args:\" in doc, \"ShellComplete docstring omits ctx_args accepted by __init__\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Inspect ShellComplete.__doc__ and require the ctx_args parameter entry to be documented.",
+  "argument_finding_is_false": "The omission could be treated as incomplete narrative documentation rather than incorrect behavior: the constructor still accepts and documents ctx_args as a class attribute and accepts it positionally/keywords by signature, so existing code following the omitted parameter can still work. However, the public constructor signature does accept ctx_args and the docstring lists constructor parameters for the other arguments, so this is weak evidence for a false positive.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

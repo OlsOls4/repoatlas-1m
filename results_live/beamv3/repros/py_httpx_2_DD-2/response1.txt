@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding is true: HTTPTransport and AsyncHTTPTransport accept and forward socket_options, but the module docstring's supported-keyword list omits it",
+  "doc_literal_usage": "httpx.HTTPTransport(uds=None, local_address=None, retries=0)",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError because httpx/_transports/default.py documents only uds, local_address, and retries while the transport signatures also support socket_options",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\n\nimport httpx\n\n# DOC-LITERAL-BEGIN\ntransport = httpx.HTTPTransport(uds=None, local_address=None, retries=0)\n# DOC-LITERAL-END\n\nasync_transport_signature = inspect.signature(httpx.AsyncHTTPTransport.__init__)\ntransport_signature = inspect.signature(httpx.HTTPTransport.__init__)\nassert \"socket_options\" in transport_signature.parameters\nassert \"socket_options\" in async_transport_signature.parameters\nassert \"* socket_options: typing.Iterable[SOCKET_OPTION] | None\" in (httpx._transports.default.__doc__ or \"\")\nprint(\"DOCS_OK\")\n"
+}

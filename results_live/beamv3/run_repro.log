@@ -1,0 +1,208 @@
+91 cases
+[docs:starlette:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: docs say Signature: BackgroundTasks(tasks=[])'
+  -> docs:starlette:DD-2: reproduced assertion AssertionError strict=False tokens=2987 ledger=7278121
+[docs:starlette:DD-3] attempt 1: reproduced (expected_exception) 'AssertionError: docs say receive is required'
+  -> docs:starlette:DD-3: reproduced assertion AssertionError strict=False tokens=3298 ledger=7281419
+[docs:httpx:DD-1] attempt 1: could_not_run (failed_outside_doc_literal) "[script line 16, not a DOC-LITERAL line] TypeError: get() got an unexpected keyword argument 'transport'"
+[docs:httpx:DD-1] attempt 2: could_not_run (unexpected_exception) "AssertionError: docs say r.encoding is 'UTF-8'"
+  -> docs:httpx:DD-1: could_not_run None AssertionError strict=False tokens=7196 ledger=7288615
+[venv] installing httpx@b5addb6 flask
+[docs:httpx:DD-5] attempt 1: reproduced (expected_exception) "TypeError: Client.__init__() got an unexpected keyword argument 'app'"
+  -> docs:httpx:DD-5: reproduced interface_error TypeError strict=True tokens=3932 ledger=7292547
+[docs:httpx:DD-8] attempt 1: could_not_run (unexpected_exception) "AttributeError: 'Client' object has no attribute 'limits'"
+[docs:httpx:DD-8] attempt 2: reproduced (expected_exception) 'AssertionError: Docs say Defaults 20'
+  -> docs:httpx:DD-8: reproduced assertion AssertionError strict=False tokens=8168 ledger=7300715
+[py:httpx#2:DD-1] attempt 1: reproduced (expected_exception) "AssertionError: docstring omits 'boundary'"
+  -> py:httpx#2:DD-1: reproduced assertion AssertionError strict=False tokens=4526 ledger=7305241
+[py:httpx#2:DD-2] attempt 1: could_not_run (failed_outside_doc_literal) '[script line 13, not a DOC-LITERAL line] AssertionError: '
+[py:httpx#2:DD-2] attempt 2: could_not_run (failed_outside_doc_literal) '[script line 14, not a DOC-LITERAL line] AssertionError: '
+  -> py:httpx#2:DD-2: could_not_run None AssertionError strict=False tokens=6908 ledger=7312149
+[py:httpx#3:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: verify doc omits str (CA bundle path)'
+  -> py:httpx#3:DD-1: reproduced assertion AssertionError strict=False tokens=2774 ledger=7314923
+[docs:click:DD-1] attempt 1: could_not_run (unexpected_exception) 'AssertionError: '
+[docs:click:DD-1] attempt 2: could_not_run (unexpected_exception) 'AssertionError: '
+  -> docs:click:DD-1: could_not_run None AssertionError strict=False tokens=7652 ledger=7322575
+[docs:click:DD-2] attempt 1: reproduced (expected_exception) "AssertionError: Usage: cmd [OPTIONS]\nTry 'cmd --help' for help.\n\nError: Invalid value for '--flag': 'definitely-not-a-bo"
+  -> docs:click:DD-2: reproduced assertion AssertionError strict=False tokens=3543 ledger=7326118
+[docs:click:DD-4] attempt 1: reproduced (expected_exception) "KeyError: 'foo_bar'"
+  -> docs:click:DD-4: reproduced other_exception KeyError strict=False tokens=3789 ledger=7329907
+[py:click#0:DD-1] attempt 1: reproduced (expected_exception) "TypeError: open_stream() got an unexpected keyword argument 'overwrite'"
+  -> py:click#0:DD-1: reproduced interface_error TypeError strict=True tokens=4393 ledger=7334300
+[py:click#2:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: envvar used with flag_value will always use the flag_value'
+  -> py:click#2:DD-1: reproduced assertion AssertionError strict=False tokens=2742 ledger=7337042
+[py:click#3:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: ShellComplete docstring omits ctx_args accepted by __init__'
+  -> py:click#3:DD-1: reproduced assertion AssertionError strict=False tokens=3253 ledger=7340295
+[py:click#3:DD-2] attempt 1: reproduced (expected_exception) "TypeError: _is_incomplete_option() missing 1 required positional argument: 'param'"
+  -> py:click#3:DD-2: reproduced interface_error TypeError strict=True tokens=3683 ledger=7343978
+[py:click#3:DD-3] attempt 1: could_not_run (unexpected_exception) 'AttributeError: shell_completion'
+[py:click#3:DD-3] attempt 2: reproduced (expected_exception) "TypeError: _resolve_context() missing 1 required positional argument: 'ctx_args'"
+  -> py:click#3:DD-3: reproduced interface_error TypeError strict=True tokens=5839 ledger=7349817
+[py:click#4:DD-1] attempt 1: reproduced (expected_exception) "TypeError: style() got an unexpected keyword argument 'message'"
+  -> py:click#4:DD-1: reproduced interface_error TypeError strict=True tokens=2497 ledger=7352314
+[py:click#4:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: docs: hidden=False disables label'
+  -> py:click#4:DD-2: reproduced assertion AssertionError strict=False tokens=4394 ledger=7356708
+[py:click#4:DD-3] attempt 1: could_not_run (unexpected_exception) 'AssertionError: default is True if the iterable has a length'
+[py:click#4:DD-3] attempt 2: could_not_run (unexpected_exception) 'AssertionError: default is True if the iterable has a length'
+  -> py:click#4:DD-3: could_not_run None AssertionError strict=False tokens=9138 ledger=7365846
+[venv] installing structlog@19c4f21 better-exceptions
+[docs:structlog:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: docs say plain_traceback is default if Rich is not installed'
+  -> docs:structlog:DD-2: reproduced assertion AssertionError strict=False tokens=2779 ledger=7368625
+[docs:structlog:DD-3] attempt 1: could_not_run (lint) 'line 17: try/except catching Exception is not allowed'
+[docs:structlog:DD-3] attempt 2: could_not_run (failed_outside_doc_literal) '[script line 15, not a DOC-LITERAL line] ValueError: not enough values to unpack (expected 2, got 1)'
+  -> docs:structlog:DD-3: could_not_run None ValueError strict=False tokens=9863 ledger=7378488
+[py:structlog#0:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: default bound logger is structlog.BoundLogger by default.'
+  -> py:structlog#0:DD-1: reproduced assertion AssertionError strict=False tokens=3602 ledger=7382090
+[py:structlog#0:DD-2] attempt 2: could_not_run (failed_outside_doc_literal) '[script line 8, not a DOC-LITERAL line] AssertionError: docs say initial_values, signature uses new_values'
+  -> py:structlog#0:DD-2: could_not_run None AssertionError strict=False tokens=6227 ledger=7388317
+[py:structlog#2:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: Positional arguments are silently ignored.'
+  -> py:structlog#2:DD-1: reproduced assertion AssertionError strict=False tokens=3967 ledger=7392284
+[py:structlog#3:DD-1] attempt 1: reproduced (expected_exception) "AttributeError: module 'structlog.threadlocal' has no attribute 'wrap'"
+  -> py:structlog#3:DD-1: reproduced interface_error AttributeError strict=True tokens=3453 ledger=7395737
+[docs:nox:DD-1] attempt 1: could_not_run (lint) 'line 11: call to subprocess.run is not allowed'
+[docs:nox:DD-1] attempt 2: could_not_run (lint) 'line 12: call to os.system is not allowed'
+  -> docs:nox:DD-1: could_not_run None None strict=False tokens=7066 ledger=7402803
+[docs:nox:DD-2] attempt 1: could_not_run (lint) 'line 14: call to subprocess.run is not allowed'
+[docs:nox:DD-2] attempt 2: could_not_run (missing_dependency) "ModuleNotFoundError: No module named 'click'"
+  -> docs:nox:DD-2: could_not_run None ModuleNotFoundError strict=False tokens=7947 ledger=7410750
+[docs:nox:DD-3] attempt 1: reproduced (expected_exception) 'AssertionError: docs list 3.14t before 3.15'
+  -> docs:nox:DD-3: reproduced assertion AssertionError strict=False tokens=4018 ledger=7414768
+[py:nox#0:DD-1] attempt 1: could_not_run (lint) 'line 4: call to subprocess.run is not allowed'
+[py:nox#0:DD-1] attempt 2: could_not_run (failed_outside_doc_literal) "[script line 4, not a DOC-LITERAL line] AttributeError: module 'nox._options' has no attribute 'Options'"
+  -> py:nox#0:DD-1: could_not_run None AttributeError strict=False tokens=9658 ledger=7424426
+[py:nox#0:DD-2] attempt 2: could_not_run (lint) 'line 5: call to subprocess.run is not allowed'
+  -> py:nox#0:DD-2: could_not_run None None strict=False tokens=5615 ledger=7430041
+[py:nox#0:DD-3] attempt 1: reproduced (expected_exception) 'AssertionError: run() docstring says external defaults to False'
+  -> py:nox#0:DD-3: reproduced assertion AssertionError strict=False tokens=3631 ledger=7433672
+[py:nox#0:DD-4] attempt 2: reproduced (expected_exception) 'AssertionError: documentation says external type is bool'
+  -> py:nox#0:DD-4: reproduced assertion AssertionError strict=False tokens=6100 ledger=7439772
+[py:nox#1:DD-1] attempt 1: reproduced (expected_exception) "TypeError: Param.__init__() got an unexpected keyword argument 'args'"
+  -> py:nox#1:DD-1: reproduced interface_error TypeError strict=True tokens=3054 ledger=7442826
+[py:nox#2:DD-1] attempt 1: could_not_run (unexpected_exception) "TypeError: 'Manifest' object is not iterable"
+  -> py:nox#2:DD-1: could_not_run None None strict=False tokens=6854 ledger=7449680
+[py:nox#2:DD-2] attempt 2: could_not_run (failed_outside_doc_literal) "[script line 21, not a DOC-LITERAL line] AttributeError: 'list' object has no attribute 'items'"
+  -> py:nox#2:DD-2: could_not_run None AttributeError strict=False tokens=7040 ledger=7456720
+  -> py:nox#2:DD-3: could_not_run None None strict=False tokens=4229 ledger=7460949
+[py:nox#3:DD-1] attempt 1: reproduced (expected_exception) "ImportError: cannot import name 'GlobalConfig' from 'nox.workflow' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs"
+  -> py:nox#3:DD-1: reproduced interface_error ImportError strict=True tokens=3403 ledger=7464352
+[py:arrow#3:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: key is always future when only_distance=False'
+  -> py:arrow#3:DD-1: reproduced assertion AssertionError strict=False tokens=4441 ledger=7468793
+[py:arrow#3:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: key is always future when only_distance=False'
+  -> py:arrow#3:DD-2: reproduced assertion AssertionError strict=False tokens=4198 ledger=7472991
+[py:arrow#4:DD-2] attempt 1: reproduced (expected_exception) "AssertionError: documentation says default locale is 'en-us'"
+  -> py:arrow#4:DD-2: reproduced assertion AssertionError strict=False tokens=3930 ledger=7476921
+[py:arrow#4:DD-3] attempt 1: reproduced (expected_exception) "AssertionError: documentation omits supported granularity 'quarter'"
+  -> py:arrow#4:DD-3: reproduced assertion AssertionError strict=False tokens=4528 ledger=7481449
+[py:arrow#4:DD-4] attempt 1: reproduced (expected_exception) "TypeError: Arrow.interval() missing 1 required positional argument: 'end'"
+  -> py:arrow#4:DD-4: reproduced interface_error TypeError strict=True tokens=3088 ledger=7484537
+[py:arrow#4:DD-5] attempt 1: reproduced (expected_exception) "TypeError: Arrow.span_range() missing 1 required positional argument: 'end'"
+  -> py:arrow#4:DD-5: reproduced interface_error TypeError strict=True tokens=3540 ledger=7488077
+[py:arrow#5:DD-1] attempt 2: reproduced (expected_exception) 'AssertionError: '
+  -> py:arrow#5:DD-1: reproduced assertion AssertionError strict=False tokens=6762 ledger=7494839
+[docs:cattrs:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: typing.Sequence[T] converts to lists'
+  -> docs:cattrs:DD-1: reproduced assertion AssertionError strict=False tokens=3387 ledger=7498226
+[venv] installing cattrs@7a24f77 pytest
+[docs:cattrs:DD-2] attempt 1: could_not_run (failed_outside_doc_literal) '[script line 5, not a DOC-LITERAL line] Failed: DID NOT RAISE Exception'
+  -> docs:cattrs:DD-2: could_not_run None None strict=False tokens=7247 ledger=7505473
+[venv] installing cattrs@7a24f77 cbor2
+[docs:cattrs:DD-4] attempt 1: reproduced (expected_exception) 'AssertionError: docs say datetimes are serialized as a text string by default'
+  -> docs:cattrs:DD-4: reproduced assertion AssertionError strict=False tokens=3431 ledger=7508904
+[docs:cattrs:DD-5] attempt 1: reproduced (expected_exception) 'AssertionError: Sets are serialized and deserialized to sets.'
+  -> docs:cattrs:DD-5: reproduced assertion AssertionError strict=False tokens=2279 ledger=7511183
+[py:cattrs#0:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:cattrs#0:DD-1: not_reproduced None None strict=False tokens=3462 ledger=7514645
+[py:cattrs#0:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: make_dict_structure_fn docs incorrectly mention unstructuring'
+  -> py:cattrs#0:DD-2: reproduced assertion AssertionError strict=False tokens=3592 ledger=7518237
+[py:cattrs#2:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: documented parameter is absent'
+  -> py:cattrs#2:DD-1: reproduced assertion AssertionError strict=False tokens=3027 ledger=7521264
+[py:cattrs#2:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: _cattrs_detailed_validation should control linecache storage'
+  -> py:cattrs#2:DD-2: reproduced assertion AssertionError strict=False tokens=4701 ledger=7525965
+[py:cattrs#3:DD-1] attempt 1: could_not_run (missing_dependency) "ModuleNotFoundError: No module named 'ujson'"
+[venv] installing cattrs@7a24f77 ujson
+[py:cattrs#3:DD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs say bytes are serialized as base64 strings'
+  -> py:cattrs#3:DD-1: reproduced assertion AssertionError strict=False tokens=5035 ledger=7531000
+[docs:marshmallow:DD-4] attempt 1: could_not_run (unexpected_exception) "TypeError: Field.__init__() got an unexpected keyword argument 'default'"
+[docs:marshmallow:DD-4] attempt 2: could_not_run (failed_outside_doc_literal) "[script line 7, not a DOC-LITERAL line] AttributeError: type object 'S' has no attribute 'value'"
+  -> docs:marshmallow:DD-4: could_not_run None AttributeError strict=False tokens=7469 ledger=7538469
+[py:marshmallow#0:DD-2] attempt 1: reproduced (expected_exception) 'TypeError: Email.__init__() takes 1 positional argument but 2 were given'
+  -> py:marshmallow#0:DD-2: reproduced interface_error TypeError strict=True tokens=3566 ledger=7542035
+[py:marshmallow#1:DD-1] attempt 2: reproduced (expected_exception) "AttributeError: 'SchemaOpts' object has no attribute 'additional'"
+  -> py:marshmallow#1:DD-1: reproduced interface_error AttributeError strict=True tokens=7786 ledger=7549821
+[py:marshmallow#1:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: loads doc refers to nonexistent obj'
+  -> py:marshmallow#1:DD-2: reproduced assertion AssertionError strict=False tokens=3135 ledger=7552956
+[docs:attrs:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: docs omit force_kw_only but implementation accepts it'
+  -> docs:attrs:DD-1: reproduced assertion AssertionError strict=False tokens=3249 ledger=7556205
+[docs:attrs:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: '
+  -> docs:attrs:DD-2: reproduced assertion AssertionError strict=False tokens=4747 ledger=7560952
+[py:attrs#0:DD-1] attempt 1: reproduced (expected_exception) 'AttributeError: module attrs has no attribute __author__'
+  -> py:attrs#0:DD-1: reproduced interface_error AttributeError strict=True tokens=3290 ledger=7564242
+[py:attrs#1:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:attrs#1:DD-1: not_reproduced None None strict=False tokens=4163 ledger=7568405
+[py:attrs#2:DD-1] attempt 1: could_not_run (lint) 'no `# DOC-LITERAL` marker on a code line: mark the statement(s) that perform the documented usage'
+[py:attrs#2:DD-1] attempt 2: could_not_run (unexpected_exception) "TypeError: attrs() got an unexpected keyword argument 'attributes_arguments'"
+  -> py:attrs#2:DD-1: could_not_run None TypeError strict=False tokens=8201 ledger=7576606
+[py:attrs#2:DD-2] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:attrs#2:DD-2: not_reproduced None None strict=False tokens=4568 ledger=7581174
+[py:attrs#3:DD-1] attempt 1: could_not_run (lint) 'line 12: try/except catching ValueError is not allowed; line 15: explicit raise is not allowed'
+[py:attrs#3:DD-1] attempt 2: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:attrs#3:DD-1: not_reproduced None None strict=False tokens=6465 ledger=7587639
+[docs:jinja:DD-2] attempt 2: could_not_run (failed_outside_doc_literal) '[script line 8, not a DOC-LITERAL line] AssertionError: docs default newstyle=False'
+  -> docs:jinja:DD-2: could_not_run None AssertionError strict=False tokens=5433 ledger=7593072
+[docs:jinja:DD-3] attempt 1: reproduced (expected_exception) 'AssertionError: documented default is newstyle=False'
+  -> docs:jinja:DD-3: reproduced assertion AssertionError strict=False tokens=4277 ledger=7597349
+[docs:jinja:DD-4] attempt 1: could_not_run (failed_outside_doc_literal) "[script line 4, not a DOC-LITERAL line] AttributeError: type object 'Environment' has no attribute 'install_gettext_call"
+[docs:jinja:DD-4] attempt 2: reproduced (expected_exception) 'AssertionError: docs say default newstyle=False'
+  -> docs:jinja:DD-4: reproduced assertion AssertionError strict=False tokens=6807 ledger=7604156
+[docs:jinja:DD-5] attempt 1: reproduced (expected_exception) 'AttributeError: SandboxEnvironment'
+  -> docs:jinja:DD-5: reproduced interface_error AttributeError strict=True tokens=2936 ledger=7607092
+[py:jinja#0:DD-1] attempt 1: could_not_run (failed_outside_doc_literal) '[script line 11, not a DOC-LITERAL line] AssertionError: docs say dumps defaults to env.policies[json.dumps_function]'
+[py:jinja#0:DD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs say dumps defaults to env.policies[json.dumps_function]'
+  -> py:jinja#0:DD-1: reproduced assertion AssertionError strict=False tokens=7636 ledger=7614728
+[py:jinja#2:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:jinja#2:DD-1: not_reproduced None None strict=False tokens=4647 ledger=7619375
+[py:jinja#3:DD-1] attempt 1: reproduced (expected_exception) "TypeError: Parser.parse_tuple() got an unexpected keyword argument 'no_condexpr'. Did you mean 'with_condexpr'?"
+  -> py:jinja#3:DD-1: reproduced interface_error TypeError strict=True tokens=2864 ledger=7622239
+[py:jinja#5:DD-1] attempt 1: could_not_run (unexpected_exception) 'AssertionError: '
+[py:jinja#5:DD-1] attempt 2: reproduced (expected_exception) 'AssertionError: '
+  -> py:jinja#5:DD-1: reproduced assertion AssertionError strict=False tokens=7272 ledger=7629511
+[py:jinja#6:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:jinja#6:DD-1: not_reproduced None None strict=False tokens=4027 ledger=7633538
+[docs:werkzeug:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: docs say removed in Werkzeug 3.3'
+  -> docs:werkzeug:DD-1: reproduced assertion AssertionError strict=False tokens=3116 ledger=7636654
+[py:werkzeug#0:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: docs: default only allows .localhost domains'
+  -> py:werkzeug#0:DD-1: reproduced assertion AssertionError strict=False tokens=3727 ledger=7640381
+[py:werkzeug#0:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: version note should spell request_key'
+  -> py:werkzeug#0:DD-2: reproduced assertion AssertionError strict=False tokens=4323 ledger=7644704
+[py:werkzeug#1:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:werkzeug#1:DD-1: not_reproduced None None strict=False tokens=4002 ledger=7648706
+[py:werkzeug#2:DD-1] attempt 1: reproduced (expected_exception) "TypeError: redirect() got an unexpected keyword argument 'response'. Did you mean 'Response'?"
+  -> py:werkzeug#2:DD-1: reproduced interface_error TypeError strict=True tokens=3503 ledger=7652209
+[py:werkzeug#4:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: '
+  -> py:werkzeug#4:DD-1: reproduced assertion AssertionError strict=False tokens=2938 ledger=7655147
+[py:werkzeug#5:DD-1] attempt 1: reproduced (expected_exception) "AttributeError: 'IfRange' object has no attribute 'datetime'"
+  -> py:werkzeug#5:DD-1: reproduced interface_error AttributeError strict=True tokens=3022 ledger=7658169
+[py:werkzeug#5:DD-2] attempt 1: reproduced (expected_exception) 'AssertionError: '
+  -> py:werkzeug#5:DD-2: reproduced assertion AssertionError strict=False tokens=3823 ledger=7661992
+[py:werkzeug#6:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: docs describe value as the cookie key'
+  -> py:werkzeug#6:DD-1: reproduced assertion AssertionError strict=False tokens=3424 ledger=7665416
+[py:werkzeug#7:DD-1] attempt 2: reproduced (expected_exception) 'AssertionError: default PBKDF2 is pbkdf2:sha256:600000'
+  -> py:werkzeug#7:DD-1: reproduced assertion AssertionError strict=False tokens=5941 ledger=7671357
+[py:werkzeug#7:DD-2] attempt 1: could_not_run (failed_outside_doc_literal) "[script line 3, not a DOC-LITERAL line] AttributeError: type object 'Request' has no attribute 'from_values'"
+[py:werkzeug#7:DD-2] attempt 2: could_not_run (failed_outside_doc_literal) "[script line 4, not a DOC-LITERAL line] TypeError: Request.__init__() missing 7 required positional arguments: 'scheme',"
+  -> py:werkzeug#7:DD-2: could_not_run None TypeError strict=False tokens=5253 ledger=7676610
+[py:werkzeug#9:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: default fallback_mimetype is application/octet-stream'
+  -> py:werkzeug#9:DD-1: reproduced assertion AssertionError strict=False tokens=3540 ledger=7680150
+[py:werkzeug#10:DD-1] attempt 1: reproduced (expected_exception) 'AssertionError: '
+  -> py:werkzeug#10:DD-1: reproduced assertion AssertionError strict=False tokens=4080 ledger=7684230
+[py:werkzeug#10:DD-3] attempt 1: reproduced (expected_exception) "KeyError: 'werkzeug.proxy_fix.orig_REMOTE_ADDR'"
+  -> py:werkzeug#10:DD-3: reproduced other_exception KeyError strict=False tokens=3249 ledger=7687479
+[py:werkzeug#10:DD-4] attempt 2: could_not_run (failed_outside_doc_literal) "[script line 48, not a DOC-LITERAL line] AttributeError: 'FakeConnection' object has no attribute 'connect'"
+  -> py:werkzeug#10:DD-4: could_not_run None AttributeError strict=False tokens=6425 ledger=7693904
+[docs:pydantic-settings:DD-1] attempt 1: could_not_run (unexpected_exception) "KeyError: 'cli_kebab_case'"
+[docs:pydantic-settings:DD-1] attempt 2: could_not_run (lint) 'line 16: try/except catching TypeError, ValueError is not allowed'
+  -> docs:pydantic-settings:DD-1: could_not_run None None strict=False tokens=8321 ledger=7702225
+[py:pydantic-settings#2:DD-1] attempt 1: not_reproduced (ran_ok) 'DOCS_OK'
+  -> py:pydantic-settings#2:DD-1: not_reproduced None None strict=False tokens=3326 ledger=7705551
+[py:pydantic-settings#2:DD-2] attempt 1: could_not_run (unexpected_exception) "AttributeError: 'CliSettingsSource' object has no attribute 'parse_args_method'"
+[py:pydantic-settings#2:DD-2] attempt 2: reproduced (expected_exception) 'AssertionError: parse_args_method defaults to argparse.ArgumentParser.parse_args'
+  -> py:pydantic-settings#2:DD-2: reproduced assertion AssertionError strict=False tokens=7902 ledger=7713453
+{"prompt_tokens": 226815, "completion_tokens": 211504, "calls": 123, "cached_calls": 0, "http_429": 0}

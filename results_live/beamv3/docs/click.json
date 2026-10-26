@@ -1,0 +1,125 @@
+{
+  "repo": "click",
+  "ref": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "doc_files": [
+    "docs/options.md",
+    "docs/commands.md",
+    "docs/advanced.md",
+    "docs/complex.md",
+    "docs/utils.md",
+    "docs/commands-and-groups.md",
+    "docs/faqs.md",
+    "docs/shell-completion.md",
+    "docs/documentation.md",
+    "docs/parameter-types.md",
+    "docs/testing.md",
+    "docs/why.md",
+    "docs/quickstart.md",
+    "docs/contrib.md",
+    "docs/exceptions.md",
+    "docs/arguments.md",
+    "docs/prompts.md",
+    "docs/api.md",
+    "docs/unicode-support.md",
+    "docs/parameters.md",
+    "docs/upgrade-guides.md",
+    "docs/standalone-apps.md",
+    "docs/extending-click.md",
+    "docs/handling-files.md",
+    "docs/wincmd.md",
+    "docs/click-concepts.md",
+    "docs/index.md",
+    "docs/option-decorators.md",
+    "docs/entry-points.md",
+    "docs/support-multiple-versions.md",
+    "README.md",
+    "docs/virtualenv.md",
+    "docs/contributing.md",
+    "docs/command-line-reference.md",
+    "docs/design-opinions.md",
+    "docs/setuptools.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 389076,
+  "completion_tokens": 23041,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "The docs claim a string default is interpreted as characters, but Click rejects string defaults for multiple options.",
+      "doc_citation": {
+        "path": "docs/options.md",
+        "start_line": 215,
+        "end_line": 216,
+        "quote": "function as a tuple. If set, `default` must be a list or tuple. Setting a string\nas `default` will be interpreted as a list of characters."
+      },
+      "code_citation": {
+        "path": "src/click/core.py",
+        "start_line": 2235,
+        "end_line": 2236,
+        "quote": "if isinstance(value, str):\n        raise TypeError"
+      },
+      "proposed_fix": "Replace the claim with: a string default is not accepted for multiple options; pass a list or tuple.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "env_var",
+      "explanation": "The docs say unrecognized boolean-flag environment values deactivate the flag, but Click raises an invalid boolean error.",
+      "doc_citation": {
+        "path": "docs/options.md",
+        "start_line": 707,
+        "end_line": 707,
+        "quote": "- Any other value is interpreted as deactivating the flag"
+      },
+      "code_citation": {
+        "path": "src/click/types.py",
+        "start_line": 874,
+        "end_line": 875,
+        "quote": "if normalized is None:\n            self.fail("
+      },
+      "proposed_fix": "Change the bullet to: any other value is rejected as an invalid boolean.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "name",
+      "explanation": "The docs refer to a `FileType`, but Click's parameter type is named `File`.",
+      "doc_citation": {
+        "path": "docs/exceptions.md",
+        "start_line": 108,
+        "end_line": 109,
+        "quote": "- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file."
+      },
+      "code_citation": {
+        "path": "src/click/types.py",
+        "start_line": 915,
+        "end_line": 915,
+        "quote": "class File(ParamType[t.IO[t.Any]]):"
+      },
+      "proposed_fix": "Replace `{class}`FileType`` with `{class}`File``.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "name",
+      "explanation": "The docs list `foo_bar` as a shell-completion template variable, but the implementation provides `prog_name`.",
+      "doc_citation": {
+        "path": "docs/shell-completion.md",
+        "start_line": 212,
+        "end_line": 214,
+        "quote": "- `complete_func` - A safe name for the completion function defined in the script.\n- `complete_var` - The environment variable name for passing the `{shell}_complete` instruction.\n- `foo_bar` - The name of the executable being completed."
+      },
+      "code_citation": {
+        "path": "src/click/shell_completion.py",
+        "start_line": 325,
+        "end_line": 331,
+        "quote": "def source_vars(self) -> _SourceVarsDict:\n        \"\"\"Vars for formatting :attr:`source_template`.\n\n        By default this provides ``complete_func``, ``complete_var``,\n        and ``prog_name``.\n        \"\"\"\n        return {\n            \"complete_func\": self.func_name,\n            \"complete_var\": self.complete_var,\n            \"prog_name\": self.prog_name,\n        }"
+      },
+      "proposed_fix": "Replace `foo_bar` with `prog_name` in the documented template variables and example.",
+      "fully_verified": false
+    }
+  ]
+}

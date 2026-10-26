@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1623,
+      "output_tokens": 2457,
+      "cached_input_tokens": 0
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Create a ProxyFix with x_host=1, send HTTP_X_FORWARDED_HOST, and assert that SERVER_NAME and SERVER_PORT are updated in addition to HTTP_HOST.",
+      "argument_finding_is_false": "Likely true: HTTP_HOST can represent the full forwarded host, but WSGI environ's SERVER_NAME and SERVER_PORT are separate application-facing values; middleware that only updates HTTP_HOST does not implement the documented guarantee.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: ",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

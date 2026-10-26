@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The docstring describes the behavior after `None` is resolved at runtime, while the parameter legitimately uses `None` as its default. Entering the progress bar and inspecting the resolved `show_percent` value confirms the documented conditional behavior.",
+  "model_verdict": "false",
+  "doc_literal_usage": "Enter a sized and an unsized progress bar as context managers, then assert their resolved show_percent values are True and False respectively.",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import click\n\nwith click.progressbar([1, 2, 3]) as bar_with_length:\n    assert bar_with_length.show_percent is True, \"default is True if the iterable has a length\"  # DOC-LITERAL\n\nwith click.progressbar(iter([1, 2, 3])) as bar_without_length:\n    assert bar_without_length.show_percent is False, \"default is False if not\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,234 @@
+{
+  "repo": "arrow",
+  "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+  "chunks": {
+    "0": {
+      "paths": [
+        "arrow/__init__.py",
+        "arrow/constants.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 2736,
+      "completion_tokens": 313,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "1": {
+      "paths": [
+        "arrow/locales.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 31383,
+      "completion_tokens": 1957,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "arrow/locales.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30147,
+      "completion_tokens": 1859,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "3": {
+      "paths": [
+        "arrow/locales.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 20903,
+      "completion_tokens": 2632,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The inline comment states that the delta key is always future when only_distance is False, but the method passes the signed delta to the base describe in that branch; the sign is discarded only when only_distance is True.",
+          "doc_citation": {
+            "path": "arrow/locales.py",
+            "start_line": 6111,
+            "end_line": 6111,
+            "quote": "        delta: Union[float, int] = 1,  # key is always future when only_distance=False"
+          },
+          "code_citation": {
+            "path": "arrow/locales.py",
+            "start_line": 6120,
+            "end_line": 6120,
+            "quote": "            return super().describe(timeframe, delta, only_distance)"
+          },
+          "proposed_fix": "Change the comment to `# key is always future when only_distance=True`.",
+          "fully_verified": false
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "The inline comment states that the delta key is always future when only_distance is False, but the method passes the signed delta to the base describe in that branch; the sign is discarded only when only_distance is True.",
+          "doc_citation": {
+            "path": "arrow/locales.py",
+            "start_line": 6486,
+            "end_line": 6486,
+            "quote": "        delta: Union[float, int] = 1,  # key is always future when only_distance=False"
+          },
+          "code_citation": {
+            "path": "arrow/locales.py",
+            "start_line": 6497,
+            "end_line": 6497,
+            "quote": "            return super().describe(timeframe, delta, only_distance)"
+          },
+          "proposed_fix": "Change the comment to `# key is always future when only_distance=True`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "4": {
+      "paths": [
+        "arrow/arrow.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 25771,
+      "completion_tokens": 5004,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The docstring refers to a parameter named `timestring`, but the method signature parameter is `input_string`.",
+          "doc_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1349,
+            "end_line": 1349,
+            "quote": "        :param timestring: a ``str`` representing a humanized relative time."
+          },
+          "code_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1344,
+            "end_line": 1344,
+            "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+          },
+          "proposed_fix": "Change `:param timestring:` to `:param input_string:`.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "default",
+          "explanation": "The docstring says the locale defaults to 'en-us', but the implementation defaults to 'en_us'.",
+          "doc_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1350,
+            "end_line": 1350,
+            "quote": "        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'."
+          },
+          "code_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1344,
+            "end_line": 1344,
+            "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+          },
+          "proposed_fix": "Change the documented default from 'en-us' to 'en_us'.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "flag",
+          "explanation": "The granularity documentation omits 'quarter' even though quarter is a supported granularity value.",
+          "doc_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1147,
+            "end_line": 1147,
+            "quote": "                           'hour', 'day', 'week', 'month' or 'year' or a list of any combination of these strings"
+          },
+          "code_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 72,
+            "end_line": 72,
+            "quote": "            \"quarter\","
+          },
+          "proposed_fix": "Update the documented granularity list to include 'quarter'.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-4",
+          "drift_kind": "default",
+          "explanation": "The docstring marks `end` as optional, but the `interval` signature has no default value for `end`.",
+          "doc_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 740,
+            "end_line": 740,
+            "quote": "        :param end: (optional) A datetime expression, the end of the range."
+          },
+          "code_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 730,
+            "end_line": 730,
+            "quote": "        end: dt_datetime,"
+          },
+          "proposed_fix": "Remove '(optional)' from the documented `end` parameter for `interval`.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-5",
+          "drift_kind": "default",
+          "explanation": "The docstring marks `end` as optional, but the `span_range` signature has no default value for `end`.",
+          "doc_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 655,
+            "end_line": 655,
+            "quote": "        :param end: (optional) A datetime expression, the end of the range."
+          },
+          "code_citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 647,
+            "end_line": 647,
+            "quote": "        end: dt_datetime,"
+          },
+          "proposed_fix": "Remove '(optional)' from the documented `end` parameter for `span_range`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "5": {
+      "paths": [
+        "arrow/parser.py",
+        "arrow/factory.py",
+        "arrow/api.py",
+        "arrow/_version.py",
+        "arrow/util.py",
+        "arrow/formatter.py",
+        "docs/conf.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 21913,
+      "completion_tokens": 2662,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The TzinfoParser.parse docstring declares the return type as datetime.timezone, but the implementation is annotated to return dt_tzinfo and may return ZoneInfo or timezone objects.",
+          "doc_citation": {
+            "path": "arrow/parser.py",
+            "start_line": 902,
+            "end_line": 902,
+            "quote": ":rtype: datetime.timezone"
+          },
+          "code_citation": {
+            "path": "arrow/parser.py",
+            "start_line": 895,
+            "end_line": 895,
+            "quote": "    def parse(cls, tzinfo_string: str) -> dt_tzinfo:"
+          },
+          "proposed_fix": "Change the TzinfoParser.parse docstring return type from `datetime.timezone` to `dt_tzinfo` (or `datetime.tzinfo`).",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

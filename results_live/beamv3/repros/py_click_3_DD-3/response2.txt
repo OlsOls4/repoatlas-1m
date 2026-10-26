@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The function is private, and internal callers pass ctx_args; missing doc entry is cosmetic, but the documented parameter list is indeed incomplete.",
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "from click.shell_completion import _resolve_context; cli = click.command()(lambda: None); _resolve_context(cli=cli, prog_name=\"prog\", args=[])",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import click\nfrom click.shell_completion import _resolve_context\n\n\n@click.command()\ndef cli() -> None:\n    pass\n\n\n_resolve_context(cli=cli, prog_name=\"prog\", args=[])  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

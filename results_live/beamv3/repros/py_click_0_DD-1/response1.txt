@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The reported mismatch is real in the shown source: the ValueError directs callers to an `overwrite` parameter, but `open_stream` has no such parameter in its signature. There is no visible passthrough or alias in the cited code that would make `overwrite` valid.",
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "Call open_stream using the nonexistent `overwrite` parameter recommended by its ValueError.",
+  "expected_exception_type": "TypeError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from click._compat import open_stream\n\nopen_stream(\"output.txt\", \"w\", atomic=True, overwrite=True)  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

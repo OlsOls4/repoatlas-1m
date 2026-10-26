@@ -1,0 +1,63 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.1,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 25, in <module>\n    main()\n    ~~~~^^\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 19, in main\n    r = httpx.get(\"https://www.example.org/\")  # DOC-LITERAL\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 16, in get\n    return original_get(url, *args, **kwargs)\nTypeError: get() got an unexpected keyword argument 'transport'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "get() got an unexpected keyword argument 'transport'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py",
+          "line": 25,
+          "name": "<module>",
+          "source": "main()"
+        },
+        {
+          "file": "/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py",
+          "line": 19,
+          "name": "main",
+          "source": "r = httpx.get(\"https://www.example.org/\")  # DOC-LITERAL"
+        },
+        {
+          "file": "/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py",
+          "line": 16,
+          "name": "get",
+          "source": "return original_get(url, *args, **kwargs)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 25, in <module>\n    main()\n    ~~~~^^\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 19, in main\n    r = httpx.get(\"https://www.example.org/\")  # DOC-LITERAL\n  File \"/tmp/repro-docs_httpx_DD-1-cs6ltm9l/repro.py\", line 16, in get\n    return original_get(url, *args, **kwargs)\nTypeError: get() got an unexpected keyword argument 'transport'\n"
+    }
+  }
+}

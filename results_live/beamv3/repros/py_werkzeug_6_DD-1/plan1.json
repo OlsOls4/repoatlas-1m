@@ -1,0 +1,10 @@
+{
+  "repro_script": "from werkzeug.test import Client\nfrom werkzeug.wrappers import Response\n\ndef app(environ, start_response):\n    response = Response(\"ok\")\n    response.set_cookie(\"foo\", \"bar\")\n    return response(environ, start_response)\n\nclient = Client(app)\nclient.get(\"/\")\ncookie = client.get_cookie(\"foo\")\nassert cookie is not None\nassert cookie.value == cookie.key, \"docs describe value as the cookie key\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The documented behavior that cookie.value is the cookie key is false; it contains the cookie value.",
+  "doc_literal_usage": "client.get_cookie('foo'); assert cookie.value == cookie.key",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

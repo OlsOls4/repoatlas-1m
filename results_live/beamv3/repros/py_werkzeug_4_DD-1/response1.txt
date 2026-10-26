@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "A weak counterargument is that this is only a docstring error with no runtime effect, and a reader might infer the correct meaning from the type annotation and setter docstring. But the getter's actual text is unambiguously wrong: it calls a str-valued token 'a dict of parameters' and cross-references itself rather than parameters, so the documentation finding is valid.",
+  "model_verdict": "finding is true",
+  "doc_literal_usage": "Inspect WWWAuthenticate.token.fget.__doc__ and assert it matches the corrected token getter docstring.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nfrom werkzeug.datastructures.auth import WWWAuthenticate\n\ndoc = inspect.getdoc(WWWAuthenticate.token.fget)\nassert doc == \"A token for the header. Only one of this or :attr:`parameters` should\\nhave a value for a given scheme.\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

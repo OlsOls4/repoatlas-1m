@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.15,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_httpx_DD-8-hc5jvve9/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_httpx_DD-8-hc5jvve9/repro.py\", line 5, in <module>\n    assert client.limits == limits, \"doc example should apply limits\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^\nAttributeError: 'Client' object has no attribute 'limits'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'Client' object has no attribute 'limits'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_httpx_DD-8-hc5jvve9/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "assert client.limits == limits, \"doc example should apply limits\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_httpx_DD-8-hc5jvve9/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_httpx_DD-8-hc5jvve9/repro.py\", line 5, in <module>\n    assert client.limits == limits, \"doc example should apply limits\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^\nAttributeError: 'Client' object has no attribute 'limits'\n"
+    }
+  }
+}

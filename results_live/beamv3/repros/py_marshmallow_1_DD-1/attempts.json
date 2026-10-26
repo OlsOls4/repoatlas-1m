@@ -1,0 +1,43 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 2379,
+      "output_tokens": 991,
+      "cached_input_tokens": 0
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unparseable_response",
+      "exception_type": null,
+      "error_excerpt": "Model response is not JSON.",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2478,
+      "output_tokens": 1938,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AttributeError",
+      "expected_failure": "True",
+      "doc_literal_usage": "SchemaOpts(type(\"Meta\", (), {\"additional\": [\"foo\"]})).additional",
+      "argument_finding_is_false": "No compelling false-positive argument: the cited annotation documents additional as a Meta option, but SchemaOpts has no corresponding attribute and no schema-loading code reads it, so a caller following the documentation would still get AttributeError when accessing opts.additional.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: 'SchemaOpts' object has no attribute 'additional'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

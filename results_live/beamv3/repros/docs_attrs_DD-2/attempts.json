@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1681,
+      "output_tokens": 3066,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "The documented Attribute repr includes stale fields/types and does not match the current runtime repr.",
+      "doc_literal_usage": "doctest example in docs/examples.md lines 458-468",
+      "argument_finding_is_false": "",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: ",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1590,
+      "output_tokens": 2093,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "The docstring lists only args and param, so a literal call omits ctx and raises TypeError.",
+      "doc_literal_usage": "_is_incomplete_option([], Option(['--foo']))",
+      "argument_finding_is_false": "",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: _is_incomplete_option() missing 1 required positional argument: 'param'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

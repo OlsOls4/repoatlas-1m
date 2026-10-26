@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "A false positive could be argued if env conversion only applies to a non-paired boolean flag or a specific flag_value configuration, but the cited code path is the shared BoolParamType.convert used for flag env values, so unrecognized values are rejected rather than treated as deactivation.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Create a paired boolean flag with envvar=\"FLAG\", invoke it with FLAG=definitely-not-a-bool, and assert it exits successfully with RESULT=False.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The documented claim that any other value deactivates the flag fails; Click raises an invalid boolean error instead.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import click\nfrom click.testing import CliRunner\n\n@click.command()\n@click.option(\"--flag/--no-flag\", envvar=\"FLAG\", default=False)\ndef cmd(flag):\n    click.echo(f\"RESULT={flag}\")\n\nrunner = CliRunner()\nresult = runner.invoke(cmd, [], env={\"FLAG\": \"definitely-not-a-bool\"})  # DOC-LITERAL\nassert result.exit_code == 0, result.output  # DOC-LITERAL\nassert \"RESULT=False\" in result.output, result.output  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

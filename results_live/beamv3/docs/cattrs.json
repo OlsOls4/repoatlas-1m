@@ -1,0 +1,135 @@
+{
+  "repo": "cattrs",
+  "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+  "doc_files": [
+    "docs/defaulthooks.md",
+    "docs/customizing.md",
+    "docs/strategies.md",
+    "docs/preconf.md",
+    "docs/usage.md",
+    "README.md",
+    "docs/indepth.md",
+    "docs/validation.md",
+    "docs/why.md",
+    "docs/recipes.md",
+    "docs/unions.md",
+    "docs/basics.md",
+    "CONTRIBUTING.md",
+    "docs/migrations.md",
+    "docs/cattrs.preconf.rst",
+    "docs/index.md",
+    "docs/benchmarking.md",
+    "docs/cattrs.rst",
+    "docs/cattrs.gen.rst",
+    "docs/cattrs.strategies.rst",
+    "docs/modules.rst",
+    "docs/contributing.md",
+    "tests/test_typing_structure.md",
+    ".github/AI_POLICY.md",
+    ".github/SECURITY.md",
+    ".github/CODE_OF_CONDUCT.md",
+    ".github/ISSUE_TEMPLATE.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 306854,
+  "completion_tokens": 17005,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "The README says typing.Sequence[T] structures into lists, but the converter routes generic sequences through homogeneous_tuple_structure_factory, which produces tuples.",
+      "doc_citation": {
+        "path": "README.md",
+        "start_line": 64,
+        "end_line": 64,
+        "quote": "- `list[T]`, `typing.List[T]`, `typing.MutableSequence[T]`, `typing.Sequence[T]` convert to lists."
+      },
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 307,
+        "end_line": 307,
+        "quote": "(is_sequence, homogenous_tuple_structure_factory, \"extended\"),"
+      },
+      "proposed_fix": "Change the README bullet to `- `list[T]`, `typing.List[T]`, `typing.MutableSequence[T]` convert to lists.` and keep `typing.Sequence[T]` under the tuple bullet.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "other",
+      "explanation": "The documentation says heterogeneous tuples cannot be structured by BaseConverter, but BaseConverter has a _structure_tuple implementation with a heterogeneous-tuple branch.",
+      "doc_citation": {
+        "path": "docs/defaulthooks.md",
+        "start_line": 300,
+        "end_line": 300,
+        "quote": "Structuring heterogenous tuples are not supported by the BaseConverter."
+      },
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 998,
+        "end_line": 999,
+        "quote": "# We're dealing with a heterogeneous tuple.\n        exp_len = len(tup_params)"
+      },
+      "proposed_fix": "Remove the note block claiming that heterogeneous tuples are unsupported by BaseConverter.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "name",
+      "explanation": "The customization example names the exception ForbiddenExtraKeyError, but the code defines ForbiddenExtraKeysError.",
+      "doc_citation": {
+        "path": "docs/customizing.md",
+        "start_line": 279,
+        "end_line": 279,
+        "quote": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber"
+      },
+      "code_citation": {
+        "path": "src/cattrs/errors.py",
+        "start_line": 118,
+        "end_line": 118,
+        "quote": "class ForbiddenExtraKeysError(CattrsError):"
+      },
+      "proposed_fix": "Replace ForbiddenExtraKeyError with ForbiddenExtraKeysError in the documentation example.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "default",
+      "explanation": "The cbor2 preconf documentation says datetimes are serialized as text strings by default, but the converter registers datetime unstructuring through unstructure_datetime_as_timestamp.",
+      "doc_citation": {
+        "path": "docs/preconf.md",
+        "start_line": 189,
+        "end_line": 189,
+        "quote": "`datetime` s are serialized as a text string by default (CBOR Tag 0)."
+      },
+      "code_citation": {
+        "path": "src/cattrs/preconf/cbor2.py",
+        "start_line": 46,
+        "end_line": 47,
+        "quote": "converter.register_unstructure_hook(datetime, unstructure_datetime_as_timestamp)\n    converter.register_structure_hook(\n        datetime, lambda v, _: datetime.fromtimestamp(v, timezone.utc)\n    )"
+      },
+      "proposed_fix": "Replace the cbor2 datetime sentence with: `_datetime` s are serialized as UNIX timestamp float values, matching the msgpack converter. Naive `datetime` s are assumed to be UTC.`",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-5",
+      "drift_kind": "default",
+      "explanation": "The cbor2 preconf documentation says sets are serialized and deserialized to sets, but the converter overrides set unstructuring to lists.",
+      "doc_citation": {
+        "path": "docs/preconf.md",
+        "start_line": 185,
+        "end_line": 185,
+        "quote": "Sets are serialized and deserialized to sets."
+      },
+      "code_citation": {
+        "path": "src/cattrs/preconf/cbor2.py",
+        "start_line": 61,
+        "end_line": 63,
+        "quote": "kwargs[\"unstruct_collection_overrides\"] = {\n        Set: list,\n        **kwargs.get(\"unstruct_collection_overrides\", {}),\n    }"
+      },
+      "proposed_fix": "Change the sentence to `Sets are serialized as lists, and deserialized back into sets.`",
+      "fully_verified": false
+    }
+  ]
+}

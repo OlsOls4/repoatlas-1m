@@ -1,0 +1,10 @@
+{
+  "repro_script": "import httpx\n\nlimits = httpx.Limits()  # DOC-LITERAL\nassert limits.max_keepalive_connections == 20, \"Docs say Defaults 20\"  # DOC-LITERAL\nassert limits.max_connections == 100, \"Docs say Default 100\"  # DOC-LITERAL\nassert limits.keepalive_expiry == 5, \"Docs say Default 5\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "httpx.Limits() constructor defaults",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

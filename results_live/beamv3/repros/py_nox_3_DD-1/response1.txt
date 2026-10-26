@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": true,
+  "doc_literal_usage": "from nox.workflow import GlobalConfig",
+  "expected_exception_type": "ImportError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from nox.workflow import GlobalConfig  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

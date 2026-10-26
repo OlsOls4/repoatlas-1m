@@ -1,0 +1,29 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1634,
+      "output_tokens": 1797,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "With the default cbor2 converter, an unstructured datetime is asserted to be a str, as the docs claim text-string serialization.",
+      "argument_finding_is_false": "One could argue the sentence describes the underlying cbor2 library's default rather than cattrs' configured converter, but the cited configure_converter explicitly registers timestamp unstructuring, and make_converter calls it unconditionally. Thus the documentation's 'by default' claim is contradicted by the shipped converter behavior.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [
+        "cbor2"
+      ],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say datetimes are serialized as a text string by default",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

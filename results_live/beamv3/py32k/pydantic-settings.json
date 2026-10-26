@@ -1,0 +1,107 @@
+{
+  "repo": "pydantic-settings",
+  "ref": "7e2dacb6db07b41abb0c80d0608e46e197265554",
+  "chunks": {
+    "0": {
+      "paths": [
+        "pydantic_settings/__init__.py",
+        "pydantic_settings/sources/__init__.py",
+        "pydantic_settings/sources/providers/__init__.py",
+        "pydantic_settings/sources/types.py",
+        "pydantic_settings/sources/utils.py",
+        "pydantic_settings/main.py",
+        "pydantic_settings/utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 26961,
+      "completion_tokens": 2705,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "1": {
+      "paths": [
+        "pydantic_settings/sources/providers/env.py",
+        "pydantic_settings/exceptions.py",
+        "pydantic_settings/sources/base.py",
+        "pydantic_settings/sources/providers/aws.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 18159,
+      "completion_tokens": 2214,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "2": {
+      "paths": [
+        "pydantic_settings/sources/providers/cli.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 28609,
+      "completion_tokens": 2361,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The docstring says cli_prog_name defaults to None when cli_parse_args is None, but the implementation always defaults to sys.argv[0] when no explicit value is provided.",
+          "doc_citation": {
+            "path": "pydantic_settings/sources/providers/cli.py",
+            "start_line": 375,
+            "end_line": 376,
+            "quote": "cli_prog_name: The CLI program name to display in help text. Defaults to `None` if cli_parse_args is `None`.\n            Otherwise, defaults to sys.argv[0]."
+          },
+          "code_citation": {
+            "path": "pydantic_settings/sources/providers/cli.py",
+            "start_line": 446,
+            "end_line": 448,
+            "quote": "self.cli_prog_name = (\n            cli_prog_name if cli_prog_name is not None else settings_cls.model_config.get('cli_prog_name', sys.argv[0])\n        )"
+          },
+          "proposed_fix": "Change the docstring to state that cli_prog_name defaults to sys.argv[0] when not explicitly provided.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "default",
+          "explanation": "The docstring says parse_args_method defaults to argparse.ArgumentParser.parse_args, while the constructor parameter defaults to None.",
+          "doc_citation": {
+            "path": "pydantic_settings/sources/providers/cli.py",
+            "start_line": 404,
+            "end_line": 404,
+            "quote": "parse_args_method: The root parser parse args method. Defaults to `argparse.ArgumentParser.parse_args`."
+          },
+          "code_citation": {
+            "path": "pydantic_settings/sources/providers/cli.py",
+            "start_line": 436,
+            "end_line": 436,
+            "quote": "parse_args_method: Callable[..., Any] | None = None,"
+          },
+          "proposed_fix": "Update the docstring default to state that parse_args_method defaults to None and that the implementation selects the appropriate parser method internally.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "pydantic_settings/sources/providers/gcp.py",
+        "pydantic_settings/sources/providers/nested_secrets.py",
+        "pydantic_settings/sources/providers/azure.py",
+        "pydantic_settings/sources/providers/secrets.py",
+        "pydantic_settings/sources/providers/toml.py",
+        "pydantic_settings/sources/providers/dotenv.py",
+        "pydantic_settings/sources/providers/yaml.py",
+        "pydantic_settings/sources/providers/json.py",
+        "pydantic_settings/sources/providers/pyproject.py",
+        "pydantic_settings/version.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 19704,
+      "completion_tokens": 2162,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    }
+  }
+}

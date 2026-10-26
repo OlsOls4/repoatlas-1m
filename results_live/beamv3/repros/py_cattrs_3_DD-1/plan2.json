@@ -1,0 +1,12 @@
+{
+  "repro_script": "import base64\nfrom cattrs.preconf.ujson import make_converter\n\nconverter = make_converter()\nassert converter.unstructure(b\"hello\") == base64.b64encode(b\"hello\").decode(\"utf-8\"), \"docs say bytes are serialized as base64 strings\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "The documented promise that bytes are serialized as base64 strings is checked by comparing unstructure(b'hello') to base64.b64encode(b'hello').",
+  "argument_finding_is_false": "No strong false-positive argument: the registered hook directly calls b85encode/b85decode, and no other option or passthrough changes byte handling; an empty-byte edge case also cannot make base85 equal base64 for nonempty data.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [
+    "ujson"
+  ],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": true,
+  "model_verdict": "The docs are not behaviorally wrong in a way that can be disproven at runtime: make_class clearly accepts list and dict as documented, and accepting tuples is an undocumented convenience rather than a documented guarantee. A documentation-only type annotation omission does not make the documented usage fail.",
+  "doc_literal_usage": "Call attrs.make_class with a list and with a dict of attrib fields, then assert the resulting classes have the expected attributes.",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import attrs\n\nA = attrs.make_class(\"A\", [\"x\", \"y\"])  # DOC-LITERAL\nassert A.__name__ == \"A\"\na = A(1, 2)\nassert (a.x, a.y) == (1, 2)\n\nB = attrs.make_class(\"B\", {\"x\": attrs.field(default=1), \"y\": attrs.field(default=2)})  # DOC-LITERAL\nassert B.__name__ == \"B\"\nb = B()\nassert (b.x, b.y) == (1, 2)\n\nprint(\"DOCS_OK\")\n"
+}

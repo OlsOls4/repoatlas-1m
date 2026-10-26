@@ -1,0 +1,10 @@
+{
+  "repro_script": "import io\nimport click\n\nout = io.StringIO()\nwith click.progressbar(range(2), label=\"TestLabel\", hidden=False, file=out) as bar:  # DOC-LITERAL\n    for _ in bar:\n        pass\nassert \"TestLabel\" not in out.getvalue(), \"docs: hidden=False disables label\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Non-tty progressbar with hidden=False should produce no label according to the docstring.",
+  "argument_finding_is_false": "The sentence is ambiguous enough that 'this' could be read as referring to the no-tty label display rather than the hidden flag, but there is no separate parameter controlling that label, so the documented False value still cannot be correct.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

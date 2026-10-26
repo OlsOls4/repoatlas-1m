@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1752,
+      "output_tokens": 1840,
+      "cached_input_tokens": 128
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "The docstring still contains 'unstructuring.' in the version note.",
+      "doc_literal_usage": "Inspect make_dict_structure_fn.__doc__ and assert the version note says 'structuring.' instead of 'unstructuring.'",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: make_dict_structure_fn docs incorrectly mention unstructuring",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

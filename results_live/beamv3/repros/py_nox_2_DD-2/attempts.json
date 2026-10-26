@@ -1,0 +1,43 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1806,
+      "output_tokens": 625,
+      "cached_input_tokens": 128
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unparseable_response",
+      "exception_type": null,
+      "error_excerpt": "Model response is not JSON.",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1905,
+      "output_tokens": 2704,
+      "cached_input_tokens": 0
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "filter_manifest returns only 3 or a Manifest according to its docstring",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "AttributeError",
+      "error_excerpt": "[script line 21, not a DOC-LITERAL line] AttributeError: 'list' object has no attribute 'items'",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

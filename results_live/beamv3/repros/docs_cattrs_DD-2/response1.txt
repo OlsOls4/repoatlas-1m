@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": true,
+  "model_verdict": "false positive",
+  "doc_literal_usage": "cattrs.BaseConverter().structure((1, \"2\"), tuple[int, str])",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": ["pytest"],
+  "needs_network_or_server": false,
+  "repro_script": "import cattrs\nimport pytest\n\nconv = cattrs.BaseConverter()\nwith pytest.raises(Exception):\n    conv.structure((1, \"2\"), tuple[int, str])  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

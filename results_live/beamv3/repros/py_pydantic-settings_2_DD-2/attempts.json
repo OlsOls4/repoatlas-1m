@@ -1,0 +1,52 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 2057,
+      "output_tokens": 2339,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Instantiate CliSettingsSource with a minimal settings class and assert that its parse_args_method equals argparse.ArgumentParser.parse_args.",
+      "argument_finding_is_false": "The constructor parameter's literal default is None, but that may only be the input-layer default; the source could normalize it to the root parser's parse_args method during construction. If that resolution exists, the docstring's stated effective default would describe runtime behavior rather than the raw signature default, so the mere presence of None in the signature would not make the documentation wrong.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "unexpected_exception",
+      "exception_type": "AttributeError",
+      "error_excerpt": "AttributeError: 'CliSettingsSource' object has no attribute 'parse_args_method'",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2639,
+      "output_tokens": 867,
+      "cached_input_tokens": 2048
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Inspect the documented constructor parameter default for parse_args_method and assert it equals argparse.ArgumentParser.parse_args.",
+      "argument_finding_is_false": "The constructor parameter's literal default is None, but that may only be the input-layer default; the source could normalize it to the root parser's parse_args method during construction. If that resolution exists, the docstring's stated effective default would describe runtime behavior rather than the raw signature default, so the mere presence of None in the signature would not make the documentation wrong.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: parse_args_method defaults to argparse.ArgumentParser.parse_args",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

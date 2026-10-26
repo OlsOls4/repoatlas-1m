@@ -1,0 +1,75 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.09,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_werkzeug_10_DD-4-is_yf6js/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_werkzeug_10_DD-4-is_yf6js/repro.py\", line 48, in <module>\n    response = client.get(\"/static/foo.txt\")\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1163, in get\n    return self.open(*args, **kw)\n           ~~~~~~~~~^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1125, in open\n    response = self.run_wsgi_app(request, buffered=buffered)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 997, in run_wsgi_app\n    app_iter, status, headers = run_wsgi_app(\n                                ~~~~~~~~~~~~^\n        self.application, request.environ, buffered=buffered\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1275, in run_wsgi_app\n    app_rv = app(environ, start_response)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py\", line 237, in application\n    return response(request.environ, start_response)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py\", line 233, in application\n    response = f(*rest, request)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/middleware/http_proxy.py\", line 151, in application\n    con.connect()\n    ^^^^^^^^^^^\nAttributeError: 'FakeConnection' object has no attribute 'connect'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'FakeConnection' object has no attribute 'connect'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "/tmp/repro-py_werkzeug_10_DD-4-is_yf6js/repro.py",
+          "line": 48,
+          "name": "<module>",
+          "source": "response = client.get(\"/static/foo.txt\")"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py",
+          "line": 1163,
+          "name": "get",
+          "source": "return self.open(*args, **kw)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py",
+          "line": 1125,
+          "name": "open",
+          "source": "response = self.run_wsgi_app(request, buffered=buffered)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py",
+          "line": 997,
+          "name": "run_wsgi_app",
+          "source": "app_iter, status, headers = run_wsgi_app("
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py",
+          "line": 1275,
+          "name": "run_wsgi_app",
+          "source": "app_rv = app(environ, start_response)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py",
+          "line": 237,
+          "name": "application",
+          "source": "return response(request.environ, start_response)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py",
+          "line": 233,
+          "name": "application",
+          "source": "response = f(*rest, request)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/middleware/http_proxy.py",
+          "line": 151,
+          "name": "application",
+          "source": "con.connect()"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_werkzeug_10_DD-4-is_yf6js/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_werkzeug_10_DD-4-is_yf6js/repro.py\", line 48, in <module>\n    response = client.get(\"/static/foo.txt\")\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1163, in get\n    return self.open(*args, **kw)\n           ~~~~~~~~~^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1125, in open\n    response = self.run_wsgi_app(request, buffered=buffered)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 997, in run_wsgi_app\n    app_iter, status, headers = run_wsgi_app(\n                                ~~~~~~~~~~~~^\n        self.application, request.environ, buffered=buffered\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/test.py\", line 1275, in run_wsgi_app\n    app_rv = app(environ, start_response)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py\", line 237, in application\n    return response(request.environ, start_response)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/wrappers/request.py\", line 233, in application\n    response = f(*rest, request)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/middleware/http_proxy.py\", line 151, in application\n    con.connect()\n    ^^^^^^^^^^^\nAttributeError: 'FakeConnection' object has no attribute 'connect'\n"
+    }
+  }
+}

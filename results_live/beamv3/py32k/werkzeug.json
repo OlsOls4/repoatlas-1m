@@ -1,0 +1,509 @@
+{
+  "repo": "werkzeug",
+  "ref": "b73dce5a2ce14f7c7fd645699d1d878de48d2948",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/werkzeug/__init__.py",
+        "src/werkzeug/datastructures/__init__.py",
+        "src/werkzeug/wrappers/__init__.py",
+        "src/werkzeug/sansio/__init__.py",
+        "src/werkzeug/debug/__init__.py",
+        "src/werkzeug/routing/__init__.py",
+        "src/werkzeug/middleware/__init__.py",
+        "src/werkzeug/exceptions.py",
+        "src/werkzeug/wsgi.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 25826,
+      "completion_tokens": 2629,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The docstring says the debugger trusted hosts default only allows ``.localhost`` domains, but the code also allows ``127.0.0.1``.",
+          "doc_citation": {
+            "path": "src/werkzeug/debug/__init__.py",
+            "start_line": 299,
+            "end_line": 301,
+            "quote": "List of domains to allow requests to the debugger from. A leading dot\n        allows all subdomains. This only allows ``\".localhost\"`` domains by\n        default."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/debug/__init__.py",
+            "start_line": 298,
+            "end_line": 298,
+            "quote": "self.trusted_hosts: list[str] = [\".localhost\", \"127.0.0.1\"]"
+          },
+          "proposed_fix": "Update the docstring to state that the default trusted hosts are ``.localhost`` domains and ``127.0.0.1``.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "name",
+          "explanation": "The version-changed note refers to ``reqeust_key``, a misspelled parameter name that does not appear in the constructor signature.",
+          "doc_citation": {
+            "path": "src/werkzeug/debug/__init__.py",
+            "start_line": 254,
+            "end_line": 255,
+            "quote": ".. versionchanged:: 3.2\n        The ``reqeust_key`` parameter was removed."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/debug/__init__.py",
+            "start_line": 264,
+            "end_line": 273,
+            "quote": "def __init__(\n        self,\n        app: wt.WSGIApplication,\n        evalex: bool = False,\n        console_path: str = \"/console\",\n        console_init_func: t.Callable[[], dict[str, t.Any]] | None = None,\n        show_hidden_frames: bool = False,\n        pin_security: bool = True,\n        pin_logging: bool = True,\n    ) -> None:"
+          },
+          "proposed_fix": "Spell the removed parameter name in the note as ``request_key``.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/werkzeug/http.py",
+        "src/werkzeug/_internal.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 22591,
+      "completion_tokens": 3370,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The docstring describes expires as only a datetime or int timestamp, while the function signature also accepts str and float values.",
+          "doc_citation": {
+            "path": "src/werkzeug/http.py",
+            "start_line": 1423,
+            "end_line": 1425,
+            "quote": "    :param expires: The client will discard the cookie after this date.\n        ``max_age`` takes precedence if both are set. A ``datetime`` or ``int``\n        timestamp. ``None`` means that it will last until the browser is closed."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/http.py",
+            "start_line": 1400,
+            "end_line": 1400,
+            "quote": "    expires: str | dt.datetime | int | float | None = None,"
+          },
+          "proposed_fix": "Update the expires parameter documentation to state that it may be a str, datetime, int, or float timestamp.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "src/werkzeug/datastructures/structures.py",
+        "src/werkzeug/datastructures/headers.py",
+        "src/werkzeug/utils.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29287,
+      "completion_tokens": 2601,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "redirect treats its injection point as ``Response``, but the version note refers to it as ``response``.",
+          "doc_citation": {
+            "path": "src/werkzeug/utils.py",
+            "start_line": 245,
+            "end_line": 245,
+            "quote": "        Added the ``response`` parameter."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/utils.py",
+            "start_line": 212,
+            "end_line": 212,
+            "quote": "    location: str, code: int = 303, Response: type[Response] | None = None"
+          },
+          "proposed_fix": "Change `Added the ``response`` parameter.` to `Added the ``Response`` parameter.`",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "Headers.setlist has a parameter named ``values``, but its docstring documents ``value``.",
+          "doc_citation": {
+            "path": "src/werkzeug/datastructures/headers.py",
+            "start_line": 433,
+            "end_line": 433,
+            "quote": "        :param value: An iterable of header values. Newlines are not allowed and"
+          },
+          "code_citation": {
+            "path": "src/werkzeug/datastructures/headers.py",
+            "start_line": 428,
+            "end_line": 428,
+            "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+          },
+          "proposed_fix": "Change `:param value:` to `:param values:`.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/werkzeug/wrappers/request.py",
+        "src/werkzeug/urls.py",
+        "src/werkzeug/wrappers/response.py",
+        "src/werkzeug/datastructures/set.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 30391,
+      "completion_tokens": 1947,
+      "finish_reason": "stop",
+      "error": "parse: no JSON object in content; content_len=0",
+      "findings": []
+    },
+    "4": {
+      "paths": [
+        "src/werkzeug/datastructures/etag.py",
+        "src/werkzeug/datastructures/auth.py",
+        "src/werkzeug/_header_property.py",
+        "src/werkzeug/routing/map.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 26300,
+      "completion_tokens": 2874,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "WWWAuthenticate.token is typed as `str | None`, but its getter docstring incorrectly describes it as 'A dict of parameters for the header.'",
+          "doc_citation": {
+            "path": "src/werkzeug/datastructures/auth.py",
+            "start_line": 260,
+            "end_line": 262,
+            "quote": "\"\"\"A dict of parameters for the header. Only one of this or :attr:`token` should\n        have a value for a given scheme.\n        \"\"\""
+          },
+          "code_citation": {
+            "path": "src/werkzeug/datastructures/auth.py",
+            "start_line": 259,
+            "end_line": 259,
+            "quote": "def token(self) -> str | None:"
+          },
+          "proposed_fix": "Change the `token` getter docstring to: \"\"\"A token for the header. Only one of this or :attr:`parameters` should\nhave a value for a given scheme.\n\"\"\"",
+          "fully_verified": true
+        }
+      ]
+    },
+    "5": {
+      "paths": [
+        "src/werkzeug/routing/rules.py",
+        "src/werkzeug/sansio/response.py",
+        "src/werkzeug/datastructures/range.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 28147,
+      "completion_tokens": 1826,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The IfRange.check docstring refers to an attribute named datetime, but the class implements and stores the value as date.",
+          "doc_citation": {
+            "path": "src/werkzeug/datastructures/range.py",
+            "start_line": 38,
+            "end_line": 38,
+            "quote": "If :attr:`datetime` is set, it must equal"
+          },
+          "code_citation": {
+            "path": "src/werkzeug/datastructures/range.py",
+            "start_line": 31,
+            "end_line": 31,
+            "quote": "self.date = date"
+          },
+          "proposed_fix": "Change ':attr:`datetime`' to ':attr:`date`' in the IfRange.check docstring.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "The access_control_expose_headers docstring names the wrong response header; it documents Access-Control-Allow-Origin although the property maps to Access-Control-Expose-Headers.",
+          "doc_citation": {
+            "path": "src/werkzeug/sansio/response.py",
+            "start_line": 825,
+            "end_line": 825,
+            "quote": "doc=\"\"\"The ``Access-Control-Allow-Origin`` header. Which response"
+          },
+          "code_citation": {
+            "path": "src/werkzeug/sansio/response.py",
+            "start_line": 822,
+            "end_line": 824,
+            "quote": "access_control_expose_headers = structure_property[HeaderSet](\n        \"Access-Control-Expose-Headers\","
+          },
+          "proposed_fix": "Change the docstring to begin 'The ``Access-Control-Expose-Headers`` header. Which response'.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "6": {
+      "paths": [
+        "src/werkzeug/datastructures/cache_control.py",
+        "src/werkzeug/routing/converters.py",
+        "src/werkzeug/datastructures/file_storage.py",
+        "src/werkzeug/test.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29940,
+      "completion_tokens": 1907,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The docstring for the `value` attribute describes it as the cookie key rather than the cookie value.",
+          "doc_citation": {
+            "path": "src/werkzeug/test.py",
+            "start_line": 1383,
+            "end_line": 1383,
+            "quote": "\"\"\"The cookie key, encoded as a client would see it.\"\"\""
+          },
+          "code_citation": {
+            "path": "src/werkzeug/test.py",
+            "start_line": 1382,
+            "end_line": 1382,
+            "quote": "value: str"
+          },
+          "proposed_fix": "Change the docstring to \"\"\"The cookie value, encoded as a client would see it.\"\"\".",
+          "fully_verified": true
+        }
+      ]
+    },
+    "7": {
+      "paths": [
+        "src/werkzeug/sansio/request.py",
+        "src/werkzeug/debug/tbtools.py",
+        "src/werkzeug/sansio/multipart.py",
+        "src/werkzeug/datastructures/mixins.py",
+        "src/werkzeug/sansio/utils.py",
+        "src/werkzeug/security.py",
+        "src/werkzeug/routing/exceptions.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29446,
+      "completion_tokens": 2497,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The documentation states that the default PBKDF2 hash uses 600,000 iterations, but the implementation uses DEFAULT_PBKDF2_ITERATIONS, whose value is 1,000,000.",
+          "doc_citation": {
+            "path": "src/werkzeug/security.py",
+            "start_line": 90,
+            "end_line": 90,
+            "quote": "the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/security.py",
+            "start_line": 9,
+            "end_line": 9,
+            "quote": "DEFAULT_PBKDF2_ITERATIONS = 1_000_000"
+          },
+          "proposed_fix": "Change ``pbkdf2:sha256:600000`` to ``pbkdf2:sha256:1000000`` in the ``generate_password_hash`` documentation.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "default",
+          "explanation": "The documentation says ``user_agent`` may be ``None`` if not set, but the implementation returns an empty ``_UserAgent`` string when the header is missing.",
+          "doc_citation": {
+            "path": "src/werkzeug/sansio/request.py",
+            "start_line": 594,
+            "end_line": 594,
+            "quote": "A ``str``, or ``None`` if not set."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/sansio/request.py",
+            "start_line": 618,
+            "end_line": 618,
+            "quote": "return _UserAgent(value)"
+          },
+          "proposed_fix": "Change the documented return type to ``A ``str``.`` and remove the ``None`` case.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "8": {
+      "paths": [
+        "src/werkzeug/serving.py",
+        "src/werkzeug/formparser.py",
+        "src/werkzeug/datastructures/accept.py",
+        "src/werkzeug/_reloader.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29846,
+      "completion_tokens": 2324,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    },
+    "9": {
+      "paths": [
+        "src/werkzeug/debug/repr.py",
+        "src/werkzeug/middleware/shared_data.py",
+        "src/werkzeug/routing/matcher.py",
+        "src/werkzeug/datastructures/csp.py",
+        "src/werkzeug/debug/console.py",
+        "src/werkzeug/sansio/http.py",
+        "src/werkzeug/user_agent.py",
+        "src/werkzeug/local.py",
+        "docs/conf.py",
+        "src/werkzeug/middleware/lint.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 29067,
+      "completion_tokens": 2718,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "default",
+          "explanation": "The docstring says the default fallback_mimetype is application/octet-stream, but the constructor defaults fallback_mimetype to None.",
+          "doc_citation": {
+            "path": "src/werkzeug/middleware/shared_data.py",
+            "start_line": 62,
+            "end_line": 65,
+            "quote": ".. versionchanged:: 1.0\n    The default ``fallback_mimetype`` is ``application/octet-stream``\n    If a filename looks like a text mimetype, the ``utf-8`` charset\n    is added to it."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/middleware/shared_data.py",
+            "start_line": 84,
+            "end_line": 84,
+            "quote": "fallback_mimetype: None = None,"
+          },
+          "proposed_fix": "Remove or update the stale statement about the default fallback_mimetype so it reflects that fallback_mimetype defaults to None.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "10": {
+      "paths": [
+        "src/werkzeug/testapp.py",
+        "src/werkzeug/middleware/http_proxy.py",
+        "src/werkzeug/middleware/proxy_fix.py",
+        "src/werkzeug/middleware/profiler.py",
+        "src/werkzeug/middleware/dispatcher.py",
+        "examples/plnt/utils.py",
+        "examples/simplewiki/utils.py",
+        "examples/simplewiki/database.py",
+        "examples/shorty/utils.py",
+        "examples/couchy/utils.py",
+        "examples/plnt/database.py",
+        "examples/simplewiki/actions.py",
+        "examples/coolmagic/utils.py",
+        "examples/couchy/models.py",
+        "examples/cupoftee/utils.py",
+        "examples/cupoftee/network.py",
+        "examples/cupoftee/application.py",
+        "examples/i18nurls/application.py",
+        "examples/couchy/views.py",
+        "examples/shorty/views.py",
+        "examples/webpylike/webpylike.py",
+        "examples/cupoftee/db.py",
+        "examples/simplewiki/specialpages.py",
+        "examples/shorty/models.py",
+        "examples/plnt/views.py",
+        "examples/i18nurls/urls.py",
+        "examples/simplewiki/__init__.py",
+        "examples/plnt/__init__.py",
+        "examples/couchy/__init__.py",
+        "examples/shorty/__init__.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 27739,
+      "completion_tokens": 3513,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The ProxyFix documentation says X-Forwarded-Host sets SERVER_NAME and SERVER_PORT, but the implementation only sets HTTP_HOST.",
+          "doc_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 45,
+            "end_line": 46,
+            "quote": "-   ``X-Forwarded-Host`` sets ``HTTP_HOST``, ``SERVER_NAME``, and\n    ``SERVER_PORT``."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 157,
+            "end_line": 161,
+            "quote": "        if x_host := self._get_real_value(\n            self.x_host, environ_get(\"HTTP_X_FORWARDED_HOST\")\n        ):\n            environ[\"HTTP_HOST\"] = x_host"
+          },
+          "proposed_fix": "Change the X-Forwarded-Host bullet to ``-   ``X-Forwarded-Host`` sets ``HTTP_HOST``.``",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "The ProxyFix documentation says X-Forwarded-Port sets SERVER_PORT, but the implementation only updates HTTP_HOST.",
+          "doc_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 47,
+            "end_line": 47,
+            "quote": "-   ``X-Forwarded-Port`` sets ``HTTP_HOST`` and ``SERVER_PORT``."
+          },
+          "code_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 162,
+            "end_line": 171,
+            "quote": "        if x_port := self._get_real_value(\n            self.x_port, environ_get(\"HTTP_X_FORWARDED_PORT\")\n        ):\n            if host := environ_get(\"HTTP_HOST\"):\n                # \"]\" to check for IPv6 address without port\n                if \":\" in host and not host.endswith(\"]\"):\n                    host = host.rpartition(\":\")[0]\n\n                environ[\"HTTP_HOST\"] = f\"{host}:{x_port}\""
+          },
+          "proposed_fix": "Change the X-Forwarded-Port bullet to ``-   ``X-Forwarded-Port`` sets ``HTTP_HOST``.``",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-3",
+          "drift_kind": "other",
+          "explanation": "The ProxyFix.__call__ docstring says original values are stored under werkzeug.proxy_fix.orig_{key}, but the code stores them in the werkzeug.proxy_fix.orig dictionary.",
+          "doc_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 131,
+            "end_line": 133,
+            "quote": "        \"\"\"Modify the WSGI environ based on the various ``Forwarded``\n        headers before calling the wrapped application. Store the\n        original environ values in ``werkzeug.proxy_fix.orig_{key}``.\n"
+          },
+          "code_citation": {
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "start_line": 138,
+            "end_line": 138,
+            "quote": "                \"werkzeug.proxy_fix.orig\": {"
+          },
+          "proposed_fix": "Update the docstring to say the original values are stored in ``werkzeug.proxy_fix.orig``, a dict.",
+          "fully_verified": false
+        },
+        {
+          "finding_id": "DD-4",
+          "drift_kind": "default",
+          "explanation": "The ProxyMiddleware documentation example says the /static/ prefix is removed from URLs, but remove_prefix defaults to False.",
+          "doc_citation": {
+            "path": "src/werkzeug/middleware/http_proxy.py",
+            "start_line": 68,
+            "end_line": 70,
+            "quote": "    In the example above, everything under ``\"/static/\"`` is proxied to\n    the server on port 5001. The host header is rewritten to the target,\n    and the ``\"/static/\"`` prefix is removed from the URLs.\n"
+          },
+          "code_citation": {
+            "path": "src/werkzeug/middleware/http_proxy.py",
+            "start_line": 89,
+            "end_line": 89,
+            "quote": "            opts.setdefault(\"remove_prefix\", False)"
+          },
+          "proposed_fix": "Correct the example to state that the prefix is retained unless remove_prefix is set to True.",
+          "fully_verified": false
+        }
+      ]
+    }
+  }
+}

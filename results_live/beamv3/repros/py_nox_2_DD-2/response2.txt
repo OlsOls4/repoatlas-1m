@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "finding is true; the docstring omits the documented 0 return path",
+  "doc_literal_usage": "filter_manifest returns only 3 or a Manifest according to its docstring",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import types\n\nimport nox\nfrom nox.manifest import Manifest\nfrom nox.tasks import filter_manifest\n\n\n@nox.session(default=False)\ndef hidden(session):\n    pass\n\n\nconfig = types.SimpleNamespace(\n    sessions=None,\n    list_sessions=False,\n    pythons=None,\n    tags=None,\n    keywords=None,\n    noxfile=\"noxfile.py\",\n)\nmanifest = Manifest([hidden], config, None)\nresult = filter_manifest(manifest, config)\nassert isinstance(result, Manifest) or result == 3, \"filter_manifest should return 3 or the manifest\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

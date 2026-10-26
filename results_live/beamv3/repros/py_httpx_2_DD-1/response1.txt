@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "Every parameter in inspect.signature(httpx._content.encode_request).parameters must also appear in inspect.getdoc(httpx._content.encode_request).",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nfrom httpx._content import encode_request\n\nparameters = list(inspect.signature(encode_request).parameters)  # DOC-LITERAL\nfor name in parameters:  # DOC-LITERAL\n    assert name in (inspect.getdoc(encode_request) or \"\"), f\"docstring omits {name!r}\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

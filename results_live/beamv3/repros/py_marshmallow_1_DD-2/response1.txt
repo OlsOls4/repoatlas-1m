@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The word `obj` could be read as a generic object being deserialized rather than the parameter name, so the mismatch is only cosmetic and has no runtime effect.",
+  "model_verdict": "true",
+  "doc_literal_usage": "inspect.getdoc(Schema.loads) must contain the documented parameter reference `s` for `many`.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nfrom marshmallow import Schema\n\ndoc = inspect.getdoc(Schema.loads)\nassert \":param many: Whether to deserialize `s` as a collection.\" in doc, \"loads doc refers to nonexistent obj\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

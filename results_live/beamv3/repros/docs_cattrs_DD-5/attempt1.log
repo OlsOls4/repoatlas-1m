@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_cattrs_DD-5-bs_y8wvy/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_cattrs_DD-5-bs_y8wvy/repro.py\", line 6, in <module>\n    assert isinstance(u, set), \"Sets are serialized and deserialized to sets.\"  # DOC-LITERAL\n           ~~~~~~~~~~^^^^^^^^\nAssertionError: Sets are serialized and deserialized to sets.\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Sets are serialized and deserialized to sets.",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_cattrs_DD-5-bs_y8wvy/repro.py",
+          "line": 6,
+          "name": "<module>",
+          "source": "assert isinstance(u, set), \"Sets are serialized and deserialized to sets.\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_cattrs_DD-5-bs_y8wvy/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_cattrs_DD-5-bs_y8wvy/repro.py\", line 6, in <module>\n    assert isinstance(u, set), \"Sets are serialized and deserialized to sets.\"  # DOC-LITERAL\n           ~~~~~~~~~~^^^^^^^^\nAssertionError: Sets are serialized and deserialized to sets.\n"
+    }
+  }
+}

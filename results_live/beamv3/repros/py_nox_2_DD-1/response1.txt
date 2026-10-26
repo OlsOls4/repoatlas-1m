@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The docstring may be describing the conceptual pairing of a session with its status rather than a literal Python tuple return type, but the implementation's return annotation and actual sequential/parallel return values are list[Result], so this is at best a wording nuance and not a false positive.",
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "result = run_manifest(manifest, global_config)  # DOC-LITERAL\nassert isinstance(result, tuple) and len(result) == 2  # DOC-LITERAL",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from nox.tasks import run_manifest\n\nclass Manifest:\n    def list_all_sessions(self):\n        return []\n\nclass GlobalConfig:\n    parallel = 1\n\nmanifest = Manifest()\nglobal_config = GlobalConfig()\nresult = run_manifest(manifest, global_config)  # DOC-LITERAL\nassert isinstance(result, tuple) and len(result) == 2  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

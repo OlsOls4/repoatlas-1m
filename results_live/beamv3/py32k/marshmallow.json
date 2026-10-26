@@ -1,0 +1,133 @@
+{
+  "repo": "marshmallow",
+  "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/marshmallow/__init__.py",
+        "src/marshmallow/experimental/__init__.py",
+        "src/marshmallow/fields.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 27665,
+      "completion_tokens": 2760,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The Url docstring documents a `default` parameter, but Url.__init__ does not accept `default`; it only accepts keyword arguments forwarded to the base Field.",
+          "doc_citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1751,
+            "end_line": 1751,
+            "quote": ":param default: Default value for the field if the attribute is not set."
+          },
+          "code_citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1763,
+            "end_line": 1770,
+            "quote": "def __init__(\n        self,\n        *,\n        relative: bool = False,\n        absolute: bool = True,\n        schemes: types.StrSequenceOrSet | None = None,\n        require_tld: bool = True,\n        **kwargs: Unpack[_BaseFieldKwargs],\n    ):"
+          },
+          "proposed_fix": "Remove the `:param default:` line from the Url docstring, or document it as supported via Field's `load_default`/`dump_default` kwargs.",
+          "fully_verified": false
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "The Email docstring documents positional `args`, but Email.__init__ accepts only `**kwargs`; String also does not define a separate positional constructor signature.",
+          "doc_citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1793,
+            "end_line": 1793,
+            "quote": ":param args: The same positional arguments that :class:`String` receives."
+          },
+          "code_citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1800,
+            "end_line": 1800,
+            "quote": "def __init__(self, **kwargs: Unpack[_BaseFieldKwargs]) -> None:"
+          },
+          "proposed_fix": "Remove the `:param args:` line from the Email docstring, or change it to state that Email only accepts the same keyword arguments as String.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/marshmallow/validate.py",
+        "src/marshmallow/utils.py",
+        "src/marshmallow/types.py",
+        "src/marshmallow/schema.py",
+        "docs/conf.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 27832,
+      "completion_tokens": 3366,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "config_key",
+          "explanation": "`Schema.Meta.additional` is documented as a schema option, but `SchemaOpts` does not read or expose `additional`, and no code path applies it.",
+          "doc_citation": {
+            "path": "src/marshmallow/schema.py",
+            "start_line": 362,
+            "end_line": 366,
+            "quote": "        additional: typing.ClassVar[tuple[str, ...] | list[str]]\n        \"\"\"Fields to include in addition to the explicitly declared fields.\n        `additional <marshmallow.Schema.Meta.additional>` and `fields <marshmallow.Schema.Meta.fields>`\n        are mutually-exclusive options.\n        \"\"\""
+          },
+          "code_citation": {
+            "path": "src/marshmallow/schema.py",
+            "start_line": 205,
+            "end_line": 223,
+            "quote": "    def __init__(self, meta: type):\n        self.fields = getattr(meta, \"fields\", ())\n        if not isinstance(self.fields, (list, tuple)):\n            raise ValueError(\"`fields` option must be a list or tuple.\")\n        self.exclude = getattr(meta, \"exclude\", ())\n        if not isinstance(self.exclude, (list, tuple)):\n            raise ValueError(\"`exclude` must be a list or tuple.\")\n        self.dateformat = getattr(meta, \"dateformat\", None)\n        self.datetimeformat = getattr(meta, \"datetimeformat\", None)\n        self.timeformat = getattr(meta, \"timeformat\", None)\n        self.render_module = getattr(meta, \"render_module\", json)\n        self.index_errors = getattr(meta, \"index_errors\", True)\n        self.include = getattr(meta, \"include\", {})\n        self.load_only = getattr(meta, \"load_only\", ())\n        self.dump_only = getattr(meta, \"dump_only\", ())\n        self.unknown = getattr(meta, \"unknown\", RAISE)\n        self.register = getattr(meta, \"register\", True)\n        self.many = getattr(meta, \"many\", False)"
+          },
+          "proposed_fix": "Remove the `additional` option documentation from `Schema.Meta` or implement support for it in `SchemaOpts` and the field-loading logic.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "name",
+          "explanation": "The `many` parameter doc for `Schema.loads` refers to a nonexistent `obj` variable; the method parameter is named `s`.",
+          "doc_citation": {
+            "path": "src/marshmallow/schema.py",
+            "start_line": 752,
+            "end_line": 752,
+            "quote": "        :param many: Whether to deserialize `obj` as a collection. If `None`, the"
+          },
+          "code_citation": {
+            "path": "src/marshmallow/schema.py",
+            "start_line": 770,
+            "end_line": 770,
+            "quote": "        data = self.opts.render_module.loads(s, **kwargs)"
+          },
+          "proposed_fix": "Change `deserialize `obj`` to `deserialize `s`` in the `loads` docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "src/marshmallow/decorators.py",
+        "src/marshmallow/class_registry.py",
+        "src/marshmallow/orderedset.py",
+        "src/marshmallow/error_store.py",
+        "src/marshmallow/exceptions.py",
+        "src/marshmallow/experimental/context.py",
+        "src/marshmallow/constants.py",
+        "performance/benchmark.py",
+        "examples/flask_example.py",
+        "examples/package_json_example.py",
+        "examples/inflection_example.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 12215,
+      "completion_tokens": 2117,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": []
+    }
+  }
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1986,
+      "output_tokens": 2540,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Every parameter in inspect.signature(httpx._content.encode_request).parameters must also appear in inspect.getdoc(httpx._content.encode_request).",
+      "argument_finding_is_false": "",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docstring omits 'boundary'",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The documentation is not wrong in any observable way: passing the documented tuple[type, ...] form works perfectly, and the implementation merely normalizes additional convenience inputs (single types or arbitrary iterables) into that same tuple. The documented signature describes the canonical/normalized contract, not an exhaustive whitelist of every accepted input shape, so a user following the docs exactly never hits an error. The extra permissiveness is a backwards-compatible convenience, not a contradiction.",
+  "model_verdict": "finding is false",
+  "doc_literal_usage": "not_: exc_types as tuple[type, ...]",
+  "expected_exception_type": "none",
+  "expected_failure": "none",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import attrs\nimport attrs.validators as V\n\n@attrs.define\nclass Foo:\n    x = attrs.field(validator=V.not_(V.in_([1]), exc_types=(ValueError,)))  # DOC-LITERAL\n\nf = Foo(2)  # inner raises ValueError, not_ passes\nassert f.x == 2, \"value 2 should be accepted\"\ntry:\n    Foo(1)\nexcept ValueError:\n    pass\nelse:\n    raise AssertionError(\"value 1 should be rejected\")\nprint(\"DOCS_OK\")\n"
+}

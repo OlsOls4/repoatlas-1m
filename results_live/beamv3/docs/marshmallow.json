@@ -1,0 +1,126 @@
+{
+  "repo": "marshmallow",
+  "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+  "doc_files": [
+    "docs/upgrading.rst",
+    "docs/quickstart.rst",
+    "docs/nesting.rst",
+    "docs/extending/pre_and_post_processing.rst",
+    "docs/custom_fields.rst",
+    "README.rst",
+    "docs/why.rst",
+    "docs/extending/schema_validation.rst",
+    "docs/extending/custom_options.rst",
+    "docs/index.rst",
+    "docs/extending/custom_error_messages.rst",
+    "docs/extending/custom_error_handling.rst",
+    "docs/extending/using_original_input_data.rst",
+    "docs/top_level.rst",
+    "docs/extending/overriding_attribute_access.rst",
+    "docs/install.rst",
+    "docs/api_reference.rst",
+    "docs/donate.rst",
+    "docs/marshmallow.fields.rst",
+    "docs/kudos.rst",
+    "docs/extending/index.rst",
+    "RELEASING.md",
+    "docs/whos_using.rst",
+    "SECURITY.md",
+    "docs/marshmallow.schema.rst",
+    "docs/marshmallow.validate.rst",
+    "docs/marshmallow.experimental.context.rst",
+    "docs/marshmallow.error_store.rst",
+    "docs/marshmallow.decorators.rst",
+    "docs/marshmallow.class_registry.rst",
+    "docs/marshmallow.utils.rst",
+    "docs/marshmallow.exceptions.rst",
+    "docs/marshmallow.types.rst",
+    "docs/examples/quotes_api.rst",
+    "docs/examples/validating_package_json.rst",
+    "docs/examples/inflection.rst",
+    "docs/examples/index.rst"
+  ],
+  "cached": false,
+  "prompt_tokens": 295001,
+  "completion_tokens": 9582,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "name",
+      "explanation": "The processing guide documents a removed `pass_many` decorator argument. Current code exposes the same option as `pass_collection` in decorator signatures.",
+      "doc_citation": {
+        "path": "docs/extending/pre_and_post_processing.rst",
+        "start_line": 34,
+        "end_line": 34,
+        "quote": "In cases where your pre- and post-processing methods needs to handle the input collection when processing multiple objects, add ``pass_many=True`` to the method decorators."
+      },
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 178,
+        "end_line": 178,
+        "quote": "    pass_collection: bool = False,"
+      },
+      "proposed_fix": "Replace ``pass_many=True`` with ``pass_collection=True`` in the text and example code.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "name",
+      "explanation": "The enveloping example uses the removed `pass_many` keyword argument. The current implementation accepts only `pass_collection`.",
+      "doc_citation": {
+        "path": "docs/extending/pre_and_post_processing.rst",
+        "start_line": 61,
+        "end_line": 61,
+        "quote": "        @pre_load(pass_many=True)"
+      },
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 178,
+        "end_line": 178,
+        "quote": "    pass_collection: bool = False,"
+      },
+      "proposed_fix": "Replace ``pass_many=True`` with ``pass_collection=True`` in both ``@pre_load`` calls.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "name",
+      "explanation": "The enveloping example uses the removed `pass_many` keyword argument. The current implementation accepts only `pass_collection`.",
+      "doc_citation": {
+        "path": "docs/extending/pre_and_post_processing.rst",
+        "start_line": 66,
+        "end_line": 66,
+        "quote": "        @post_dump(pass_many=True)"
+      },
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 178,
+        "end_line": 178,
+        "quote": "    pass_collection: bool = False,"
+      },
+      "proposed_fix": "Replace ``pass_many=True`` with ``pass_collection=True`` in the ``@post_dump`` call.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "name",
+      "explanation": "The documented description of `missing` refers to a field's `default` value, while deserialization uses the field's `load_default` attribute.",
+      "doc_citation": {
+        "path": "docs/top_level.rst",
+        "start_line": 14,
+        "end_line": 14,
+        "quote": "   its ``default`` value is used."
+      },
+      "code_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 382,
+        "end_line": 382,
+        "quote": "            _miss = self.load_default"
+      },
+      "proposed_fix": "Change ``its ``default`` value is used.`` to ``its ``load_default`` value is used.``.",
+      "fully_verified": true
+    }
+  ]
+}

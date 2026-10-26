@@ -1,0 +1,27 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 2074,
+      "output_tokens": 1252,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "Instantiate CliSettingsSource with cli_parse_args=None and no explicit cli_prog_name, then assert source.cli_prog_name is None.",
+      "argument_finding_is_false": "The finding is not a false positive: code path self.cli_prog_name = cli_prog_name if cli_prog_name is not None else settings_cls.model_config.get('cli_prog_name', sys.argv[0]) has no branch keyed on cli_parse_args being None, so omitting both yields sys.argv[0], not None.",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "not_reproduced",
+      "reason": "ran_ok",
+      "exception_type": null,
+      "error_excerpt": "DOCS_OK",
+      "evidence": null,
+      "retryable": false
+    }
+  }
+]

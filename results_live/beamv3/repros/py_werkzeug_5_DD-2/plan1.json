@@ -1,0 +1,10 @@
+{
+  "repro_script": "from werkzeug.sansio.response import Response\n\ndoc = Response.access_control_expose_headers.__doc__\nassert doc is not None\nassert doc.lstrip().startswith(\"The ``Access-Control-Expose-Headers`` header.\")  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "Response.access_control_expose_headers.__doc__ is checked against the corrected header name.",
+  "argument_finding_is_false": "The mismatch is only in human-readable prose; the property is still bound to \"Access-Control-Expose-Headers\" by its first constructor argument, so runtime header mapping and behavior remain correct. A documentation-only wording error has no functional impact and could be considered cosmetic rather than a real library bug.",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

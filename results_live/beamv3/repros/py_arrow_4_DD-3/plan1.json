@@ -1,0 +1,10 @@
+{
+  "repro_script": "import arrow\n\nassert \"'quarter'\" in arrow.Arrow.humanize.__doc__, \"documentation omits supported granularity 'quarter'\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "assert \"'quarter'\" in arrow.Arrow.humanize.__doc__",
+  "argument_finding_is_false": "The omission could be editorial: `_GRANULARITY` is a type alias used in multiple signatures, so including `'quarter'` there does not necessarily prove every documented `humanize` path renders quarters in every locale or accepts the value with the same behavior as the listed granularities. However, the cited code explicitly includes `'quarter'` in the shared granularity literal, so the finding is likely real.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

@@ -1,0 +1,10 @@
+{
+  "repro_script": "import doctest\n\ndoc = r'''\n>>> from attrs import define, field, validators\n>>> @define\n... class C:\n...     x: int = field(validator=validators.instance_of(int))\n>>> C(42)\nC(x=42)\n>>> C(\"42\")\nTraceback (most recent call last):\n   ...\nTypeError: (\"'x' must be <type 'int'> (got '42' that is a <type 'str'>).\", Attribute(name='x', default=NOTHING, factory=NOTHING, validator=<instance_of validator for type <type 'int'>>, type=None, kw_only=False), <type 'int'>, '42')\n'''\n\n# DOC-LITERAL-BEGIN\ntest = doctest.DocTestParser().get_doctest(doc, globals(), \"doc\", __file__, 0)\nrunner = doctest.DocTestRunner()\nresult = runner.run(test)\nassert result.failed == 0\nprint(\"DOCS_OK\")\n# DOC-LITERAL-END\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The documented Attribute repr includes stale fields/types and does not match the current runtime repr.",
+  "doc_literal_usage": "doctest example in docs/examples.md lines 458-468",
+  "argument_finding_is_false": "",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

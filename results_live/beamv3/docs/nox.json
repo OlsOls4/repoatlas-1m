@@ -1,0 +1,81 @@
+{
+  "repo": "nox",
+  "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+  "doc_files": [
+    "docs/config.rst",
+    "docs/usage.rst",
+    "docs/tutorial.rst",
+    "docs/cookbook.rst",
+    "docs/index.rst",
+    "CODE_OF_CONDUCT.md",
+    "README.md",
+    "CONTRIBUTING.md",
+    "docs/CONTRIBUTING.md",
+    "tests/resources/orig_dir/orig_file.txt",
+    "tests/resources/sym_dir/sym_file.txt"
+  ],
+  "cached": false,
+  "prompt_tokens": 346594,
+  "completion_tokens": 11372,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "flag",
+      "explanation": "The docs imply that --json can be used by itself to get JSON output, but Nox rejects --json unless --list-sessions is also specified.",
+      "doc_citation": {
+        "path": "docs/usage.rst",
+        "start_line": 33,
+        "end_line": 34,
+        "quote": "If you'd like to use the output in later processing, you can add ``--json`` to\nget json output for the selected session. Fields include ``session`` (pretty"
+      },
+      "code_citation": {
+        "path": "nox/tasks.py",
+        "start_line": 349,
+        "end_line": 351,
+        "quote": "    if global_config.json and not global_config.list_sessions:\n        logger.error(\"Must specify --list-sessions with --json\")\n        return 3"
+      },
+      "proposed_fix": "Update docs/usage.rst to state that --json requires --list-sessions (for example, `nox --list-sessions --json`).",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "other",
+      "explanation": "The example documents `nox --list` as printing `Available sessions:`, but Nox prints `Sessions defined in <noxfile>:`.",
+      "doc_citation": {
+        "path": "docs/config.rst",
+        "start_line": 53,
+        "end_line": 55,
+        "quote": "    $ nox --list\n    Available sessions:\n    * tests -> Run the test suite."
+      },
+      "code_citation": {
+        "path": "nox/tasks.py",
+        "start_line": 291,
+        "end_line": 291,
+        "quote": "    print(f\"Sessions defined in {global_config.noxfile}:\\n\")"
+      },
+      "proposed_fix": "Update the docs/config.rst example to use Nox's actual `Sessions defined in ...:` heading.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "other",
+      "explanation": "The cookbook's illustrative result lists `3.14t` before `3.15` and has a misplaced quote, while classifier-derived versions place all non-free-threaded versions before `3.14t` and `3.15t`.",
+      "doc_citation": {
+        "path": "docs/cookbook.rst",
+        "start_line": 211,
+        "end_line": 211,
+        "quote": "    # [\"3.12\", \"3.13\", \"3.14\", \"3.14t, \"3.15\", \"3.15t\"]"
+      },
+      "code_citation": {
+        "path": "tests/test_project.py",
+        "start_line": 67,
+        "end_line": 74,
+        "quote": "    assert python_versions(pyproject) == [\n        \"3.12\",\n        \"3.13\",\n        \"3.14\",\n        \"3.15\",\n        \"3.14t\",\n        \"3.15t\",\n    ]"
+      },
+      "proposed_fix": "Correct the cookbook comment to `# [\"3.12\", \"3.13\", \"3.14\", \"3.15\", \"3.14t\", \"3.15t\"]`.",
+      "fully_verified": true
+    }
+  ]
+}

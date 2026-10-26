@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.04,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-py_attrs_0_DD-1-pc1exbx3/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_attrs_0_DD-1-pc1exbx3/repro.py\", line 3, in <module>\n    attrs.__author__        # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/__init__.py\", line 102, in __getattr__\n    raise AttributeError(msg)\nAttributeError: module attrs has no attribute __author__\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AttributeError",
+      "qualified_type": "builtins.AttributeError",
+      "mro": [
+        "builtins.AttributeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "module attrs has no attribute __author__",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-py_attrs_0_DD-1-pc1exbx3/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "attrs.__author__        # DOC-LITERAL"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/__init__.py",
+          "line": 102,
+          "name": "__getattr__",
+          "source": "raise AttributeError(msg)"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-py_attrs_0_DD-1-pc1exbx3/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-py_attrs_0_DD-1-pc1exbx3/repro.py\", line 3, in <module>\n    attrs.__author__        # DOC-LITERAL\n    ^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/attrs-c8bb9bfaa284-base/lib/python3.13/site-packages/attr/__init__.py\", line 102, in __getattr__\n    raise AttributeError(msg)\nAttributeError: module attrs has no attribute __author__\n"
+    }
+  }
+}

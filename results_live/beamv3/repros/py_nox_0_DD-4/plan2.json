@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\nimport nox\n\nparam = inspect.signature(nox.Session.run).parameters[\"external\"]\nannotation = param.annotation\nif isinstance(annotation, str):\n    assert annotation == \"bool\", \"documentation says external type is bool\"  # DOC-LITERAL\nelse:\n    assert annotation is bool, \"documentation says external type is bool\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "nox.Session.run signature's external parameter annotation is expected to be bool because the docstring declares ':type external: bool'.",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

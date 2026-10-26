@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The constructor parameter's literal default is None, but that may only be the input-layer default; the source could normalize it to the root parser's parse_args method during construction. If that resolution exists, the docstring's stated effective default would describe runtime behavior rather than the raw signature default, so the mere presence of None in the signature would not make the documentation wrong.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Instantiate CliSettingsSource with a minimal settings class and assert that its parse_args_method equals argparse.ArgumentParser.parse_args.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import argparse\nimport inspect\nfrom pydantic import BaseModel\nfrom pydantic_settings import BaseSettings\nfrom pydantic_settings.sources.providers.cli import CliSettingsSource\n\n\nclass Settings(BaseSettings):\n    pass\n\n\nsrc = CliSettingsSource(Settings)\nassert src.parse_args_method is argparse.ArgumentParser.parse_args, \"parse_args_method should default to argparse.ArgumentParser.parse_args\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

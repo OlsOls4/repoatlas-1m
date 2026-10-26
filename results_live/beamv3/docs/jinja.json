@@ -1,0 +1,124 @@
+{
+  "repo": "jinja",
+  "ref": "5ef70112a1ff19c05324ff889dd30405b1002044",
+  "doc_files": [
+    "docs/templates.rst",
+    "docs/api.rst",
+    "docs/extensions.rst",
+    "docs/switching.rst",
+    "docs/sandbox.rst",
+    "docs/faq.rst",
+    "docs/tricks.rst",
+    "docs/integration.rst",
+    "docs/intro.rst",
+    "README.md",
+    "docs/nativetypes.rst",
+    "docs/index.rst",
+    ".github/pull_request_template.md",
+    ".github/ISSUE_TEMPLATE/bug-report.md",
+    ".github/ISSUE_TEMPLATE/feature-request.md",
+    "tests/res/templates/mojibake.txt"
+  ],
+  "cached": false,
+  "prompt_tokens": 357115,
+  "completion_tokens": 6368,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "config_key",
+      "explanation": "The documentation uses the misspelled config-key/parameter name `commend_end_string` instead of the Environment parameter `comment_end_string`.",
+      "doc_citation": {
+        "path": "docs/switching.rst",
+        "start_line": 140,
+        "end_line": 140,
+        "quote": "        commend_end_string=\"</%doc>\","
+      },
+      "code_citation": {
+        "path": "src/jinja2/environment.py",
+        "start_line": 302,
+        "end_line": 302,
+        "quote": "        comment_end_string: str = COMMENT_END_STRING,"
+      },
+      "proposed_fix": "Replace `commend_end_string` with `comment_end_string` in the docs example.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "default",
+      "explanation": "The documentation states the default for `newstyle` is `False`, but the code uses `None`, which controls whether translations are installed.",
+      "doc_citation": {
+        "path": "docs/extensions.rst",
+        "start_line": 92,
+        "end_line": 92,
+        "quote": ".. method:: jinja2.Environment.install_gettext_translations(translations, newstyle=False)"
+      },
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 269,
+        "end_line": 269,
+        "quote": "        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None"
+      },
+      "proposed_fix": "Change the documented default from `newstyle=False` to `newstyle=None`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "default",
+      "explanation": "The documentation states the default for `newstyle` is `False`, but the code uses `None`.",
+      "doc_citation": {
+        "path": "docs/extensions.rst",
+        "start_line": 106,
+        "end_line": 106,
+        "quote": ".. method:: jinja2.Environment.install_null_translations(newstyle=False)"
+      },
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 286,
+        "end_line": 286,
+        "quote": "    def _install_null(self, newstyle: bool | None = None) -> None:"
+      },
+      "proposed_fix": "Change the documented default from `newstyle=False` to `newstyle=None`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "default",
+      "explanation": "The documentation states the default for `newstyle` is `False`, but the code uses `None`.",
+      "doc_citation": {
+        "path": "docs/extensions.rst",
+        "start_line": 114,
+        "end_line": 114,
+        "quote": ".. method:: jinja2.Environment.install_gettext_callables(gettext, ngettext, newstyle=False, pgettext=None, npgettext=None)"
+      },
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 302,
+        "end_line": 302,
+        "quote": "        newstyle: bool | None = None,"
+      },
+      "proposed_fix": "Change the documented default from `newstyle=False` to `newstyle=None`.",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-5",
+      "drift_kind": "name",
+      "explanation": "The documentation refers to `SandboxEnvironment` where the code defines `SandboxedEnvironment`.",
+      "doc_citation": {
+        "path": "docs/sandbox.rst",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": ":meth:`SandboxEnvironment.call <Environment.call>` by default, because"
+      },
+      "code_citation": {
+        "path": "src/jinja2/sandbox.py",
+        "start_line": 177,
+        "end_line": 177,
+        "quote": "class SandboxedEnvironment(Environment):"
+      },
+      "proposed_fix": "Replace `SandboxEnvironment` with `SandboxedEnvironment` in the docs.",
+      "fully_verified": true
+    }
+  ]
+}

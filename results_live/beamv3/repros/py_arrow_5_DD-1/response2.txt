@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": true,
+  "doc_literal_usage": "TzinfoParser.parse.__doc__ and TzinfoParser.parse.__annotations__['return']",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from arrow.parser import TzinfoParser\nimport datetime\n\nassert \":rtype: datetime.timezone\" in (TzinfoParser.parse.__doc__ or \"\")  # DOC-LITERAL\nassert TzinfoParser.parse.__annotations__.get(\"return\") is datetime.timezone  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

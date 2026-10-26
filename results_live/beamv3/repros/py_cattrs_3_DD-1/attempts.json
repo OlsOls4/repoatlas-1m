@@ -1,0 +1,54 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1601,
+      "output_tokens": 964,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "The documented promise that bytes are serialized as base64 strings is checked by comparing unstructure(b'hello') to base64.b64encode(b'hello').",
+      "argument_finding_is_false": "No strong false-positive argument: the registered hook directly calls b85encode/b85decode, and no other option or passthrough changes byte handling; an empty-byte edge case also cannot make base85 equal base64 for nonempty data.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "missing_dependency",
+      "exception_type": "ModuleNotFoundError",
+      "error_excerpt": "ModuleNotFoundError: No module named 'ujson'",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2183,
+      "output_tokens": 287,
+      "cached_input_tokens": 1600
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "True",
+      "doc_literal_usage": "The documented promise that bytes are serialized as base64 strings is checked by comparing unstructure(b'hello') to base64.b64encode(b'hello').",
+      "argument_finding_is_false": "No strong false-positive argument: the registered hook directly calls b85encode/b85decode, and no other option or passthrough changes byte handling; an empty-byte edge case also cannot make base85 equal base64 for nonempty data.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [
+        "ujson"
+      ],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say bytes are serialized as base64 strings",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]

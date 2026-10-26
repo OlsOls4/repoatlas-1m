@@ -1,0 +1,10 @@
+{
+  "repro_script": "import sys\nfrom structlog._output import BytesLoggerFactory\n\nfactory = BytesLoggerFactory(sys.stdout.buffer)\nlogger = factory(\"ignored\")  # DOC-LITERAL\nassert logger.name is None, \"Positional arguments are silently ignored.\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The docs claim positional arguments are ignored, but the implementation stores the first one as the logger name, so the documented behavior assertion fails.",
+  "doc_literal_usage": "logger = factory(\"ignored\")  # DOC-LITERAL; assert logger.name is None  # DOC-LITERAL",
+  "argument_finding_is_false": "The positional argument could be viewed as part of the standard logger-factory call protocol rather than a documented BytesLogger constructor input, so it might be an internal compatibility value rather than a user-facing name. Also, a caller could pass the factory to structlog without explicitly naming loggers, making the docstring's 'ignored' wording superficially plausible.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

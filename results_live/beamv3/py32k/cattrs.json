@@ -1,0 +1,236 @@
+{
+  "repo": "cattrs",
+  "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+  "chunks": {
+    "0": {
+      "paths": [
+        "src/cattrs/preconf/__init__.py",
+        "src/cattrs/strategies/__init__.py",
+        "src/cattrs/gen/__init__.py",
+        "src/cattrs/__init__.py",
+        "src/cattr/__init__.py",
+        "src/cattr/preconf/__init__.py",
+        "src/cattrs/_generics.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 18401,
+      "completion_tokens": 2585,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The version note for `make_dict_structure_fn_from_attrs` says `typing.Annotated[T, override()]` customizes unstructuring, but this function generates a structuring function.",
+          "doc_citation": {
+            "path": "src/cattrs/gen/__init__.py",
+            "start_line": 377,
+            "end_line": 377,
+            "quote": "unstructuring."
+          },
+          "code_citation": {
+            "path": "src/cattrs/gen/__init__.py",
+            "start_line": 335,
+            "end_line": 335,
+            "quote": "def make_dict_structure_fn_from_attrs("
+          },
+          "proposed_fix": "Change the cited documentation word from `unstructuring.` to `structuring.`",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "other",
+          "explanation": "The version note for `make_dict_structure_fn` says `typing.Annotated[T, override()]` customizes unstructuring, but this function generates a structuring function.",
+          "doc_citation": {
+            "path": "src/cattrs/gen/__init__.py",
+            "start_line": 807,
+            "end_line": 807,
+            "quote": "unstructuring."
+          },
+          "code_citation": {
+            "path": "src/cattrs/gen/__init__.py",
+            "start_line": 761,
+            "end_line": 761,
+            "quote": "def make_dict_structure_fn("
+          },
+          "proposed_fix": "Change the cited documentation word from `unstructuring.` to `structuring.`",
+          "fully_verified": true
+        }
+      ]
+    },
+    "1": {
+      "paths": [
+        "src/cattrs/converters.py",
+        "src/cattr/converters.py",
+        "src/cattrs/_compat.py",
+        "src/cattrs/fns.py",
+        "src/cattrs/literals.py",
+        "src/cattrs/dispatch.py",
+        "src/cattrs/errors.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 28039,
+      "completion_tokens": 1984,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "signature",
+          "explanation": "The documented parameter name is `cache`, but the method parameter is named `cache_result`.",
+          "doc_citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 502,
+            "end_line": 502,
+            "quote": "        :param cache: Whether to cache the returned hook."
+          },
+          "code_citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 492,
+            "end_line": 492,
+            "quote": "        self, type: Any, cache_result: bool = True"
+          },
+          "proposed_fix": "Change `:param cache:` to `:param cache_result:` in the `get_unstructure_hook` docstring.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "signature",
+          "explanation": "The documented parameter name is `cache`, but the method parameter is named `cache_result`.",
+          "doc_citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 651,
+            "end_line": 651,
+            "quote": "        :param cache: Whether to cache the returned hook."
+          },
+          "code_citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 641,
+            "end_line": 641,
+            "quote": "        self, type: TypeForm[T], cache_result: bool = True"
+          },
+          "proposed_fix": "Change `:param cache:` to `:param cache_result:` in the `get_structure_hook` docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "2": {
+      "paths": [
+        "src/cattrs/cols.py",
+        "src/cattrs/gen/_consts.py",
+        "src/cattrs/gen/_generics.py",
+        "src/cattrs/sentinels.py",
+        "src/cattrs/typealiases.py",
+        "src/cattrs/gen/typeddicts.py",
+        "src/cattrs/disambiguators.py",
+        "src/cattrs/gen/_shared.py",
+        "src/cattrs/enums.py",
+        "src/cattrs/gen/_lc.py",
+        "src/cattrs/subclasses.py",
+        "src/cattrs/types.py",
+        "src/cattrs/strategies/_unions.py",
+        "docs/conf.py",
+        "src/cattrs/strategies/_subclasses.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 28488,
+      "completion_tokens": 2579,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "name",
+          "explanation": "make_dict_unstructure_fn documents `_cattrs_detailed_validation`, but the function parameter is `_cattrs_use_linecache`.",
+          "doc_citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 59,
+            "end_line": 60,
+            "quote": "    :param _cattrs_detailed_validation: Whether to store the generated code in the\n    _linecache_, for easier debugging and better stack traces."
+          },
+          "code_citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 49,
+            "end_line": 49,
+            "quote": "    _cattrs_use_linecache: bool = True,"
+          },
+          "proposed_fix": "Rename the documented parameter from `_cattrs_detailed_validation` to `_cattrs_use_linecache` in the make_dict_unstructure_fn docstring.",
+          "fully_verified": true
+        },
+        {
+          "finding_id": "DD-2",
+          "drift_kind": "name",
+          "explanation": "make_dict_structure_fn documents `_cattrs_detailed_validation` twice; the linecache-related documentation actually corresponds to the `_cattrs_use_linecache` parameter.",
+          "doc_citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 258,
+            "end_line": 259,
+            "quote": "    :param _cattrs_detailed_validation: Whether to store the generated code in the\n    _linecache_, for easier debugging and better stack traces."
+          },
+          "code_citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 244,
+            "end_line": 244,
+            "quote": "    _cattrs_use_linecache: bool = True,"
+          },
+          "proposed_fix": "Change the second `_cattrs_detailed_validation` documentation entry to `_cattrs_use_linecache` in the make_dict_structure_fn docstring.",
+          "fully_verified": true
+        }
+      ]
+    },
+    "3": {
+      "paths": [
+        "src/cattrs/preconf/msgspec.py",
+        "src/cattrs/preconf/bson.py",
+        "src/cattrs/preconf/orjson.py",
+        "src/cattrs/v.py",
+        "src/cattrs/preconf/tomlkit.py",
+        "src/cattrs/preconf/tomllib.py",
+        "src/cattrs/preconf/json.py",
+        "src/cattrs/preconf/ujson.py",
+        "src/cattrs/preconf/msgpack.py",
+        "src/cattrs/preconf/pyyaml.py",
+        "src/cattrs/strategies/_class_methods.py",
+        "src/cattrs/preconf/cbor2.py",
+        "src/cattr/gen.py",
+        "src/cattr/errors.py",
+        "src/cattr/preconf/msgpack.py",
+        "src/cattr/preconf/tomlkit.py",
+        "src/cattr/preconf/json.py",
+        "src/cattr/preconf/orjson.py",
+        "src/cattr/preconf/pyyaml.py",
+        "src/cattr/preconf/ujson.py",
+        "src/cattr/preconf/bson.py",
+        "src/cattr/dispatch.py",
+        "src/cattr/disambiguators.py",
+        "bench/__init__.py"
+      ],
+      "cached": false,
+      "prompt_tokens": 15821,
+      "completion_tokens": 1680,
+      "finish_reason": "stop",
+      "error": null,
+      "findings": [
+        {
+          "finding_id": "DD-1",
+          "drift_kind": "other",
+          "explanation": "The ujson converter documentation says bytes are serialized as base64 strings, but the code registers a bytes unstructure hook using base85 encoding.",
+          "doc_citation": {
+            "path": "src/cattrs/preconf/ujson.py",
+            "start_line": 40,
+            "end_line": 40,
+            "quote": "    * bytes are serialized as base64 strings"
+          },
+          "code_citation": {
+            "path": "src/cattrs/preconf/ujson.py",
+            "start_line": 49,
+            "end_line": 49,
+            "quote": "    bytes, lambda v: (b85encode(v) if v else b\"\").decode(\"utf8\")"
+          },
+          "proposed_fix": "Change the docstring bullet in src/cattrs/preconf/ujson.py to read '    * bytes are serialized as base85 strings'.",
+          "fully_verified": true
+        }
+      ]
+    }
+  }
+}

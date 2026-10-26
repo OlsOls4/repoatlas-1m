@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\n\nimport httpx\n\n# DOC-LITERAL-BEGIN\ntransport = httpx.HTTPTransport(uds=None, local_address=None, retries=0)\n# DOC-LITERAL-END\n\n# DOC-LITERAL\nassert \"socket_options\" in inspect.signature(httpx.HTTPTransport.__init__).parameters\n# DOC-LITERAL\nassert \"socket_options\" in inspect.signature(httpx.AsyncHTTPTransport.__init__).parameters\n# DOC-LITERAL\nassert \"* socket_options: typing.Iterable[SOCKET_OPTION] | None\" in (httpx._transports.default.__doc__ or \"\")\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError because httpx/_transports/default.py documents only uds, local_address, and retries while transport signatures also support socket_options",
+  "doc_literal_usage": "httpx.HTTPTransport(uds=None, local_address=None, retries=0)",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

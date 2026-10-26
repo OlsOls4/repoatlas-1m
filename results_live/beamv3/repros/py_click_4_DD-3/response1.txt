@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The docstring describes the effective resolved default, not necessarily the raw sentinel parameter default. The code initializes show_percent=None and then resolves it to True when a length is available and False otherwise, which is exactly the documented behavior. Thus the prose is documenting runtime semantics rather than the Python default expression, so it is not a genuine behavior drift.",
+  "model_verdict": "false",
+  "doc_literal_usage": "Create progress bars without show_percent for a sized iterable and an unsized iterable, then assert their resolved show_percent values match the documented conditional default.",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import click\n\nbar_with_length = click.progressbar([1, 2, 3])\nassert bar_with_length.show_percent is True, \"default is True if the iterable has a length\"  # DOC-LITERAL\n\nbar_without_length = click.progressbar(iter([1, 2, 3]))\nassert bar_without_length.show_percent is False, \"default is False if not\"  # DOC-LITERAL\n\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "Likely true: HTTP_HOST can represent the full forwarded host, but WSGI environ's SERVER_NAME and SERVER_PORT are separate application-facing values; middleware that only updates HTTP_HOST does not implement the documented guarantee.",
+  "model_verdict": "finding_true",
+  "doc_literal_usage": "Create a ProxyFix with x_host=1, send HTTP_X_FORWARDED_HOST, and assert that SERVER_NAME and SERVER_PORT are updated in addition to HTTP_HOST.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import io, sys\nfrom werkzeug.middleware.proxy_fix import ProxyFix\n\ndef environ():\n    return {\n        \"REQUEST_METHOD\": \"GET\",\n        \"SCRIPT_NAME\": \"\",\n        \"PATH_INFO\": \"/\",\n        \"QUERY_STRING\": \"\",\n        \"SERVER_NAME\": \"original.example\",\n        \"SERVER_PORT\": \"80\",\n        \"HTTP_HOST\": \"original.example\",\n        \"HTTP_X_FORWARDED_HOST\": \"forwarded.example:8080\",\n        \"wsgi.version\": (1, 0),\n        \"wsgi.url_scheme\": \"http\",\n        \"wsgi.input\": io.BytesIO(b\"\"),\n        \"wsgi.errors\": sys.stderr,\n        \"wsgi.multithread\": False,\n        \"wsgi.multiproc\": False,\n        \"wsgi.run_once\": False,\n    }\n\ncaptured = {}\ndef app(environ, start_response):\n    captured.update(environ)\n    start_response(\"200 OK\", [])\n    return [b\"\"]\n\nproxy = ProxyFix(app, x_host=1)\nproxy(environ(), lambda status, headers: None)\n\nassert captured[\"HTTP_HOST\"] == \"forwarded.example:8080\"  # DOC-LITERAL\nassert captured[\"SERVER_NAME\"] == \"forwarded.example\"  # DOC-LITERAL\nassert captured[\"SERVER_PORT\"] == \"8080\"  # DOC-LITERAL\nprint(\"DOCS_OK\")"
+}

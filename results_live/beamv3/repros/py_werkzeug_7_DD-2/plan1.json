@@ -1,0 +1,10 @@
+{
+  "repro_script": "from werkzeug.sansio.request import Request\n\nrequest = Request.from_values()\nassert request.user_agent is None, \"docs say user_agent is None if not set\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "request = Request.from_values()\nassert request.user_agent is None  # DOC-LITERAL",
+  "argument_finding_is_false": "One could argue that _UserAgent('') is falsy and semantically equivalent to 'not set', and that subclasses or user_agent_class overrides might return None, so the documented None case reflects a plausible (if not default) code path. However, the default implementation unconditionally returns a _UserAgent instance (a str subclass) even when the header is absent, so the documented None return type is not accurate for the literal documented usage.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

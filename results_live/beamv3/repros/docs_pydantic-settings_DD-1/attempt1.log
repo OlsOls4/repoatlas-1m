@@ -1,0 +1,52 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.24,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_pydantic-settings_DD-1-edk05evd/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_pydantic-settings_DD-1-edk05evd/repro.py\", line 5, in <module>\n    assert inspect.signature(BaseSettings.__init__).parameters['cli_kebab_case'].default is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'cli_kebab_case'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "KeyError",
+      "qualified_type": "builtins.KeyError",
+      "mro": [
+        "builtins.KeyError",
+        "builtins.LookupError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "'cli_kebab_case'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-docs_pydantic-settings_DD-1-edk05evd/repro.py",
+          "line": 5,
+          "name": "<module>",
+          "source": "assert inspect.signature(BaseSettings.__init__).parameters['cli_kebab_case'].default is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-docs_pydantic-settings_DD-1-edk05evd/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-docs_pydantic-settings_DD-1-edk05evd/repro.py\", line 5, in <module>\n    assert inspect.signature(BaseSettings.__init__).parameters['cli_kebab_case'].default is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\nKeyError: 'cli_kebab_case'\n"
+    }
+  }
+}

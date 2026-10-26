@@ -1,0 +1,10 @@
+{
+  "repro_script": "from marshmallow.schema import SchemaOpts\n\nmeta = type(\"Meta\", (), {\"additional\": [\"foo\"]})\nopts = SchemaOpts(meta)\nassert opts.additional == [\"foo\"], \"SchemaOpts should expose the documented additional option\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AttributeError",
+  "expected_failure": "True",
+  "doc_literal_usage": "SchemaOpts(type(\"Meta\", (), {\"additional\": [\"foo\"]})).additional",
+  "argument_finding_is_false": "No compelling false-positive argument: the cited annotation documents additional as a Meta option, but SchemaOpts has no corresponding attribute and no schema-loading code reads it, so a caller following the documentation would still get AttributeError when accessing opts.additional.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

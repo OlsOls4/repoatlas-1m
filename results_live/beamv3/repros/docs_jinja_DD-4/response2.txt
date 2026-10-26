@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The code's None is a sentinel preserving an already-configured Environment.newstyle_gettext value, so the documented False may describe effective behavior rather than the literal Python default. However, if install_gettext_callables exposes a parameter default that is None, the signature itself contradicts the docs.",
+  "model_verdict": "true",
+  "doc_literal_usage": "inspect.signature(env.install_gettext_callables).parameters['newstyle'].default is False",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import inspect\nimport jinja2\n\nenv = jinja2.Environment(extensions=[\"jinja2.ext.i18n\"])\nparam = inspect.signature(env.install_gettext_callables).parameters[\"newstyle\"]  # DOC-LITERAL\nassert param.default is False, \"docs say default newstyle=False\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

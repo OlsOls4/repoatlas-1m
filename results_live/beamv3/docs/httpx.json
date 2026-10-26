@@ -1,0 +1,191 @@
+{
+  "repo": "httpx",
+  "ref": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "doc_files": [
+    "docs/quickstart.md",
+    "docs/advanced/transports.md",
+    "docs/advanced/clients.md",
+    "docs/compatibility.md",
+    "docs/advanced/extensions.md",
+    "docs/advanced/authentication.md",
+    "docs/contributing.md",
+    "docs/async.md",
+    "README.md",
+    "docs/code_of_conduct.md",
+    "docs/api.md",
+    "docs/index.md",
+    "docs/logging.md",
+    "docs/advanced/text-encodings.md",
+    "docs/advanced/ssl.md",
+    "docs/advanced/proxies.md",
+    "docs/third_party_packages.md",
+    "docs/environment_variables.md",
+    "docs/advanced/timeouts.md",
+    "docs/http2.md",
+    "docs/advanced/event-hooks.md",
+    "docs/troubleshooting.md",
+    "docs/exceptions.md",
+    "docs/advanced/resource-limits.md",
+    ".github/CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md"
+  ],
+  "cached": false,
+  "prompt_tokens": 392905,
+  "completion_tokens": 5784,
+  "finish_reason": "stop",
+  "error": null,
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "default",
+      "explanation": "The QuickStart shows response encoding as uppercase 'UTF-8', but httpx defaults to lowercase 'utf-8'.",
+      "doc_citation": {
+        "path": "docs/quickstart.md",
+        "start_line": 73,
+        "end_line": 73,
+        "quote": "'UTF-8'"
+      },
+      "code_citation": {
+        "path": "httpx/_models.py",
+        "start_line": 671,
+        "end_line": 671,
+        "quote": "self._encoding = encoding or \"utf-8\""
+      },
+      "proposed_fix": "Change the QuickStart output to 'utf-8'.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-2",
+      "drift_kind": "name",
+      "explanation": "The transports guide references response.iter_content(), but the Response API uses iter_bytes, iter_text, and iter_raw.",
+      "doc_citation": {
+        "path": "docs/advanced/clients.md",
+        "start_line": 180,
+        "end_line": 180,
+        "quote": "because the total number of bytes returned by `response.content` or `response.iter_content()` will not always correspond with the raw content length of the response if HTTP response compression is being used."
+      },
+      "code_citation": {
+        "path": "httpx/_models.py",
+        "start_line": 884,
+        "end_line": 884,
+        "quote": "def iter_bytes(self, chunk_size: int | None = None) -> typing.Iterator[bytes]:"
+      },
+      "proposed_fix": "Replace response.iter_content() with response.iter_bytes() in the documentation example.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-3",
+      "drift_kind": "signature",
+      "explanation": "The transports guide shows an outdated BaseTransport.handle_request signature accepting method, url, headers, stream, and extensions and returning a tuple.",
+      "doc_citation": {
+        "path": "docs/advanced/transports.md",
+        "start_line": 285,
+        "end_line": 294,
+        "quote": "def handle_request(self, method, url, headers, stream, extensions):\n        scheme, host, port, path = url\n        if port is None:\n            location = b\"https://%s%s\" % (host, path)\n        else:\n            location = b\"https://%s:%d%s\" % (host, port, path)\n        stream = httpx.ByteStream(b\"\")\n        headers = [(b\"location\", location)]\n        extensions = {}\n        return 303, headers, stream, extensions"
+      },
+      "code_citation": {
+        "path": "httpx/_transports/base.py",
+        "start_line": 26,
+        "end_line": 27,
+        "quote": "def handle_request(self, request: Request) -> Response:"
+      },
+      "proposed_fix": "Rewrite the custom transport example to implement handle_request(self, request) and return httpx.Response(...).",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-4",
+      "drift_kind": "name",
+      "explanation": "The transports guide uses httpx.Mounts(...), but httpx does not export a Mounts class.",
+      "doc_citation": {
+        "path": "docs/advanced/transports.md",
+        "start_line": 190,
+        "end_line": 190,
+        "quote": "transport = httpx.Mounts({"
+      },
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 54,
+        "end_line": 54,
+        "quote": "__all__ = [\"USE_CLIENT_DEFAULT\", \"AsyncClient\", \"Client\"]"
+      },
+      "proposed_fix": "Pass a mapping directly to the mounts parameter, e.g. mounts={'http://': HTTPSRedirectTransport()}.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-5",
+      "drift_kind": "flag",
+      "explanation": "The transports guide passes app= to httpx.Client, but Client does not accept an app argument.",
+      "doc_citation": {
+        "path": "docs/advanced/transports.md",
+        "start_line": 50,
+        "end_line": 50,
+        "quote": "client = httpx.Client(app=app)"
+      },
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 594,
+        "end_line": 594,
+        "quote": "class Client(BaseClient):"
+      },
+      "proposed_fix": "Use transport=httpx.WSGITransport(app=app) or transport=httpx.ASGITransport(app=app) instead of Client(app=app).",
+      "fully_verified": false
+    },
+    {
+      "finding_id": "DD-6",
+      "drift_kind": "signature",
+      "explanation": "The API reference lists Response.next() and Response.anext() methods, but Response does not define next() or anext().",
+      "doc_citation": {
+        "path": "docs/api.md",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": "* `def .next()` - **Response**"
+      },
+      "code_citation": {
+        "path": "httpx/_models.py",
+        "start_line": 515,
+        "end_line": 515,
+        "quote": "class Response:"
+      },
+      "proposed_fix": "Remove .next() and .anext() from the documented Response methods.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-7",
+      "drift_kind": "name",
+      "explanation": "The API reference lists URL.is_ssl, but URL does not define an is_ssl attribute.",
+      "doc_citation": {
+        "path": "docs/api.md",
+        "start_line": 126,
+        "end_line": 126,
+        "quote": "* `.is_ssl` - **bool**"
+      },
+      "code_citation": {
+        "path": "httpx/_urls.py",
+        "start_line": 15,
+        "end_line": 15,
+        "quote": "class URL:"
+      },
+      "proposed_fix": "Remove URL.is_ssl from the documented properties or replace it with scheme comparisons.",
+      "fully_verified": true
+    },
+    {
+      "finding_id": "DD-8",
+      "drift_kind": "default",
+      "explanation": "The resource limits documentation states Defaults 20, Default 100, and Default 5 for Limits constructor values, but the Limits constructor defaults max_connections and max_keepalive_connections to None.",
+      "doc_citation": {
+        "path": "docs/advanced/resource-limits.md",
+        "start_line": 4,
+        "end_line": 8,
+        "quote": "- `max_keepalive_connections`, number of allowable keep-alive connections, or `None` to always\nallow. (Defaults 20)\n- `max_connections`, maximum number of allowable connections, or `None` for no limits.\n(Default 100)\n- `keepalive_expiry`, time limit on idle keep-alive connections in seconds, or `None` for no limits. (Default 5)"
+      },
+      "code_citation": {
+        "path": "httpx/_config.py",
+        "start_line": 176,
+        "end_line": 179,
+        "quote": "max_connections: int | None = None,\n        max_keepalive_connections: int | None = None,\n        keepalive_expiry: float | None = 5.0,"
+      },
+      "proposed_fix": "Clarify that these are typical Client/DEFAULT_LIMITS values, not Limits(...) constructor defaults.",
+      "fully_verified": true
+    }
+  ]
+}

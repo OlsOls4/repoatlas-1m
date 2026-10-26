@@ -1,0 +1,10 @@
+{
+  "repro_script": "import inspect\nimport structlog.typing\n\ncls = structlog.typing.FilteringBoundLogger\nsig = inspect.signature(cls.new)\nactual_param = next(p.name for p in sig.parameters.values() if p.kind is inspect.Parameter.VAR_KEYWORD)\ndocumented_param = \"initial_values\"  # DOC-LITERAL\nassert documented_param == actual_param, f\"docs say {documented_param}, signature uses {actual_param}\"\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "True",
+  "doc_literal_usage": "FilteringBoundLogger.new documents an italicized parameter named initial_values, but inspect.signature shows the variadic keyword parameter is named new_values.",
+  "argument_finding_is_false": "The mismatch is mostly cosmetic: because `new` takes `**new_values`, callers can pass `initial_values=...` and it will bind that key rather than fail. However, the docstring uses italics in the conventional parameter-position sense, so the named placeholder still conflicts with the actual variadic parameter name.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

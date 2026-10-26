@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": false,
+  "model_verdict": "true",
+  "doc_literal_usage": "$ nox --list\nAvailable sessions:",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "Nox prints 'Sessions defined in <noxfile>:' instead of the documented 'Available sessions:'.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import subprocess\nimport sys\nimport tempfile\nfrom pathlib import Path\n\nwith tempfile.TemporaryDirectory() as td:\n    (Path(td) / 'noxfile.py').write_text(\n        'import nox\\n\\n'\n        '@nox.session\\n'\n        'def tests(session):\\n'\n        '    \"\"\"Run the test suite.\"\"\"\\n'\n        \"    session.run('pytest')\\n\"\n    )\n    result = subprocess.run(\n        ['nox', '--list'],\n        cwd=td,\n        capture_output=True,\n        text=True,\n    )\n    print(result.stdout, end='')\n    if result.stderr:\n        print(result.stderr, file=sys.stderr, end='')\n    assert result.returncode == 0\n    assert 'Available sessions:' in result.stdout  # DOC-LITERAL\n\nprint('DOCS_OK')\n"
+}

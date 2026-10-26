@@ -1,0 +1,10 @@
+{
+  "repro_script": "from cattrs.gen import make_dict_structure_fn\n\n# DOC-LITERAL-BEGIN\ndoc = make_dict_structure_fn.__doc__\nassert \"structuring.\" in doc, \"make_dict_structure_fn docs should mention structuring\"\nassert \"unstructuring.\" not in doc, \"make_dict_structure_fn docs incorrectly mention unstructuring\"\n# DOC-LITERAL-END\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "The docstring still contains 'unstructuring.' in the version note.",
+  "doc_literal_usage": "Inspect make_dict_structure_fn.__doc__ and assert the version note says 'structuring.' instead of 'unstructuring.'",
+  "argument_finding_is_false": "",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}
