@@ -5,7 +5,7 @@ colorFrom: indigo
 colorTo: emerald
 sdk: gradio
 app_file: app.py
-short_description: Beam-powered whole-repo DocDrift finder with hand-checked benchmark evidence.
+short_description: Beam-powered docs-vs-code drift finder with recorded long-context evidence.
 tags:
   - beam
   - long-context
@@ -17,28 +17,34 @@ tags:
 
 # RepoAtlas-1M
 
-## Hero media
-
-- Hero screenshot: `docs/hero.png`
-- Animated demo placeholder: add your GIF at `docs/hero.gif` and reference it here once available.
-
 ![RepoAtlas hero](docs/hero.png)
 
 ## Headline result
 
-**11 hand-verified docs bugs in popular Python libraries, found by Beam reading each whole repo (~300–400k tokens) in a single call.**
+**11 hand-verified docs bugs in popular Python libraries, found by Beam reading each library's docs and source (up to ~400k tokens) in one call.**
 
-Signature story:
+Starlette story (canonical upstream repo):
 
 - Canonical repo: **https://github.com/Kludex/starlette** (GitHub redirects from encode/starlette).
-- Beam read a 394,577-token prompt and flagged the `receive_json(data, mode="binary")` doc line against the implementation signature.
-- Hand-verified true drift.
-- **Fix submitted upstream (PR #3746, open):** https://github.com/Kludex/starlette/pull/3746
+- Recorded run prompt size: **394,577** tokens.
+- Drift: docs line used `receive_json(data, mode="binary")` while code signature has no `data` parameter.
+- Result: hand-verified true drift.
+- Upstream state: **fix submitted upstream (PR #3746, open)**  
+  https://github.com/Kludex/starlette/pull/3746
 
-## How Beam is used
+## What is docs drift?
 
-1. **One whole-repo call into long context**  
-   RepoAtlas packs an entire repository into one prompt (line-numbered, deterministic format), then submits a single Beam call per run.
+Docs drift means docs and code disagree in a way that can break users who follow the docs.
+Example from starlette:
+
+- docs/websockets.md line 74: `websocket.receive_json(data, mode="binary")`
+- starlette/websockets.py line 136: `async def receive_json(self, mode: str = "text") -> Any:`
+- following the docs can raise: `TypeError` (multiple values for `mode`)
+
+## How Beam is used (required challenge section)
+
+1. **One packed docs+source call into long context**  
+   RepoAtlas packs docs plus source into one deterministic, line-numbered prompt, then submits one Beam call per run.
 2. **Structured JSON schema output**  
    Beam is asked for strict structured output (`findings[]`, `atlas_claims[]`) so each claim has explicit citations.
 3. **Deterministic citation verifier**  
@@ -46,17 +52,25 @@ Signature story:
 4. **Token calibration factor**  
    Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens.
 5. **Why long context rather than chunked RAG**  
-   Many drifts require a docs citation and a distant code citation in the same pass. One packed prompt keeps those relationships available without retrieval misses.
+   Many true drifts require a docs citation and a far-away code citation in the same pass. A single packed prompt keeps those relationships available without retrieval misses.
 
 ## Results (real live runs only)
 
-All values below come from `results_live/handcheck.md` and `results_live/benchmark_results_combined.csv`.
+All values below are from `results_live/index.json`, generated from:
+- `results_live/benchmark_results_combined.csv`
+- `results_live/handcheck.md`
+- `results_live/reverify_line_shift.json`
+- `results_live/upstream_status.json`
 
 - **All live hand-checked findings:** 11 true / 8 false / 2 unclear = **11/21 (52.4%)**
-- **Verifier caveat from hand-check:** caught **4/7** false positives, but wrongly rejected **1** true drift.
-- **Upstream status source:** `results_live/upstream_status.json`
-  - starlette: fix submitted upstream (PR #3746, open)
-  - httpx-mounts and arrow: independently confirmed by open upstream PRs
+- **Verifier behaviour (all runs):** caught **4/8** false positives; wrongly rejected **1** true drift.
+- **Verifier behaviour (11-repository subset):** caught **4/7** false positives.
+- **Cross-file framing:** **8/11** true drifts are cross-file, median **89,192** tokens apart, max **122,786**.
+- **Prior-art check:** **9/11** true drifts had no prior upstream PR or issue when checked.
+- **Token spend:** **5.81M** prompt + **82k** completion tokens on Beam, `$0` via Ollama Cloud free tier.
+- **Truncation footnote:** **10/17** packs were trimmed (tests/benchmarks dropped first; traces do not always include exact dropped paths).
+- **1M naming honesty:** RepoAtlas-1M is the model-window target; current recorded long-context runs are ~294k–404k prompt tokens (plus two earlier 120k pilot runs).
+- **Maintainer effort signal:** about 1 in 1.9 findings is a real drift; each check takes ~2 minutes with the SHA-pinned permalinks.
 
 ### Full run table
 
@@ -82,14 +96,10 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 
 ## Space behaviour
 
-- Default tab is cached, from `results_live/index.json` (no inference cost).
-- Hero banner stats are data-derived:
-  - 11 verified docs bugs,
-  - 13 repos around 300k–400k prompt tokens,
-  - 1 call per repo,
-  - 52.4% hand-checked precision.
-- Bug wall shows one card per true drift, including upstream status and token distance when derivable from pack order.
-- Findings tab supports verdict filtering (`true`, `false`, `unclear`) and defaults to starlette.
+- Default view is recorded data from `results_live/index.json` (no inference cost).
+- Hero, bug wall, findings, atlas, and benchmark numbers are all derived from that same index.
+- Findings tab defaults to starlette and shows verifier status separately from hand-check verdict.
+- True-finding cards include SHA-pinned doc/code permalinks and issue-draft copy text.
 
 ## Live tab guardrails
 
@@ -102,6 +112,7 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 - Per-IP session limit: **2 runs per hour**.
 - Global daily cap: `REPOATLAS_LIVE_DAILY_CAP` (default 24).
 - Hidden progress log is emitted during live runs.
+- If `OLLAMA_API_KEY` is missing, the tab shows a recorded replay mode instead of a disabled blank state.
 - API keys are never echoed in UI output.
 
 ## Dataset export
@@ -112,6 +123,7 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 - `dataset/runs.jsonl`,
 - `dataset/findings.jsonl`,
 - `dataset/upstream_status.json`,
+- `dataset/reverify_line_shift.json`,
 - full `dataset/traces/` and `dataset/upstream_drafts/`.
 
 ## Limitations
@@ -130,7 +142,7 @@ python3 -m pytest -q
 python3 app.py
 ```
 
-Optional live sweep command:
+Optional live benchmark command:
 
 ```bash
 BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live
