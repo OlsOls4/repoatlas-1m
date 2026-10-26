@@ -1,5 +1,5 @@
 ---
-pretty_name: RepoAtlas-1M Live DocDrift Results (Oct 2026)
+pretty_name: DocDrift v2 results (RepoAtlas-1M, Oct 2026)
 task_categories:
   - text-classification
   - summarization
@@ -10,26 +10,30 @@ tags:
   - long-context
   - docs
   - code
+  - docdrift
 ---
 
-# RepoAtlas-1M live results dataset export
+# DocDrift v2 dataset card
 
-This folder is prepared for a companion Hugging Face dataset publication.
+This folder is the earlier v1 live-results export. The v2 publication folder is `hf_dataset/` (60 findings, 56 triage verdicts, 54 repros, planted-drift set, token ledger).
 
-- Hand-checked precision across all live findings: **11/21 = 52.4%**
-- Breakdown: true=11, false=8, unclear=2
-- Full run narrative and caveats are in `handcheck.md`.
+**v2 headline** (from `results_live/hybrid/hybrid.json`): 34 real docs bugs in 12 Python libraries; 45 of 60 flagged findings were real; 29 strict repros. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.
 
-## Files
+## Field: `hand_verdict`
 
-- `runs.jsonl`: one row per run from `results_live/benchmark_results_combined.csv`
-- `findings.jsonl`: one row per finding with verifier and hand verdict labels
-- `upstream_status.json`: source of truth for external status labels and links
-- `reverify_line_shift.json`: ±3 line-shift verifier output used for corrected citation checks
-- `traces/`: full raw trace JSON payloads (large; include pack text)
-- `upstream_drafts/`: unfiled upstream issue/PR draft notes
+Kept for compatibility. **Description:** checked against the source by an AI reviewer (file:line evidence). Not a human annotator. Not “mine”.
 
-## Notes
+## Files in this folder
 
-- `verifier_fully_verified=true` means cited snippets matched pack text; it does not prove a finding is correct.
-- `hand_verdict` is the source of truth for precision reporting.
+- `runs.jsonl`: one row per v1 run
+- `findings.jsonl`: one row per v1 finding with verifier and `hand_verdict`
+- `upstream_status.json`: starlette #3746 and nox #1216 filed open; httpx #3774 and arrow #1355 already reported upstream by others
+- `reverify_line_shift.json`: ±3 line-shift verifier output
+- `traces/`: full raw trace JSON (large)
+- `upstream_drafts/`: unfiled drafts
+
+## Limits
+
+- Citation pass/fail is quote alignment, not correctness.
+- The 45-drift v2 universe is the union of method output.
+- 2 false + 1 unclear received a strict repro badge (werkzeug S38, S39 false; S41 unclear).

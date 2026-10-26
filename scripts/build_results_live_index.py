@@ -456,7 +456,7 @@ def _extract_findings_from_trace(
                 "upstream_status": upstream_status_text,
                 "upstream_url": upstream["url"] if upstream else "",
                 "upstream_checked_at": upstream["checked_at"] if upstream else "",
-                "upstream_prior_reported": "independently confirmed by an open upstream pr"
+                "upstream_prior_reported": "already reported upstream by others"
                 in upstream_status_text.lower(),
                 "breakage_summary": BREAKAGE_SUMMARIES.get(key, ""),
                 "token_distance": _compute_token_distance(
@@ -909,7 +909,7 @@ def _write_dataset_readme(index_payload: dict[str, object]) -> None:
     precision: float = float(summary.get("precision", 0.0))
     readme_text: str = (
         "---\n"
-        "pretty_name: RepoAtlas-1M Live DocDrift Results (Oct 2026)\n"
+        "pretty_name: DocDrift v2 results (RepoAtlas-1M, Oct 2026)\n"
         "task_categories:\n"
         "  - text-classification\n"
         "  - summarization\n"
@@ -921,10 +921,11 @@ def _write_dataset_readme(index_payload: dict[str, object]) -> None:
         "  - docs\n"
         "  - code\n"
         "---\n\n"
-        "# RepoAtlas-1M live results dataset export\n\n"
-        "This folder is prepared for a companion Hugging Face dataset publication.\n\n"
-        f"- Hand-checked precision across all live findings: **{true_count}/{judged_count} = {precision * 100:.1f}%**\n"
+        "# DocDrift dataset card\n\n"
+        "This folder is the earlier v1 live-results export. The v2 publication folder is `hf_dataset/`.\n\n"
+        f"- Labels were checked against the source by an AI reviewer. v1 precision: **{true_count}/{judged_count} = {precision * 100:.1f}%**\n"
         f"- Breakdown: true={true_count}, false={false_count}, unclear={unclear_count}\n"
+        "- The stored field is still `hand_verdict`.\n"
         "- Full run narrative and caveats are in `handcheck.md`.\n\n"
         "## Files\n\n"
         "- `runs.jsonl`: one row per run from `results_live/benchmark_results_combined.csv`\n"
@@ -935,7 +936,7 @@ def _write_dataset_readme(index_payload: dict[str, object]) -> None:
         "- `upstream_drafts/`: unfiled upstream issue/PR draft notes\n\n"
         "## Notes\n\n"
         "- `verifier_fully_verified=true` means cited snippets matched pack text; it does not prove a finding is correct.\n"
-        "- `hand_verdict` is the source of truth for precision reporting.\n"
+        "- `hand_verdict` means checked against the source by an AI reviewer, not a human annotator.\n"
     )
     (DATASET_DIRECTORY / "README.md").write_text(readme_text, encoding="utf-8")
 

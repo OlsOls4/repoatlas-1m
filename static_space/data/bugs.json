@@ -58,9 +58,9 @@
     "ref": "2224255",
     "upstream": {
       "kind": "also_reported",
-      "label": "Also reported by someone else: open PR #1355",
+      "label": "Already reported upstream by others: open PR #1355",
       "url": "https://github.com/arrow-py/arrow/pull/1355",
-      "note": "From results_live/upstream_status.json."
+      "note": "From results_live/upstream_status.json. Other people's PRs."
     },
     "cross_file": false
   },
@@ -91,7 +91,7 @@
     "summary": "Catching the documented exception name fails because the class does not exist.",
     "verdict": "true",
     "badge": "reproduced",
-    "badge_note": "ImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-pac",
+    "badge_note": "ImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (<local-path>)",
     "finder": "whole-repo Beam",
     "doc_path": "docs/customizing.md",
     "doc_line": 279,
@@ -223,9 +223,9 @@
     "ref": "b5addb6",
     "upstream": {
       "kind": "also_reported",
-      "label": "Also reported by someone else: open PR #3774",
+      "label": "Already reported upstream by others: open PR #3774",
       "url": "https://github.com/encode/httpx/pull/3774",
-      "note": "From results_live/upstream_status.json."
+      "note": "From results_live/upstream_status.json. Other people's PRs."
     },
     "cross_file": true
   },
@@ -566,7 +566,7 @@
     "summary": "Docs reference `werkzeug.exceptions.RequestRedirect`, which doesn't exist",
     "verdict": "true",
     "badge": "reproduced",
-    "badge_note": "ImportError: cannot import name 'RequestRedirect' from 'werkzeug.exceptions' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-pa",
+    "badge_note": "ImportError: cannot import name 'RequestRedirect' from 'werkzeug.exceptions' (<local-path>)",
     "finder": "symbol check + Beam",
     "doc_path": "docs/routing.rst",
     "doc_line": 64,
@@ -606,7 +606,7 @@
     "summary": "import: `werkzeug.routing.NotFound`: 'NotFound' not found on werkzeug.routing",
     "verdict": "true",
     "badge": "reproduced",
-    "badge_note": "ImportError: cannot import name 'NotFound' from 'werkzeug.routing' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/wer",
+    "badge_note": "ImportError: cannot import name 'NotFound' from 'werkzeug.routing' (<local-path>)",
     "finder": "symbol check + Beam",
     "doc_path": "docs/routing.rst",
     "doc_line": 24,
@@ -946,7 +946,7 @@
     "summary": "Beam: true. Kept false: proxy_fix.py:55 says the values are stored 'in the WSGI environ as werkzeug.proxy_fix.orig', which is the environ key used at :138. Beam's own reason concedes this",
     "verdict": "false",
     "badge": "false",
-    "badge_note": "Strict repro badge on a false finding (3 such badges: werkzeug S38, S39, S41).",
+    "badge_note": "Strict repro badge on a false finding. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
     "finder": "symbol check + Beam",
     "doc_path": "src/werkzeug/middleware/proxy_fix.py",
     "doc_line": 55,
@@ -966,7 +966,7 @@
     "summary": "Beam: true. Kept false: same as S38 (proxy_fix.py:83)",
     "verdict": "false",
     "badge": "false",
-    "badge_note": "Strict repro badge on a false finding (3 such badges: werkzeug S38, S39, S41).",
+    "badge_note": "Strict repro badge on a false finding. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
     "finder": "symbol check + Beam",
     "doc_path": "src/werkzeug/middleware/proxy_fix.py",
     "doc_line": 83,
@@ -986,7 +986,7 @@
     "summary": "Beam: true. Kept unclear: test.py:1103 is a historical 0.5 note; werkzeug.FileWrapper is gone but werkzeug.wsgi still has a deprecated alias (wsgi.py:623)",
     "verdict": "unclear",
     "badge": "false",
-    "badge_note": "Strict repro badge on a unclear finding (3 such badges: werkzeug S38, S39, S41).",
+    "badge_note": "Strict repro badge on a unclear finding. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
     "finder": "symbol check + Beam",
     "doc_path": "src/werkzeug/test.py",
     "doc_line": 1103,

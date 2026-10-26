@@ -29,7 +29,7 @@
     $("headline").textContent = hero.headline + ".";
     $("hero-note").textContent = hero.label_note;
     const tiles = [
-      [hero.hybrid_true, "Real docs bugs, checked against the source (file:line evidence)"],
+      [hero.hybrid_true, "Real docs bugs, checked against the source by an AI reviewer"],
       [percent(hero.hybrid_precision), "of flagged findings were real (" + hero.hybrid_true_findings + " / " + hero.hybrid_findings + ")"],
       [hero.repro_true, "Reproduce an API error when you run the docs"],
       [hero.rejected_true + " of " + hero.true_candidates_judged, "Real bugs Beam's triage threw away"],
@@ -145,17 +145,26 @@
         return "<li><b>" + step.step + ":</b> " + step.true + " true. " + step.detail + "</li>";
       })
       .join("");
+    const recall = benchmark.recall;
     $("recall-note").textContent =
       "Beam accepted prompts up to " +
-      formatNumber(benchmark.recall.max_probe_tokens) +
+      formatNumber(recall.max_probe_tokens) +
       " tokens. Focused whole-context passes hit " +
-      benchmark.recall.far_hits[0] +
+      recall.far_hits[0] +
       "/" +
-      benchmark.recall.far_hits[1] +
-      " planted drifts 700k+ tokens apart; chunked 128k hit " +
-      benchmark.recall.chunk_far[0] +
+      recall.far_hits[1] +
+      " planted drifts 700k+ tokens apart vs " +
+      recall.chunk_far[0] +
       "/" +
-      benchmark.recall.chunk_far[1] +
+      recall.chunk_far[1] +
+      " for chunked 128k, seed 1 only, at ~" +
+      recall.focused_multiplier +
+      "× tokens (" +
+      formatNumber(recall.focused_tokens) +
+      " vs ~" +
+      (recall.chunk_baseline_tokens / 1000000).toFixed(1) +
+      "M). " +
+      recall.docstring_pooled +
       ".";
     if (benchmark.chart_present) {
       const image = $("recall-chart");
@@ -192,60 +201,100 @@
 
   function renderReplay(replay) {
     $("replay-banner").innerHTML =
-      "<b>Recording</b>, not a live call. Packed " +
-      replay.recorded_at +
-      ". Prompt tokens " +
+      "<b>Recording</b> of the real starlette pack. " +
       formatNumber(replay.prompt_tokens) +
-      ", completion tokens " +
+      " prompt tokens, " +
       formatNumber(replay.completion_tokens) +
-      ", pack " +
-      formatNumber(replay.pack_tokens) +
-      " (limit " +
-      formatNumber(replay.token_limit) +
-      ", truncated=" +
-      replay.truncated +
-      "). Source " +
+      " completion tokens, packed " +
+      replay.recorded_at +
+      ". " +
+      replay.candidate_count +
+      " candidates (" +
+      replay.symbol_candidates +
+      " symbol check + " +
+      replay.whole_candidates +
+      " whole-repo pass). Kept " +
+      replay.kept +
+      ", rejected " +
+      replay.rejected +
+      ". Source " +
       replay.trace_path +
       ".";
-    const steps = replay.steps || [];
-    let shown = steps.length;
-    function paint() {
-      $("replay-steps").innerHTML = steps
-        .slice(0, shown)
-        .map(function (step) {
-          return "<li><b>" + step.name + ".</b> " + step.detail + "</li>";
-        })
-        .join("");
-      $("replay-progress").textContent = "Step " + shown + " of " + steps.length;
-      $("replay-prev").disabled = shown <= 1;
-      $("replay-next").disabled = shown >= steps.length;
-    }
-    $("replay-prev").onclick = function () {
-      if (shown > 1) {
-        shown -= 1;
-        paint();
-      }
-    };
-    $("replay-next").onclick = function () {
-      if (shown < steps.length) {
-        shown += 1;
-        paint();
-      }
-    };
-    shown = 1;
-    paint();
+    $("player-candidates").innerHTML = (replay.candidates || [])
+      .map(function (item) {
+        return (
+          "<li><b>" +
+          item.id +
+          " · " +
+          item.source +
+          "</b> " +
+          item.doc_path +
+          ":" +
+          item.doc_line +
+          " — " +
+          item.claim +
+          "</li>"
+        );
+      })
+      .join("");
+    $("player-verdicts").innerHTML = (replay.candidates || [])
+      .map(function (item) {
+        const site = item.code_path
+          ? item.code_path + (item.code_line ? ":" + item.code_line : "")
+          : "no code cite";
+        return (
+          "<li><b>" +
+          item.id +
+          " → " +
+          item.verdict +
+          "</b> " +
+          site +
+          ". " +
+          item.reason +
+          "</li>"
+        );
+      })
+      .join("");
+    $("player-repro-note").textContent = replay.repro_note || "";
+    $("player-tracebacks").innerHTML = (replay.tracebacks || [])
+      .map(function (row) {
+        return (
+          "<pre><code>attempt " +
+          row.attempt +
+          " · " +
+          row.status +
+          " · " +
+          row.exception_type +
+          "\n" +
+          (row.excerpt || "") +
+          "</code></pre>"
+        );
+      })
+      .join("");
+    const pr = replay.pr || {};
+    $("player-pr").innerHTML = pr.url
+      ? '<a href="' + pr.url + '">' + pr.label + "</a> — " + (pr.note || "")
+      : "";
   }
 
   function renderCopy(copy) {
     $("ollama-key").textContent = copy.ollama_key;
     $("local-cmd").textContent = copy.local;
     $("cli-cmd").textContent = copy.cli;
+    if ($("sweep-cmd")) {
+      $("sweep-cmd").textContent = copy.cli_sweep || "";
+    }
     $("limits-list").innerHTML = copy.limits
       .map(function (item) {
         return "<li>" + item + "</li>";
       })
       .join("");
     $("exclusions-list").innerHTML = (copy.exclusions || [])
+      .map(function (item) {
+        return "<li>" + item + "</li>";
+      })
+      .join("");
+    $("glossary-list").innerHTML = (copy.glossary || [])
       .map(function (item) {
         return "<li>" + item + "</li>";
       })

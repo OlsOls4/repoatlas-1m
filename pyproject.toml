@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "repoatlas-1m"
 version = "0.1.0"
-description = "RepoAtlas-1M: verifiable repository documentation drift and onboarding atlas."
+description = "DocDrift / RepoAtlas-1M: verifiable repository documentation drift."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -19,9 +19,13 @@ dependencies = [
   "tiktoken>=0.12.0",
 ]
 
+[project.scripts]
+docdrift = "repoatlas.cli:main"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=8.4.2",
+  "pyarrow>=17.0.0",
 ]
 
 [tool.setuptools.packages.find]

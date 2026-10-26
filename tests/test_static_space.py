@@ -41,7 +41,8 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert any("9 of 33" in str(row[1]) for row in compare_rows)
     hybrid_tokens = str(next(row[4] for row in compare_rows if "hybrid (symbol" in str(row[0]).lower()))
     assert "4,739,392" in hybrid_tokens
-    assert "~9.2M" in hybrid_tokens
+    assert "~9.2M triage-only" in hybrid_tokens
+    assert any("9,302,105" in str(row[4]) or "~9.3M" in str(row[4]) for row in compare_rows)
     assert found
 
 
@@ -69,15 +70,16 @@ def test_static_upstream_and_replay_are_honest(tmp_path: Path) -> None:
     assert replay["completion_tokens"] == trace["summary"]["output_tokens"]
     assert replay["pack_tokens"] == trace["pack"]["total_tokens"]
     assert replay["recorded_at"] == trace["pack"]["packed_at"]
+    assert replay["candidate_count"] == 3
+    assert replay["symbol_candidates"] == 2
+    assert replay["whole_candidates"] == 1
+    assert replay["kept"] == 2
+    assert replay["rejected"] == 1
+    assert replay["pr"]["url"].endswith("/3746")
+    assert replay["tracebacks"]
     assert "hand-checked" not in json.dumps(documents).lower()
     assert "hand-verified" not in json.dumps(documents).lower()
-    indexed = json.loads(Path("results_live/index.json").read_text(encoding="utf-8"))
-    starlette = next(
-        row for row in indexed["findings"] if row.get("finding_key") == "starlette-400000/DD-1"
-    )
-    assert str(starlette["verifier_label"]) in replay["steps"][3]["detail"]
-    assert f"L{starlette['doc_model_line']}" in replay["steps"][3]["detail"]
-    assert f"L{starlette['doc_verified_line']}" in replay["steps"][3]["detail"]
+    assert "/workspace/" not in json.dumps(documents)
     false_cards = [bug for bug in documents["bugs"] if bug["badge"] == "false"]
     assert false_cards
     httpx_s7 = next(bug for bug in false_cards if bug["id"] == "httpx/S7")
@@ -102,7 +104,8 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert (target / "assets" / "app.js").exists()
     assert (target / "assets" / "app.css").exists()
     index_html = (target / "index.html").read_text(encoding="utf-8")
-    assert 'id="replay-next"' in index_html
+    assert 'id="recorded-run"' in index_html
+    assert "DocDrift" in index_html
     hero = json.loads((target / "data" / "hero.json").read_text(encoding="utf-8"))
     stats = compute_hero_stats(load_hybrid_payload())
     assert hero["hybrid_true"] == stats["hybrid_true"]

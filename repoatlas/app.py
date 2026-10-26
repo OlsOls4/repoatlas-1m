@@ -18,6 +18,8 @@ import pandas as pd
 from repoatlas.analyser import analyse_repository
 from repoatlas.config import RepoAtlasConfig
 from repoatlas.hybrid_view import (
+    LABEL_SOURCE,
+    already_reported_status,
     build_beam_did_markdown,
     build_comparison_table,
     build_long_context_markdown,
@@ -25,11 +27,14 @@ from repoatlas.hybrid_view import (
     build_v2_replay_rows,
     canonicalize_repo_url,
     compute_hero_stats,
+    docstring_pooled_text,
     headline_sentence,
     load_hybrid_payload,
     merge_hybrid_true_findings,
+    non_bug_badge_phrase,
     render_hero_html as render_hybrid_hero_html,
     render_pipeline_html,
+    strip_local_paths,
 )
 from repoatlas.packer import estimate_prompt_tokens, pack_repository
 
@@ -255,7 +260,6 @@ class BaselinePanelData(TypedDict):
 # - _attach_repro_records(findings: list[dict[str, object]], repros_map: dict[str, dict[str, object]]) -> list[dict[str, object]]
 # - _finding_case_id(finding: dict[str, object]) -> str
 # - _render_hero_html(summary: dict[str, object]) -> str
-# - _render_long_context_diagram_html() -> str
 # - _render_bug_wall_html(findings: list[dict[str, object]]) -> str
 # - _build_findings_rows(findings: list[dict[str, object]]) -> list[list[object]]
 # - _build_finding_choice_map(findings: list[dict[str, object]]) -> dict[str, dict[str, object]]
@@ -326,7 +330,12 @@ def build_app() -> gr.Blocks:
         )
     )
 
-    all_choice_map: dict[str, dict[str, object]] = _build_finding_choice_map(findings)
+    v2_explorer_findings: list[dict[str, object]] = hybrid_true_findings
+    v2_keys: set[str] = {str(item.get("finding_key", "")) for item in v2_explorer_findings}
+    v1_only_findings: list[dict[str, object]] = [
+        item for item in findings if str(item.get("finding_key", "")) not in v2_keys
+    ]
+    all_choice_map: dict[str, dict[str, object]] = _build_finding_choice_map(v2_explorer_findings)
     default_finding_label: str = _default_finding_label(all_choice_map)
     default_finding_panel: FindingPanelState = _render_finding_panel(all_choice_map[default_finding_label])
     starlette_finding: dict[str, object] = next(
@@ -383,7 +392,7 @@ def build_app() -> gr.Blocks:
     example_fastapi_button: gr.Button | None = None
     example_starlette_button: gr.Button | None = None
 
-    with gr.Blocks(title="RepoAtlas-1M") as demo:
+    with gr.Blocks(title="DocDrift") as demo:
         hybrid_headline: str = (
             headline_sentence(hybrid_stats)
             if hybrid_stats is not None
@@ -391,7 +400,8 @@ def build_app() -> gr.Blocks:
         )
         gr.HTML(hero_html)
         gr.Markdown(
-            "# RepoAtlas-1M · DocDrift v2\n"
+            "# DocDrift\n"
+            "Repo name: RepoAtlas-1M.\n\n"
             f"**{hybrid_headline}.**\n\n"
             "**What is docs drift?** Docs say one thing, but the code does another.\n\n"
             "**Worked example (starlette):** docs line `receive_json(data, mode=\"binary\")`; code signature "
@@ -436,10 +446,16 @@ def build_app() -> gr.Blocks:
 
         with gr.Tab("Findings"):
             gr.Markdown(
-                "Citation-check status and the source-checked verdict are separate. "
-                "A citation pass means quote alignment only, not that the drift is real. "
-                "v2 has 3 false repro-badged findings (werkzeug S38, S39, S41); "
-                "the earlier “10 of 11 reproduce; 0 of 10 false do” line does not apply here."
+                "### v2 34-bug wall\n"
+                "Citation-check chips mean quote alignment of cited lines vs packed source "
+                "(±3-line shift allowed). They are not a verdict that the drift is real. "
+                f"The source-checked verdict was {LABEL_SOURCE}. "
+                f"{non_bug_badge_phrase(hybrid_stats) if hybrid_stats is not None else '2 false + 1 unclear'} "
+                "received a strict repro badge; "
+                "the earlier “10 of 11 reproduce; 0 of 10 false do” line does not apply here.\n\n"
+                "**Glossary:** *Triage* = Beam judges candidates against one packed library. "
+                "*Strict badge* = TypeError / AttributeError / ImportError / NameError on a DOC-LITERAL line. "
+                "*Line-shifted match* = the quote matched within ±3 lines of the cited line."
             )
             verdict_filter = gr.Dropdown(
                 choices=["all", "true", "false", "unclear"],
@@ -482,10 +498,28 @@ def build_app() -> gr.Blocks:
                     "Cross-file",
                     "Token distance",
                 ],
-                value=_build_findings_rows(findings),
+                value=_build_findings_rows(v2_explorer_findings),
                 interactive=False,
                 wrap=True,
             )
+            with gr.Accordion("Earlier v1 recorded findings", open=False):
+                gr.Markdown("Folded away. These are the earlier whole-repo-only sweep cards, not the v2 34-bug wall.")
+                gr.Dataframe(
+                    headers=[
+                        "Finding key",
+                        "Repo",
+                        "Drift kind",
+                        "Verifier",
+                        "Source-checked verdict",
+                        "Upstream status",
+                        "Executable repro",
+                        "Cross-file",
+                        "Token distance",
+                    ],
+                    value=_build_findings_rows(v1_only_findings),
+                    interactive=False,
+                    wrap=True,
+                )
 
         with gr.Tab("Benchmark"):
             if hybrid_payload["available"]:
@@ -745,7 +779,7 @@ def build_app() -> gr.Blocks:
             @param verdict Verdict filter value.
             """
 
-            filtered: list[dict[str, object]] = _filter_findings(findings, verdict)
+            filtered: list[dict[str, object]] = _filter_findings(v2_explorer_findings, verdict)
             filtered_choice_map: dict[str, dict[str, object]] = _build_finding_choice_map(filtered)
             if not filtered_choice_map:
                 return (
@@ -1060,7 +1094,7 @@ def _load_recall_panel_data() -> RecallPanelData:
         f"- **Seed-2 signal:** docs-focused pass reached **{focusdocs_seed2_strict[0]}/{focusdocs_seed2_strict[1]}** "
         f"vs **{whole_seed2_strict[0]}/{whole_seed2_strict[1]}** for whole seed 2 (partial hold).\n"
         f"- **Docstring caveat:** single-call whole-context variants mostly miss Python docstring drifts "
-        f"(best observed **{docstring_ratio_text}**).\n"
+        f"(best observed **{docstring_pooled_text()}**).\n"
         "- **Caveats:** one run per configuration, only 4-6 plants per distance bucket, and small samples.\n"
         "- **Practical recipe:** use whole-repo context for a docs-focused audit (to catch long-range drift chunking "
         "cannot see), plus cheap chunked passes for docstrings."
@@ -1177,6 +1211,7 @@ def _load_baseline_panel_data() -> BaselinePanelData:
     chunk128_prompt_tokens: int = _coerce_int(chunk128_csv_row.get("prompt_tokens") if chunk128_csv_row else 0, 0)
 
     symbol_findings_all: int = _coerce_int(symbol_json_row.get("total_findings") if symbol_json_row else 0, 0)
+    symbol_findings_9: int = _coerce_int(symbol_json_row.get("total_findings_9repos") if symbol_json_row else 0, 0)
     whole_findings: int = _coerce_int(whole_csv_row.get("total_findings") if whole_csv_row else 0, 0)
 
     chunk32_same_chunk_hits: int = _count_chunk_colocated_recovered(
@@ -1204,11 +1239,11 @@ def _load_baseline_panel_data() -> BaselinePanelData:
         f"({chunk32_prompt_tokens:,} and {chunk128_prompt_tokens:,} prompt tokens vs {whole_prompt_tokens:,} for whole-repo), "
         f"and mostly where doc and code co-located in one chunk "
         f"({chunk32_same_chunk_hits}/{chunk32_same_chunk_denom} at 32k; {chunk128_same_chunk_hits}/{chunk128_same_chunk_denom} at 128k).\n"
-        f"- The no-AI symbol check recovered **{symbol_recovered}/11** and surfaced more drifts overall in this snapshot "
-        f"({symbol_findings_all} findings vs {whole_findings} whole-repo findings), so DocDrift's value is cross-file/prose drift handling "
-        f"plus triage workflow, not raw detection count alone.\n"
-        "- The table is data-driven from `results_live/baselines/baselines.csv` and automatically appends new methods; "
-        "the upcoming hybrid row (symbol check + whole-repo Beam triage + executable repro) will appear here when added."
+        f"- The no-AI symbol check recovered **{symbol_recovered}/11** and surfaced more drifts on the same 9 repos "
+        f"({symbol_findings_9} findings vs {whole_findings} whole-repo findings; {symbol_findings_all} flags across all 12). "
+        "Precision on all 43 flags is 25/43 = 58.1%. The 65% figure was a 20-item sample (seed 20261026). "
+        "DocDrift's value is cross-file/prose drift handling plus triage, not raw detection count alone.\n"
+        "- The table is data-driven from `results_live/baselines/baselines.csv`. Hybrid v2 rows live in the comparison table above."
     )
 
     return BaselinePanelData(
@@ -1357,7 +1392,7 @@ def _attach_repro_records(
         finding_copy["repro_reason"] = str(repro.get("reason", ""))
         finding_copy["repro_evidence"] = repro_evidence
         finding_copy["repro_exception_type"] = repro_exception_type
-        finding_copy["repro_error_excerpt"] = str(repro.get("error_excerpt", ""))
+        finding_copy["repro_error_excerpt"] = strip_local_paths(str(repro.get("error_excerpt", "")))
         finding_copy["repro_is_strict_api_error"] = is_strict_api_error_repro
         enriched.append(finding_copy)
     return enriched
@@ -1392,30 +1427,6 @@ def _render_hero_html(summary: dict[str, object]) -> str:
         "</div>"
         f"<p style='margin-top:10px;'>Footnote: {pack_trimmed_count} of {pack_total_count} packs were trimmed "
         "(tests/benchmarks dropped first; trace files do not always list exact dropped paths).</p>"
-        "</div>"
-    )
-
-
-def _render_long_context_diagram_html() -> str:
-    """
-    @brief Render a compact HTML diagram describing the long-context flow.
-    """
-
-    return (
-        "<div class='repoatlas-diagram'>"
-        "<div class='repoatlas-flow-row'>"
-        "<div class='repoatlas-node'>docs/… citation</div>"
-        "<div class='repoatlas-arrow'>→</div>"
-        "<div class='repoatlas-node'>single packed prompt</div>"
-        "<div class='repoatlas-arrow'>→</div>"
-        "<div class='repoatlas-node'>Beam one-call reasoning</div>"
-        "<div class='repoatlas-arrow'>→</div>"
-        "<div class='repoatlas-node'>code/… citation</div>"
-        "</div>"
-        "<p style='margin:10px 0 0 0;color:#475569;'>"
-        "True drifts often link a docs line and a far-away implementation line. "
-        "Keeping both in one prompt allows direct cross-file comparison without retrieval hops."
-        "</p>"
         "</div>"
     )
 
@@ -1855,7 +1866,7 @@ def _build_summary_markdown(summary: dict[str, object]) -> str:
         f"- {true_no_prior} of {true_count} true drifts had no prior upstream PR or issue when checked.\n"
         f"- Cost: {total_input_tokens / 1_000_000:.2f}M prompt + {total_output_tokens / 1_000:.0f}k completion tokens on Beam, $0 via Ollama Cloud free tier.\n"
         f"- {pack_trimmed_count} of {pack_total_count} packs were trimmed to fit the token cap.\n"
-        "- v2 has 3 false repro-badged findings (werkzeug S38, S39, S41). "
+        "- v2 has 2 false + 1 unclear repro-badged findings (werkzeug S38, S39 false; S41 unclear). "
         "The v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2."
     )
 
@@ -1874,11 +1885,13 @@ def _rewrite_finding_display_fields(finding: dict[str, object]) -> dict[str, obj
     if status_lower in {"", "draft prepared, unfiled", "unfiled"}:
         rewritten["upstream_status"] = "Not reported upstream yet" if str(rewritten.get("hand_verdict", "")).lower() == "true" else ""
         rewritten["upstream_url"] = ""
+    if str(rewritten.get("finding_key", "")) == "nox-400000/DD-1":
+        rewritten["upstream_status"] = "fix submitted upstream (PR #1216, open)"
+        rewritten["upstream_url"] = "https://github.com/wntrblm/nox/pull/1216"
     if "independently confirmed" in status_lower or bool(rewritten.get("upstream_prior_reported", False)):
         url: str = str(rewritten.get("upstream_url", ""))
-        pr_match = re.search(r"/pull/(\d+)", url)
-        if pr_match:
-            rewritten["upstream_status"] = f"Also reported by someone else: open PR #{pr_match.group(1)}"
+        if url:
+            rewritten["upstream_status"] = already_reported_status(url)
             rewritten["upstream_prior_reported"] = True
     if str(rewritten.get("finding_key", "")) == "starlette-400000/DD-1":
         rewritten["repro_is_strict_api_error"] = False
@@ -2156,8 +2169,8 @@ def _badge_for_verifier(verifier_label: str) -> str:
 
 def _badge_for_hand_verdict(verdict: str) -> str:
     """
-    @brief Build a colour badge for hand-check verdict.
-    @param verdict Verdict string.
+    @brief Build a colour badge for the source-checked verdict.
+    @param verdict Verdict string stored as hand_verdict (checked against the source by an AI reviewer).
     """
 
     normalised: str = verdict.strip().lower()

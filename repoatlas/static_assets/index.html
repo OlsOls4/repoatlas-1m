@@ -3,25 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RepoAtlas-1M · DocDrift v2</title>
+  <title>DocDrift · RepoAtlas-1M</title>
   <link rel="stylesheet" href="assets/app.css">
 </head>
 <body>
   <header class="hero" id="hero">
-    <p class="eyebrow">RepoAtlas-1M · static recording</p>
-    <h1>DocDrift v2</h1>
+    <p class="eyebrow">DocDrift · static recording · repo RepoAtlas-1M</p>
+    <h1>DocDrift</h1>
     <p class="headline" id="headline">Loading recorded results…</p>
     <div class="tiles" id="tiles"></div>
     <p class="note" id="hero-note"></p>
   </header>
+
+  <section id="recorded-run" class="player">
+    <p class="player-kicker">Recording — not a live call</p>
+    <h2>Recorded starlette pack</h2>
+    <aside class="banner" id="replay-banner"></aside>
+    <div class="player-grid">
+      <div>
+        <h3>Candidates</h3>
+        <ol id="player-candidates"></ol>
+      </div>
+      <div>
+        <h3>Beam verdicts</h3>
+        <ol id="player-verdicts"></ol>
+      </div>
+    </div>
+    <h3>Repro traceback</h3>
+    <p id="player-repro-note" class="lede"></p>
+    <div id="player-tracebacks"></div>
+    <p id="player-pr" class="pr-line"></p>
+  </section>
 
   <nav class="tabs" aria-label="Sections">
     <button type="button" class="tab is-active" data-tab="story">Story</button>
     <button type="button" class="tab" data-tab="bugs">Bug wall</button>
     <button type="button" class="tab" data-tab="benchmark">Benchmark</button>
     <button type="button" class="tab" data-tab="repros">Repros</button>
-    <button type="button" class="tab" data-tab="replay">Recorded live run</button>
-    <button type="button" class="tab" data-tab="run">Run it yourself</button>
+    <button type="button" class="tab" data-tab="run">Run it on your repo</button>
     <button type="button" class="tab" data-tab="limits">Limits</button>
   </nav>
 
@@ -31,11 +50,13 @@
       <p>Docs say one thing, the code does another. Worked example from starlette: docs call <code>receive_json(data, mode="binary")</code>; the implementation is <code>receive_json(self, mode: str = "text")</code>. Following the docs can raise <code>TypeError</code>.</p>
       <h2>What Beam did</h2>
       <ol id="how-beam"></ol>
+      <h2>Glossary</h2>
+      <ul id="glossary-list"></ul>
     </section>
 
     <section id="bugs" class="panel">
       <h2>Bug wall</h2>
-      <p class="lede">True drifts plus the false findings that still got a repro badge. Filter by library or badge. Permalinks point at the pinned commit.</p>
+      <p class="lede">The v2 34-bug wall plus the non-true findings that still got a repro badge. Filter by library or badge. Permalinks point at the pinned commit.</p>
       <div class="filters">
         <label>Library
           <select id="library-filter"></select>
@@ -68,30 +89,21 @@
 
     <section id="repros" class="panel">
       <h2>Repros</h2>
-      <p class="lede">Each row is a Beam-written script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError.</p>
+      <p class="lede">Each row is a Beam-written script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError on a DOC-LITERAL line.</p>
       <div class="table-wrap">
         <table id="repro-table"></table>
       </div>
     </section>
 
-    <section id="replay" class="panel">
-      <h2>Recorded live run</h2>
-      <aside class="banner" id="replay-banner"></aside>
-      <p class="replay-controls">
-        <button type="button" id="replay-prev">Previous</button>
-        <button type="button" id="replay-next">Next step</button>
-        <span id="replay-progress"></span>
-      </p>
-      <ol id="replay-steps"></ol>
-    </section>
-
     <section id="run" class="panel">
-      <h2>Run it yourself</h2>
+      <h2>Run it on your repo</h2>
       <p id="ollama-key"></p>
+      <h3>CLI</h3>
+      <pre><code id="cli-cmd"></code></pre>
       <h3>Local recorded Space</h3>
       <pre><code id="local-cmd"></code></pre>
-      <h3>Live sweep (your key)</h3>
-      <pre><code id="cli-cmd"></code></pre>
+      <h3>Earlier whole-repo sweep</h3>
+      <pre><code id="sweep-cmd"></code></pre>
     </section>
 
     <section id="limits" class="panel">

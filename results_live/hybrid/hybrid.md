@@ -5,10 +5,10 @@ The run covers 12 repos: starlette, httpx, click, structlog, nox, arrow, cattrs,
 
 ## Comparison (12 repos)
 
-"Unclear" counts as not-true. The "distinct true" column is measured against a universe of 45 hand-checked true drifts:
+"Unclear" counts as not-true. The "distinct true" column is measured against a universe of 45 true drifts checked against the source by an AI reviewer:
 - the 33 from the prior 9-repo union (11 known T-drifts, 9 new from the symbol check, 13 new from chunked Beam);
 - 5 symbol-check trues in jinja/werkzeug;
-- 7 new trues that Beam added during triage (hand-checked in `scripts/_hybrid_verdicts.py`).
+- 7 new trues that Beam added during triage (checked against the source by an AI reviewer in `scripts/_hybrid_verdicts.py`). The stored field is still `hand_verdict`.
 
 | Method | Distinct true drifts (of 45) | Of prior 33 | Findings | True findings | Precision | Beam tokens |
 |---|---|---|---|---|---|---|
@@ -17,12 +17,14 @@ The run covers 12 repos: starlette, httpx, click, structlog, nox, arrow, cattrs,
 | Hybrid (symbol + Beam triage) | **34** | **22** | 60 | 45 | **75.0%** | 4,739,392 new (triage) |
 | Hybrid + repro-confirmed (strict) | 29 | 18 | 39 | 36 | **92.3%** | 4,877,530 new (triage + 138,138 repro) |
 
-Cost caveat: the hybrid's candidate list includes the whole-repo findings, and those findings came from the earlier sweep (4.42M tokens). The end-to-end cost of the hybrid as built is therefore about 9.2M tokens.
+Cost caveat: the hybrid's candidate list includes the whole-repo findings, and those findings came from the earlier sweep (4,424,575 tokens). Triage-only end-to-end is 4,424,575 + 4,739,392 = 9,163,967 (~9.2M). End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Of the 9 true drifts Beam added during triage, 2 were already known (chunked-only items).
 - The whole-repo findings themselves added no distinct true drift that the symbol check had missed, except T11.
 - So a symbol-only-candidate hybrid would probably lose little and cost about 4.7M. That configuration was not run.
 
-## Beam triage as a filter (56 candidates judged, 11 repos)
+## Beam triage as a filter (56 candidates judged; 11 of 12 libraries triaged)
+
+structlog failed (no JSON). cattrs needed 2 calls (attempt 1 returned empty).
 
 | | Hand-labelled true | Hand-labelled false or unclear |
 |---|---|---|
@@ -84,4 +86,4 @@ The badge requires `status == reproduced` with interface_error evidence: TypeErr
 - **No HTTP 429, 402 or quota errors.** Calls ran sequentially under `.cache/repoatlas/ollama.lock`. Prompt caching was not observed (each triage call billed the full ~300–400k pack).
 - **Source cues:** the symbol-flag wording ("method-call-signature: ...") differs in style from the whole-repo finding wording, so the model could partly tell where each candidate came from.
 - **The strict tier was defined after the earlier repro run.** The universe of 45 is defined by what the methods found, so it favours the methods that contributed to it. The 7 new items came from the hybrid itself.
-- **Hand labels:** these are mine, from reading the code at the pack ref (`/workspace/sweep/<repo>`). Triage verdicts that disagreed with an existing label were re-checked, and the original label stands (see `RECHECK` in `scripts/_hybrid_verdicts.py`).
+- **Labels:** checked against the source by an AI reviewer at the pack ref. The stored field is still `hand_verdict`. Triage verdicts that disagreed with an existing label were re-checked, and the original label stands (see `RECHECK` in `scripts/_hybrid_verdicts.py`).

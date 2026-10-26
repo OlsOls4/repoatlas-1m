@@ -83,7 +83,7 @@
     "status": "reproduced",
     "evidence": "interface_error",
     "exception_type": "ImportError",
-    "error_excerpt": "ImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/cattrs-7a24f770fd6f-base/lib/python3.13/site-packages/cattrs/errors.py)",
+    "error_excerpt": "ImportError: cannot import name 'ForbiddenExtraKeyError' from 'cattrs.errors' (<local-path>)",
     "strict_confirmed": true,
     "ref": "7a24f77"
   },
@@ -358,7 +358,7 @@
     "status": "reproduced",
     "evidence": "interface_error",
     "exception_type": "ImportError",
-    "error_excerpt": "ImportError: cannot import name 'NotFound' from 'werkzeug.routing' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/routing/__init__.py)",
+    "error_excerpt": "ImportError: cannot import name 'NotFound' from 'werkzeug.routing' (<local-path>)",
     "strict_confirmed": true,
     "ref": "b73dce5"
   },
@@ -369,7 +369,7 @@
     "status": "reproduced",
     "evidence": "interface_error",
     "exception_type": "ImportError",
-    "error_excerpt": "ImportError: cannot import name 'RequestRedirect' from 'werkzeug.exceptions' (/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/werkzeug-b73dce5a2ce1-base/lib/python3.13/site-packages/werkzeug/exceptions.py)",
+    "error_excerpt": "ImportError: cannot import name 'RequestRedirect' from 'werkzeug.exceptions' (<local-path>)",
     "strict_confirmed": true,
     "ref": "b73dce5"
   },

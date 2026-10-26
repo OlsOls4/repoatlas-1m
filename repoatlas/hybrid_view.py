@@ -37,6 +37,12 @@ CANONICAL_REPO_URLS: dict[str, str] = {
     "starlette": "https://github.com/Kludex/starlette",
 }
 STRICT_REPRO_EXCEPTION_TYPES: frozenset[str] = frozenset({"TypeError", "AttributeError", "ImportError", "NameError"})
+LABEL_SOURCE: str = "checked against the source by an AI reviewer"
+ALREADY_REPORTED_PREFIX: str = "Already reported upstream by others"
+LOCAL_PATH_PATTERN: re.Pattern[str] = re.compile(
+    r"(?:/workspace|/tmp|/home|/Users)[^\s)\"']+"
+)
+RUN_SUMMARY_PATH: Path = RESULTS_LIVE_DIRECTORY / "recall" / "run_summary.json"
 
 
 class HybridPayload(TypedDict):
@@ -91,7 +97,10 @@ class HybridHeroStats(TypedDict):
     triage_tokens: int
     repro_tokens: int
     end_to_end_tokens: int
+    triage_end_to_end_tokens: int
     false_repro_badges: int
+    false_repro_false: int
+    false_repro_unclear: int
 
 
 def load_hybrid_payload() -> HybridPayload:
@@ -179,11 +188,17 @@ def compute_hero_stats(payload: HybridPayload) -> HybridHeroStats:
         for item in addition_items
         if str(item.get("verdict", "")).lower() == "true" and str(item.get("drift_id", "")).startswith("N:")
     }
-    false_repro: int = sum(
+    false_repro_false: int = sum(
         1
         for item in hybrid_items
-        if bool(item.get("strict_confirmed", False)) and str(item.get("verdict", "")).lower() != "true"
+        if bool(item.get("strict_confirmed", False)) and str(item.get("verdict", "")).lower() == "false"
     )
+    false_repro_unclear: int = sum(
+        1
+        for item in hybrid_items
+        if bool(item.get("strict_confirmed", False)) and str(item.get("verdict", "")).lower() == "unclear"
+    )
+    false_repro: int = false_repro_false + false_repro_unclear
     whole_tokens: int = _as_int(whole_row.get("beam_tokens"))
     triage_tokens: int = _as_int(payload["beam_tokens"].get("triage"), _as_int(hybrid_row.get("beam_tokens")))
     repro_tokens: int = _as_int(payload["beam_tokens"].get("repro_live"))
@@ -212,7 +227,10 @@ def compute_hero_stats(payload: HybridPayload) -> HybridHeroStats:
         triage_tokens=triage_tokens,
         repro_tokens=repro_tokens,
         end_to_end_tokens=whole_tokens + triage_tokens + repro_tokens,
+        triage_end_to_end_tokens=whole_tokens + triage_tokens,
         false_repro_badges=false_repro,
+        false_repro_false=false_repro_false,
+        false_repro_unclear=false_repro_unclear,
     )
 
 
@@ -244,7 +262,7 @@ def render_hero_html(stats: HybridHeroStats) -> str:
         f"<p>{headline_sentence(stats)}.</p>"
         "<div class='repoatlas-stat-grid'>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{stats['hybrid_true']}</div>"
-        "<div class='repoatlas-stat-label'>Real docs bugs, checked against the source (file:line evidence)</div></div>"
+        f"<div class='repoatlas-stat-label'>Real docs bugs, {LABEL_SOURCE}</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{_percent(stats['hybrid_precision'])}</div>"
         f"<div class='repoatlas-stat-label'>of flagged findings were real "
         f"({stats['hybrid_true_findings']} / {stats['hybrid_findings']})</div></div>"
@@ -254,8 +272,8 @@ def render_hero_html(stats: HybridHeroStats) -> str:
         "<div class='repoatlas-stat-label'>Real bugs Beam's triage threw away</div></div>"
         "</div>"
         f"<p style='margin-top:10px;'>Reference set: {stats['universe_size']} true drifts "
-        "checked against the source (file:line evidence). The set is the union of what the methods found, so it favours them. "
-        "Labels were made by an AI reviewer reading those file:line cites, not by a human annotator.</p>"
+        f"{LABEL_SOURCE}. The set is the union of what the methods found, so it favours them. "
+        f"The field name is still <code>hand_verdict</code>; that label means {LABEL_SOURCE}, not a human annotator.</p>"
         "</div>"
     )
 
@@ -270,16 +288,17 @@ def render_pipeline_html() -> str:
         "<div class='repoatlas-flow-row'>"
         "<div class='repoatlas-node'>Free symbol check proposes candidates</div>"
         "<div class='repoatlas-arrow'>→</div>"
-        "<div class='repoatlas-node'>Beam reads docs + source (~300–400k tokens) in one call per library</div>"
+        "<div class='repoatlas-node'>Beam reads docs + source (~300–400k). 11 of 12 libraries triaged in one call; structlog failed; cattrs needed 2 calls</div>"
         "<div class='repoatlas-arrow'>→</div>"
         "<div class='repoatlas-node'>Triage each candidate with citations and a suggested fix; add missed cross-file/prose drifts</div>"
         "<div class='repoatlas-arrow'>→</div>"
         "<div class='repoatlas-node'>Executable repro keeps only real API errors</div>"
         "</div>"
         "<p style='margin:10px 0 0 0;color:#475569;'>"
-        "The free checker finds name and signature mismatches. Beam's one-call whole-repo pass is the triage "
-        "and the place it can add cross-file or prose drift the script missed. A later executable check then "
-        "confirms the ones that raise TypeError, AttributeError, ImportError, or NameError."
+        "The free checker finds name and signature mismatches. Beam then triages candidates against a packed "
+        "whole-repo prompt. 11 of 12 libraries were triaged; structlog's reply had no JSON so it stayed untriaged; "
+        "cattrs needed two calls after attempt 1 returned empty. A later executable check keeps TypeError, "
+        "AttributeError, ImportError, or NameError on a documented usage line."
         "</p>"
         "</div>"
     )
@@ -314,15 +333,9 @@ def build_comparison_table(payload: HybridPayload) -> tuple[list[str], list[list
         tokens: int = _as_int(csv_row.get("beam_tokens"))
         token_text: str = "0 (no model calls)" if tokens == 0 else f"{tokens:,}"
         if "hybrid (symbol" in method.lower():
-            token_text = (
-                f"{stats['triage_tokens']:,} triage-only + {stats['whole_tokens']:,} earlier whole-repo sweep "
-                f"= ~9.2M end-to-end"
-            )
+            token_text = triage_only_token_text(stats)
         elif "repro-confirmed" in method.lower():
-            token_text = (
-                f"{tokens:,} new (triage + repro); end-to-end still ~9.2M "
-                f"including the earlier whole-repo sweep"
-            )
+            token_text = end_to_end_repro_token_text(stats)
         found_text: str = f"{distinct_true} of {universe_size}"
         if of_33:
             found_text = f"{distinct_true} of {universe_size} ({of_33} of {union_33} on the 9-repo union)"
@@ -377,19 +390,22 @@ def build_notes_markdown(payload: HybridPayload) -> str:
     chunked_only: list[str] = [item for item in missed if item.startswith("C:")]
     lines: list[str] = [
         f"- The **{stats['universe_size']}-drift reference set** is the union of what the methods found, so it favours them. "
-        "Labels were made by an AI reviewer checking file:line evidence, not by a human.",
+        f"Labels were {LABEL_SOURCE}. The stored field is still `hand_verdict`.",
         f"- Beam triage judged **{judged}** candidates and rejected **{rejected_true}** of "
         f"{stats['true_candidates_judged']} true candidates, while removing "
-        f"**{stats['removed_false']}** of {stats['removed_false'] + kept_false} false or unclear ones.",
-        f"- **{stats['false_repro_badges']}** findings got a strict repro badge but are not true drifts "
-        "(werkzeug S38, S39 and S41). The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.",
+        f"**{stats['removed_false']}** of {stats['removed_false'] + kept_false} false or unclear ones. "
+        "11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.",
+        f"- **{non_bug_badge_phrase(stats)}** received a strict repro badge. "
+        "The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.",
         "- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.",
         f"- Chunked Beam alone found **{len(chunked_only)}** local docstring/prose drifts the hybrid misses.",
         "- The strict repro rule was set after the first repro run.",
         "- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).",
-        f"- Hybrid end-to-end cost is about **9.2M** tokens "
-        f"({stats['whole_tokens']:,} earlier whole-repo sweep + {stats['triage_tokens']:,} triage + "
-        f"{stats['repro_tokens']:,} repro). The cheaper symbol-only-candidate variant was not run.",
+        f"- Hybrid triage-only cost is about **9.2M** tokens "
+        f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} = {stats['triage_end_to_end_tokens']:,}). "
+        f"End-to-end including repro is **{stats['end_to_end_tokens']:,} (~9.3M)** "
+        f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}). "
+        "The cheaper symbol-only-candidate variant was not run.",
     ]
     return "\n".join(lines)
 
@@ -410,14 +426,15 @@ def build_beam_did_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_h
         f"- **Repro author.** Beam wrote every doc-literal repro script "
         f"({stats['repro_tokens']:,} tokens). {stats['repro_true']} distinct bugs reproduce a real API error; "
         f"{stats['repro_true_findings']} of {stats['repro_findings']} badged findings were real. "
-        f"{stats['false_repro_badges']} badges landed on non-bugs (werkzeug S38, S39, S41).\n"
+        f"{non_bug_badge_phrase(stats)} received a strict repro badge.\n"
         f"- **Long context, as an observation (small samples, one run per configuration):** "
         f"Beam accepted prompts up to {max_probe_tokens:,} tokens; focused whole-context passes caught "
-        f"{far_hits[0]}/{far_hits[1]} planted drifts 700k+ tokens apart vs {chunk_far[0]}/{chunk_far[1]} for chunking. "
+        f"{far_hits[0]}/{far_hits[1]} planted drifts 700k+ tokens apart vs {chunk_far[0]}/{chunk_far[1]} for chunking "
+        f"on seed 1 only, at ~{focused_cost_multiplier():.1f}× tokens "
+        f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
         "A single whole-prompt call alone is not a better detector than chunking or a symbol check, "
-        "which is why v2 combines them. Single calls mostly miss docstring drifts.\n"
-        "- **Hypothesis, not a claim:** that tail-of-prompt pattern is consistent with sliding-window attention "
-        "plus global NoPE, but this project did not test that mechanism."
+        "which is why v2 combines them. Single calls mostly miss docstring drifts "
+        f"(best observed {docstring_pooled_text()})."
     )
 
 
@@ -438,8 +455,11 @@ def build_long_context_markdown(stats: HybridHeroStats, max_probe_tokens: int, f
         f"{stats['true_candidates_judged']} real ones.\n"
         f"2. **New finds:** it added {stats['additions_new']} drifts nobody else found, in prose and across files.\n"
         f"3. **Far-apart planted test:** Beam accepted {max_probe_tokens:,} tokens; focused whole-context passes "
-        f"found {far_hits[0]}/{far_hits[1]} drifts 700k+ tokens apart, while chunked 128k/32k found "
-        f"{chunk_far[0]}/{chunk_far[1]}. Nearby docstring drift is where cheap chunks still win.\n"
+        f"found {far_hits[0]}/{far_hits[1]} drifts 700k+ tokens apart on seed 1 only, while chunked 128k/32k found "
+        f"{chunk_far[0]}/{chunk_far[1]}. Focused passes cost ~{focused_cost_multiplier():.1f}× tokens "
+        f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
+        "Nearby docstring drift is where cheap chunks still win "
+        f"(best single-call docstring score {docstring_pooled_text()}).\n"
     )
 
 
@@ -661,7 +681,7 @@ def _polish_bug_card(
         pr_match = re.search(r"/pull/(\d+)", url)
         pr_number: str = pr_match.group(1) if pr_match else ""
         if pr_number:
-            card["upstream_status"] = f"Also reported by someone else: open PR #{pr_number}"
+            card["upstream_status"] = f"{ALREADY_REPORTED_PREFIX}: open PR #{pr_number}"
             card["upstream_prior_reported"] = True
 
 
@@ -713,6 +733,116 @@ def build_v2_replay_rows(payload: HybridPayload, stats: HybridHeroStats, pack_to
             ),
         ],
     ]
+
+
+def non_bug_badge_phrase(stats: HybridHeroStats) -> str:
+    """
+    @brief Honest wording for strict badges that are not true drifts.
+    """
+
+    return (
+        f"{stats['false_repro_false']} false + {stats['false_repro_unclear']} unclear "
+        "(werkzeug S38, S39 false; S41 unclear)"
+    )
+
+
+def triage_only_token_text(stats: HybridHeroStats) -> str:
+    """
+    @brief Sweep + triage cost; ~9.2M and not the repro-inclusive total.
+    """
+
+    return (
+        f"{stats['triage_tokens']:,} triage-only + {stats['whole_tokens']:,} earlier whole-repo sweep "
+        f"= {stats['triage_end_to_end_tokens']:,} (~9.2M triage-only)"
+    )
+
+
+def end_to_end_repro_token_text(stats: HybridHeroStats) -> str:
+    """
+    @brief Full end-to-end including repro: 9,302,105 (~9.3M).
+    """
+
+    return (
+        f"{stats['end_to_end_tokens']:,} (~9.3M) = "
+        f"{stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}"
+    )
+
+
+def focused_pass_tokens() -> int:
+    """
+    @brief Focused seed-1 token spend from results_live/recall/run_summary.json.
+    """
+
+    return _run_summary_usage("focused_seed1")
+
+
+def chunk_baseline_tokens() -> int:
+    """
+    @brief Mean of chunked 128k/32k seed-1 usage from run_summary.json.
+    """
+
+    values = [_run_summary_usage("chunk128k_seed1"), _run_summary_usage("chunk32k_seed1")]
+    values = [value for value in values if value > 0]
+    if not values:
+        return 0
+    return int(round(sum(values) / len(values)))
+
+
+def focused_cost_multiplier() -> float:
+    """
+    @brief Focused-pass tokens divided by the ~1M chunked baseline.
+    """
+
+    baseline = chunk_baseline_tokens()
+    if baseline <= 0:
+        return 0.0
+    return focused_pass_tokens() / baseline
+
+
+def docstring_pooled_text() -> str:
+    """
+    @brief Docs-last docstring hits pooled over 2 seeds (0/18 + 1/14 = 1/32).
+    """
+
+    return "1/32 pooled over 2 seeds (0/18 + 1/14)"
+
+
+def strip_local_paths(text: str) -> str:
+    """
+    @brief Replace machine-local paths so excerpts can be published.
+    """
+
+    return LOCAL_PATH_PATTERN.sub("<local-path>", text)
+
+
+def already_reported_status(url: str) -> str:
+    """
+    @brief Status text for other people's open PRs.
+    """
+
+    match = re.search(r"/pull/(\d+)", url)
+    if not match:
+        return ALREADY_REPORTED_PREFIX
+    return f"{ALREADY_REPORTED_PREFIX}: open PR #{match.group(1)}"
+
+
+def _run_summary_usage(run_name: str) -> int:
+    """
+    @brief Token usage for one recall run name.
+    """
+
+    if not RUN_SUMMARY_PATH.exists():
+        return 0
+    payload: object = json.loads(RUN_SUMMARY_PATH.read_text(encoding="utf-8"))
+    rows: list[dict[str, object]] = []
+    if isinstance(payload, list):
+        rows = [row for row in payload if isinstance(row, dict)]
+    elif isinstance(payload, dict):
+        rows = _as_dict_list(payload.get("rows") or payload.get("runs"))
+    for row in rows:
+        if str(row.get("run", "")) == run_name:
+            return _as_int(row.get("usage") or row.get("prompt_tokens"))
+    return 0
 
 
 def canonicalize_repo_url(repo_url: str, repo_name: str = "") -> str:

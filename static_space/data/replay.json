@@ -1,6 +1,6 @@
 {
   "is_recording": true,
-  "title": "Recorded live run: starlette",
+  "title": "Recorded starlette pack",
   "recorded_at": "2026-10-26T19:15:16.531485+00:00",
   "repo_url": "https://github.com/Kludex/starlette",
   "source_repo_url": "https://github.com/encode/starlette",
@@ -12,26 +12,64 @@
   "truncated": true,
   "token_limit": 400000,
   "trace_path": "results_live/traces/starlette-400000.json",
-  "steps": [
+  "candidate_count": 3,
+  "symbol_candidates": 2,
+  "whole_candidates": 1,
+  "kept": 2,
+  "rejected": 1,
+  "candidates": [
     {
-      "name": "Pack",
-      "detail": "Packed 327,836 tokens (limit 400,000, truncated=True) at 2026-10-26T19:15:16.531485+00:00."
+      "id": "C01",
+      "source": "symbol check",
+      "claim": "method-call-signature: `client.get(...)`: no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)",
+      "doc_path": "docs/testclient.md",
+      "doc_line": 53,
+      "verdict": "false",
+      "reason": "TestClient inherits httpx's client API, where request methods such as get accept a `headers` argument.",
+      "code_path": "starlette/testclient.py",
+      "code_line": 440
     },
     {
-      "name": "Beam call",
-      "detail": "394,577 prompt tokens, 4,733 completion tokens, 21.36s."
+      "id": "C02",
+      "source": "whole-repo pass",
+      "claim": "The WebSocket documentation calls `receive_json` with a positional `data` argument, but the implementation only accepts `mode`.",
+      "doc_path": "docs/websockets.md",
+      "doc_line": 73,
+      "verdict": "true_drift",
+      "reason": "The documented call passes a positional `data` argument, but `WebSocket.receive_json` accepts only `mode`.",
+      "code_path": "starlette/websockets.py",
+      "code_line": 136
     },
     {
-      "name": "Finding",
-      "detail": "DD-1: The WebSocket documentation calls `receive_json` with a positional `data` argument, but the implementation only accepts `mode`. Doc docs/websockets.md:73; code starlette/websockets.py:136."
-    },
-    {
-      "name": "Citation check",
-      "detail": "verified (line-shifted); model cited L73, verifier matched L74."
-    },
-    {
-      "name": "Later v2 steps",
-      "detail": "Symbol check: 2 candidates → Beam triage: kept 2, rejected 1, added 0 → Repro: could not run (earlier docs-runner only; not counted in the 29)."
+      "id": "C03",
+      "source": "symbol check",
+      "claim": "method-call-signature: `websocket.receive_json(...)`: keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)",
+      "doc_path": "docs/websockets.md",
+      "doc_line": 74,
+      "verdict": "true_drift",
+      "reason": "The WebSocket test session's `receive_json` also accepts only `mode` and has no `data` parameter.",
+      "code_path": "starlette/testclient.py",
+      "code_line": 188
     }
-  ]
+  ],
+  "tracebacks": [
+    {
+      "attempt": 1,
+      "status": "could_not_run",
+      "exception_type": "RuntimeError",
+      "excerpt": "[script line 3, not a DOC-LITERAL line] RuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n"
+    },
+    {
+      "attempt": 2,
+      "status": "could_not_run",
+      "exception_type": "RuntimeError",
+      "excerpt": "[script line 11, not a DOC-LITERAL line] RuntimeError: Expected ASGI message \"websocket.connect\", but got 'websocket.receive'"
+    }
+  ],
+  "pr": {
+    "label": "Open PR #3746",
+    "url": "https://github.com/Kludex/starlette/pull/3746",
+    "note": "Filed by this project. Open, not merged."
+  },
+  "repro_note": "v2 strict repro could not run (setup RuntimeError). Not counted in the 29. An earlier docs-runner did raise TypeError."
 }

@@ -1,4 +1,4 @@
-"""Shared definitions for the DocDrift baselines: the 11 hand-checked true drifts and matching helpers."""
+"""Shared definitions for the DocDrift baselines: the 11 true drifts checked against the source by an AI reviewer."""
 
 from __future__ import annotations
 

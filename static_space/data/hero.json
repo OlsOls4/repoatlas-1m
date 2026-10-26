@@ -26,5 +26,7 @@
   "end_to_end_tokens": 9302105,
   "judged": 56,
   "max_probe_tokens": 947446,
-  "label_note": "Labels were made by an AI reviewer checking file:line evidence, not by a human. The 45-drift set is the union of what the methods found, so it favours them."
+  "label_note": "Labels were checked against the source by an AI reviewer. The stored field is still hand_verdict. The 45-drift set is the union of what the methods found, so it favours them.",
+  "end_to_end_tokens_text": "9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138",
+  "non_bug_badges": "2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)"
 }

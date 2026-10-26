@@ -47,17 +47,20 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     token_cells = [str(row[4]) for row in rows]
     assert any("15 of 33" in cell for cell in found_cells)
     assert any("9 of 33" in cell for cell in found_cells)
-    assert any("4,739,392" in cell and "~9.2M" in cell for cell in token_cells)
+    assert any("4,739,392" in cell and "~9.2M triage-only" in cell for cell in token_cells)
+    assert any("9,302,105" in cell and "~9.3M" in cell for cell in token_cells)
     notes = build_notes_markdown(payload)
     assert "union of what the methods found" in notes
     assert "rejected **0** of 32 true candidates" in notes
     assert "removing **15** of 24" in notes
-    assert "werkzeug S38, S39 and S41" in notes
+    assert "S38, S39 false; S41 unclear" in notes
     assert "structlog: Beam's triage reply had no JSON" in notes
     assert "11** local docstring" in notes
     assert "after the first repro run" in notes
     assert "No prompt caching" in notes
     assert "9.2M" in notes
+    assert "9,302,105" in notes
+    assert "11 of 12 libraries" in notes
     assert "hand-checked" not in notes.lower()
     assert "hand-verified" not in notes.lower()
     assert "hand-true" not in notes
@@ -74,7 +77,7 @@ def test_hero_units_and_wording() -> None:
     assert "0 of 32" in hero
     assert "Real bugs Beam's triage threw away" in hero
     assert "45 / 60" in hero
-    assert "checked against the source (file:line evidence)" in hero
+    assert "checked against the source by an AI reviewer" in hero
     assert "hand-checked" not in hero.lower()
     assert "hand-verified" not in hero.lower()
     beam_did = build_beam_did_markdown(stats, 947446, (5, 6), (0, 6))
@@ -82,6 +85,9 @@ def test_hero_units_and_wording() -> None:
     assert "947,446" in beam_did
     assert "5/6" in beam_did
     assert "0/6" in beam_did
+    assert "seed 1" in beam_did
+    assert "4,755,853" in beam_did
+    assert "tail-of-prompt" not in beam_did
     long_context = build_long_context_markdown(stats, 947446, (5, 6), (0, 6))
     assert "not** a better detector" in long_context or "not a better detector" in long_context
 
@@ -177,8 +183,8 @@ def test_upstream_badges_use_also_reported_wording() -> None:
             "repo_url": "https://github.com/encode/httpx",
         }
     )
-    assert arrow["upstream_status"] == "Also reported by someone else: open PR #1355"
-    assert httpx["upstream_status"] == "Also reported by someone else: open PR #3774"
+    assert arrow["upstream_status"] == "Already reported upstream by others: open PR #1355"
+    assert httpx["upstream_status"] == "Already reported upstream by others: open PR #3774"
     starlette = _rewrite_finding_display_fields(
         {
             "finding_key": "starlette-400000/DD-1",

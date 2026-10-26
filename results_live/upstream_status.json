@@ -9,15 +9,22 @@
   {
     "repo": "https://github.com/encode/httpx",
     "finding": "httpx-400000/DD-1",
-    "status": "independently confirmed by an open upstream PR",
+    "status": "already reported upstream by others",
     "url": "https://github.com/encode/httpx/pull/3774",
     "checked_at": "2026-10-26T20:24:00Z"
   },
   {
     "repo": "https://github.com/arrow-py/arrow",
     "finding": "arrow-400000/DD-1",
-    "status": "independently confirmed by an open upstream PR",
+    "status": "already reported upstream by others",
     "url": "https://github.com/arrow-py/arrow/pull/1355",
     "checked_at": "2026-10-26T20:24:00Z"
+  },
+  {
+    "repo": "https://github.com/wntrblm/nox",
+    "finding": "nox-400000/DD-1",
+    "status": "fix submitted upstream (PR #1216, open)",
+    "url": "https://github.com/wntrblm/nox/pull/1216",
+    "checked_at": "2026-10-26T22:55:00Z"
   }
 ]

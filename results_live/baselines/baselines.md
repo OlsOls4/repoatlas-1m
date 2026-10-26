@@ -4,12 +4,12 @@ All numbers come from files in this directory, produced on 2026-10-26 by the scr
 The scope is the 9 repos that had true drifts in the 400k sweep (starlette, httpx, click, structlog, nox, arrow, cattrs, marshmallow) plus the zero-find repo attrs.
 Each Beam configuration was run once (n=1), so differences of one or two drifts are within run-to-run noise.
 
-## Comparison (9 repos; "true drifts" = the 11 hand-checked drifts from the whole-repo sweep)
+## Comparison (9 repos; "true drifts" = the 11 drifts from the whole-repo sweep, checked against the source by an AI reviewer)
 
 | method | calls | prompt tokens | completion tokens | true drifts recovered (of 11) | total findings | precision |
 |---|---|---|---|---|---|---|
 | Whole-repo Beam (1 call/repo, ~400k) | 9 | 3,256,903 | 44,198 | **11** (9 of them pass the verifier) | 16 | 11/16 = 68.8% |
-| Non-AI symbol check (`ast`, 0 cost) | 0 | 0 | 0 | **10** (misses T11) | 32 on these 9 repos (43 on all 12) | 65% on a random 20 of 43 (seed 20261026); 25/43 = 58.1% with all 43 hand-checked; 20/32 = 62.5% on the 9 repos |
+| Non-AI symbol check (`ast`, 0 cost) | 0 | 0 | 0 | **10** (misses T11) | 32 on these 9 repos (43 on all 12; compare 32 vs 16, not 43 vs 16) | 25/43 = 58.1% across all 43; 65% was a random 20-item sample (seed 20261026); 20/32 = 62.5% on the 9 repos |
 | Chunked Beam, ~32k chunks | 129 | 3,318,430 | 211,515 | **3** (T7, T9, T10) | 25 | 15/25 = 60% |
 | Chunked Beam, ~128k chunks | 33 | 3,269,063 | 73,138 | **4** (T3, T6, T7, T8) | 13 | 9/13 = 69.2% |
 
@@ -26,7 +26,7 @@ T1 starlette receive_json · T2 httpx.Mounts · T3 httpx Client(app=) · T4 clic
 
 ### Union view: every true drift any method found on these 9 repos
 
-There are 33 distinct hand-checked true drifts: the 11 known ones, 9 new ones from the symbol check, and 13 new ones from chunked Beam.
+There are 33 distinct true drifts checked against the source by an AI reviewer: the 11 known ones, 9 new ones from the symbol check, and 13 new ones from chunked Beam.
 
 | method | distinct true drifts found (of 33) |
 |---|---|
@@ -55,7 +55,7 @@ So chunking loses the cross-file drifts (a doc names an API defined elsewhere). 
 ## Blunt verdict
 
 - **Whole-repo beat the chunked Beam baselines decisively, at the same token cost.** On the known drifts it recovered 11/11 vs 3/11 (32k) and 4/11 (128k) for about the same ~3.3M prompt tokens. Precision was similar (60–69%).
-- **Whole-repo did not clearly beat the non-AI baseline.** The `ast` symbol check costs nothing, recovers 10/11 of the same drifts at similar precision (65% on the sample), and found 9 extra true drifts on these repos that whole-repo missed. Its one miss (T11) is a prose drift. Caveat: I designed its check types (docstring `:param:`, exception names, Sphinx roles) knowing the target drifts, so 10/11 is optimistically biased. They are still standard checks (darglint / Sphinx nitpicky style).
+- **Whole-repo did not clearly beat the non-AI baseline.** The `ast` symbol check costs nothing, recovers 10/11 of the same drifts at 25/43 = 58.1% precision across all 43 flags (65% was a 20-item sample), and found 9 extra true drifts on these repos that whole-repo missed. On the same 9 repos the finding counts are 32 vs 16, not 43 vs 16. Its one miss (T11) is a prose drift. Caveat: the check types (docstring `:param:`, exception names, Sphinx roles) were designed knowing the target drifts, so 10/11 is optimistically biased. They are still standard checks (darglint / Sphinx nitpicky style).
 - **The "of 11" metric is biased toward whole-repo,** because the 11 came from whole-repo's own output. On the union of 33 true drifts, whole-repo found 11, fewer than the symbol check (19) and fewer than 32k chunking (15). Chunking finds more local, within-file drifts because each call reads less text more closely.
 - Fair claim: whole-repo context is what lets an LLM catch cross-file drifts. Chunking cannot, at equal cost. Unfair claim: that whole-repo is the best detector. A cheap resolver plus local LLM passes would beat it on recall.
 
@@ -67,7 +67,7 @@ So chunking loses the cross-file drifts (a doc names an API defined elsewhere). 
   - Findings are deduped by doc and code path plus line (±3).
   - Calls were sequential, with retries disabled.
 - **128k errors:** 2 calls returned no `message.content` (reasoning only): starlette chunk 1 and attrs chunk 0. Their tokens still count. There were no HTTP errors, 402s or 429s.
-- **Verifier:** some true chunked findings fail it because of quote or line offsets (T8@128k, T3@128k, cattrs typeddicts). The precision figures above use hand verdicts.
+- **Verifier:** some true chunked findings fail it because of quote or line offsets (T8@128k, T3@128k, cattrs typeddicts). The precision figures above use `hand_verdict` (checked against the source by an AI reviewer).
 - **Symbol check:** 43 flags on 12 repos; per-flag verdicts with evidence are in `baselines.json`.
   - The random 20 (seed 20261026) came out 13 true / 7 false. That sample happened to contain 5 of the known drifts.
   - The full 43 came out 25 true / 15 false / 3 unclear.

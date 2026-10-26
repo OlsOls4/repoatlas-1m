@@ -10,11 +10,13 @@ import shutil
 from typing import TypedDict
 
 from repoatlas.hybrid_view import (
+    ALREADY_REPORTED_PREFIX,
     CANONICAL_REPO_URLS,
     HYBRID_JSON_PATH,
     HYBRID_REPROS_PATH,
     HYBRID_SOURCES_PATH,
     HYBRID_TRIAGE_DIRECTORY,
+    LABEL_SOURCE,
     RESULTS_LIVE_DIRECTORY,
     HybridHeroStats,
     HybridPayload,
@@ -25,13 +27,21 @@ from repoatlas.hybrid_view import (
     _human_title,
     _load_hybrid_citations,
     _parse_code_site,
+    already_reported_status,
     build_comparison_table,
     build_notes_markdown,
     canonicalize_repo_url,
+    chunk_baseline_tokens,
     compute_hero_stats,
+    docstring_pooled_text,
+    end_to_end_repro_token_text,
+    focused_cost_multiplier,
+    focused_pass_tokens,
     headline_sentence,
     load_hybrid_payload,
     merge_hybrid_true_findings,
+    non_bug_badge_phrase,
+    strip_local_paths,
 )
 
 
@@ -167,9 +177,11 @@ def _build_hero(payload: HybridPayload, stats: HybridHeroStats) -> dict[str, obj
         "judged": stats["judged"],
         "max_probe_tokens": max_probe,
         "label_note": (
-            "Labels were made by an AI reviewer checking file:line evidence, not by a human. "
+            f"Labels were {LABEL_SOURCE}. The stored field is still hand_verdict. "
             f"The {stats['universe_size']}-drift set is the union of what the methods found, so it favours them."
         ),
+        "end_to_end_tokens_text": end_to_end_repro_token_text(stats),
+        "non_bug_badges": non_bug_badge_phrase(stats),
     }
 
 
@@ -256,7 +268,7 @@ def _card_from_merged(
         "id": finding_key,
         "library": repo,
         "title": title,
-        "summary": str(card.get("breakage_summary") or card.get("explanation") or ""),
+        "summary": strip_local_paths(str(card.get("breakage_summary") or card.get("explanation") or "")),
         "verdict": "true",
         "badge": badge,
         "badge_note": badge_note,
@@ -321,8 +333,8 @@ def _card_from_hybrid_item(
     badge_note = ""
     if bool(item.get("strict_confirmed", False)):
         badge_note = (
-            f"Strict repro badge on a {verdict} finding "
-            f"({stats['false_repro_badges']} such badges: werkzeug S38, S39, S41)."
+            f"Strict repro badge on a {verdict} finding. "
+            f"{non_bug_badge_phrase(stats)} received a strict badge."
         )
     return {
         "id": f"{repo}/{source_id}",
@@ -353,9 +365,9 @@ def _badge_for_card(card: dict[str, object], stats: HybridHeroStats) -> tuple[st
 
     override: str = str(card.get("repro_badge_override", "")).strip()
     if override:
-        return "reproduced", override
+        return "reproduced", strip_local_paths(override)
     if bool(card.get("repro_is_strict_api_error", False)):
-        excerpt: str = str(card.get("repro_error_excerpt", "")).strip()
+        excerpt: str = strip_local_paths(str(card.get("repro_error_excerpt", "")).strip())
         return "reproduced", excerpt[:180]
     if str(card.get("repro_status", "")) == "reproduced":
         return "checked", "Ran, but not a strict API error (not counted in the 29)."
@@ -390,12 +402,12 @@ def _upstream_for(
             continue
         number: str = pr_match.group(1)
         status: str = str(row.get("status", "")).lower()
-        if "independently confirmed" in status:
+        if "independently confirmed" in status or ALREADY_REPORTED_PREFIX.lower() in status:
             return {
                 "kind": "also_reported",
-                "label": f"Also reported by someone else: open PR #{number}",
+                "label": already_reported_status(url),
                 "url": url,
-                "note": "From results_live/upstream_status.json.",
+                "note": "From results_live/upstream_status.json. Other people's PRs.",
             }
         return {
             "kind": "filed_open",
@@ -405,8 +417,13 @@ def _upstream_for(
         }
     status = str(card.get("upstream_status", ""))
     url = str(card.get("upstream_url", ""))
-    if "Also reported by someone else" in status and url:
-        return {"kind": "also_reported", "label": status, "url": url, "note": "From results_live/upstream_status.json."}
+    if (ALREADY_REPORTED_PREFIX in status or "Also reported by someone else" in status) and url:
+        return {
+            "kind": "also_reported",
+            "label": already_reported_status(url) if "PR #" not in status else status,
+            "url": url,
+            "note": "From results_live/upstream_status.json. Other people's PRs.",
+        }
     if "PR #" in status and "open" in status.lower() and url:
         return {"kind": "filed_open", "label": status, "url": url, "note": "From results_live/upstream_status.json."}
     return None
@@ -438,7 +455,7 @@ def _build_benchmark(payload: HybridPayload, stats: HybridHeroStats) -> dict[str
                 "true": stats["repro_true"],
                 "detail": (
                     f"{stats['repro_true_findings']} of {stats['repro_findings']} badges were real; "
-                    f"{stats['false_repro_badges']} false badges (werkzeug S38, S39, S41)"
+                    f"{non_bug_badge_phrase(stats)}"
                 ),
             },
         ],
@@ -446,6 +463,10 @@ def _build_benchmark(payload: HybridPayload, stats: HybridHeroStats) -> dict[str
             "max_probe_tokens": _max_probe_tokens(),
             "far_hits": list(far_hits),
             "chunk_far": list(chunk_far),
+            "focused_tokens": focused_pass_tokens(),
+            "chunk_baseline_tokens": chunk_baseline_tokens(),
+            "focused_multiplier": round(focused_cost_multiplier(), 1),
+            "docstring_pooled": docstring_pooled_text(),
             "chart": "assets/recall_vs_distance.png",
             "source": "results_live/recall/",
         },
@@ -482,7 +503,7 @@ def _build_repros(payload: HybridPayload, sources: dict[str, dict[str, object]])
                 "status": str(value.get("status", "")),
                 "evidence": str(value.get("evidence") or ""),
                 "exception_type": str(value.get("exception_type") or ""),
-                "error_excerpt": str(value.get("error_excerpt") or ""),
+                "error_excerpt": strip_local_paths(str(value.get("error_excerpt") or "")),
                 "strict_confirmed": bool(value.get("strict_confirmed", False)),
                 "ref": str(sources.get(repo, {}).get("ref", ""))[:7],
             }
@@ -493,7 +514,7 @@ def _build_repros(payload: HybridPayload, sources: dict[str, dict[str, object]])
 
 def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]]) -> dict[str, object]:
     """
-    @brief Compact recorded starlette trace plus later v2 triage steps.
+    @brief Recorded starlette pack player: candidates, verdicts, traceback, PR.
     """
 
     if not STARLETTE_TRACE_PATH.exists():
@@ -501,45 +522,64 @@ def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]
     trace: dict[str, object] = json.loads(STARLETTE_TRACE_PATH.read_text(encoding="utf-8"))
     summary: dict[str, object] = _as_dict(trace.get("summary"))
     pack: dict[str, object] = _as_dict(trace.get("pack"))
-    output: dict[str, object] = _as_dict(trace.get("output"))
-    findings: list[dict[str, object]] = _as_dict_list(output.get("findings"))
-    finding: dict[str, object] = findings[0] if findings else {}
-    doc = _as_dict(finding.get("doc_citation"))
-    code = _as_dict(finding.get("code_citation"))
     indexed: dict[str, object] = {}
     for row in index_findings:
         if str(row.get("finding_key", "")) == "starlette-400000/DD-1":
             indexed = row
             break
-    symbol_candidates = 0
-    kept = 0
-    rejected = 0
-    added = 0
+    triage: dict[str, object] = {}
     if HYBRID_TRIAGE_STARLETTE_PATH.exists():
-        triage: dict[str, object] = _as_dict(json.loads(HYBRID_TRIAGE_STARLETTE_PATH.read_text(encoding="utf-8")))
-        candidates = _as_dict_list(triage.get("candidates"))
-        symbol_candidates = sum(1 for item in candidates if str(item.get("source", "")) == "symbol")
-        verdicts = _as_dict_list(triage.get("verdicts"))
-        kept = sum(1 for item in verdicts if "true" in str(item.get("verdict", "")).lower())
-        rejected = len(verdicts) - kept
-        added = len(_as_dict_list(triage.get("additional_findings")))
+        triage = _as_dict(json.loads(HYBRID_TRIAGE_STARLETTE_PATH.read_text(encoding="utf-8")))
+    candidates_raw = _as_dict_list(triage.get("candidates"))
+    verdicts_raw = _as_dict_list(triage.get("verdicts"))
+    verdict_by_id = {str(item.get("candidate_id", "")): item for item in verdicts_raw}
+    candidates: list[dict[str, object]] = []
+    for candidate in candidates_raw:
+        verdict = _as_dict(verdict_by_id.get(str(candidate.get("candidate_id", "")), {}))
+        code = _as_dict(verdict.get("code_citation"))
+        source = str(candidate.get("source", ""))
+        source_label = "symbol check" if source == "symbol" else "whole-repo pass"
+        candidates.append(
+            {
+                "id": str(candidate.get("candidate_id", "")),
+                "source": source_label,
+                "claim": str(candidate.get("claim", "")),
+                "doc_path": str(candidate.get("doc_path", "")),
+                "doc_line": _as_int(candidate.get("doc_line")),
+                "verdict": str(verdict.get("verdict", "")),
+                "reason": str(verdict.get("reason", "")),
+                "code_path": str(code.get("path", "")),
+                "code_line": _as_int(code.get("start_line")),
+            }
+        )
+    symbol_candidates = sum(1 for item in candidates_raw if str(item.get("source", "")) == "symbol")
+    whole_candidates = sum(1 for item in candidates_raw if str(item.get("source", "")) != "symbol")
+    kept = sum(1 for item in verdicts_raw if "true" in str(item.get("verdict", "")).lower())
+    rejected = len(verdicts_raw) - kept
+    attempts_path: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "repros" / "starlette_starlette-400000_DD-1" / "attempts.json"
+    tracebacks: list[dict[str, object]] = []
+    if attempts_path.exists():
+        attempts_raw: object = json.loads(attempts_path.read_text(encoding="utf-8"))
+        attempts = attempts_raw if isinstance(attempts_raw, list) else []
+        for attempt in attempts:
+            if not isinstance(attempt, dict):
+                continue
+            classification = _as_dict(attempt.get("classification"))
+            tracebacks.append(
+                {
+                    "attempt": _as_int(attempt.get("attempt")),
+                    "status": str(classification.get("status", "")),
+                    "exception_type": str(classification.get("exception_type", "")),
+                    "excerpt": strip_local_paths(str(classification.get("error_excerpt", ""))),
+                }
+            )
     packed_at: str = str(pack.get("packed_at") or "")
     sources: dict[str, dict[str, object]] = _load_sources()
     starlette_ref: str = str(sources.get("starlette", {}).get("ref") or indexed.get("ref") or "")
-    verifier_label: str = str(indexed.get("verifier_label") or "")
-    model_line: int = _as_int(indexed.get("doc_model_line") or doc.get("start_line"))
-    verified_line: int = _as_int(indexed.get("doc_verified_line"))
-    if verifier_label and model_line and verified_line:
-        citation_detail = (
-            f"{verifier_label}; model cited L{model_line}, verifier matched L{verified_line}."
-        )
-    elif verifier_label:
-        citation_detail = verifier_label
-    else:
-        citation_detail = "Citation check not recorded on this finding."
+    pr_url: str = str(indexed.get("upstream_url") or "https://github.com/Kludex/starlette/pull/3746")
     return {
         "is_recording": True,
-        "title": "Recorded live run: starlette",
+        "title": "Recorded starlette pack",
         "recorded_at": packed_at,
         "repo_url": CANONICAL_REPO_URLS["starlette"],
         "source_repo_url": str(summary.get("repo_url", "")),
@@ -551,44 +591,22 @@ def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]
         "truncated": bool(pack.get("truncated", False)),
         "token_limit": _as_int(pack.get("token_limit")),
         "trace_path": "results_live/traces/starlette-400000.json",
-        "steps": [
-            {
-                "name": "Pack",
-                "detail": (
-                    f"Packed { _as_int(pack.get('total_tokens')):,} tokens "
-                    f"(limit { _as_int(pack.get('token_limit')):,}, truncated={bool(pack.get('truncated'))}) "
-                    f"at {packed_at}."
-                ),
-            },
-            {
-                "name": "Beam call",
-                "detail": (
-                    f"{_as_int(summary.get('input_tokens')):,} prompt tokens, "
-                    f"{_as_int(summary.get('output_tokens')):,} completion tokens, "
-                    f"{float(summary.get('latency_seconds') or 0.0):.2f}s."
-                ),
-            },
-            {
-                "name": "Finding",
-                "detail": (
-                    f"{finding.get('finding_id', 'DD-1')}: {finding.get('explanation', '')} "
-                    f"Doc {doc.get('path', '')}:{doc.get('start_line', '')}; "
-                    f"code {code.get('path', '')}:{code.get('start_line', '')}."
-                ),
-            },
-            {
-                "name": "Citation check",
-                "detail": citation_detail,
-            },
-            {
-                "name": "Later v2 steps",
-                "detail": (
-                    f"Symbol check: {symbol_candidates} candidates → Beam triage: kept {kept}, "
-                    f"rejected {rejected}, added {added} → Repro: could not run "
-                    f"(earlier docs-runner only; not counted in the {stats['repro_true']})."
-                ),
-            },
-        ],
+        "candidate_count": len(candidates),
+        "symbol_candidates": symbol_candidates,
+        "whole_candidates": whole_candidates,
+        "kept": kept,
+        "rejected": rejected,
+        "candidates": candidates,
+        "tracebacks": tracebacks,
+        "pr": {
+            "label": "Open PR #3746",
+            "url": pr_url,
+            "note": "Filed by this project. Open, not merged.",
+        },
+        "repro_note": (
+            f"v2 strict repro could not run (setup RuntimeError). "
+            f"Not counted in the {stats['repro_true']}. An earlier docs-runner did raise TypeError."
+        ),
     }
 
 
@@ -601,10 +619,10 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         "how_beam": [
             (
                 "Triage filter, not a raw detector. A free AST symbol check proposes name and signature "
-                f"mismatches. Beam reads each library's docs and source in one packed prompt and judged "
-                f"{stats['judged']} candidates. It rejected {stats['rejected_true']} of "
-                f"{stats['true_candidates_judged']} true candidates and removed {stats['removed_false']} of "
-                f"{stats['removed_false'] + stats['kept_false']} false or unclear ones."
+                f"mismatches. Beam judged {stats['judged']} candidates across 11 of 12 libraries "
+                "(structlog failed; cattrs needed 2 calls). It rejected "
+                f"{stats['rejected_true']} of {stats['true_candidates_judged']} true candidates and removed "
+                f"{stats['removed_false']} of {stats['removed_false'] + stats['kept_false']} false or unclear ones."
             ),
             (
                 f"New finds. Beam added {stats['additions_true']} true drifts the checker missed "
@@ -615,26 +633,38 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                 f"Repro author. Beam wrote every doc-literal repro script ({stats['repro_tokens']:,} tokens). "
                 f"{stats['repro_true']} distinct bugs reproduce a real API error. "
                 f"{stats['repro_true_findings']} of {stats['repro_findings']} badges were real. "
-                f"{stats['false_repro_badges']} badges landed on non-bugs (werkzeug S38, S39, S41)."
+                f"{non_bug_badge_phrase(stats)} received a strict badge."
             ),
             (
                 f"Long context, measured. Beam accepted prompts up to {_max_probe_tokens():,} tokens. "
-                "Focused whole-context passes caught far-apart planted drifts that chunking missed. "
-                "A single whole-prompt call alone is not a better detector than chunking or a symbol check, "
-                "which is why v2 combines them."
+                f"Focused whole-context passes hit 5/6 plants 700k+ tokens apart vs 0/6 for chunking "
+                f"on seed 1 only, at ~{focused_cost_multiplier():.1f}× tokens "
+                f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
+                "A single whole-prompt call alone is not a better detector than chunking or a symbol check. "
+                f"Docstring single-call score: {docstring_pooled_text()}."
             ),
         ],
         "limits": [
             "The 45-drift universe is the union of method output, so it favours those methods.",
-            "Labels were made by an AI reviewer checking file:line evidence, not by a human annotator.",
-            "Citation pass/fail is quote alignment, not correctness.",
+            f"Labels were {LABEL_SOURCE}. The stored field is still hand_verdict.",
+            "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
             "A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug input_stream).",
-            "Three false findings received a repro badge (werkzeug S38, S39, S41).",
+            f"{non_bug_badge_phrase(stats)} received a strict repro badge.",
             NOX_PR_NOTE,
+            "httpx #3774 and arrow #1355 were already reported upstream by others.",
             "cattrs and click have drafts in the repo; they are not listed as filed.",
             "This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives.",
         ],
+        "glossary": [
+            "Triage: Beam judges symbol-check and whole-repo candidates as true_drift, false, or unclear against one packed library prompt.",
+            "Strict badge: TypeError, AttributeError, ImportError, or NameError raised on a DOC-LITERAL usage line.",
+            "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line.",
+            f"hand_verdict: stored field name. It means {LABEL_SOURCE}, not a human annotator.",
+        ],
         "cli": (
+            "docdrift run https://github.com/OWNER/REPO --max-tokens 400000"
+        ),
+        "cli_sweep": (
             "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py "
             "--repos-file benchmarks/repos_sweep_2026-10-26.yaml "
             "--repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug "
@@ -677,8 +707,9 @@ def _static_readme(hero: dict[str, object], copy: dict[str, object]) -> str:
     how_beam = "\n".join(f"{index}. {paragraph}" for index, paragraph in enumerate(copy["how_beam"], start=1))
     limits = "\n".join(f"- {line}" for line in copy["limits"])
     exclusions = "\n".join(f"- {line}" for line in copy["exclusions"])
+    glossary = "\n".join(f"- {line}" for line in copy["glossary"])
     return f"""---
-title: RepoAtlas-1M
+title: DocDrift
 emoji: 🛰️
 colorFrom: indigo
 colorTo: emerald
@@ -694,11 +725,13 @@ tags:
   - static
 ---
 
-# RepoAtlas-1M
+# DocDrift
 
-**DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) in one call to triage them and add cross-file or prose drift. A generated script then runs the documented usage and keeps the ones that raise a real API error.
+Repo name: RepoAtlas-1M. **DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) to triage them and add cross-file or prose drift. 11 of 12 libraries were triaged in one call; structlog failed; cattrs needed 2 calls. A generated script then runs the documented usage and keeps the ones that raise a real API error.
 
 **Results:** {hero['headline']}. Beam's triage threw away {hero['rejected_true']} of {hero['true_candidates_judged']} real bugs.
+
+Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
 This Space is **static** because Hugging Face now requires a PRO subscription to host Gradio or Docker Spaces on free CPU Basic. The Gradio app (`app.py`) is still in the repository and unchanged in behaviour if a hosting grant arrives.
 
@@ -712,23 +745,33 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 
 {how_beam}
 
+## Glossary
+
+{glossary}
+
 ## Limits
 
 {limits}
 
-## Run it yourself
-
-```bash
-{copy['local']}
-```
-
-Live sweep (needs your own key; none is embedded here):
+## Run it on your repo
 
 ```bash
 {copy['cli']}
 ```
 
 {copy['ollama_key']}
+
+Recorded Space / Gradio app:
+
+```bash
+{copy['local']}
+```
+
+Earlier whole-repo sweep (your key; none is embedded here):
+
+```bash
+{copy['cli_sweep']}
+```
 
 ## Exclusions
 

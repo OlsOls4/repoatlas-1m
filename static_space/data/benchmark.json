@@ -26,14 +26,14 @@
       "34 of 45 (22 of 33 on the 9-repo union)",
       60,
       "75%",
-      "4,739,392 triage-only + 4,424,575 earlier whole-repo sweep = ~9.2M end-to-end"
+      "4,739,392 triage-only + 4,424,575 earlier whole-repo sweep = 9,163,967 (~9.2M triage-only)"
     ],
     [
       "Hybrid + repro-confirmed (strict)",
       "29 of 45 (18 of 33 on the 9-repo union)",
       39,
       "92.3%",
-      "4,877,530 new (triage + repro); end-to-end still ~9.2M including the earlier whole-repo sweep"
+      "9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138"
     ],
     [
       "Chunked Beam (~32k chunks) (9-repo union)",
@@ -50,7 +50,7 @@
       "3,342,201"
     ]
   ],
-  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were made by an AI reviewer checking file:line evidence, not by a human.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones.\n- **3** findings got a strict repro badge but are not true drifts (werkzeug S38, S39 and S41). The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Hybrid end-to-end cost is about **9.2M** tokens (4,424,575 earlier whole-repo sweep + 4,739,392 triage + 138,138 repro). The cheaper symbol-only-candidate variant was not run.",
+  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.\n- **2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)** received a strict repro badge. The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Hybrid triage-only cost is about **9.2M** tokens (4,424,575 + 4,739,392 = 9,163,967). End-to-end including repro is **9,302,105 (~9.3M)** (4,424,575 + 4,739,392 + 138,138). The cheaper symbol-only-candidate variant was not run.",
   "funnel": [
     {
       "step": "Symbol check",
@@ -65,7 +65,7 @@
     {
       "step": "Strict repro",
       "true": 29,
-      "detail": "36 of 39 badges were real; 3 false badges (werkzeug S38, S39, S41)"
+      "detail": "36 of 39 badges were real; 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)"
     }
   ],
   "recall": {
@@ -78,6 +78,10 @@
       0,
       6
     ],
+    "focused_tokens": 4755853,
+    "chunk_baseline_tokens": 1000174,
+    "focused_multiplier": 4.8,
+    "docstring_pooled": "1/32 pooled over 2 seeds (0/18 + 1/14)",
     "chart": "assets/recall_vs_distance.png",
     "source": "results_live/recall/"
   },
