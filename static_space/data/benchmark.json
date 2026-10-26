@@ -85,5 +85,136 @@
     "chart": "assets/recall_vs_distance.png",
     "source": "results_live/recall/"
   },
-  "chart_present": true
+  "chart_present": true,
+  "ablation": {
+    "available": true,
+    "headers": [
+      "Metric",
+      "Whole-repo (reused hybrid)",
+      "Local-file only",
+      "Whole-repo, subset (27)",
+      "Local, subset (27)",
+      "Whole-repo rerun, subset (27)"
+    ],
+    "rows": [
+      [
+        "True candidates kept",
+        "32/32",
+        "32/32",
+        "13/13",
+        "13/13",
+        "13/13"
+      ],
+      [
+        "False/unclear candidates rejected",
+        "15/24",
+        "15/24",
+        "9/14",
+        "12/14",
+        "10/14"
+      ],
+      [
+        "Precision (kept that are true)",
+        "0.78 (32/41)",
+        "0.78 (32/41)",
+        "0.722 (13/18)",
+        "0.867 (13/15)",
+        "0.765 (13/17)"
+      ],
+      [
+        "Verdict accuracy",
+        "0.839",
+        "0.839",
+        "0.815",
+        "0.926",
+        "0.852"
+      ],
+      [
+        "Citation hits gold file:line (gradable)",
+        "41/52",
+        "34/52",
+        "19/26",
+        "19/26",
+        "22/26"
+      ],
+      [
+        "Right verdict + gold citation",
+        "39/52",
+        "33/52",
+        "17/26",
+        "19/26",
+        "20/26"
+      ],
+      [
+        "Citation verified (quote matches source)",
+        "54/56",
+        "52/56",
+        "25/27",
+        "26/27",
+        "27/27"
+      ],
+      [
+        "Cross-file cases: right verdict",
+        "26/30",
+        "26/30",
+        "12/13",
+        "12/13",
+        "12/13"
+      ],
+      [
+        "Cross-file cases: right verdict + citation",
+        "25/30",
+        "14/30",
+        "12/13",
+        "8/13",
+        "12/13"
+      ],
+      [
+        "Evidence outside local context: right verdict",
+        "12/13",
+        "12/13",
+        "4/4",
+        "4/4",
+        "4/4"
+      ],
+      [
+        "Evidence outside local context: right verdict + citation",
+        "11/13",
+        "0/13",
+        "4/4",
+        "0/4",
+        "4/4"
+      ],
+      [
+        "Beam tokens",
+        "4,022,532 (11 calls; 4,331,995 as spent incl. a cattrs re-send)",
+        "830,527 (56 calls; 848,654 as spent incl. 1 re-send)",
+        "—",
+        "—",
+        "1,099,815"
+      ]
+    ],
+    "claim": "Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers.",
+    "caveats": [
+      "n=56 judged candidates (structlog excluded; its hybrid triage failed).",
+      "Labels and gold file:line were checked against the source by an AI reviewer, not a human maintainer.",
+      "Whole-repo is one batched call per repo; local is one call per candidate.",
+      "Local was given every file the candidate already named.",
+      "6 of 56 disagreements split 3-3. Stability rerun: 26/27 verdicts matched.",
+      "Whole-repo used 4,022,532 tokens vs 830,527 for local (~4.8×). This ablation run's own ledger is 1,948,469 tokens over 60 calls; that is extra experimental cost, not part of the 9.3M hybrid end-to-end."
+    ],
+    "n": 56,
+    "disagreements": 6,
+    "stability_agree": 26,
+    "stability_n": 27,
+    "whole_tokens": 4022532,
+    "local_tokens": 830527,
+    "token_multiplier": 4.8,
+    "ablation_ledger_tokens": 1948469,
+    "ablation_ledger_calls": 60,
+    "cross_file_cite_whole": "25/30",
+    "cross_file_cite_local": "14/30",
+    "outside_cite_whole": "11/13",
+    "outside_cite_local": "0/13"
+  }
 }

@@ -50,6 +50,13 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "4,739,392" in hybrid_tokens
     assert "~9.2M triage-only" in hybrid_tokens
     assert any("9,302,105" in str(row[4]) or "~9.3M" in str(row[4]) for row in compare_rows)
+    ablation = documents["benchmark"]["ablation"]
+    assert ablation["available"] is True
+    assert ablation["claim"].startswith("Long context didn't make verdicts more accurate")
+    assert any(row[0] == "Cross-file cases: right verdict + citation" and row[1] == "25/30" and row[2] == "14/30" for row in ablation["rows"])
+    dumped = json.dumps(documents).lower()
+    assert "improves accuracy" not in dumped
+    assert "improves precision" not in dumped
     assert found
 
 

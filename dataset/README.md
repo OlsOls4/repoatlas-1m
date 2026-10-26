@@ -15,7 +15,7 @@ tags:
 
 # DocDrift v2 dataset card
 
-This folder is the earlier v1 live-results export. The v2 publication folder is `hf_dataset/` (60 findings, 56 triage verdicts, 54 repros, planted-drift set, token ledger).
+This folder is the earlier v1 live-results export. The v2 publication folder is `hf_dataset/` (60 findings, 56 triage verdicts, 54 repros, planted-drift set, ablation verdicts, token ledger including the 1,948,469-token ablation run).
 
 **v2 headline** (from `results_live/hybrid/hybrid.json`): 34 real docs bugs in 12 Python libraries; 45 of 60 flagged findings were real; 30 strict repros. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.
 

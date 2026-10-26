@@ -37,3 +37,9 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert plants
     ledger = [json.loads(line) for line in (target / "token_ledger.jsonl").read_text(encoding="utf-8").splitlines()]
     assert ledger
+    assert any(row.get("ledger") == "ablation" for row in ledger)
+    ablation_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "ablation")
+    assert ablation_tokens == 1_948_469
+    ablation = [json.loads(line) for line in (target / "ablation_verdicts.jsonl").read_text(encoding="utf-8").splitlines()]
+    assert len(ablation) == 56
+    assert LABEL_SOURCE in (target / "README.md").read_text(encoding="utf-8")

@@ -9,6 +9,10 @@ import re
 import shutil
 from typing import TypedDict
 
+from repoatlas.ablation_view import (
+    ablation_long_context_blurb,
+    load_ablation_payload,
+)
 from repoatlas.hybrid_view import (
     ALREADY_REPORTED_PREFIX,
     CANONICAL_REPO_URLS,
@@ -475,6 +479,7 @@ def _build_benchmark(payload: HybridPayload, stats: HybridHeroStats) -> dict[str
             "source": "results_live/recall/",
         },
         "chart_present": RECALL_CHART_PATH.exists(),
+        "ablation": load_ablation_payload(),
     }
 
 
@@ -662,14 +667,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                 f"{stats['repro_true_findings']} of {stats['repro_findings']} badges were real. "
                 f"{non_bug_badge_phrase(stats)} received a strict badge."
             ),
-            (
-                f"Long context, measured. Beam accepted prompts up to {_max_probe_tokens():,} tokens. "
-                f"Focused whole-context passes hit 5/6 plants 700k+ tokens apart vs 0/6 for chunking "
-                f"on seed 1 only, at ~{focused_cost_multiplier():.1f}× tokens "
-                f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
-                "A single whole-prompt call alone is not a better detector than chunking or a symbol check. "
-                f"Docstring single-call score: {docstring_pooled_text()}."
-            ),
+            ablation_long_context_blurb(),
         ],
         "limits": [
             "The 45-drift universe is the union of method output, so it favours those methods.",
@@ -715,11 +713,13 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "results_live/index.json",
             "results_live/upstream_status.json",
             "results_live/traces/starlette-400000.json (summary and pack metadata only)",
+            "results_live/ablation/results.json",
         ],
         "exclusions": [
             "results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
             "results_live/hybrid/repros/*/attempts.json per-attempt logs",
             "results_live/hybrid/triage/*.json (read at build time, not shipped)",
+            "results_live/ablation/raw/ API bodies",
             "dataset/ traces and other raw sweep artifacts",
             "Gradio app.py runtime, caches, and virtualenvs",
         ],
@@ -768,7 +768,7 @@ Docs and code disagree in a way that can break users who follow the docs. Starle
 
 ## How Beam is used
 
-Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, and `results_live/recall/`.
+Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, and `results_live/ablation/results.json`.
 
 {how_beam}
 

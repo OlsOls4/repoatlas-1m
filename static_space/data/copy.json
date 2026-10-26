@@ -3,7 +3,7 @@
     "Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.",
     "New finds. Beam added 9 true drifts the checker missed (7 new to the union), taking distinct trues from 24 to 34.",
     "Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
-    "Long context, measured. Beam accepted prompts up to 947,446 tokens. Focused whole-context passes hit 5/6 plants 700k+ tokens apart vs 0/6 for chunking on seed 1 only, at ~4.8× tokens (4,755,853 vs ~1.0M). A single whole-prompt call alone is not a better detector than chunking or a symbol check. Docstring single-call score: 1/32 pooled over 2 seeds (0/18 + 1/14)."
+    "Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers. On the same 56 candidates, whole-repo and local-file triage both kept 32/32 true and rejected 15/24 false; 6 of 56 disagreements split 3-3. Whole-repo cited the correct file:line in 25/30 cross-file cases vs 14/30 for local, and 11/13 vs 0/13 when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: 26/27 verdicts matched."
   ],
   "limits": [
     "The 45-drift universe is the union of method output, so it favours those methods.",
@@ -26,7 +26,7 @@
   "cli_sweep": "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live",
   "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.",
   "local": "python3 -m pip install -r requirements-dev.txt && python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py",
-  "built_at": "2026-10-26T23:14:01Z",
+  "built_at": "2026-10-26T23:21:49Z",
   "sources": [
     "results_live/hybrid/hybrid.json",
     "results_live/hybrid/hybrid.csv",
@@ -35,12 +35,14 @@
     "results_live/recall/",
     "results_live/index.json",
     "results_live/upstream_status.json",
-    "results_live/traces/starlette-400000.json (summary and pack metadata only)"
+    "results_live/traces/starlette-400000.json (summary and pack metadata only)",
+    "results_live/ablation/results.json"
   ],
   "exclusions": [
     "results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
     "results_live/hybrid/repros/*/attempts.json per-attempt logs",
     "results_live/hybrid/triage/*.json (read at build time, not shipped)",
+    "results_live/ablation/raw/ API bodies",
     "dataset/ traces and other raw sweep artifacts",
     "Gradio app.py runtime, caches, and virtualenvs"
   ]

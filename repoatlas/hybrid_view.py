@@ -428,14 +428,12 @@ def build_beam_did_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_h
         f"{stats['repro_true']} distinct bugs reproduce a real API error; "
         f"{stats['repro_true_findings']} of {stats['repro_findings']} badged findings were real. "
         f"{non_bug_badge_phrase(stats)} received a strict repro badge.\n"
-        f"- **Long context, as an observation (small samples, one run per configuration):** "
-        f"Beam accepted prompts up to {max_probe_tokens:,} tokens; focused whole-context passes caught "
-        f"{far_hits[0]}/{far_hits[1]} planted drifts 700k+ tokens apart vs {chunk_far[0]}/{chunk_far[1]} for chunking "
-        f"on seed 1 only, at ~{focused_cost_multiplier():.1f}× tokens "
-        f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
-        "A single whole-prompt call alone is not a better detector than chunking or a symbol check, "
-        "which is why v2 combines them. Single calls mostly miss docstring drifts "
-        f"(best observed {docstring_pooled_text()})."
+        f"- **Long context is grounding, not a verdict-accuracy lift.** "
+        f"{_ablation_blurb()} "
+        f"A separate planted-drift distance probe (seed 1 only) hit {far_hits[0]}/{far_hits[1]} plants "
+        f"700k+ tokens apart vs {chunk_far[0]}/{chunk_far[1]} for chunking, at ~{focused_cost_multiplier():.1f}× tokens "
+        f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M); "
+        f"max prompt {max_probe_tokens:,}. That probe is not a triage-accuracy result."
     )
 
 
@@ -445,23 +443,33 @@ def build_long_context_markdown(stats: HybridHeroStats, max_probe_tokens: int, f
     """
 
     return (
-        "### Where Beam's long context helps\n"
+        "### Does long context help?\n"
+        f"{_ablation_blurb()}\n\n"
         f"A free symbol checker already catches most name and signature drift "
         f"({stats['symbol_true']} of {stats['universe_size']}). "
-        "Whole-repo context lets Beam judge those candidates against code anywhere in the library "
-        "and link evidence that is far apart; a single whole-prompt call alone is **not** a better detector "
-        "than chunking or a symbol check, which is why v2 combines them.\n\n"
-        f"1. **Triage:** reading the library in one prompt, Beam threw out {stats['removed_false']} of "
+        "Triage on the same 56 judged candidates was equally accurate with or without the whole pack; "
+        "the pack is what lets Beam point at the file:line a maintainer can open.\n\n"
+        f"1. **Triage filter (verdicts):** Beam threw out {stats['removed_false']} of "
         f"{stats['removed_false'] + stats['kept_false']} false flags and {stats['rejected_true']} of "
-        f"{stats['true_candidates_judged']} real ones.\n"
+        f"{stats['true_candidates_judged']} real ones. Local-file triage matched that keep/reject split.\n"
         f"2. **New finds:** it added {stats['additions_new']} drifts nobody else found, in prose and across files.\n"
-        f"3. **Far-apart planted test:** Beam accepted {max_probe_tokens:,} tokens; focused whole-context passes "
-        f"found {far_hits[0]}/{far_hits[1]} drifts 700k+ tokens apart on seed 1 only, while chunked 128k/32k found "
-        f"{chunk_far[0]}/{chunk_far[1]}. Focused passes cost ~{focused_cost_multiplier():.1f}× tokens "
-        f"({focused_pass_tokens():,} vs ~{chunk_baseline_tokens() / 1_000_000:.1f}M). "
-        "Nearby docstring drift is where cheap chunks still win "
+        f"3. **Planted-drift distance probe (not accuracy):** Beam accepted {max_probe_tokens:,} tokens; "
+        f"focused whole-context passes found {far_hits[0]}/{far_hits[1]} plants 700k+ tokens apart on seed 1 only, "
+        f"while chunked 128k/32k found {chunk_far[0]}/{chunk_far[1]}. Focused passes cost "
+        f"~{focused_cost_multiplier():.1f}× tokens ({focused_pass_tokens():,} vs "
+        f"~{chunk_baseline_tokens() / 1_000_000:.1f}M). Nearby docstring drift is where cheap chunks still win "
         f"(best single-call docstring score {docstring_pooled_text()}).\n"
     )
+
+
+def _ablation_blurb() -> str:
+    """
+    @brief Late import so hybrid_view can stay importable from the ablation loader.
+    """
+
+    from repoatlas.ablation_view import ablation_long_context_blurb
+
+    return ablation_long_context_blurb()
 
 
 def merge_hybrid_true_findings(

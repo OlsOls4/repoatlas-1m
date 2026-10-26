@@ -31,12 +31,12 @@ Docs and code disagree in a way that can break users who follow the docs. Starle
 
 ## How Beam is used
 
-Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, and `results_live/recall/`.
+Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, and `results_live/ablation/results.json`.
 
 1. Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.
 2. New finds. Beam added 9 true drifts the checker missed (7 new to the union), taking distinct trues from 24 to 34.
 3. Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.
-4. Long context, measured. Beam accepted prompts up to 947,446 tokens. Focused whole-context passes hit 5/6 plants 700k+ tokens apart vs 0/6 for chunking on seed 1 only, at ~4.8× tokens (4,755,853 vs ~1.0M). A single whole-prompt call alone is not a better detector than chunking or a symbol check. Docstring single-call score: 1/32 pooled over 2 seeds (0/18 + 1/14).
+4. Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers. On the same 56 candidates, whole-repo and local-file triage both kept 32/32 true and rejected 15/24 false; 6 of 56 disagreements split 3-3. Whole-repo cited the correct file:line in 25/30 cross-file cases vs 14/30 for local, and 11/13 vs 0/13 when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: 26/27 verdicts matched.
 
 ## Glossary
 
@@ -84,5 +84,6 @@ This static folder does not include:
 - results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)
 - results_live/hybrid/repros/*/attempts.json per-attempt logs
 - results_live/hybrid/triage/*.json (read at build time, not shipped)
+- results_live/ablation/raw/ API bodies
 - dataset/ traces and other raw sweep artifacts
 - Gradio app.py runtime, caches, and virtualenvs

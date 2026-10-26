@@ -144,10 +144,39 @@
       .map(function (step) {
         return "<li><b>" + step.step + ":</b> " + step.true + " true. " + step.detail + "</li>";
       })
-      .join("");
+        .join("");
+    const ablation = benchmark.ablation || {};
+    if (ablation.available) {
+      $("ablation-claim").textContent = ablation.claim;
+      $("ablation-table").innerHTML =
+        "<thead><tr>" +
+        ablation.headers.map(function (header) {
+          return "<th>" + header + "</th>";
+        }).join("") +
+        "</tr></thead><tbody>" +
+        ablation.rows
+          .map(function (row) {
+            return (
+              "<tr>" +
+              row
+                .map(function (cell) {
+                  return "<td>" + cell + "</td>";
+                })
+                .join("") +
+              "</tr>"
+            );
+          })
+          .join("") +
+        "</tbody>";
+      $("ablation-caveats").innerHTML = (ablation.caveats || [])
+        .map(function (item) {
+          return "<li>" + item + "</li>";
+        })
+        .join("");
+    }
     const recall = benchmark.recall;
     $("recall-note").textContent =
-      "Beam accepted prompts up to " +
+      "Separate planted-drift distance probe, not a triage-accuracy result. Beam accepted prompts up to " +
       formatNumber(recall.max_probe_tokens) +
       " tokens. Focused whole-context passes hit " +
       recall.far_hits[0] +

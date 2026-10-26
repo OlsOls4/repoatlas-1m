@@ -52,7 +52,7 @@ Example from starlette:
 
 ## How Beam is used (required challenge section)
 
-Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, and `results_live/recall/`.
+Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, and `results_live/ablation/results.json`.
 
 1. **Triage filter, not a raw detector**  
    A free AST symbol check proposes name and signature mismatches. Beam then reads each library's docs and source in one packed prompt (~300–400k tokens) and judges those candidates. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls. It rejected **0 of 32** true candidates and removed **15 of 24** false or unclear ones.
@@ -62,8 +62,8 @@ Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live
    Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. **30** distinct bugs reproduce a real API error (`TypeError` / `AttributeError` / `ImportError` / `NameError`). **38 of 41** badged findings were real. **2 false + 1 unclear** received a strict badge (werkzeug S38, S39 false; S41 unclear). The earlier v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2.
 4. **Token calibration**  
    Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens. On the recall mix the observed ratio was about **1.187**.
-5. **Where long context helps (measured)**  
-   Whole-repo context lets Beam judge candidates against code anywhere and link far-apart evidence. In the planted-drift test, focused whole-context passes hit **5/6** plants 700k+ tokens apart vs **0/6** for chunking on seed 1 only, at ~4.8× tokens (4,755,853 vs ~1.0M). Beam accepted prompts up to **947,446** tokens with no silent truncation. A single whole-prompt call alone is **not** a better detector than chunking or a symbol check (**5/30** vs **5/30** on seed 1), which is why v2 combines them. Single calls mostly miss docstring drifts (best observed **1/32** pooled over 2 seeds: 0/18 + 1/14).
+5. **Long context is grounding, not a verdict-accuracy lift**  
+   On the same 56 judged candidates, whole-repo vs local-file triage kept **32/32** true and rejected **15/24** false in both conditions. They disagreed on 6 cases, split 3-3. Whole-repo cited the real file:line in **25/30** cross-file cases vs **14/30** for local, and **11/13** vs **0/13** when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: **26/27** verdicts matched. Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers.
 6. **Citation check**  
    Recorded whole-repo findings are also checked against packed source lines. Exact quote matching is required, with a controlled **±3-line shift** tolerance.
 
@@ -89,10 +89,41 @@ Honest notes, also from `hybrid.json`:
 - Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.
 - The strict repro rule was set after the first repro run.
 - No prompt caching was observed on triage calls.
+- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.
 
-## Where long context helps (planted-drift test)
+## Does long context help?
 
-Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`).
+Sourced from `results_live/ablation/results.json` (scored by `scripts/ablation_score.py`).
+
+**Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers.**
+
+The table is generated from that file:
+
+| Metric | Whole-repo (reused hybrid) | Local-file only | Whole-repo, subset (27) | Local, subset (27) | Whole-repo rerun, subset (27) |
+|---|---|---|---|---|---|
+| True candidates kept | 32/32 | 32/32 | 13/13 | 13/13 | 13/13 |
+| False/unclear candidates rejected | 15/24 | 15/24 | 9/14 | 12/14 | 10/14 |
+| Precision (kept that are true) | 0.78 (32/41) | 0.78 (32/41) | 0.722 (13/18) | 0.867 (13/15) | 0.765 (13/17) |
+| Verdict accuracy | 0.839 | 0.839 | 0.815 | 0.926 | 0.852 |
+| Citation hits gold file:line (gradable) | 41/52 | 34/52 | 19/26 | 19/26 | 22/26 |
+| Right verdict + gold citation | 39/52 | 33/52 | 17/26 | 19/26 | 20/26 |
+| Citation verified (quote matches source) | 54/56 | 52/56 | 25/27 | 26/27 | 27/27 |
+| Cross-file cases: right verdict | 26/30 | 26/30 | 12/13 | 12/13 | 12/13 |
+| Cross-file cases: right verdict + citation | 25/30 | 14/30 | 12/13 | 8/13 | 12/13 |
+| Evidence outside local context: right verdict | 12/13 | 12/13 | 4/4 | 4/4 | 4/4 |
+| Evidence outside local context: right verdict + citation | 11/13 | 0/13 | 4/4 | 0/4 | 4/4 |
+| Beam tokens | 4,022,532 (11 calls; 4,331,995 as spent incl. a cattrs re-send) | 830,527 (56 calls; 848,654 as spent incl. 1 re-send) | — | — | 1,099,815 |
+
+- n=56 judged candidates (structlog excluded). Labels and gold file:line were checked against the source by an AI reviewer.
+- Whole-repo is one call per repo; local is one call per candidate and was given every file the candidate already named.
+- 6 of 56 disagreements split 3-3, within run-to-run noise (stability rerun: 26/27).
+- Whole-repo 4,022,532 tokens vs local 830,527 (~4.8×). This ablation run's own ledger is **1,948,469** tokens over 60 calls. That is extra experimental cost, not part of the 9.3M hybrid end-to-end.
+
+Full write-up: `results_live/ablation/ablation.md`.
+
+## Planted-drift distance probe
+
+Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`). This is a distance probe, not a claim that long context improves triage accuracy or precision.
 
 - **Prompt-size probe:** Beam accepted prompts up to **947,446** prompt tokens in this setup. Nothing above 947k was tried.
 - **700k+ separation bucket:** focused whole-context passes hit **5/6** plants on seed 1 only; chunked 128k and 32k both hit **0/6**. Focused passes cost ~4.8× tokens (4,755,853 vs ~1.0M).
@@ -101,7 +132,7 @@ Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv
 - **Docstring limitation:** single-call whole-context variants mostly miss planted Python docstring drifts (best observed **1/32** pooled over 2 seeds: 0/18 + 1/14).
 - **Caveats:** one run per configuration, 4-6 plants per bucket, and small samples.
 
-Practical recipe supported by this data: use whole-repo context to judge candidates and catch long-range drift, plus a cheap symbol check (and later a chunked pass) for local docstring slips.
+Practical recipe supported by this data: use a cheap symbol check for local slips, then whole-repo context so the citation points at the real file:line.
 
 ![Planted-drift recall by distance](results_live/recall/recall_vs_distance.png)
 

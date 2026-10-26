@@ -87,9 +87,14 @@ def test_hero_units_and_wording() -> None:
     assert "0/6" in beam_did
     assert "seed 1" in beam_did
     assert "4,755,853" in beam_did
+    assert "didn't make verdicts more accurate" in beam_did
+    assert "improves accuracy" not in beam_did.lower()
     assert "tail-of-prompt" not in beam_did
     long_context = build_long_context_markdown(stats, 947446, (5, 6), (0, 6))
-    assert "not** a better detector" in long_context or "not a better detector" in long_context
+    assert "Didn't make verdicts more accurate" in long_context or "didn't make verdicts more accurate" in long_context
+    assert "cite the real evidence" in long_context
+    assert "improves accuracy" not in long_context.lower()
+    assert "improves precision" not in long_context.lower()
 
 
 def test_build_app_constructs_with_hybrid_headline() -> None:

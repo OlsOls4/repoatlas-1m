@@ -23,6 +23,8 @@ from repoatlas.hybrid_view import (
 HF_DATASET_DIRECTORY: Path = Path("hf_dataset")
 LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "beam_usage_ledger.json"
 RECALL_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "recall" / "usage_ledger.json"
+ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
+ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
 GROUND_TRUTH_SEED1: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed1.json"
 GROUND_TRUTH_SEED2: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed2.json"
 
@@ -42,13 +44,15 @@ def build_hf_dataset(destination: Path | None = None) -> Path:
     verdicts = _triage_verdicts()
     repros = _repro_rows()
     plants = _planted_rows()
+    ablation = _ablation_verdicts()
     ledger = _token_ledger()
     _write_table(target, "findings", findings)
     _write_table(target, "triage_verdicts", verdicts)
     _write_table(target, "repros", repros)
     _write_table(target, "planted_drift", plants)
+    _write_table(target, "ablation_verdicts", ablation)
     _write_table(target, "token_ledger", ledger)
-    (target / "README.md").write_text(_card(stats, findings, verdicts, repros, plants, ledger), encoding="utf-8")
+    (target / "README.md").write_text(_card(stats, findings, verdicts, repros, plants, ablation, ledger), encoding="utf-8")
     return target
 
 
@@ -168,13 +172,51 @@ def _planted_rows() -> list[dict[str, object]]:
     return rows
 
 
+def _ablation_verdicts() -> list[dict[str, object]]:
+    """
+    @brief One row per judged candidate from the whole-repo vs local-file ablation.
+    """
+
+    if not ABLATION_RESULTS_PATH.exists():
+        return []
+    payload: object = json.loads(ABLATION_RESULTS_PATH.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        return []
+    rows: list[dict[str, object]] = []
+    for item in _as_dict_list(payload.get("rows")):
+        whole = _as_dict(item.get("whole"))
+        local = _as_dict(item.get("local"))
+        stability = _as_dict(item.get("stability")) if item.get("stability") else {}
+        rows.append(
+            {
+                "key": item.get("key", ""),
+                "repo": item.get("repo", ""),
+                "candidate_id": item.get("candidate_id", ""),
+                "source_id": item.get("source_id", ""),
+                "label": item.get("label", ""),
+                "hand_verdict": item.get("label", ""),
+                "hand_verdict_description": LABEL_SOURCE,
+                "cross_file": item.get("cross_file"),
+                "gold_outside_local": item.get("gold_outside_local"),
+                "whole_verdict": whole.get("verdict"),
+                "local_verdict": local.get("verdict"),
+                "stability_verdict": stability.get("verdict"),
+                "whole_cite_correct": whole.get("cite_correct"),
+                "local_cite_correct": local.get("cite_correct"),
+                "whole_cite_verified": whole.get("cite_verified"),
+                "local_cite_verified": local.get("cite_verified"),
+            }
+        )
+    return rows
+
+
 def _token_ledger() -> list[dict[str, object]]:
     """
-    @brief Combined hybrid + recall token ledger rows.
+    @brief Combined hybrid + recall + ablation token ledger rows.
     """
 
     rows: list[dict[str, object]] = []
-    for source, path in (("hybrid", LEDGER_PATH), ("recall", RECALL_LEDGER_PATH)):
+    for source, path in (("hybrid", LEDGER_PATH), ("recall", RECALL_LEDGER_PATH), ("ablation", ABLATION_LEDGER_PATH)):
         if not path.exists():
             continue
         payload: object = json.loads(path.read_text(encoding="utf-8"))
@@ -217,6 +259,7 @@ def _card(
     verdicts: list[dict[str, object]],
     repros: list[dict[str, object]],
     plants: list[dict[str, object]],
+    ablation: list[dict[str, object]],
     ledger: list[dict[str, object]],
 ) -> str:
     """
@@ -234,6 +277,8 @@ configs:
     data_files: repros.parquet
   - config_name: planted_drift
     data_files: planted_drift.parquet
+  - config_name: ablation_verdicts
+    data_files: ablation_verdicts.parquet
   - config_name: token_ledger
     data_files: token_ledger.parquet
 license: other
@@ -261,7 +306,8 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 | triage_verdicts.jsonl / .parquet | {len(verdicts)} | Beam triage verdicts (56 judged) |
 | repros.jsonl / .parquet | {len(repros)} | Executable repro cases (54) |
 | planted_drift.jsonl / .parquet | {len(plants)} | Planted-drift set + ground truth |
-| token_ledger.jsonl / .parquet | {len(ledger)} | Hybrid + recall token ledger |
+| ablation_verdicts.jsonl / .parquet | {len(ablation)} | Whole-repo vs local-file triage on the same 56 candidates |
+| token_ledger.jsonl / .parquet | {len(ledger)} | Hybrid + recall + ablation token ledger |
 
 ## Fields
 
@@ -275,4 +321,7 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 - 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
+- Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
+- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding.
+
 """
