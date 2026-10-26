@@ -52,7 +52,7 @@ Example from starlette:
 
 ## How Beam is used (required challenge section)
 
-Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, and `results_live/ablation/results.json`.
+Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, `results_live/ablation/results.json`, and `results_live/beamv3/results.json`.
 
 1. **Triage filter, not a raw detector**  
    A free AST symbol check proposes name and signature mismatches. Beam then reads each library's docs and source in one packed prompt (~300–400k tokens) and judges those candidates. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls. It rejected **0 of 32** true candidates and removed **15 of 24** false or unclear ones.
@@ -90,6 +90,7 @@ Honest notes, also from `hybrid.json`:
 - The strict repro rule was set after the first repro run.
 - No prompt caching was observed on triage calls.
 - The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.
+- The docs-pass + py32k beam v3 experiment spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end. Headline coverage stays **34 of 45**.
 
 ## Does long context help?
 
@@ -121,6 +122,36 @@ The table is generated from that file:
 
 Full write-up: `results_live/ablation/ablation.md`.
 
+## Catching what one whole-repo call misses
+
+Sourced from `results_live/beamv3/results.json` (scored by `scripts/beamv3_analyze.py`, no Beam calls). This is a Benchmark-tab experiment, **not** a headline number. Headline coverage stays **34 of 45**.
+
+**32k docstring chunks (py32k) recovered 7 of the 11 drifts hybrid missed; the docs-focused whole-context pass recovered 1; 3 prose-doc drifts are still missed. Union coverage 34 → 42 of 45.** Marginal cost ~140k tokens per extra drift for py32k vs ~1.5M for the docs pass. Precision of the new findings is a **lower bound**: **18.5%** for hybrid+py32k new items (**60%** among labelled); most are unlabelled and are not counted as true. **7** new true drifts sit outside the labelled 45 (AI reviewer checking against source). Stability repeat: **18/19** verdicts agreed.
+
+Recommended: symbol check + whole-repo Beam triage, plus 32k docstring chunks if you want more coverage at lower precision.
+
+The table is generated from that file:
+
+| mode | findings | true | false | unclear | unlabelled | precision LB | among labelled | of 45 | extra of 45 vs hybrid | new (AI) | tokens | tokens / distinct true | marginal tokens / extra drift |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Hybrid (existing, for reference) | 60 | 45 | - | - | - | 75.0% | - | 34 | - | - | 4,739,392 | 139,394 | - |
+| Hybrid + repro strict (existing) | 41 | 38 | - | - | - | 92.7% | - | 30 | - | - | 4,877,530 | - | - |
+| (a) docs-focused pass alone | 43 | 17 | 8 | 2 | 16 | 39.5% | 63.0% | 15 | 1 | 2 | 4,485,924 | 263,878 | - |
+| (b) py32k docstring chunks alone | 72 | 18 | 3 | 5 | 46 | 25.0% | 69.2% | 13 | 7 | 5 | 1,680,568 | 93,365 | - |
+| Hybrid + (a): new items only | 26 | 4 | 4 | 2 | 16 | 15.4% | 40.0% | 35 | 1 | 2 | 9,225,316 | 249,333 | 1,495,308 |
+| Hybrid + (b): new items only | 65 | 12 | 3 | 5 | 45 | 18.5% | 60.0% | 41 | 7 | 5 | 6,419,960 | 139,564 | 140,047 |
+| Hybrid + (a) + (b): new items only | 91 | 16 | 7 | 7 | 61 | 17.6% | 53.3% | 42 | 8 | 7 | 10,905,884 | 222,569 | 411,099 |
+| Hybrid + v3 new items strict-confirmed by repro | 17 | 4 | 0 | 0 | 13 | 23.5% | 100.0% | 36 | 2 | 2 | 11,344,203 | 298,532 | 1,651,203 |
+
+- Precision LB = labelled-true / all findings. Unlabelled findings are not counted as true.
+- 'Among labelled' is biased upward: the labelled items are the ones that hit known drifts.
+- 15 new-item labels were checked against the source by an AI reviewer at the pack ref, not a human maintainer. Unclear counts as not-true.
+- 3 still-missed drifts are prose-doc: C:attrs-py2-reprs, C:httpx-sslcontext, C:mm-quotes-400.
+- This run's own ledger is **7,713,453** tokens over 168 calls. That is extra experimental cost, not part of the 9.3M hybrid end-to-end.
+- The shipped CLI is still symbol check + one whole-repo triage. 32k docstring chunks are an experimental extra pass (`scripts/beamv3.py`), not a `--docstring-chunks` flag.
+
+Full write-up: `results_live/beamv3/beamv3.md`.
+
 ## Planted-drift distance probe
 
 Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`). This is a distance probe, not a claim that long context improves triage accuracy or precision.
@@ -132,7 +163,7 @@ Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv
 - **Docstring limitation:** single-call whole-context variants mostly miss planted Python docstring drifts (best observed **1/32** pooled over 2 seeds: 0/18 + 1/14).
 - **Caveats:** one run per configuration, 4-6 plants per bucket, and small samples.
 
-Practical recipe supported by this data: use a cheap symbol check for local slips, then whole-repo context so the citation points at the real file:line.
+Recommended: symbol check + whole-repo Beam triage, plus 32k docstring chunks if you want more coverage at lower precision. Whole-repo context is still what points the citation at the real file:line.
 
 ![Planted-drift recall by distance](results_live/recall/recall_vs_distance.png)
 
@@ -152,7 +183,7 @@ These numbers are **not** the v2 headline. They come from `results_live/index.js
 - v2 hero, What Beam did, comparison table, and notes come from `results_live/hybrid/hybrid.json` / `hybrid.csv`.
 - Bug wall includes hybrid true drifts plus earlier recorded-run cards.
 - Atlas (all 17 v1 runs) is folded under Benchmark.
-- Findings tab defaults to starlette. Starlette's repro badge is labelled as the earlier runner and is not counted in the 29.
+- Findings tab defaults to starlette. Starlette's strict repro is one of the 30.
 - Live tab is a replay when no API key is set.
 
 ## Live tab guardrails
@@ -185,7 +216,7 @@ These numbers are **not** the v2 headline. They come from `results_live/index.js
 - Sample size remains limited.
 - Citation pass/fail is **not** correctness; it only checks quote alignment (±3-line shift allowed).
 - The 45-drift universe is the union of method output, so it favours those methods.
-- A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug `input_stream`).
+- A true drift can still fail the strict repro rule (marshmallow T11, structlog untriaged, werkzeug `input_stream`).
 - 2 false + 1 unclear received a repro badge (werkzeug S38, S39 false; S41 unclear).
 
 ## Glossary
@@ -208,6 +239,8 @@ docdrift run ./my-library --max-tokens 400000
 ```
 
 Uses the v2 pipeline: free symbol check, then one whole-repo Beam triage via an OpenAI-compatible endpoint (default `https://ollama.com/v1`, model `beam`, key from `OLLAMA_API_KEY`), then an optional executable repro. The command prints a token-estimate preflight and refuses to call Beam if the estimate exceeds `--max-tokens`. Create a free Ollama Cloud key at https://ollama.com (Settings → API keys). No key is stored in this repository.
+
+`--docstring-chunks` is not a shipped flag (it would be a second Beam pass, not a one-liner). The experimental 32k docstring-chunk pass lives in `scripts/beamv3.py`. Recommended: symbol check + whole-repo Beam triage, plus 32k docstring chunks if you want more coverage at lower precision.
 
 ## Reproduce locally
 

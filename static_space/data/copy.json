@@ -26,7 +26,7 @@
   "cli_sweep": "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live",
   "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.",
   "local": "python3 -m pip install -r requirements-dev.txt && python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py",
-  "built_at": "2026-10-26T23:21:49Z",
+  "built_at": "2026-10-26T23:31:55Z",
   "sources": [
     "results_live/hybrid/hybrid.json",
     "results_live/hybrid/hybrid.csv",
@@ -36,13 +36,15 @@
     "results_live/index.json",
     "results_live/upstream_status.json",
     "results_live/traces/starlette-400000.json (summary and pack metadata only)",
-    "results_live/ablation/results.json"
+    "results_live/ablation/results.json",
+    "results_live/beamv3/results.json"
   ],
   "exclusions": [
     "results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
     "results_live/hybrid/repros/*/attempts.json per-attempt logs",
     "results_live/hybrid/triage/*.json (read at build time, not shipped)",
     "results_live/ablation/raw/ API bodies",
+    "results_live/beamv3/repros/*/ per-attempt logs",
     "dataset/ traces and other raw sweep artifacts",
     "Gradio app.py runtime, caches, and virtualenvs"
   ]

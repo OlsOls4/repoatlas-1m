@@ -11,6 +11,8 @@ configs:
     data_files: planted_drift.parquet
   - config_name: ablation_verdicts
     data_files: ablation_verdicts.parquet
+  - config_name: beamv3_findings
+    data_files: beamv3_findings.parquet
   - config_name: token_ledger
     data_files: token_ledger.parquet
 license: other
@@ -39,12 +41,14 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 | repros.jsonl / .parquet | 54 | Executable repro cases (54) |
 | planted_drift.jsonl / .parquet | 58 | Planted-drift set + ground truth |
 | ablation_verdicts.jsonl / .parquet | 56 | Whole-repo vs local-file triage on the same 56 candidates |
-| token_ledger.jsonl / .parquet | 113 | Hybrid + recall + ablation token ledger |
+| beamv3_findings.jsonl / .parquet | 115 | Docs-pass + py32k findings with labels (unlabelled not counted as true) |
+| token_ledger.jsonl / .parquet | 281 | Hybrid + recall + ablation + beamv3 token ledger |
 
 ## Fields
 
 - `hand_verdict`: stored field name. **Description:** checked against the source by an AI reviewer. Not a human annotator.
 - `verdict` / `strict_confirmed` / `repro_status`: from `hybrid.json` and `repros.json`.
+- `label` on beamv3_findings: existing labelled set, AI source-check, or unlabelled. Unlabelled is not true.
 - Citation fields are quote alignment only, including line-shifted matches (±3 lines).
 
 ## Limits
@@ -54,5 +58,7 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
+- Beam v3 ledger (docs + py32k + stability + repro, not in that 9.3M): 7,713,453 tokens over 168 calls.
 - Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding.
+- Adding py32k recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid+py32k). Headline stays 34 of 45.
 

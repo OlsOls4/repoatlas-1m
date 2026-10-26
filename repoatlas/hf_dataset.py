@@ -25,6 +25,8 @@ LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "beam_usage_ledger.json"
 RECALL_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "recall" / "usage_ledger.json"
 ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
 ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
+BEAMV3_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "results.json"
+BEAMV3_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "beam_usage_ledger.json"
 GROUND_TRUTH_SEED1: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed1.json"
 GROUND_TRUTH_SEED2: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed2.json"
 
@@ -45,14 +47,18 @@ def build_hf_dataset(destination: Path | None = None) -> Path:
     repros = _repro_rows()
     plants = _planted_rows()
     ablation = _ablation_verdicts()
+    beamv3 = _beamv3_findings()
     ledger = _token_ledger()
     _write_table(target, "findings", findings)
     _write_table(target, "triage_verdicts", verdicts)
     _write_table(target, "repros", repros)
     _write_table(target, "planted_drift", plants)
     _write_table(target, "ablation_verdicts", ablation)
+    _write_table(target, "beamv3_findings", beamv3)
     _write_table(target, "token_ledger", ledger)
-    (target / "README.md").write_text(_card(stats, findings, verdicts, repros, plants, ablation, ledger), encoding="utf-8")
+    (target / "README.md").write_text(
+        _card(stats, findings, verdicts, repros, plants, ablation, beamv3, ledger), encoding="utf-8"
+    )
     return target
 
 
@@ -210,13 +216,53 @@ def _ablation_verdicts() -> list[dict[str, object]]:
     return rows
 
 
+def _beamv3_findings() -> list[dict[str, object]]:
+    """
+    @brief One row per beam v3 finding, including unlabelled items.
+    """
+
+    if not BEAMV3_RESULTS_PATH.exists():
+        return []
+    payload: object = json.loads(BEAMV3_RESULTS_PATH.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        return []
+    rows: list[dict[str, object]] = []
+    for item in _as_dict_list(payload.get("findings")):
+        rows.append(
+            {
+                "id": item.get("id", ""),
+                "repo": item.get("repo", ""),
+                "pass": item.get("pass", ""),
+                "doc_path": item.get("doc_path", ""),
+                "doc_line": item.get("doc_line", ""),
+                "code": item.get("code", ""),
+                "label": item.get("label", "unlabelled"),
+                "drift_id": item.get("drift_id", ""),
+                "label_by": item.get("label_by", ""),
+                "label_evidence": strip_local_paths(str(item.get("label_evidence") or "")),
+                "hand_verdict": item.get("label", "unlabelled"),
+                "hand_verdict_description": LABEL_SOURCE,
+                "new_vs_hybrid": bool(item.get("new_vs_hybrid")),
+                "repro_status": item.get("repro_status"),
+                "strict_confirmed": bool(item.get("strict_confirmed", False)),
+                "explanation": strip_local_paths(str(item.get("explanation") or "")),
+            }
+        )
+    return rows
+
+
 def _token_ledger() -> list[dict[str, object]]:
     """
-    @brief Combined hybrid + recall + ablation token ledger rows.
+    @brief Combined hybrid + recall + ablation + beamv3 token ledger rows.
     """
 
     rows: list[dict[str, object]] = []
-    for source, path in (("hybrid", LEDGER_PATH), ("recall", RECALL_LEDGER_PATH), ("ablation", ABLATION_LEDGER_PATH)):
+    for source, path in (
+        ("hybrid", LEDGER_PATH),
+        ("recall", RECALL_LEDGER_PATH),
+        ("ablation", ABLATION_LEDGER_PATH),
+        ("beamv3", BEAMV3_LEDGER_PATH),
+    ):
         if not path.exists():
             continue
         payload: object = json.loads(path.read_text(encoding="utf-8"))
@@ -260,6 +306,7 @@ def _card(
     repros: list[dict[str, object]],
     plants: list[dict[str, object]],
     ablation: list[dict[str, object]],
+    beamv3: list[dict[str, object]],
     ledger: list[dict[str, object]],
 ) -> str:
     """
@@ -279,6 +326,8 @@ configs:
     data_files: planted_drift.parquet
   - config_name: ablation_verdicts
     data_files: ablation_verdicts.parquet
+  - config_name: beamv3_findings
+    data_files: beamv3_findings.parquet
   - config_name: token_ledger
     data_files: token_ledger.parquet
 license: other
@@ -307,12 +356,14 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 | repros.jsonl / .parquet | {len(repros)} | Executable repro cases (54) |
 | planted_drift.jsonl / .parquet | {len(plants)} | Planted-drift set + ground truth |
 | ablation_verdicts.jsonl / .parquet | {len(ablation)} | Whole-repo vs local-file triage on the same 56 candidates |
-| token_ledger.jsonl / .parquet | {len(ledger)} | Hybrid + recall + ablation token ledger |
+| beamv3_findings.jsonl / .parquet | {len(beamv3)} | Docs-pass + py32k findings with labels (unlabelled not counted as true) |
+| token_ledger.jsonl / .parquet | {len(ledger)} | Hybrid + recall + ablation + beamv3 token ledger |
 
 ## Fields
 
 - `hand_verdict`: stored field name. **Description:** {LABEL_SOURCE}. Not a human annotator.
 - `verdict` / `strict_confirmed` / `repro_status`: from `hybrid.json` and `repros.json`.
+- `label` on beamv3_findings: existing labelled set, AI source-check, or unlabelled. Unlabelled is not true.
 - Citation fields are quote alignment only, including line-shifted matches (±3 lines).
 
 ## Limits
@@ -322,6 +373,8 @@ Unpublished companion dataset for RepoAtlas-1M. Numbers come from `results_live/
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
+- Beam v3 ledger (docs + py32k + stability + repro, not in that 9.3M): 7,713,453 tokens over 168 calls.
 - Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding.
+- Adding py32k recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid+py32k). Headline stays 34 of 45.
 
 """

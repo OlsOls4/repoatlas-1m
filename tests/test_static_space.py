@@ -54,6 +54,18 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert ablation["available"] is True
     assert ablation["claim"].startswith("Long context didn't make verdicts more accurate")
     assert any(row[0] == "Cross-file cases: right verdict + citation" and row[1] == "25/30" and row[2] == "14/30" for row in ablation["rows"])
+    beamv3 = documents["benchmark"]["beamv3"]
+    assert beamv3["available"] is True
+    assert beamv3["title"] == "Catching what one whole-repo call misses"
+    assert beamv3["py32k_extra_of_45"] == 7
+    assert beamv3["docs_extra_of_45"] == 1
+    assert beamv3["union_of_45"] == 42
+    assert beamv3["hybrid_of_45"] == 34
+    assert beamv3["py32k_precision_lb"] == "18.5%"
+    assert "lower bound" in beamv3["claim"]
+    assert beamv3["recipe"].startswith("Recommended: symbol check + whole-repo Beam triage")
+    assert hero["hybrid_true"] == 34
+    assert hero["repro_true"] == 30
     dumped = json.dumps(documents).lower()
     assert "improves accuracy" not in dumped
     assert "improves precision" not in dumped

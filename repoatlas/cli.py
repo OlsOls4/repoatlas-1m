@@ -64,7 +64,16 @@ def build_parser() -> argparse.ArgumentParser:
     @brief Build the `docdrift` argument parser.
     """
 
-    parser = argparse.ArgumentParser(prog="docdrift", description="DocDrift v2: symbol check + Beam triage + optional repro.")
+    parser = argparse.ArgumentParser(
+        prog="docdrift",
+        description="DocDrift v2: symbol check + Beam triage + optional repro.",
+        epilog=(
+            "Recommended: symbol check + whole-repo Beam triage, plus 32k docstring chunks "
+            "if you want more coverage at lower precision. The shipped command is the first "
+            "two steps. 32k docstring chunks are an experimental extra pass "
+            "(scripts/beamv3.py), not a --docstring-chunks flag."
+        ),
+    )
     sub = parser.add_subparsers(dest="command", required=True)
     run = sub.add_parser("run", help="Run the v2 pipeline on a local path or GitHub URL.")
     run.add_argument("target", help="Local repo path or https://github.com/OWNER/REPO")

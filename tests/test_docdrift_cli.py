@@ -39,6 +39,11 @@ def test_parser_has_run_and_max_tokens() -> None:
     assert args.command == "run"
     assert args.max_tokens == 1000
     assert args.preflight_only is True
+    help_text = parser.format_help()
+    run_parser = parser._subparsers._group_actions[0].choices["run"]
+    assert "--docstring-chunks" not in run_parser._option_string_actions
+    assert "scripts/beamv3.py" in help_text
+    assert "more coverage at lower precision" in help_text
 
 
 def test_preflight_only_does_not_need_a_key(capsys: pytest.CaptureFixture[str]) -> None:

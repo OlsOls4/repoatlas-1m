@@ -31,7 +31,7 @@ Docs and code disagree in a way that can break users who follow the docs. Starle
 
 ## How Beam is used
 
-Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, and `results_live/ablation/results.json`.
+Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, `results_live/ablation/results.json`, and `results_live/beamv3/results.json`.
 
 1. Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.
 2. New finds. Beam added 9 true drifts the checker missed (7 new to the union), taking distinct trues from 24 to 34.
@@ -85,5 +85,6 @@ This static folder does not include:
 - results_live/hybrid/repros/*/attempts.json per-attempt logs
 - results_live/hybrid/triage/*.json (read at build time, not shipped)
 - results_live/ablation/raw/ API bodies
+- results_live/beamv3/repros/*/ per-attempt logs
 - dataset/ traces and other raw sweep artifacts
 - Gradio app.py runtime, caches, and virtualenvs

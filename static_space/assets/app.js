@@ -174,6 +174,37 @@
         })
         .join("");
     }
+    const beamv3 = benchmark.beamv3 || {};
+    if (beamv3.available) {
+      $("beamv3-title").textContent = beamv3.title || "Catching what one whole-repo call misses";
+      $("beamv3-claim").textContent = beamv3.claim;
+      $("beamv3-recipe").textContent = beamv3.recipe;
+      $("beamv3-table").innerHTML =
+        "<thead><tr>" +
+        beamv3.headers.map(function (header) {
+          return "<th>" + header + "</th>";
+        }).join("") +
+        "</tr></thead><tbody>" +
+        beamv3.rows
+          .map(function (row) {
+            return (
+              "<tr>" +
+              row
+                .map(function (cell) {
+                  return "<td>" + cell + "</td>";
+                })
+                .join("") +
+              "</tr>"
+            );
+          })
+          .join("") +
+        "</tbody>";
+      $("beamv3-caveats").innerHTML = (beamv3.caveats || [])
+        .map(function (item) {
+          return "<li>" + item + "</li>";
+        })
+        .join("");
+    }
     const recall = benchmark.recall;
     $("recall-note").textContent =
       "Separate planted-drift distance probe, not a triage-accuracy result. Beam accepted prompts up to " +

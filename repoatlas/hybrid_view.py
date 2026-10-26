@@ -406,6 +406,8 @@ def build_notes_markdown(payload: HybridPayload) -> str:
         f"End-to-end including repro is **{stats['end_to_end_tokens']:,} (~9.3M)** "
         f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}). "
         "The cheaper symbol-only-candidate variant was not run.",
+        "- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
+        "- The docs-pass + py32k beam v3 experiment spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
     ]
     return "\n".join(lines)
 
