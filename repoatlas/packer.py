@@ -23,7 +23,7 @@ from repoatlas.models import RepoFileSnapshot, RepoPack
 
 
 PACK_FORMAT_VERSION: str = "1"
-FILTER_SIGNATURE: str = "v3"
+FILTER_SIGNATURE: str = "v4"
 SOURCE_SUFFIXES: tuple[str, ...] = (".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs")
 DOC_SUFFIXES: tuple[str, ...] = (".md", ".rst", ".txt", ".adoc")
 IMPORT_RELATIVE_PATTERN: re.Pattern[str] = re.compile(
@@ -442,6 +442,10 @@ LOW_PRIORITY_DIRECTORY_NAMES: set[str] = {
     ".github", ".devcontainer", ".circleci", ".gitlab", "ci", "scripts", "docs_src",
 }
 LOW_PRIORITY_ROOT_NAMES: set[str] = {"CHANGES.rst", "CHANGES.md", "CHANGELOG.md", "CHANGELOG.rst", "HISTORY.md", "HISTORY.rst", "NEWS.md"}
+ROOT_CONFIG_NAMES: set[str] = {
+    "pyproject.toml", "setup.cfg", "setup.py", "package.json", "Cargo.toml", "go.mod", "mkdocs.yml",
+    "mkdocs.yaml", "tox.ini", "hatch.toml", "tsconfig.json",
+}
 ROOT_DOC_NAMES: set[str] = {"README.md", "README.rst", "CONTRIBUTING.md", "CONTRIBUTING.rst"}
 
 
@@ -532,17 +536,26 @@ def _priority_order(repo_root: Path, paths: Iterable[Path], repo_url: str = "") 
         )
 
     ranked_entries.sort(key=lambda item: item[:6])
-    core_paths: list[Path] = [entry[-1] for entry in ranked_entries if entry[0] <= 3]
-    source_paths: list[Path] = [entry[-1] for entry in ranked_entries if entry[0] >= 4 and entry[6] and not entry[7]]
-    doc_paths: list[Path] = [entry[-1] for entry in ranked_entries if entry[0] >= 4 and entry[7]]
-    other_paths: list[Path] = [entry[-1] for entry in ranked_entries if entry[0] >= 4 and not entry[6] and not entry[7]]
+    # Root config (pyproject.toml, setup.cfg, package.json, mkdocs.yml, ...) defines entry points and defaults,
+    # so it ranks with core modules; low-priority files (tests, CI, examples) always go last.
+    root_config_paths: list[Path] = [
+        entry[-1] for entry in ranked_entries
+        if entry[0] == 6 and entry[5] in ROOT_CONFIG_NAMES
+    ]
+    root_config_set: set[Path] = set(root_config_paths)
+    core_paths: list[Path] = root_config_paths + [entry[-1] for entry in ranked_entries if entry[0] <= 3]
+    normal_entries = [entry for entry in ranked_entries if 4 <= entry[0] < 9 and entry[-1] not in root_config_set]
+    source_paths: list[Path] = [entry[-1] for entry in normal_entries if entry[6] and not entry[7]]
+    doc_paths: list[Path] = [entry[-1] for entry in normal_entries if entry[7]]
+    other_paths: list[Path] = [entry[-1] for entry in normal_entries if not entry[6] and not entry[7]]
+    low_priority_paths: list[Path] = [entry[-1] for entry in ranked_entries if entry[0] == 9]
     interleaved_non_core_paths: list[Path] = []
     for index in range(max(len(source_paths), len(doc_paths))):
         if index < len(source_paths):
             interleaved_non_core_paths.append(source_paths[index])
         if index < len(doc_paths):
             interleaved_non_core_paths.append(doc_paths[index])
-    return core_paths + interleaved_non_core_paths + other_paths
+    return core_paths + interleaved_non_core_paths + other_paths + low_priority_paths
 
 
 def _collect_doc_reference_targets(

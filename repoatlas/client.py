@@ -223,12 +223,14 @@ class OpenAICompatibleAnalysisClient:
             status_code: int = response.status_code
             if status_code == 429 or status_code >= 500:
                 if attempt == MAX_RETRY_ATTEMPTS:
-                    response.raise_for_status()
+                    raise RuntimeError(_http_error_text(response))
                 time.sleep(backoff_seconds)
                 backoff_seconds *= 2
                 continue
 
-            response.raise_for_status()
+            if status_code >= 400:
+                # Keep the server's own error body (quota, rate-limit, payment messages) in the error.
+                raise RuntimeError(_http_error_text(response))
             payload_json: dict[str, object] = response.json()
             headers_map: dict[str, str] = dict(response.headers)
             return payload_json, headers_map
@@ -529,3 +531,15 @@ def _normalise_aliases(raw: dict[str, object]) -> dict[str, object]:
             }
         )
     return {"findings": findings, "atlas_claims": claims}
+
+
+def _http_error_text(response: requests.Response) -> str:
+    """
+    @brief Render an HTTP error with status, rate-limit headers and the server's body text.
+    @param response Failed HTTP response.
+    """
+
+    limit_headers: dict[str, str] = {
+        key: value for key, value in response.headers.items() if "ratelimit" in key.lower() or key.lower() == "retry-after"
+    }
+    return f"HTTP {response.status_code} {response.reason}; headers={limit_headers}; body={response.text[:2000]}"

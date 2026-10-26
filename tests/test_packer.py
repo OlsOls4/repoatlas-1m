@@ -115,3 +115,22 @@ def test_token_calibration_factor_reduces_estimated_budget(tmp_path: Path) -> No
     )
     assert pack.total_tokens <= 500
     assert estimate_prompt_tokens(pack.total_tokens, 2.0) <= 1_000
+
+
+def test_root_config_ranks_before_tests(tmp_path: Path) -> None:
+    """
+    @brief pyproject.toml is packed before test files under a tight budget.
+    """
+
+    from repoatlas.packer import build_pack_from_directory
+
+    (tmp_path / "pkg").mkdir()
+    (tmp_path / "pkg" / "__init__.py").write_text("from pkg.core import run\n", encoding="utf-8")
+    (tmp_path / "pkg" / "core.py").write_text("def run():\n    return 1\n", encoding="utf-8")
+    (tmp_path / "pyproject.toml").write_text('[project.scripts]\npkg = "pkg.core:run"\n', encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "test_core.py").write_text("x = 1\n" * 4000, encoding="utf-8")
+    pack = build_pack_from_directory("https://github.com/o/pkg", "main", tmp_path, token_limit=600, token_calibration_factor=1.0)
+    paths = [f.path for f in pack.files]
+    assert "pyproject.toml" in paths
+    assert "tests/test_core.py" not in paths
