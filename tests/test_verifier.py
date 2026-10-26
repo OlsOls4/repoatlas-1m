@@ -108,3 +108,15 @@ def test_verify_citation_tolerates_dropped_indentation_only() -> None:
         lookup,
     )
     assert not bad.verified
+
+
+def test_parse_structured_content_repairs_truncated_json() -> None:
+    from repoatlas.client import parse_structured_content
+
+    truncated = (
+        '{"findings": [], "atlas_claims": [{"claim_id": "AC-1", "section": "s", "text": "t", '
+        '"citations": [{"path": "a.py", "start_line": 1, "end_line": 1, "quote": "x"}]}'
+    )
+    parsed, _ = parse_structured_content(truncated)
+    assert parsed.findings == []
+    assert parsed.atlas_claims[0].claim_id == "AC-1"

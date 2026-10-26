@@ -474,7 +474,15 @@ def parse_structured_content(content: str) -> tuple[_StructuredModelResponse, bo
     end: int = cleaned.rfind("}")
     if start == -1 or end == -1:
         raise ValueError("Model response contains no JSON object.")
-    raw: object = json.loads(cleaned[start : end + 1])
+    try:
+        raw: object = json.loads(cleaned[start : end + 1])
+    except json.JSONDecodeError:
+        # Beam sometimes stops mid-object (seen on click at 400k: findings complete, atlas_claims cut off).
+        # Close any open strings/brackets so the complete parts can still be parsed and verified.
+        repaired: str | None = _close_truncated_json(cleaned[start:])
+        if repaired is None:
+            raise
+        raw = json.loads(repaired)
     try:
         return _StructuredModelResponse.model_validate(raw), False
     except Exception:
@@ -482,6 +490,41 @@ def parse_structured_content(content: str) -> tuple[_StructuredModelResponse, bo
     if not isinstance(raw, dict):
         raise ValueError("Model JSON is not an object.")
     return _StructuredModelResponse.model_validate(_normalise_aliases(raw)), True
+
+
+def _close_truncated_json(text: str) -> str | None:
+    """
+    @brief Close unterminated strings, arrays and objects at the end of truncated JSON text.
+    @param text JSON text starting at the first '{'.
+    @return Repaired JSON text, or None when the text is not a simple truncation.
+    """
+
+    stack: list[str] = []
+    in_string: bool = False
+    escaped: bool = False
+    for char in text:
+        if in_string:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            continue
+        if char == '"':
+            in_string = True
+        elif char in "{[":
+            stack.append("}" if char == "{" else "]")
+        elif char in "}]":
+            if not stack or stack.pop() != char:
+                return None
+    if not stack and not in_string:
+        return None
+    repaired: str = text.rstrip()
+    if in_string:
+        repaired += '"'
+    repaired = repaired.rstrip().rstrip(",")
+    return repaired + "".join(reversed(stack))
 
 
 def _first(item: dict[str, object], *keys: str) -> object:
