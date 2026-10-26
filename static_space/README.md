@@ -2,10 +2,10 @@
 title: DocDrift
 emoji: 🛰️
 colorFrom: indigo
-colorTo: emerald
+colorTo: green
 sdk: static
 app_file: index.html
-short_description: DocDrift v2 — recorded docs-drift bugs, Beam triage, and executable repros.
+short_description: Beam finds real docs-vs-code bugs in Python libraries
 tags:
   - beam
   - long-context

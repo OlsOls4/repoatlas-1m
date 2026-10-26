@@ -5,8 +5,15 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import yaml
+
 from repoatlas.hybrid_view import compute_hero_stats, headline_sentence, load_hybrid_payload
-from repoatlas.static_build import build_static_payload, write_static_space
+from repoatlas.static_build import (
+    HF_SHORT_DESCRIPTION_MAX,
+    HF_SPACE_COLORS,
+    build_static_payload,
+    write_static_space,
+)
 
 
 def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
@@ -113,3 +120,20 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     stats = compute_hero_stats(load_hybrid_payload())
     assert hero["hybrid_true"] == stats["hybrid_true"]
     assert hero["repro_true"] == stats["repro_true"]
+
+
+def test_static_readme_front_matter_matches_hf_limits(tmp_path: Path) -> None:
+    """
+    @brief Hugging Face rejects unknown colorTo values and short_description over 60 chars.
+    """
+
+    target = write_static_space(tmp_path / "static_space")
+    readme = (target / "README.md").read_text(encoding="utf-8")
+    front = readme.split("---", 2)[1]
+    meta = yaml.safe_load(front)
+    assert meta["colorFrom"] in HF_SPACE_COLORS
+    assert meta["colorTo"] in HF_SPACE_COLORS
+    assert isinstance(meta["short_description"], str)
+    assert len(meta["short_description"]) <= HF_SHORT_DESCRIPTION_MAX
+    assert meta["colorTo"] == "green"
+    assert meta["short_description"] == "Beam finds real docs-vs-code bugs in Python libraries"

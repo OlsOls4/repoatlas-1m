@@ -60,6 +60,11 @@ NOX_PR_URL: str = "https://github.com/wntrblm/nox/pull/1216"
 NOX_PR_NOTE: str = (
     "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
 )
+HF_SPACE_COLORS: frozenset[str] = frozenset(
+    {"red", "yellow", "green", "blue", "indigo", "purple", "pink", "gray"}
+)
+HF_SHORT_DESCRIPTION: str = "Beam finds real docs-vs-code bugs in Python libraries"
+HF_SHORT_DESCRIPTION_MAX: int = 60
 
 
 class StaticPayload(TypedDict):
@@ -711,10 +716,10 @@ def _static_readme(hero: dict[str, object], copy: dict[str, object]) -> str:
 title: DocDrift
 emoji: 🛰️
 colorFrom: indigo
-colorTo: emerald
+colorTo: green
 sdk: static
 app_file: index.html
-short_description: DocDrift v2 — recorded docs-drift bugs, Beam triage, and executable repros.
+short_description: {HF_SHORT_DESCRIPTION}
 tags:
   - beam
   - long-context
