@@ -539,8 +539,7 @@ def build_app() -> gr.Blocks:
                         value=recall_panel_data["chart_path"],
                         label="Planted-drift strict recall by distance bucket",
                         interactive=False,
-                        show_download_button=False,
-                        show_fullscreen_button=True,
+                        buttons=["fullscreen"],
                     )
                 with gr.Accordion("Bucket recall table (strict and loose)", open=False):
                     gr.Dataframe(

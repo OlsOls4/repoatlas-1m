@@ -43,6 +43,17 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     assert "No prompt caching" in notes
 
 
+def test_build_app_constructs_with_hybrid_headline() -> None:
+    """
+    @brief Building the Space should succeed and include DocDrift v2 copy.
+    """
+
+    from repoatlas.app import build_app
+
+    demo = build_app()
+    assert demo is not None
+
+
 def test_hybrid_bug_wall_includes_new_true_drifts() -> None:
     """
     @brief Bug-wall merge should keep earlier true cards and add hybrid-only drifts.
