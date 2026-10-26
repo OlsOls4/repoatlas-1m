@@ -40,6 +40,7 @@ It packs a full repository into a deterministic long-context prompt, runs one st
 ### 4) Benchmark harness + exports
 
 - Sweep runner over repo list and context limits.
+- Live benchmark rows are merged into `results_live/benchmark_results.csv` by `(repo_url, token_limit)` so reruns update those keys without dropping other rows.
 - Exports:
   - `results/benchmark_results.csv`
   - `results/hand_check_sheet.csv`
@@ -48,6 +49,7 @@ It packs a full repository into a deterministic long-context prompt, runs one st
   - charts in `results/charts/`
 - Small-budget mode via `--max-repos`.
 - `--dry-run` mode estimates packed token sizes without inference.
+- `--repos` allows selecting named repos from a repo catalogue file.
 
 ### 5) Gradio app (HF Space-ready pattern)
 
@@ -84,6 +86,7 @@ Live client is OpenAI-compatible and supports two providers:
 - Retries on `429` and `5xx` with exponential backoff.
 - Caches every live response to disk in `.cache/repoatlas/responses/`, keyed by prompt hash, to prevent re-billing identical calls.
 - Uses generous `max_tokens` (`REPOATLAS_MAX_TOKENS`, default `32000`) because reasoning tokens count towards token limits.
+- Applies token calibration (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`, default `1.22`) so packer estimates target real prompt-token ceilings.
 - Parses `message.content`; if content is empty, reasoning fallback text is captured in raw traces for debugging.
 
 ---
@@ -130,6 +133,18 @@ python3 scripts/run_app.py --port 43123
 BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --max-repos 2 --token-limits 120000,240000,400000
 ```
 
+Run from the candidate catalogue (select only specific repos, do not fetch all):
+
+```bash
+BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_candidates.yaml --repos uv,poetry,pnpm --token-limits 120000,240000
+```
+
+List candidate repos and one-line reasons:
+
+```bash
+python3 scripts/run_benchmark.py --list-repos
+```
+
 ### Reflection alternative
 
 ```bash
@@ -140,6 +155,12 @@ BEAM_PROVIDER=reflection REFLECTION_API_KEY=YOUR_KEY python3 scripts/run_benchma
 
 ```bash
 python3 scripts/run_benchmark.py --dry-run --max-repos 2 --token-limits 120000,240000,400000
+```
+
+Dry-run a near-900k real-token budget (with calibration-aware projected prompt tokens):
+
+```bash
+python3 scripts/run_benchmark.py --dry-run --repos-file benchmarks/repos_candidates.yaml --repos fastapi --token-limits 900000
 ```
 
 ---

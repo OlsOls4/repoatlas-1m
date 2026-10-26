@@ -50,6 +50,7 @@ def analyse_repository(
         repo_url=repo_url,
         ref=ref,
         token_limit=config.token_limit,
+        token_calibration_factor=config.token_calibration_factor,
         cache_dir=config.cache_dir,
     )
     client: AnalysisClient = make_analysis_client(config=config, fixture_path=fixture_path)

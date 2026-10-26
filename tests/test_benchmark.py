@@ -50,3 +50,56 @@ def test_live_runs_default_to_results_live() -> None:
     assert script._resolve_output_directory(None, "fixture") == Path("results")
     with pytest.raises(SystemExit):
         script._resolve_output_directory(Path("results"), "ollama")
+
+
+def test_merge_results_replaces_same_repo_and_token_limit(tmp_path: Path) -> None:
+    """
+    @brief Ensure benchmark results merge by repo_url and token_limit instead of overwriting all rows.
+    @param tmp_path Temporary directory provided by pytest.
+    """
+
+    import repoatlas.benchmark as benchmark
+
+    existing_df = pd.DataFrame.from_records(
+        [
+            {
+                "case_name": "flask-120000",
+                "repo_url": "https://github.com/pallets/flask",
+                "ref": "main",
+                "token_limit": 120000,
+                "status": "ok",
+            },
+            {
+                "case_name": "fastapi-120000",
+                "repo_url": "https://github.com/fastapi/fastapi",
+                "ref": "master",
+                "token_limit": 120000,
+                "status": "ok",
+            },
+        ]
+    )
+    results_path: Path = tmp_path / "benchmark_results.csv"
+    existing_df.to_csv(results_path, index=False)
+    run_df = pd.DataFrame.from_records(
+        [
+            {
+                "case_name": "flask-120000-rerun",
+                "repo_url": "https://github.com/pallets/flask",
+                "ref": "main",
+                "token_limit": 120000,
+                "status": "ok",
+            },
+            {
+                "case_name": "django-120000",
+                "repo_url": "https://github.com/django/django",
+                "ref": "main",
+                "token_limit": 120000,
+                "status": "ok",
+            },
+        ]
+    )
+    merged_df = benchmark._merge_with_existing_results(run_df, results_path)
+    assert len(merged_df) == 3
+    flask_rows = merged_df[merged_df["repo_url"] == "https://github.com/pallets/flask"]
+    assert len(flask_rows) == 1
+    assert flask_rows.iloc[0]["case_name"] == "flask-120000-rerun"

@@ -61,6 +61,7 @@ def run_benchmark(
             api_key=base_config.api_key,
             token_limit=case.token_limit,
             max_tokens=base_config.max_tokens,
+            token_calibration_factor=base_config.token_calibration_factor,
             reasoning_effort=base_config.reasoning_effort,
             cache_dir=base_config.cache_dir,
         )
@@ -129,9 +130,10 @@ def run_benchmark(
             },
         )
 
-    results_df: pd.DataFrame = pd.DataFrame.from_records(records)
-    results_df.sort_values(by=["token_limit", "case_name"], inplace=True)
+    run_results_df: pd.DataFrame = pd.DataFrame.from_records(records)
     results_path: Path = output_directory / "benchmark_results.csv"
+    results_df: pd.DataFrame = _merge_with_existing_results(run_results_df, results_path)
+    results_df = results_df.sort_values(by=["token_limit", "case_name"]).reset_index(drop=True)
     results_df.to_csv(results_path, index=False)
     hand_check_df: pd.DataFrame = pd.DataFrame.from_records(hand_check_rows)
     hand_check_path: Path = output_directory / "hand_check_sheet.csv"
@@ -165,6 +167,29 @@ def _error_record(case: BenchmarkCase, error: BaseException) -> dict[str, object
         "status": "error",
         "error": f"{type(error).__name__}: {error}"[:500],
     }
+
+
+def _merge_with_existing_results(run_results_df: pd.DataFrame, results_path: Path) -> pd.DataFrame:
+    """
+    @brief Merge fresh benchmark rows into an existing results CSV keyed by repo and token limit.
+    @param run_results_df Dataframe produced by the current benchmark invocation.
+    @param results_path Path to benchmark_results.csv.
+    """
+
+    if not results_path.exists():
+        return run_results_df
+    existing_results_df: pd.DataFrame = pd.read_csv(results_path)
+    if existing_results_df.empty:
+        return run_results_df
+    combined_df: pd.DataFrame = pd.concat([existing_results_df, run_results_df], ignore_index=True)
+    if "repo_url" not in combined_df.columns or "token_limit" not in combined_df.columns:
+        return run_results_df
+    deduped_df: pd.DataFrame = combined_df.drop_duplicates(
+        subset=["repo_url", "token_limit"],
+        keep="last",
+        ignore_index=True,
+    )
+    return deduped_df
 
 
 def _write_trace_file(traces_directory: Path, case_name: str, bundle_data: dict[str, object]) -> None:

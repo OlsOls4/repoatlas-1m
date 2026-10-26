@@ -1,7 +1,7 @@
 PYTHON ?= python3
 PIP ?= $(PYTHON) -m pip
 
-.PHONY: install test app benchmark-fixture benchmark-live benchmark-dry-run analysis-dry-run
+.PHONY: install test app benchmark-fixture benchmark-live benchmark-dry-run benchmark-dry-run-900k analysis-dry-run
 
 install:
 	$(PIP) install -e ".[dev]"
@@ -17,6 +17,9 @@ benchmark-fixture:
 
 benchmark-dry-run:
 	$(PYTHON) scripts/run_benchmark.py --dry-run --max-repos 2 --token-limits 120000,240000,400000
+
+benchmark-dry-run-900k:
+	$(PYTHON) scripts/run_benchmark.py --dry-run --repos-file benchmarks/repos_candidates.yaml --repos fastapi --token-limits 900000
 
 benchmark-live:
 	$(PYTHON) scripts/run_benchmark.py --max-repos 2 --token-limits 120000,240000,400000

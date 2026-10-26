@@ -12,12 +12,15 @@ import json
 from pathlib import Path
 from typing import TypedDict
 
+import yaml
+
 from repoatlas.benchmark import BenchmarkCase, run_benchmark
 from repoatlas.config import RepoAtlasConfig
-from repoatlas.packer import pack_repository
+from repoatlas.packer import estimate_prompt_tokens, pack_repository
 
 
 DEFAULT_REPOS_FILE: Path = Path("fixtures/benchmark_repos.json")
+DEFAULT_REPOS_CANDIDATES_FILE: Path = Path("benchmarks/repos_candidates.yaml")
 DEFAULT_FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
 DEFAULT_OUTPUT_DIRECTORY: Path = Path("results")
 DEFAULT_LIVE_OUTPUT_DIRECTORY: Path = Path("results_live")
@@ -30,16 +33,21 @@ class RepoSpec(TypedDict):
     @param name Human-readable repository name.
     @param repo_url Public GitHub repository URL.
     @param ref Branch, tag, or commit.
+    @param reason One-line rationale for benchmark candidacy.
     """
 
     name: str
     repo_url: str
     ref: str
+    reason: str
 
 
 # Private function prototypes:
 # - _parse_token_limits(raw_limits: str) -> list[int]
 # - _load_repo_specs(repos_file: Path) -> list[RepoSpec]
+# - _parse_repo_specs_payload(payload: object) -> list[RepoSpec]
+# - _filter_repo_specs(repo_specs: list[RepoSpec], repos_arg: str | None) -> list[RepoSpec]
+# - _print_repo_catalog(repo_specs: list[RepoSpec]) -> None
 # - _build_cases(repo_specs: list[RepoSpec], token_limits: list[int], max_repos: int | None) -> list[BenchmarkCase]
 # - _run_dry_run(cases: list[BenchmarkCase], config: RepoAtlasConfig) -> None
 
@@ -50,7 +58,24 @@ def parse_args() -> argparse.Namespace:
     """
 
     parser = argparse.ArgumentParser(description="Run RepoAtlas benchmark cases.")
-    parser.add_argument("--repos-file", type=Path, default=DEFAULT_REPOS_FILE, help="JSON file listing repository specs.")
+    parser.add_argument("--repos-file", type=Path, default=DEFAULT_REPOS_FILE, help="JSON or YAML file listing repository specs.")
+    parser.add_argument(
+        "--repos-candidates-file",
+        type=Path,
+        default=DEFAULT_REPOS_CANDIDATES_FILE,
+        help="YAML catalogue of repo candidates with reasons.",
+    )
+    parser.add_argument(
+        "--repos",
+        type=str,
+        default=None,
+        help="Comma-separated repository names to run (selected from --repos-file).",
+    )
+    parser.add_argument(
+        "--list-repos",
+        action="store_true",
+        help="List candidate repositories from --repos-candidates-file and exit.",
+    )
     parser.add_argument(
         "--token-limits",
         type=str,
@@ -78,10 +103,15 @@ def main() -> None:
     token_limits: list[int] = _parse_token_limits(args.token_limits)
     provider_override: str | None = args.provider
     config: RepoAtlasConfig = RepoAtlasConfig.from_environment(provider=provider_override, token_limit=max(token_limits))
+    if args.list_repos:
+        repo_catalog_specs: list[RepoSpec] = _load_repo_specs(args.repos_candidates_file)
+        _print_repo_catalog(repo_catalog_specs)
+        return
     if args.dry_run:
         config.provider = "fixture"
     repo_specs: list[RepoSpec] = _load_repo_specs(args.repos_file)
-    cases: list[BenchmarkCase] = _build_cases(repo_specs, token_limits=token_limits, max_repos=args.max_repos)
+    selected_repo_specs: list[RepoSpec] = _filter_repo_specs(repo_specs, args.repos)
+    cases: list[BenchmarkCase] = _build_cases(selected_repo_specs, token_limits=token_limits, max_repos=args.max_repos)
     if args.dry_run:
         _run_dry_run(cases, config)
         return
@@ -129,23 +159,71 @@ def _parse_token_limits(raw_limits: str) -> list[int]:
 
 def _load_repo_specs(repos_file: Path) -> list[RepoSpec]:
     """
-    @brief Load repository benchmark specifications from JSON.
+    @brief Load repository benchmark specifications from JSON or YAML.
     @param repos_file Path to repository-spec JSON file.
     """
 
-    payload: object = json.loads(repos_file.read_text(encoding="utf-8"))
-    if not isinstance(payload, list):
-        raise ValueError("Repository specs file must contain a JSON list.")
+    suffix: str = repos_file.suffix.lower()
+    raw_text: str = repos_file.read_text(encoding="utf-8")
+    if suffix in {".yaml", ".yml"}:
+        payload: object = yaml.safe_load(raw_text)
+    else:
+        payload = json.loads(raw_text)
+    return _parse_repo_specs_payload(payload)
+
+
+def _parse_repo_specs_payload(payload: object) -> list[RepoSpec]:
+    """
+    @brief Parse repository-spec payloads from list or keyed YAML structures.
+    @param payload Decoded JSON or YAML object.
+    """
+
+    payload_items: object = payload
+    if isinstance(payload, dict):
+        payload_items = payload.get("repos")
+    if not isinstance(payload_items, list):
+        raise ValueError("Repository specs file must contain a list or a {repos: [...]} mapping.")
     repo_specs: list[RepoSpec] = []
-    for item in payload:
+    for item in payload_items:
         if not isinstance(item, dict):
             continue
         name = item.get("name")
         repo_url = item.get("repo_url")
         ref = item.get("ref", "main")
-        if isinstance(name, str) and isinstance(repo_url, str) and isinstance(ref, str):
-            repo_specs.append(RepoSpec(name=name, repo_url=repo_url, ref=ref))
+        reason = item.get("reason", "")
+        if isinstance(name, str) and isinstance(repo_url, str) and isinstance(ref, str) and isinstance(reason, str):
+            repo_specs.append(RepoSpec(name=name, repo_url=repo_url, ref=ref, reason=reason))
     return repo_specs
+
+
+def _filter_repo_specs(repo_specs: list[RepoSpec], repos_arg: str | None) -> list[RepoSpec]:
+    """
+    @brief Filter repository specs by comma-separated names.
+    @param repo_specs Repository specifications.
+    @param repos_arg Comma-separated repository names, or None.
+    """
+
+    if repos_arg is None or not repos_arg.strip():
+        return repo_specs
+    requested_names: list[str] = [item.strip() for item in repos_arg.split(",") if item.strip()]
+    requested_set: set[str] = set(requested_names)
+    repo_map: dict[str, RepoSpec] = {spec["name"]: spec for spec in repo_specs}
+    missing_names: list[str] = [name for name in requested_names if name not in repo_map]
+    if missing_names:
+        available: str = ", ".join(sorted(repo_map.keys()))
+        missing: str = ", ".join(missing_names)
+        raise ValueError(f"Unknown repo names: {missing}. Available: {available}")
+    return [repo_map[name] for name in requested_names if name in requested_set]
+
+
+def _print_repo_catalog(repo_specs: list[RepoSpec]) -> None:
+    """
+    @brief Print candidate repository names with one-line reasons.
+    @param repo_specs Repository specifications.
+    """
+
+    for spec in repo_specs:
+        print(f"{spec['name']}: {spec['reason']}")
 
 
 def _build_cases(repo_specs: list[RepoSpec], token_limits: list[int], max_repos: int | None) -> list[BenchmarkCase]:
@@ -185,10 +263,13 @@ def _run_dry_run(cases: list[BenchmarkCase], config: RepoAtlasConfig) -> None:
             repo_url=case.repo_url,
             ref=case.ref,
             token_limit=case.token_limit,
+            token_calibration_factor=config.token_calibration_factor,
             cache_dir=config.cache_dir,
         )
+        projected_prompt_tokens: int = estimate_prompt_tokens(pack.total_tokens, config.token_calibration_factor)
         print(
-            f"{case.case_name}: context_tokens={pack.total_tokens} "
+            f"{case.case_name}: estimated_tokens={pack.total_tokens} projected_prompt_tokens={projected_prompt_tokens} "
+            f"token_limit={case.token_limit} calibration_factor={config.token_calibration_factor:.2f} "
             f"truncated={pack.truncated} files={len(pack.files)} prefix_hash={pack.prefix_hash[:12]}"
         )
 

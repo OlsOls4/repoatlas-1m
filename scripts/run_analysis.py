@@ -12,7 +12,7 @@ from pathlib import Path
 
 from repoatlas.analyser import analyse_repository, save_analysis_bundle
 from repoatlas.config import RepoAtlasConfig
-from repoatlas.packer import pack_repository
+from repoatlas.packer import estimate_prompt_tokens, pack_repository
 
 
 DEFAULT_FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
@@ -45,11 +45,14 @@ def main() -> None:
             repo_url=args.repo_url,
             ref=args.ref,
             token_limit=config.token_limit,
+            token_calibration_factor=config.token_calibration_factor,
             cache_dir=config.cache_dir,
         )
+        projected_prompt_tokens: int = estimate_prompt_tokens(pack.total_tokens, config.token_calibration_factor)
         print(
-            f"Dry-run pack: context_tokens={pack.total_tokens} truncated={pack.truncated} "
-            f"files={len(pack.files)} prefix_hash={pack.prefix_hash}"
+            f"Dry-run pack: estimated_tokens={pack.total_tokens} projected_prompt_tokens={projected_prompt_tokens} "
+            f"token_limit={config.token_limit} calibration_factor={config.token_calibration_factor:.2f} "
+            f"truncated={pack.truncated} files={len(pack.files)} prefix_hash={pack.prefix_hash}"
         )
         return
     bundle = analyse_repository(

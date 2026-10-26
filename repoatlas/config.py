@@ -10,6 +10,7 @@ DEFAULT_TOKEN_LIMIT: int = 400_000
 MAX_TOKEN_LIMIT: int = 900_000
 DEFAULT_REASONING_EFFORT: str = "medium"
 DEFAULT_MAX_TOKENS: int = 32_000
+DEFAULT_TOKEN_CALIBRATION_FACTOR: float = 1.22
 DEFAULT_REFLECTION_BASE_URL: str = "https://api.reflection.ai/openai/v1"
 DEFAULT_REFLECTION_MODEL: str = "Beam-1.0-501B-A23B"
 DEFAULT_OLLAMA_BASE_URL: str = "https://ollama.com/v1"
@@ -26,6 +27,7 @@ class RepoAtlasConfig:
     @param api_key Environment key used for authenticated runs.
     @param token_limit Maximum packed input token limit.
     @param max_tokens Maximum generated token budget.
+    @param token_calibration_factor Multiplier used to estimate real prompt tokens.
     @param reasoning_effort Reasoning effort level.
     @param cache_dir Local cache path for packed repositories.
     """
@@ -36,6 +38,7 @@ class RepoAtlasConfig:
     api_key: str | None
     token_limit: int
     max_tokens: int
+    token_calibration_factor: float
     reasoning_effort: str
     cache_dir: str
 
@@ -49,6 +52,11 @@ class RepoAtlasConfig:
 
         selected_provider: str = (provider or os.environ.get("BEAM_PROVIDER", "ollama")).strip().lower()
         bounded_limit: int = max(1, min(token_limit, MAX_TOKEN_LIMIT))
+        token_calibration_factor: float = float(
+            os.environ.get("REPOATLAS_TOKEN_CALIBRATION_FACTOR", str(DEFAULT_TOKEN_CALIBRATION_FACTOR))
+        )
+        if token_calibration_factor <= 0:
+            token_calibration_factor = DEFAULT_TOKEN_CALIBRATION_FACTOR
         cache_dir: str = os.environ.get("REPOATLAS_CACHE_DIR", ".cache/repoatlas")
         if selected_provider == "reflection":
             return cls(
@@ -60,6 +68,7 @@ class RepoAtlasConfig:
                 max_tokens=int(
                     os.environ.get("REPOATLAS_MAX_TOKENS", str(DEFAULT_MAX_TOKENS))
                 ),
+                token_calibration_factor=token_calibration_factor,
                 reasoning_effort=os.environ.get("REPOATLAS_REASONING_EFFORT", DEFAULT_REASONING_EFFORT),
                 cache_dir=cache_dir,
             )
@@ -73,6 +82,7 @@ class RepoAtlasConfig:
                 max_tokens=int(
                     os.environ.get("REPOATLAS_MAX_TOKENS", str(DEFAULT_MAX_TOKENS))
                 ),
+                token_calibration_factor=token_calibration_factor,
                 reasoning_effort=os.environ.get("REPOATLAS_REASONING_EFFORT", DEFAULT_REASONING_EFFORT),
                 cache_dir=cache_dir,
             )
@@ -83,6 +93,7 @@ class RepoAtlasConfig:
             api_key=None,
             token_limit=bounded_limit,
             max_tokens=DEFAULT_MAX_TOKENS,
+            token_calibration_factor=token_calibration_factor,
             reasoning_effort=DEFAULT_REASONING_EFFORT,
             cache_dir=cache_dir,
         )
