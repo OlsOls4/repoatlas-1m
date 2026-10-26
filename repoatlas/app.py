@@ -20,6 +20,9 @@ from repoatlas.packer import estimate_prompt_tokens, pack_repository
 
 RESULTS_LIVE_DIRECTORY: Path = Path("results_live")
 RESULTS_LIVE_INDEX_PATH: Path = RESULTS_LIVE_DIRECTORY / "index.json"
+RESULTS_LIVE_REPROS_DIRECTORY: Path = RESULTS_LIVE_DIRECTORY / "repros"
+RESULTS_LIVE_REPROS_INDEX_PATH: Path = RESULTS_LIVE_REPROS_DIRECTORY / "repros.json"
+RESULTS_LIVE_REPROS_SUMMARY_PATH: Path = RESULTS_LIVE_REPROS_DIRECTORY / "summary.json"
 FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
 LIVE_MAX_TOKEN_LIMIT: int = 150_000
 LIVE_DEFAULT_TOKEN_LIMIT: int = 150_000
@@ -127,6 +130,7 @@ CUSTOM_CSS: str = """
 _RATE_LIMIT_LOCK = threading.Lock()
 _RATE_LIMIT_STATE: dict[str, list[float]] = {}
 _DAILY_CAP_LOCK = threading.Lock()
+STRICT_REPRO_EXCEPTION_TYPES: frozenset[str] = frozenset({"TypeError", "AttributeError", "ImportError", "NameError"})
 
 
 class LiveIndex(TypedDict):
@@ -157,6 +161,7 @@ class FindingPanelState(TypedDict):
     @param doc_quote Documentation quote.
     @param code_quote Code quote.
     @param notes Human verification notes and context.
+    @param repro_badge Reproduction outcome badge markdown.
     @param links Permalink and issue-draft metadata block.
     @param issue_draft_text Draft issue text for copy action.
     """
@@ -169,12 +174,16 @@ class FindingPanelState(TypedDict):
     doc_quote: str
     code_quote: str
     notes: str
+    repro_badge: str
     links: str
     issue_draft_text: str
 
 
 # Private function prototypes:
 # - _load_live_index() -> LiveIndex
+# - _load_repro_results() -> tuple[dict[str, dict[str, object]], dict[str, object]]
+# - _attach_repro_records(findings: list[dict[str, object]], repros_map: dict[str, dict[str, object]]) -> list[dict[str, object]]
+# - _finding_case_id(finding: dict[str, object]) -> str
 # - _render_hero_html(summary: dict[str, object]) -> str
 # - _render_long_context_diagram_html() -> str
 # - _render_bug_wall_html(findings: list[dict[str, object]]) -> str
@@ -188,6 +197,7 @@ class FindingPanelState(TypedDict):
 # - _filter_findings(findings: list[dict[str, object]], verdict_filter: str) -> list[dict[str, object]]
 # - _render_finding_panel(finding: dict[str, object]) -> FindingPanelState
 # - _build_summary_markdown(summary: dict[str, object]) -> str
+# - _build_repro_summary_markdown(repro_summary: dict[str, object]) -> str
 # - _copy_issue_draft(text: str) -> str
 # - _estimate_live_tokens(repo_url: str, ref: str, token_limit: int) -> tuple[str, str]
 # - _run_live_analysis_stream(repo_url: str, ref: str, token_limit: int, request: gr.Request | None = None) -> object
@@ -200,6 +210,7 @@ class FindingPanelState(TypedDict):
 # - _is_public_github_url(repo_url: str) -> bool
 # - _badge_for_verifier(verifier_label: str) -> str
 # - _badge_for_hand_verdict(verdict: str) -> str
+# - _badge_for_repro(finding: dict[str, object]) -> str
 # - _coerce_int(value: object, fallback: int = 0) -> int
 # - _coerce_float(value: object, fallback: float = 0.0) -> float
 # - _as_dict(value: object) -> dict[str, object]
@@ -213,7 +224,8 @@ def build_app() -> gr.Blocks:
     """
 
     live_index: LiveIndex = _load_live_index()
-    findings: list[dict[str, object]] = live_index["findings"]
+    repros_map, repro_summary = _load_repro_results()
+    findings: list[dict[str, object]] = _attach_repro_records(live_index["findings"], repros_map=repros_map)
     runs: list[dict[str, object]] = live_index["runs"]
     summary: dict[str, object] = live_index["summary"]
     hero_html: str = _render_hero_html(summary)
@@ -291,6 +303,9 @@ def build_app() -> gr.Blocks:
             "`results_live/upstream_status.json`."
         )
         gr.Markdown(_build_summary_markdown(summary))
+        repro_summary_markdown: str = _build_repro_summary_markdown(repro_summary)
+        if repro_summary_markdown:
+            gr.Markdown(repro_summary_markdown)
 
         with gr.Tab("Recorded runs"):
             gr.HTML(hero_html)
@@ -316,6 +331,8 @@ def build_app() -> gr.Blocks:
                 "Verifier status and hand-check verdict are separate. "
                 "Verifier pass means quote/citation alignment only, not guaranteed correctness."
             )
+            if repro_summary_markdown:
+                gr.Markdown(repro_summary_markdown)
             verdict_filter = gr.Dropdown(
                 choices=["all", "true", "false", "unclear"],
                 value="all",
@@ -332,6 +349,7 @@ def build_app() -> gr.Blocks:
                 verifier_badge = gr.Markdown(value=default_finding_panel["verifier_badge"])
                 hand_badge = gr.Markdown(value=default_finding_panel["hand_badge"])
                 upstream_badge = gr.Markdown(value=default_finding_panel["upstream_badge"])
+                repro_badge = gr.Markdown(value=default_finding_panel["repro_badge"])
             finding_notes = gr.Markdown(value=default_finding_panel["notes"])
             finding_links = gr.Markdown(value=default_finding_panel["links"])
             with gr.Row():
@@ -352,6 +370,7 @@ def build_app() -> gr.Blocks:
                     "Verifier",
                     "Hand verdict",
                     "Upstream status",
+                    "Executable repro",
                     "Cross-file",
                     "Token distance",
                 ],
@@ -477,7 +496,7 @@ def build_app() -> gr.Blocks:
         def on_finding_change(
             finding_choice: str,
             choice_map: dict[str, dict[str, object]],
-        ) -> tuple[str, str, str, str, str, str, str, str, str, str]:
+        ) -> tuple[str, str, str, str, str, str, str, str, str, str, str]:
             """
             @brief Update finding detail panels when user selects a finding.
             @param finding_choice Selected finding label.
@@ -493,6 +512,7 @@ def build_app() -> gr.Blocks:
                     verifier_badge="",
                     hand_badge="",
                     upstream_badge="",
+                    repro_badge="",
                     doc_header="No finding selected.",
                     code_header="No finding selected.",
                     doc_quote="",
@@ -505,6 +525,7 @@ def build_app() -> gr.Blocks:
                     empty["verifier_badge"],
                     empty["hand_badge"],
                     empty["upstream_badge"],
+                    empty["repro_badge"],
                     empty["notes"],
                     empty["links"],
                     empty["doc_header"],
@@ -518,6 +539,7 @@ def build_app() -> gr.Blocks:
                 panel["verifier_badge"],
                 panel["hand_badge"],
                 panel["upstream_badge"],
+                panel["repro_badge"],
                 panel["notes"],
                 panel["links"],
                 panel["doc_header"],
@@ -533,6 +555,7 @@ def build_app() -> gr.Blocks:
             object,
             list[list[object]],
             dict[str, dict[str, object]],
+            str,
             str,
             str,
             str,
@@ -561,6 +584,7 @@ def build_app() -> gr.Blocks:
                     "",
                     "",
                     "",
+                    "",
                     "No finding selected.",
                     "No finding selected.",
                     "",
@@ -580,6 +604,7 @@ def build_app() -> gr.Blocks:
                 panel["verifier_badge"],
                 panel["hand_badge"],
                 panel["upstream_badge"],
+                panel["repro_badge"],
                 panel["notes"],
                 panel["links"],
                 panel["doc_header"],
@@ -599,6 +624,7 @@ def build_app() -> gr.Blocks:
                 verifier_badge,
                 hand_badge,
                 upstream_badge,
+                repro_badge,
                 finding_notes,
                 finding_links,
                 doc_header,
@@ -616,6 +642,7 @@ def build_app() -> gr.Blocks:
                 verifier_badge,
                 hand_badge,
                 upstream_badge,
+                repro_badge,
                 finding_notes,
                 finding_links,
                 doc_header,
@@ -710,6 +737,77 @@ def _load_live_index() -> LiveIndex:
         handcheck_markdown_path=str(payload.get("handcheck_markdown_path", "")),
         upstream_status_path=str(payload.get("upstream_status_path", "")),
     )
+
+
+def _load_repro_results() -> tuple[dict[str, dict[str, object]], dict[str, object]]:
+    """
+    @brief Load optional repro records and aggregate summary.
+    @return Tuple of (repros map, repro summary map).
+    """
+
+    repros_map: dict[str, dict[str, object]] = {}
+    repro_summary: dict[str, object] = {}
+    if RESULTS_LIVE_REPROS_INDEX_PATH.exists():
+        payload: object = json.loads(RESULTS_LIVE_REPROS_INDEX_PATH.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            repros_map = {str(key): value for key, value in payload.items() if isinstance(value, dict)}
+    if RESULTS_LIVE_REPROS_SUMMARY_PATH.exists():
+        payload = json.loads(RESULTS_LIVE_REPROS_SUMMARY_PATH.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            summary_payload: object = payload.get("summary", payload)
+            if isinstance(summary_payload, dict):
+                repro_summary = summary_payload
+    return repros_map, repro_summary
+
+
+def _finding_case_id(finding: dict[str, object]) -> str:
+    """
+    @brief Build repro case id from finding metadata.
+    @param finding Finding record.
+    """
+
+    finding_key: str = str(finding.get("finding_key", ""))
+    if "/" in finding_key:
+        return finding_key.replace("/", ":", 1)
+    case_name: str = str(finding.get("case_name", "")).strip()
+    finding_id: str = str(finding.get("finding_id", "")).strip()
+    if case_name and finding_id:
+        return f"{case_name}:{finding_id}"
+    return ""
+
+
+def _attach_repro_records(
+    findings: list[dict[str, object]],
+    repros_map: dict[str, dict[str, object]],
+) -> list[dict[str, object]]:
+    """
+    @brief Attach repro metadata to finding rows.
+    @param findings Finding rows from index.json.
+    @param repros_map Repro map keyed by case id.
+    """
+
+    enriched: list[dict[str, object]] = []
+    for finding in findings:
+        finding_copy: dict[str, object] = dict(finding)
+        case_id: str = _finding_case_id(finding_copy)
+        repro: dict[str, object] = repros_map.get(case_id, {})
+        repro_status: str = str(repro.get("status", ""))
+        repro_evidence: str = str(repro.get("evidence", ""))
+        repro_exception_type: str = str(repro.get("exception_type", ""))
+        is_strict_api_error_repro: bool = (
+            repro_status == "reproduced"
+            and repro_evidence == "interface_error"
+            and repro_exception_type in STRICT_REPRO_EXCEPTION_TYPES
+        )
+        finding_copy["repro_case_id"] = case_id
+        finding_copy["repro_status"] = repro_status
+        finding_copy["repro_reason"] = str(repro.get("reason", ""))
+        finding_copy["repro_evidence"] = repro_evidence
+        finding_copy["repro_exception_type"] = repro_exception_type
+        finding_copy["repro_error_excerpt"] = str(repro.get("error_excerpt", ""))
+        finding_copy["repro_is_strict_api_error"] = is_strict_api_error_repro
+        enriched.append(finding_copy)
+    return enriched
 
 
 def _render_hero_html(summary: dict[str, object]) -> str:
@@ -810,6 +908,18 @@ def _render_bug_wall_html(findings: list[dict[str, object]]) -> str:
             if prior_reported
             else ""
         )
+        repro_status: str = str(finding.get("repro_status", ""))
+        repro_evidence: str = str(finding.get("repro_evidence", ""))
+        repro_error_excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
+        repro_is_strict: bool = bool(finding.get("repro_is_strict_api_error", False))
+        repro_badge_html: str = ""
+        if repro_is_strict:
+            excerpt: str = repro_error_excerpt[:160] if repro_error_excerpt else "API error observed."
+            repro_badge_html = f"<span class='repoatlas-badge repoatlas-badge-open'>Reproduced: {excerpt}</span>"
+        elif repro_status == "reproduced" and repro_evidence == "assertion":
+            repro_badge_html = "<span class='repoatlas-badge repoatlas-badge-linked'>repro: assertion only (weak)</span>"
+        elif repro_status == "reproduced":
+            repro_badge_html = "<span class='repoatlas-badge repoatlas-badge-linked'>repro: non-interface exception (weak)</span>"
         upstream_markup: str = (
             f"<a href='{upstream_url}' target='_blank'>{upstream_status}</a>"
             if upstream_url
@@ -831,7 +941,7 @@ def _render_bug_wall_html(findings: list[dict[str, object]]) -> str:
             f"<div style='font-size:0.82rem;margin-top:6px;'><b>Verifier</b>: {verifier_label}</div>"
             f"{line_match_text}"
             f"<div style='font-size:0.84rem;margin-top:6px;'><b>Repo</b>: <a href='{repo_url}' target='_blank'>{repo_url}</a></div>"
-            f"<div style='margin-top:8px;'>{prior_badge}<span class='repoatlas-badge {badge_class}'>{upstream_markup}</span></div>"
+            f"<div style='margin-top:8px;'>{repro_badge_html}{prior_badge}<span class='repoatlas-badge {badge_class}'>{upstream_markup}</span></div>"
             "</div>"
         )
     return "<div class='repoatlas-bug-grid'>" + "".join(cards) + "</div>"
@@ -854,6 +964,16 @@ def _build_findings_rows(findings: list[dict[str, object]]) -> list[list[object]
                 finding.get("verifier_label", ""),
                 finding.get("hand_verdict", ""),
                 finding.get("upstream_status", ""),
+                (
+                    "reproduced (API error)"
+                    if bool(finding.get("repro_is_strict_api_error", False))
+                    else (
+                        "repro: assertion only (weak)"
+                        if str(finding.get("repro_status", "")) == "reproduced"
+                        and str(finding.get("repro_evidence", "")) == "assertion"
+                        else str(finding.get("repro_status", "")) or "n/a"
+                    )
+                ),
                 "yes" if bool(finding.get("is_cross_file", False)) else "no",
                 token_distance if isinstance(token_distance, int) else "",
             ]
@@ -1066,10 +1186,23 @@ def _render_finding_panel(finding: dict[str, object]) -> FindingPanelState:
     upstream_badge_text: str = upstream_badge
     if hand_verdict == "false" and upstream_badge_text.lower().endswith("draft prepared, unfiled"):
         upstream_badge_text = "**Upstream:** n/a for false positive"
+    repro_badge_text: str = _badge_for_repro(finding)
+    repro_error_excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
+    repro_line: str = ""
+    if bool(finding.get("repro_is_strict_api_error", False)):
+        repro_line = f"**Executable repro:** Reproduced via API error: `{repro_error_excerpt}`."
+    elif str(finding.get("repro_status", "")) == "reproduced" and str(finding.get("repro_evidence", "")) == "assertion":
+        repro_line = "**Executable repro:** repro: assertion only (weak)."
+    elif str(finding.get("repro_status", "")):
+        repro_line = (
+            f"**Executable repro:** {finding.get('repro_status')} "
+            f"({finding.get('repro_reason', 'n/a')})."
+        )
     return FindingPanelState(
         verifier_badge=verifier_badge,
         hand_badge=hand_badge,
         upstream_badge=upstream_badge_text,
+        repro_badge=repro_badge_text,
         doc_header=doc_header,
         code_header=code_header,
         doc_quote=str(finding.get("doc_quote", "")),
@@ -1079,6 +1212,7 @@ def _render_finding_panel(finding: dict[str, object]) -> FindingPanelState:
             f"**What breaks:** {finding.get('breakage_summary', '') or finding.get('hand_notes', '')}\n\n"
             f"{token_distance_line}\n\n"
             f"{line_shift_line}\n\n"
+            f"{repro_line}\n\n"
             f"**Verifier reasons:** doc={finding.get('verifier_doc_reason', '') or 'n/a'}, "
             f"code={finding.get('verifier_code_reason', '') or 'n/a'}"
         ),
@@ -1123,6 +1257,27 @@ def _build_summary_markdown(summary: dict[str, object]) -> str:
         f"- **Cost (recorded runs):** {total_input_tokens / 1_000_000:.2f}M prompt + {total_output_tokens / 1_000:.0f}k completion tokens on Beam, $0 via Ollama Cloud free tier.\n"
         f"- **Packing footnote:** {pack_trimmed_count} of {pack_total_count} packs were trimmed; when trimming happens, tests/benchmarks are dropped first.\n"
         f"- **Maintainer note:** about 1 in {findings_per_true:.1f} findings is a real drift; each takes roughly two minutes to check with the permalinks."
+    )
+
+
+def _build_repro_summary_markdown(repro_summary: dict[str, object]) -> str:
+    """
+    @brief Build markdown for strict executable repro metrics.
+    @param repro_summary Summary payload from results_live/repros/summary.json.
+    """
+
+    if not repro_summary:
+        return ""
+    true_total: int = _coerce_int(repro_summary.get("hand_true"), 0)
+    false_unclear_total: int = _coerce_int(repro_summary.get("hand_false_or_unclear"), 0)
+    strict_kept: int = _coerce_int(repro_summary.get("kept_with_strict_filter"), 0)
+    strict_true: int = _coerce_int(repro_summary.get("kept_true_with_strict_filter"), 0)
+    strict_false_unclear: int = max(0, strict_kept - strict_true)
+    return (
+        f"- **Executable check:** {strict_true} of {true_total} true drifts reproduce as a real API error when you run "
+        f"the docs literally; {strict_false_unclear} of {false_unclear_total} false/unclear findings do.\n"
+        "- **Strict rule note:** the API-error rule (TypeError/AttributeError/ImportError/NameError) was defined "
+        "after seeing these 21 results, and is pending confirmation on new findings."
     )
 
 
@@ -1394,6 +1549,27 @@ def _badge_for_hand_verdict(verdict: str) -> str:
     if normalised == "unclear":
         return "🟠 **Hand-check:** unclear"
     return "⚪ **Hand-check:** unlabelled"
+
+
+def _badge_for_repro(finding: dict[str, object]) -> str:
+    """
+    @brief Build a badge that distinguishes strict API-error repros from weaker signals.
+    @param finding Finding record with attached repro metadata.
+    """
+
+    status: str = str(finding.get("repro_status", "")).strip()
+    evidence: str = str(finding.get("repro_evidence", "")).strip()
+    excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
+    if bool(finding.get("repro_is_strict_api_error", False)):
+        snippet: str = excerpt[:180] if excerpt else "API error observed."
+        return f"🟢 **Reproduced:** `{snippet}`"
+    if status == "reproduced" and evidence == "assertion":
+        return "🟠 **Repro:** repro: assertion only (weak)"
+    if status == "reproduced":
+        return "🟠 **Repro:** reproduced, but not via strict API error (weak)"
+    if status:
+        return f"⚪ **Repro:** {status}"
+    return "⚪ **Repro:** n/a"
 
 
 def _coerce_int(value: object, fallback: int = 0) -> int:
