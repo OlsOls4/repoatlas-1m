@@ -77,8 +77,9 @@ def run_benchmark(
             records.append(_error_record(case, error))
             continue
         verified_count: int = sum(1 for result in bundle.verification_results if result.fully_verified)
-        total_count: int = max(1, len(bundle.verification_results))
-        citation_precision: float = verified_count / total_count
+        total_count: int = len(bundle.verification_results)
+        # No findings means precision is undefined, not 0.0.
+        citation_precision: float | None = verified_count / total_count if total_count else None
         records.append(
             {
                 "case_name": case.case_name,
