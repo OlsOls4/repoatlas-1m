@@ -1,0 +1,233 @@
+{
+  "repo": "nox",
+  "chunk_size": 32000,
+  "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+  "full_pack_tokens_est": 294382,
+  "chunks_planned": 14,
+  "estimate_prompt_tokens": 362776,
+  "estimate_total_tokens": 446776,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 5,
+      "est_tokens": 23717,
+      "cached": false,
+      "prompt_tokens": 28591,
+      "completion_tokens": 2635,
+      "latency_seconds": 29.73693389300024,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 5,
+      "est_tokens": 24973,
+      "cached": false,
+      "prompt_tokens": 29904,
+      "completion_tokens": 2273,
+      "latency_seconds": 15.283802482997999,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 10,
+      "est_tokens": 25676,
+      "cached": false,
+      "prompt_tokens": 30283,
+      "completion_tokens": 2720,
+      "latency_seconds": 24.9076486370177,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 3,
+      "paths": 8,
+      "est_tokens": 14286,
+      "cached": false,
+      "prompt_tokens": 16965,
+      "completion_tokens": 1952,
+      "latency_seconds": 15.912637394008925,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 4,
+      "paths": 2,
+      "est_tokens": 25353,
+      "cached": false,
+      "prompt_tokens": 30488,
+      "completion_tokens": 1474,
+      "latency_seconds": 17.158759919984732,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 5,
+      "paths": 11,
+      "est_tokens": 24726,
+      "cached": false,
+      "prompt_tokens": 29131,
+      "completion_tokens": 1792,
+      "latency_seconds": 16.42396759899566,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 7,
+      "est_tokens": 5444,
+      "cached": false,
+      "prompt_tokens": 6475,
+      "completion_tokens": 1969,
+      "latency_seconds": 16.98033562200726,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 1,
+      "est_tokens": 23598,
+      "cached": false,
+      "prompt_tokens": 28460,
+      "completion_tokens": 1830,
+      "latency_seconds": 20.702620543015655,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 1,
+      "est_tokens": 16992,
+      "cached": false,
+      "prompt_tokens": 20681,
+      "completion_tokens": 1966,
+      "latency_seconds": 20.600728583987802,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 1,
+      "est_tokens": 18888,
+      "cached": false,
+      "prompt_tokens": 22828,
+      "completion_tokens": 222,
+      "latency_seconds": 15.416714439023053,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 2,
+      "est_tokens": 25652,
+      "cached": false,
+      "prompt_tokens": 30861,
+      "completion_tokens": 1578,
+      "latency_seconds": 17.37787316099275,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 3,
+      "est_tokens": 24436,
+      "cached": false,
+      "prompt_tokens": 29629,
+      "completion_tokens": 347,
+      "latency_seconds": 14.115646293997997,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 8,
+      "est_tokens": 25900,
+      "cached": false,
+      "prompt_tokens": 30863,
+      "completion_tokens": 1986,
+      "latency_seconds": 20.510565005999524,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 39,
+      "est_tokens": 15677,
+      "cached": false,
+      "prompt_tokens": 17891,
+      "completion_tokens": 1639,
+      "latency_seconds": 18.465224029001547,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 263.6155451920058,
+  "raw_findings": 1,
+  "findings": [
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The run_manifest docstring says it returns a two-tuple of sessions and statuses, but its implementation returns list[Result].",
+        "doc_citation": {
+          "path": "nox/tasks.py",
+          "start_line": 406,
+          "end_line": 408,
+          "quote": "Returns:\n        tuple[~nox.sessions.Session,~.SessionStatus]: A two-tuple of the\n            sessions and the result of each session that was run."
+        },
+        "code_citation": {
+          "path": "nox/tasks.py",
+          "start_line": 399,
+          "end_line": 399,
+          "quote": "def run_manifest(manifest: Manifest, global_config: NoxConfig) -> list[Result]:"
+        },
+        "proposed_fix": "Replace the Returns block in run_manifest with: list[~nox.sessions.Result]: The results of each session that was run.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "nox/tasks.py",
+            "start_line": 406,
+            "end_line": 408,
+            "quote": "Returns:\n        tuple[~nox.sessions.Session,~.SessionStatus]: A two-tuple of the\n            sessions and the result of each session that was run."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "nox/tasks.py",
+            "start_line": 399,
+            "end_line": 399,
+            "quote": "def run_manifest(manifest: Manifest, global_config: NoxConfig) -> list[Result]:"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 353050,
+  "completion_tokens": 24383,
+  "calls_ok": 14,
+  "sum_call_latency_seconds": 263.59345760403085,
+  "true_drifts_recovered": []
+}

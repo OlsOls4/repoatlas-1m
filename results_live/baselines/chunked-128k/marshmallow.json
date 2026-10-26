@@ -1,0 +1,226 @@
+{
+  "repo": "marshmallow",
+  "chunk_size": 128000,
+  "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+  "full_pack_tokens_est": 247224,
+  "chunks_planned": 3,
+  "estimate_prompt_tokens": 298648,
+  "estimate_total_tokens": 316648,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 65,
+      "est_tokens": 103755,
+      "cached": false,
+      "prompt_tokens": 122138,
+      "completion_tokens": 3282,
+      "latency_seconds": 12.133791316009592,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 1,
+      "paths": 6,
+      "est_tokens": 98332,
+      "cached": false,
+      "prompt_tokens": 119853,
+      "completion_tokens": 1665,
+      "latency_seconds": 9.119433024985483,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 25,
+      "est_tokens": 45287,
+      "cached": false,
+      "prompt_tokens": 53590,
+      "completion_tokens": 2160,
+      "latency_seconds": 9.038419674005127,
+      "finish_reason": "stop",
+      "findings": 1
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 30.29881225700956,
+  "raw_findings": 3,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "flag",
+        "explanation": "The pre/post-processing docs still use the removed `pass_many=True` option; current decorators expose it as `pass_collection`.",
+        "doc_citation": {
+          "path": "docs/extending/pre_and_post_processing.rst",
+          "start_line": 35,
+          "end_line": 35,
+          "quote": "In cases where your pre- and post-processing methods needs to handle the input collection when processing multiple objects, add ``pass_many=True`` to the method decorators."
+        },
+        "code_citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 178,
+          "end_line": 178,
+          "quote": "    pass_collection: bool = False,"
+        },
+        "proposed_fix": "Replace `pass_many=True` with `pass_collection=True` in pre_ and post-processing examples and prose.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/extending/pre_and_post_processing.rst",
+            "start_line": 35,
+            "end_line": 35,
+            "quote": "In cases where your pre- and post-processing methods needs to handle the input collection when processing multiple objects, add ``pass_many=True`` to the method decorators."
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 34,
+          "corrected_end_line": 34,
+          "line_offset": -1
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/marshmallow/decorators.py",
+            "start_line": 178,
+            "end_line": 178,
+            "quote": "    pass_collection: bool = False,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "The custom options example passes `**kwargs` to `SchemaOpts.__init__`, but the current constructor only accepts `meta`.",
+        "doc_citation": {
+          "path": "docs/extending/custom_options.rst",
+          "start_line": 41,
+          "end_line": 41,
+          "quote": "        def __init__(self, meta, **kwargs):"
+        },
+        "code_citation": {
+          "path": "src/marshmallow/schema.py",
+          "start_line": 205,
+          "end_line": 205,
+          "quote": "    def __init__(self, meta: type):"
+        },
+        "proposed_fix": "Update the example to define `def __init__(self, meta):` and call `SchemaOpts.__init__(self, meta)` without `**kwargs`.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "docs/extending/custom_options.rst",
+            "start_line": 41,
+            "end_line": 41,
+            "quote": "        def __init__(self, meta, **kwargs):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/marshmallow/schema.py",
+            "start_line": 205,
+            "end_line": 205,
+            "quote": "    def __init__(self, meta: type):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The documentation says invalid input data produces a 400 response, but the Flask example returns 422 when ValidationError is raised.",
+        "doc_citation": {
+          "path": "docs/examples/quotes_api.rst",
+          "start_line": 41,
+          "end_line": 41,
+          "quote": "If we provide invalid input data, we get 400 error response. Let's omit \"author\" from the input data."
+        },
+        "code_citation": {
+          "path": "examples/flask_example.py",
+          "start_line": 140,
+          "end_line": 140,
+          "quote": "        return err.messages, 422"
+        },
+        "proposed_fix": "Change \"400 error response\" to \"422 error response\" in docs/examples/quotes_api.rst.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/examples/quotes_api.rst",
+            "start_line": 41,
+            "end_line": 41,
+            "quote": "If we provide invalid input data, we get 400 error response. Let's omit \"author\" from the input data."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "examples/flask_example.py",
+            "start_line": 140,
+            "end_line": 140,
+            "quote": "        return err.messages, 422"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 295581,
+  "completion_tokens": 7107,
+  "calls_ok": 3,
+  "sum_call_latency_seconds": 30.2916440150002,
+  "true_drifts_recovered": []
+}

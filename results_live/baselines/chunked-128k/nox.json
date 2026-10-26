@@ -1,0 +1,241 @@
+{
+  "repo": "nox",
+  "chunk_size": 128000,
+  "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+  "full_pack_tokens_est": 294382,
+  "chunks_planned": 4,
+  "estimate_prompt_tokens": 355917,
+  "estimate_total_tokens": 379917,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 28,
+      "est_tokens": 88436,
+      "cached": false,
+      "prompt_tokens": 104207,
+      "completion_tokens": 3281,
+      "latency_seconds": 13.913291541015496,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 1,
+      "paths": 22,
+      "est_tokens": 95825,
+      "cached": false,
+      "prompt_tokens": 113187,
+      "completion_tokens": 2825,
+      "latency_seconds": 11.890985131991329,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 2,
+      "paths": 25,
+      "est_tokens": 105637,
+      "cached": false,
+      "prompt_tokens": 125078,
+      "completion_tokens": 2440,
+      "latency_seconds": 11.891344351985026,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 28,
+      "est_tokens": 4700,
+      "cached": false,
+      "prompt_tokens": 5458,
+      "completion_tokens": 389,
+      "latency_seconds": 2.7329849649977405,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 40.439922229008516,
+  "raw_findings": 3,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The run() docstring says external defaults to False, but the parameter default is None and behavior is derived from configuration and sandboxing.",
+        "doc_citation": {
+          "path": "nox/sessions.py",
+          "start_line": 489,
+          "end_line": 489,
+          "quote": ":param external: If False (the default) then programs not in the"
+        },
+        "code_citation": {
+          "path": "nox/sessions.py",
+          "start_line": 406,
+          "end_line": 406,
+          "quote": "        external: ExternalType | None = None,"
+        },
+        "proposed_fix": "Change the docstring to state that `external` defaults to `None`, letting Nox use sandbox and `--error-on-external-run` settings.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "nox/sessions.py",
+            "start_line": 489,
+            "end_line": 489,
+            "quote": ":param external: If False (the default) then programs not in the"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "nox/sessions.py",
+            "start_line": 406,
+            "end_line": 406,
+            "quote": "        external: ExternalType | None = None,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "The notify() docstring says target is only a string and that passing a session object is unsupported, but the signature accepts str or SessionRunner.",
+        "doc_citation": {
+          "path": "nox/sessions.py",
+          "start_line": 954,
+          "end_line": 956,
+          "quote": "target (str): The session name to notify, as used for ``nox -s``.\n                Passing the decorated function object is not currently\n                supported."
+        },
+        "code_citation": {
+          "path": "nox/sessions.py",
+          "start_line": 932,
+          "end_line": 932,
+          "quote": "        target: str | SessionRunner,"
+        },
+        "proposed_fix": "Update the docstring to document target as str or SessionRunner.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "nox/sessions.py",
+            "start_line": 954,
+            "end_line": 956,
+            "quote": "target (str): The session name to notify, as used for ``nox -s``.\n                Passing the decorated function object is not currently\n                supported."
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 955,
+          "corrected_end_line": 957,
+          "line_offset": 1
+        },
+        "code_check": {
+          "citation": {
+            "path": "nox/sessions.py",
+            "start_line": 932,
+            "end_line": 932,
+            "quote": "        target: str | SessionRunner,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 1,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "config_key",
+        "explanation": "The usage documentation refers to `nox.options.reuse_venvs`, but the documented and tested Noxfile option name is `nox.options.reuse_venv`.",
+        "doc_citation": {
+          "path": "docs/usage.rst",
+          "start_line": 219,
+          "end_line": 219,
+          "quote": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``."
+        },
+        "code_citation": {
+          "path": "tests/test_sessions.py",
+          "start_line": 1180,
+          "end_line": 1180,
+          "quote": "                reuse_venv=\"no\","
+        },
+        "proposed_fix": "In docs/usage.rst, replace `nox.options.reuse_venvs` with `nox.options.reuse_venv`.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/usage.rst",
+            "start_line": 219,
+            "end_line": 219,
+            "quote": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "tests/test_sessions.py",
+            "start_line": 1180,
+            "end_line": 1180,
+            "quote": "                reuse_venv=\"no\","
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": [
+        "T6"
+      ]
+    }
+  ],
+  "prompt_tokens": 347930,
+  "completion_tokens": 8935,
+  "calls_ok": 4,
+  "sum_call_latency_seconds": 40.42860598998959,
+  "true_drifts_recovered": [
+    "T6"
+  ]
+}

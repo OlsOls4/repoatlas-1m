@@ -1,0 +1,369 @@
+{
+  "repo": "click",
+  "chunk_size": 32000,
+  "ref": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+  "full_pack_tokens_est": 327831,
+  "chunks_planned": 16,
+  "estimate_prompt_tokens": 404406,
+  "estimate_total_tokens": 500406,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 4,
+      "est_tokens": 15454,
+      "cached": false,
+      "prompt_tokens": 18775,
+      "completion_tokens": 2515,
+      "latency_seconds": 11.101402733009309,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 1,
+      "est_tokens": 26039,
+      "cached": false,
+      "prompt_tokens": 31191,
+      "completion_tokens": 1728,
+      "latency_seconds": 9.258829186990624,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 3,
+      "est_tokens": 23038,
+      "cached": false,
+      "prompt_tokens": 27496,
+      "completion_tokens": 1861,
+      "latency_seconds": 9.125940239988267,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 2,
+      "est_tokens": 22088,
+      "cached": false,
+      "prompt_tokens": 26808,
+      "completion_tokens": 2616,
+      "latency_seconds": 13.293884720013011,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 4,
+      "paths": 4,
+      "est_tokens": 19592,
+      "cached": false,
+      "prompt_tokens": 23618,
+      "completion_tokens": 3799,
+      "latency_seconds": 30.353204521001317,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 5,
+      "paths": 4,
+      "est_tokens": 20298,
+      "cached": false,
+      "prompt_tokens": 24549,
+      "completion_tokens": 2090,
+      "latency_seconds": 14.846251801005565,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 5,
+      "est_tokens": 25170,
+      "cached": false,
+      "prompt_tokens": 30267,
+      "completion_tokens": 1628,
+      "latency_seconds": 9.23238639702322,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 8,
+      "est_tokens": 25389,
+      "cached": false,
+      "prompt_tokens": 30282,
+      "completion_tokens": 1537,
+      "latency_seconds": 13.200380578986369,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 19,
+      "est_tokens": 25914,
+      "cached": false,
+      "prompt_tokens": 30641,
+      "completion_tokens": 1375,
+      "latency_seconds": 16.85402831900865,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 17,
+      "est_tokens": 5506,
+      "cached": false,
+      "prompt_tokens": 6685,
+      "completion_tokens": 1242,
+      "latency_seconds": 19.577953517989954,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 1,
+      "est_tokens": 26039,
+      "cached": false,
+      "prompt_tokens": 31078,
+      "completion_tokens": 212,
+      "latency_seconds": 11.905150824022712,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 1,
+      "est_tokens": 18223,
+      "cached": false,
+      "prompt_tokens": 22079,
+      "completion_tokens": 373,
+      "latency_seconds": 9.326955013006227,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 1,
+      "est_tokens": 22990,
+      "cached": false,
+      "prompt_tokens": 28242,
+      "completion_tokens": 305,
+      "latency_seconds": 7.198453830002109,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 1,
+      "est_tokens": 22241,
+      "cached": false,
+      "prompt_tokens": 26681,
+      "completion_tokens": 1022,
+      "latency_seconds": 14.235283190006157,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 14,
+      "paths": 2,
+      "est_tokens": 21789,
+      "cached": false,
+      "prompt_tokens": 26576,
+      "completion_tokens": 269,
+      "latency_seconds": 52.21058457699837,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 15,
+      "paths": 2,
+      "est_tokens": 9242,
+      "cached": false,
+      "prompt_tokens": 11552,
+      "completion_tokens": 222,
+      "latency_seconds": 7.3333192210120615,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 249.07719828101108,
+  "raw_findings": 3,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The docstring says get_best_encoding returns the default stream encoding if it is not found, but the implementation replaces an ASCII encoding with utf-8.",
+        "doc_citation": {
+          "path": "src/click/_compat.py",
+          "start_line": 52,
+          "end_line": 52,
+          "quote": "\"\"\"Returns the default stream encoding if not found.\"\"\""
+        },
+        "code_citation": {
+          "path": "src/click/_compat.py",
+          "start_line": 53,
+          "end_line": 56,
+          "quote": "    rv = getattr(stream, \"encoding\", None) or sys.getdefaultencoding()\n    if is_ascii_encoding(rv):\n        return \"utf-8\"\n    return rv"
+        },
+        "proposed_fix": "Update the docstring to: \"\"\"Returns the stream's encoding, falling back to the default and upgrading ASCII to UTF-8.\"\"\"",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/click/_compat.py",
+            "start_line": 52,
+            "end_line": 52,
+            "quote": "\"\"\"Returns the default stream encoding if not found.\"\"\""
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/click/_compat.py",
+            "start_line": 53,
+            "end_line": 56,
+            "quote": "    rv = getattr(stream, \"encoding\", None) or sys.getdefaultencoding()\n    if is_ascii_encoding(rv):\n        return \"utf-8\"\n    return rv"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 3,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The ShellComplete class docstring omits the ctx_args constructor parameter that is present in __init__.",
+        "doc_citation": {
+          "path": "src/click/shell_completion.py",
+          "start_line": 283,
+          "end_line": 286,
+          "quote": ":param cli: Command being called.\n    :param prog_name: Name of the executable in the shell.\n    :param complete_var: Name of the environment variable that holds\n        the completion instruction."
+        },
+        "code_citation": {
+          "path": "src/click/shell_completion.py",
+          "start_line": 307,
+          "end_line": 313,
+          "quote": "def __init__(\n        self,\n        cli: Command,\n        ctx_args: cabc.MutableMapping[str, t.Any],\n        prog_name: str,\n        complete_var: str,\n    ) -> None:"
+        },
+        "proposed_fix": "Add to the ShellComplete class docstring, after :param cli:, the missing parameter documentation: \":param ctx_args: Extra arguments to pass to ``cli.make_context``.\"",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 283,
+            "end_line": 286,
+            "quote": ":param cli: Command being called.\n    :param prog_name: Name of the executable in the shell.\n    :param complete_var: Name of the environment variable that holds\n        the completion instruction."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/click/shell_completion.py",
+            "start_line": 307,
+            "end_line": 313,
+            "quote": "def __init__(\n        self,\n        cli: Command,\n        ctx_args: cabc.MutableMapping[str, t.Any],\n        prog_name: str,\n        complete_var: str,\n    ) -> None:"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The bytes/bytearray overload documents require_save with a default of False, while the runtime implementation declares the default as True.",
+        "doc_citation": {
+          "path": "src/click/termui.py",
+          "start_line": 814,
+          "end_line": 821,
+          "quote": "@t.overload\ndef edit(\n    text: bytes | bytearray,\n    editor: str | None = None,\n    env: cabc.Mapping[str, str] | None = None,\n    require_save: bool = False,\n    extension: str = \".txt\",\n) -> bytes | None: ..."
+        },
+        "code_citation": {
+          "path": "src/click/termui.py",
+          "start_line": 848,
+          "end_line": 858,
+          "quote": "def edit(\n    text: str | bytes | bytearray | None = None,\n    editor: str | None = None,\n    env: cabc.Mapping[str, str] | None = None,\n    require_save: bool = True,\n    extension: str = \".txt\",\n    filename: str\n    | os.PathLike[str]\n    | cabc.Iterable[str | os.PathLike[str]]\n    | None = None,\n) -> str | bytes | bytearray | None:"
+        },
+        "proposed_fix": "Change the bytes/bytearray overload default from `require_save: bool = False` to `require_save: bool = True` so it matches the runtime implementation.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/click/termui.py",
+            "start_line": 814,
+            "end_line": 821,
+            "quote": "@t.overload\ndef edit(\n    text: bytes | bytearray,\n    editor: str | None = None,\n    env: cabc.Mapping[str, str] | None = None,\n    require_save: bool = False,\n    extension: str = \".txt\",\n) -> bytes | None: ..."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/click/termui.py",
+            "start_line": 848,
+            "end_line": 858,
+            "quote": "def edit(\n    text: str | bytes | bytearray | None = None,\n    editor: str | None = None,\n    env: cabc.Mapping[str, str] | None = None,\n    require_save: bool = True,\n    extension: str = \".txt\",\n    filename: str\n    | os.PathLike[str]\n    | cabc.Iterable[str | os.PathLike[str]]\n    | None = None,\n) -> str | bytes | bytearray | None:"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 396520,
+  "completion_tokens": 22794,
+  "calls_ok": 16,
+  "sum_call_latency_seconds": 249.05400867006392,
+  "true_drifts_recovered": []
+}

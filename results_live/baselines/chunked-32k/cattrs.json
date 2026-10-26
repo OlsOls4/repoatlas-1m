@@ -1,0 +1,446 @@
+{
+  "repo": "cattrs",
+  "chunk_size": 32000,
+  "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+  "full_pack_tokens_est": 262894,
+  "chunks_planned": 12,
+  "estimate_prompt_tokens": 323618,
+  "estimate_total_tokens": 395618,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 8,
+      "est_tokens": 17221,
+      "cached": false,
+      "prompt_tokens": 20538,
+      "completion_tokens": 1257,
+      "latency_seconds": 13.544889732002048,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 7,
+      "est_tokens": 23256,
+      "cached": false,
+      "prompt_tokens": 27936,
+      "completion_tokens": 1980,
+      "latency_seconds": 8.280162308976287,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 2,
+      "paths": 15,
+      "est_tokens": 24084,
+      "cached": false,
+      "prompt_tokens": 28385,
+      "completion_tokens": 2325,
+      "latency_seconds": 24.148280458990484,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 3,
+      "paths": 7,
+      "est_tokens": 25972,
+      "cached": false,
+      "prompt_tokens": 30931,
+      "completion_tokens": 2779,
+      "latency_seconds": 25.700713177007856,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 4,
+      "paths": 21,
+      "est_tokens": 26016,
+      "cached": false,
+      "prompt_tokens": 29168,
+      "completion_tokens": 2096,
+      "latency_seconds": 22.213616767025087,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 5,
+      "paths": 33,
+      "est_tokens": 21564,
+      "cached": false,
+      "prompt_tokens": 25540,
+      "completion_tokens": 2345,
+      "latency_seconds": 19.82587316900026,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 3,
+      "est_tokens": 16596,
+      "cached": false,
+      "prompt_tokens": 20372,
+      "completion_tokens": 372,
+      "latency_seconds": 16.639356986997882,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 2,
+      "est_tokens": 22587,
+      "cached": false,
+      "prompt_tokens": 27263,
+      "completion_tokens": 2001,
+      "latency_seconds": 22.57775021000998,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 5,
+      "est_tokens": 25503,
+      "cached": false,
+      "prompt_tokens": 31195,
+      "completion_tokens": 203,
+      "latency_seconds": 11.29259172899765,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 10,
+      "est_tokens": 25491,
+      "cached": false,
+      "prompt_tokens": 30355,
+      "completion_tokens": 500,
+      "latency_seconds": 16.664476172998548,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 26,
+      "est_tokens": 25857,
+      "cached": false,
+      "prompt_tokens": 29618,
+      "completion_tokens": 1862,
+      "latency_seconds": 20.96921293300693,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 33,
+      "est_tokens": 9539,
+      "cached": false,
+      "prompt_tokens": 10891,
+      "completion_tokens": 1272,
+      "latency_seconds": 11.427746923000086,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 213.30495493201306,
+  "raw_findings": 5,
+  "findings": [
+    {
+      "chunk": 1,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The docstring names the parameter `cache`, while the implementation names it `cache_result`.",
+        "doc_citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 502,
+          "end_line": 502,
+          "quote": ":param cache: Whether to cache the returned hook."
+        },
+        "code_citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 492,
+          "end_line": 492,
+          "quote": "self, type: Any, cache_result: bool = True"
+        },
+        "proposed_fix": "Change the docstring to `:param cache_result: Whether to cache the returned hook.`",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 502,
+            "end_line": 502,
+            "quote": ":param cache: Whether to cache the returned hook."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 492,
+            "end_line": 492,
+            "quote": "self, type: Any, cache_result: bool = True"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": [
+        "T9"
+      ]
+    },
+    {
+      "chunk": 1,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "other",
+        "explanation": "The docstring names the parameter `cache`, while the implementation names it `cache_result`.",
+        "doc_citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 651,
+          "end_line": 651,
+          "quote": ":param cache: Whether to cache the returned hook."
+        },
+        "code_citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 641,
+          "end_line": 641,
+          "quote": "self, type: TypeForm[T], cache_result: bool = True"
+        },
+        "proposed_fix": "Change the docstring to `:param cache_result: Whether to cache the returned hook.`",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 651,
+            "end_line": 651,
+            "quote": ":param cache: Whether to cache the returned hook."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/converters.py",
+            "start_line": 641,
+            "end_line": 641,
+            "quote": "self, type: TypeForm[T], cache_result: bool = True"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": [
+        "T10"
+      ]
+    },
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The unstructure docstring names `_cattrs_detailed_validation` as the line-cache parameter, but the corresponding function parameter is `_cattrs_use_linecache`.",
+        "doc_citation": {
+          "path": "src/cattrs/gen/typeddicts.py",
+          "start_line": 59,
+          "end_line": 60,
+          "quote": ":param _cattrs_detailed_validation: Whether to store the generated code in\n        the _linecache_, for easier debugging and better stack traces."
+        },
+        "code_citation": {
+          "path": "src/cattrs/gen/typeddicts.py",
+          "start_line": 49,
+          "end_line": 50,
+          "quote": "    _cattrs_use_linecache: bool = True,\n    **kwargs: AttributeOverride,"
+        },
+        "proposed_fix": "Change the docstring parameter name from `_cattrs_detailed_validation` to `_cattrs_use_linecache`.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 59,
+            "end_line": 60,
+            "quote": ":param _cattrs_detailed_validation: Whether to store the generated code in\n        the _linecache_, for easier debugging and better stack traces."
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 49,
+            "end_line": 50,
+            "quote": "    _cattrs_use_linecache: bool = True,\n    **kwargs: AttributeOverride,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "The structure docstring lists `_cattrs_detailed_validation` twice; the second entry should document `_cattrs_use_linecache`.",
+        "doc_citation": {
+          "path": "src/cattrs/gen/typeddicts.py",
+          "start_line": 257,
+          "end_line": 258,
+          "quote": ":param _cattrs_detailed_validation: Whether to store the generated code in\n        the _linecache_, for easier debugging and better stack traces."
+        },
+        "code_citation": {
+          "path": "src/cattrs/gen/typeddicts.py",
+          "start_line": 244,
+          "end_line": 245,
+          "quote": "    _cattrs_use_linecache: bool = True,\n    _cattrs_detailed_validation: bool | Literal[\"from_converter\"] = \"from_converter\","
+        },
+        "proposed_fix": "Rename the second docstring parameter to `_cattrs_use_linecache`.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 257,
+            "end_line": 258,
+            "quote": ":param _cattrs_detailed_validation: Whether to store the generated code in\n        the _linecache_, for easier debugging and better stack traces."
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/gen/typeddicts.py",
+            "start_line": 244,
+            "end_line": 245,
+            "quote": "    _cattrs_use_linecache: bool = True,\n    _cattrs_detailed_validation: bool | Literal[\"from_converter\"] = \"from_converter\","
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The ujson configure_converter docstring says bytes are serialized as base64, but the implementation uses base85 encoding and decoding.",
+        "doc_citation": {
+          "path": "src/cattrs/preconf/ujson.py",
+          "start_line": 40,
+          "end_line": 40,
+          "quote": "    * bytes are serialized as base64 strings"
+        },
+        "code_citation": {
+          "path": "src/cattrs/preconf/ujson.py",
+          "start_line": 49,
+          "end_line": 49,
+          "quote": "        bytes, lambda v: (b85encode(v) if v else b\"\").decode(\"utf8\")"
+        },
+        "proposed_fix": "Change the ujson.configure_converter docstring from \"* bytes are serialized as base64 strings\" to \"* bytes are serialized as base85 strings\".",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/cattrs/preconf/ujson.py",
+            "start_line": 40,
+            "end_line": 40,
+            "quote": "    * bytes are serialized as base64 strings"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/preconf/ujson.py",
+            "start_line": 49,
+            "end_line": 49,
+            "quote": "        bytes, lambda v: (b85encode(v) if v else b\"\").decode(\"utf8\")"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 312192,
+  "completion_tokens": 18992,
+  "calls_ok": 12,
+  "sum_call_latency_seconds": 213.2846705680131,
+  "true_drifts_recovered": [
+    "T10",
+    "T9"
+  ]
+}

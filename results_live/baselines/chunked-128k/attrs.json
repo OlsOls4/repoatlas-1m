@@ -1,0 +1,185 @@
+{
+  "repo": "attrs",
+  "chunk_size": 128000,
+  "ref": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+  "full_pack_tokens_est": 327857,
+  "chunks_planned": 4,
+  "estimate_prompt_tokens": 396090,
+  "estimate_total_tokens": 420090,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 30,
+      "est_tokens": 105695,
+      "cached": false,
+      "prompt_tokens": 128739,
+      "completion_tokens": 1338,
+      "latency_seconds": 8.732272074994398,
+      "finish_reason": "stop",
+      "parse_error": "Model returned no message.content; reasoning fallback: We need answer JSON only. Need analyze packed repo. Task: find documentation drift contradiction code for flags, defaults, signatures, env vars, config keys; onboarding atlas claims architecture entry points data flow. Need cite exact lines. Need be very careful. We have huge repo context but maybe can inspect for obvious drift. Need output strict JSON. We need not overdo? User asks \"Requested ove"
+    },
+    {
+      "chunk": 1,
+      "paths": 62,
+      "est_tokens": 96835,
+      "cached": false,
+      "prompt_tokens": 120830,
+      "completion_tokens": 3566,
+      "latency_seconds": 14.947082666010829,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 2,
+      "paths": 11,
+      "est_tokens": 103793,
+      "cached": false,
+      "prompt_tokens": 126376,
+      "completion_tokens": 1869,
+      "latency_seconds": 30.449685017985757,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 13,
+      "est_tokens": 21753,
+      "cached": false,
+      "prompt_tokens": 26227,
+      "completion_tokens": 2161,
+      "latency_seconds": 8.80690296299872,
+      "finish_reason": "stop",
+      "findings": 1
+    }
+  ],
+  "errors": [
+    {
+      "chunk": 0,
+      "parse_error": "Model returned no message.content; reasoning fallback: We need answer JSON only. Need analyze packed repo. Task: find documentation drift contradiction code for flags, defaults, signatures, env vars, config keys; onboarding atlas claims architecture entry points data flow. Need cite exact lines. Need be very careful. We have huge repo context but maybe can inspect for obvious drift. Need output strict JSON. We need not overdo? User asks \"Requested ove"
+    }
+  ],
+  "stopped": null,
+  "wall_seconds": 62.94544872100232,
+  "raw_findings": 2,
+  "findings": [
+    {
+      "chunk": 1,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The documented attr.s signature omits the force_kw_only parameter, but code/tests exercise attr.s(..., force_kw_only=False).",
+        "doc_citation": {
+          "path": "docs/api-attr.rst",
+          "start_line": 17,
+          "end_line": 17,
+          "quote": ".. autofunction:: attr.s(these=None, repr_ns=None, repr=None, cmp=None, hash=None, init=None, slots=False, frozen=False, weakref_slot=True, str=False, auto_attribs=False, kw_only=False, cache_hash=False, auto_exc=False, eq=None, order=None, auto_detect=False, collect_by_mro=False, getstate_setstate=None, on_setattr=None, field_transformer=None, match_args=True, unsafe_hash=None)"
+        },
+        "code_citation": {
+          "path": "tests/test_make.py",
+          "start_line": 1257,
+          "end_line": 1257,
+          "quote": "        @attr.s(kw_only=True, force_kw_only=False)"
+        },
+        "proposed_fix": "Update the documented attr.s signature to include force_kw_only=False, e.g. ... kw_only=False, force_kw_only=False, cache_hash=False, ...",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/api-attr.rst",
+            "start_line": 17,
+            "end_line": 17,
+            "quote": ".. autofunction:: attr.s(these=None, repr_ns=None, repr=None, cmp=None, hash=None, init=None, slots=False, frozen=False, weakref_slot=True, str=False, auto_attribs=False, kw_only=False, cache_hash=False, auto_exc=False, eq=None, order=None, auto_detect=False, collect_by_mro=False, getstate_setstate=None, on_setattr=None, field_transformer=None, match_args=True, unsafe_hash=None)"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "tests/test_make.py",
+            "start_line": 1257,
+            "end_line": 1257,
+            "quote": "        @attr.s(kw_only=True, force_kw_only=False)"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 3,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "flag",
+        "explanation": "The test docstring names a nonexistent `attrs(tranform_value_serializer=func)` API, while the tests actually use the `field_transformer` argument to `attr.s`.",
+        "doc_citation": {
+          "path": "tests/test_hooks.py",
+          "start_line": 14,
+          "end_line": 14,
+          "quote": "Tests for `attrs(tranform_value_serializer=func)`"
+        },
+        "code_citation": {
+          "path": "tests/test_hooks.py",
+          "start_line": 29,
+          "end_line": 29,
+          "quote": "@attr.s(field_transformer=hook)"
+        },
+        "proposed_fix": "Change the docstring to `Tests for `attrs(field_transformer=func)``.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "tests/test_hooks.py",
+            "start_line": 14,
+            "end_line": 14,
+            "quote": "Tests for `attrs(tranform_value_serializer=func)`"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "tests/test_hooks.py",
+            "start_line": 29,
+            "end_line": 29,
+            "quote": "@attr.s(field_transformer=hook)"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 402172,
+  "completion_tokens": 8934,
+  "calls_ok": 4,
+  "sum_call_latency_seconds": 62.935942721989704,
+  "true_drifts_recovered": []
+}

@@ -1,0 +1,178 @@
+{
+ "T1@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 136,
+  "doc_chunk": 6,
+  "code_chunk": 1,
+  "same_chunk": false
+ },
+ "T2@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 652,
+  "doc_chunk": 4,
+  "code_chunk": 2,
+  "same_chunk": false
+ },
+ "T3@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 594,
+  "doc_chunk": 4,
+  "code_chunk": 2,
+  "same_chunk": false
+ },
+ "T4@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 915,
+  "doc_chunk": 8,
+  "code_chunk": 3,
+  "same_chunk": false
+ },
+ "T5@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 27,
+  "doc_chunk": 6,
+  "code_chunk": 1,
+  "same_chunk": false
+ },
+ "T6@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 333,
+  "doc_chunk": 5,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T7@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 1344,
+  "doc_chunk": 4,
+  "code_chunk": 4,
+  "same_chunk": true
+ },
+ "T8@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 118,
+  "doc_chunk": 3,
+  "code_chunk": 1,
+  "same_chunk": false
+ },
+ "T9@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 491,
+  "doc_chunk": 1,
+  "code_chunk": 1,
+  "same_chunk": true
+ },
+ "T10@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 640,
+  "doc_chunk": 1,
+  "code_chunk": 1,
+  "same_chunk": true
+ },
+ "T11@32k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 92,
+  "doc_chunk": 4,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T1@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 136,
+  "doc_chunk": 1,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T2@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 652,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T3@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 594,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T4@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 915,
+  "doc_chunk": 1,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T5@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 27,
+  "doc_chunk": 1,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T6@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 333,
+  "doc_chunk": 1,
+  "code_chunk": 0,
+  "same_chunk": false
+ },
+ "T7@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 1344,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T8@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 118,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T9@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 491,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T10@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 640,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ },
+ "T11@128k": {
+  "doc_in_pack": true,
+  "code_in_pack": true,
+  "code_line": 92,
+  "doc_chunk": 0,
+  "code_chunk": 0,
+  "same_chunk": true
+ }
+}

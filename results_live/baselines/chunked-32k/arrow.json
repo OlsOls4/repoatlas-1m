@@ -1,0 +1,351 @@
+{
+  "repo": "arrow",
+  "chunk_size": 32000,
+  "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+  "full_pack_tokens_est": 280937,
+  "chunks_planned": 14,
+  "estimate_prompt_tokens": 346809,
+  "estimate_total_tokens": 430809,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 5,
+      "est_tokens": 3332,
+      "cached": false,
+      "prompt_tokens": 4310,
+      "completion_tokens": 2515,
+      "latency_seconds": 18.923478436016012,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 1,
+      "est_tokens": 26000,
+      "cached": false,
+      "prompt_tokens": 31280,
+      "completion_tokens": 1683,
+      "latency_seconds": 19.22621967300074,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 1,
+      "est_tokens": 26032,
+      "cached": false,
+      "prompt_tokens": 30044,
+      "completion_tokens": 660,
+      "latency_seconds": 11.498260193999158,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 1,
+      "est_tokens": 19380,
+      "cached": false,
+      "prompt_tokens": 20800,
+      "completion_tokens": 1104,
+      "latency_seconds": 14.324563877016772,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 4,
+      "paths": 1,
+      "est_tokens": 20507,
+      "cached": false,
+      "prompt_tokens": 25668,
+      "completion_tokens": 3891,
+      "latency_seconds": 23.834841773001244,
+      "finish_reason": "stop",
+      "findings": 3
+    },
+    {
+      "chunk": 5,
+      "paths": 8,
+      "est_tokens": 24734,
+      "cached": false,
+      "prompt_tokens": 30705,
+      "completion_tokens": 2752,
+      "latency_seconds": 16.694895550986985,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 17,
+      "est_tokens": 8885,
+      "cached": false,
+      "prompt_tokens": 10497,
+      "completion_tokens": 2235,
+      "latency_seconds": 14.302230649016565,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 1,
+      "est_tokens": 26014,
+      "cached": false,
+      "prompt_tokens": 29161,
+      "completion_tokens": 247,
+      "latency_seconds": 10.967911232000915,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 1,
+      "est_tokens": 26011,
+      "cached": false,
+      "prompt_tokens": 28954,
+      "completion_tokens": 527,
+      "latency_seconds": 4.585950634995243,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 1,
+      "est_tokens": 15283,
+      "cached": false,
+      "prompt_tokens": 16903,
+      "completion_tokens": 1268,
+      "latency_seconds": 14.511762046982767,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 1,
+      "est_tokens": 26005,
+      "cached": false,
+      "prompt_tokens": 32612,
+      "completion_tokens": 1249,
+      "latency_seconds": 6.985662578983465,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 1,
+      "est_tokens": 14390,
+      "cached": false,
+      "prompt_tokens": 17638,
+      "completion_tokens": 659,
+      "latency_seconds": 15.827810418006266,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 1,
+      "est_tokens": 21751,
+      "cached": false,
+      "prompt_tokens": 28389,
+      "completion_tokens": 710,
+      "latency_seconds": 15.000561392022064,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 15,
+      "est_tokens": 23687,
+      "cached": false,
+      "prompt_tokens": 28940,
+      "completion_tokens": 1764,
+      "latency_seconds": 18.239620458014542,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 204.9486407819786,
+  "raw_findings": 3,
+  "findings": [
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The docstring documents the first parameter of dehumanize as `timestring` and locale default as `'en-us'`, while the implementation defines `input_string` and defaults `locale` to `\"en_us\"`.",
+        "doc_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1349,
+          "end_line": 1350,
+          "quote": "        :param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'."
+        },
+        "code_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "proposed_fix": "Update the dehumanize docstring to use `:param input_string:` and change the documented locale default from 'en-us' to 'en_us'.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1349,
+            "end_line": 1350,
+            "quote": "        :param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1344,
+            "end_line": 1344,
+            "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": [
+        "T7"
+      ]
+    },
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "The docstring marks `end` as optional for interval, but the implementation requires `end: dt_datetime`.",
+        "doc_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 740,
+          "end_line": 740,
+          "quote": "        :param end: (optional) A datetime expression, the end of the range."
+        },
+        "code_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 729,
+          "end_line": 729,
+          "quote": "        end: dt_datetime,"
+        },
+        "proposed_fix": "Remove '(optional)' from the interval docstring for `end` or otherwise state that it is required.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 740,
+            "end_line": 740,
+            "quote": "        :param end: (optional) A datetime expression, the end of the range."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 729,
+            "end_line": 729,
+            "quote": "        end: dt_datetime,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-3",
+        "drift_kind": "signature",
+        "explanation": "The docstring marks `end` as optional for span_range, but the implementation requires `end: dt_datetime`.",
+        "doc_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 658,
+          "end_line": 658,
+          "quote": "        :param end: (optional) A datetime expression, the end of the range."
+        },
+        "code_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 647,
+          "end_line": 647,
+          "quote": "        end: dt_datetime,"
+        },
+        "proposed_fix": "Remove '(optional)' from the span_range docstring for `end` or otherwise state that it is required.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-3",
+        "doc_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 658,
+            "end_line": 658,
+            "quote": "        :param end: (optional) A datetime expression, the end of the range."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 647,
+            "end_line": 647,
+            "quote": "        end: dt_datetime,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 335901,
+  "completion_tokens": 21264,
+  "calls_ok": 14,
+  "sum_call_latency_seconds": 204.92376891404274,
+  "true_drifts_recovered": [
+    "T7"
+  ]
+}

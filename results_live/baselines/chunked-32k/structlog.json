@@ -1,0 +1,301 @@
+{
+  "repo": "structlog",
+  "chunk_size": 32000,
+  "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+  "full_pack_tokens_est": 318657,
+  "chunks_planned": 15,
+  "estimate_prompt_tokens": 392609,
+  "estimate_total_tokens": 482609,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 9,
+      "est_tokens": 20999,
+      "cached": false,
+      "prompt_tokens": 25310,
+      "completion_tokens": 2798,
+      "latency_seconds": 19.494905821979046,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 6,
+      "est_tokens": 24528,
+      "cached": false,
+      "prompt_tokens": 29970,
+      "completion_tokens": 3120,
+      "latency_seconds": 18.183924348995788,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 7,
+      "est_tokens": 25609,
+      "cached": false,
+      "prompt_tokens": 30918,
+      "completion_tokens": 2214,
+      "latency_seconds": 11.94870914297644,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 3,
+      "paths": 4,
+      "est_tokens": 5661,
+      "cached": false,
+      "prompt_tokens": 7149,
+      "completion_tokens": 2560,
+      "latency_seconds": 49.55969281101716,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 4,
+      "paths": 1,
+      "est_tokens": 32888,
+      "cached": false,
+      "prompt_tokens": 52691,
+      "completion_tokens": 301,
+      "latency_seconds": 7.052999065985205,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 5,
+      "paths": 2,
+      "est_tokens": 13941,
+      "cached": false,
+      "prompt_tokens": 21284,
+      "completion_tokens": 1010,
+      "latency_seconds": 20.387825179990614,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 4,
+      "est_tokens": 25519,
+      "cached": false,
+      "prompt_tokens": 34273,
+      "completion_tokens": 1222,
+      "latency_seconds": 7.848657225986244,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 9,
+      "est_tokens": 25966,
+      "cached": false,
+      "prompt_tokens": 29952,
+      "completion_tokens": 2153,
+      "latency_seconds": 20.331663022981957,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 12,
+      "est_tokens": 24156,
+      "cached": false,
+      "prompt_tokens": 31279,
+      "completion_tokens": 1581,
+      "latency_seconds": 14.80381251097424,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 26,
+      "est_tokens": 13664,
+      "cached": false,
+      "prompt_tokens": 17586,
+      "completion_tokens": 2021,
+      "latency_seconds": 24.254265413997928,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 1,
+      "est_tokens": 16950,
+      "cached": false,
+      "prompt_tokens": 20597,
+      "completion_tokens": 259,
+      "latency_seconds": 4.4735542129783425,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 2,
+      "est_tokens": 25380,
+      "cached": false,
+      "prompt_tokens": 31543,
+      "completion_tokens": 2510,
+      "latency_seconds": 26.63466044398956,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 3,
+      "est_tokens": 22420,
+      "cached": false,
+      "prompt_tokens": 27889,
+      "completion_tokens": 1361,
+      "latency_seconds": 19.16385801899014,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 7,
+      "est_tokens": 23983,
+      "cached": false,
+      "prompt_tokens": 29253,
+      "completion_tokens": 1496,
+      "latency_seconds": 34.242655290989205,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 14,
+      "paths": 22,
+      "est_tokens": 18015,
+      "cached": false,
+      "prompt_tokens": 21335,
+      "completion_tokens": 2090,
+      "latency_seconds": 13.411117211013334,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 291.81759337498806,
+  "raw_findings": 2,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The docstring claims bound_contextvars can be used as a decorator, but the function is declared with only contextlib.contextmanager and is called as a context manager factory.",
+        "doc_citation": {
+          "path": "src/structlog/contextvars.py",
+          "start_line": 182,
+          "end_line": 182,
+          "quote": "Can be used as a context manager or decorator."
+        },
+        "code_citation": {
+          "path": "src/structlog/contextvars.py",
+          "start_line": 176,
+          "end_line": 176,
+          "quote": "@contextlib.contextmanager"
+        },
+        "proposed_fix": "Change the sentence to \"Can be used as a context manager.\"",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/structlog/contextvars.py",
+            "start_line": 182,
+            "end_line": 182,
+            "quote": "Can be used as a context manager or decorator."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/structlog/contextvars.py",
+            "start_line": 176,
+            "end_line": 176,
+            "quote": "@contextlib.contextmanager"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "BytesLoggerFactory's docstring says positional arguments are ignored, but its __call__ uses the first positional argument as the logger name.",
+        "doc_citation": {
+          "path": "src/structlog/_output.py",
+          "start_line": 368,
+          "end_line": 368,
+          "quote": "    Positional arguments are silently ignored."
+        },
+        "code_citation": {
+          "path": "src/structlog/_output.py",
+          "start_line": 379,
+          "end_line": 379,
+          "quote": "        return BytesLogger(self._file, name=args[0] if args else None)"
+        },
+        "proposed_fix": "Change the docstring line to: \"The first positional argument, if present, is used as the logger name.\"",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 368,
+            "end_line": 368,
+            "quote": "    Positional arguments are silently ignored."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 379,
+            "end_line": 379,
+            "quote": "        return BytesLogger(self._file, name=args[0] if args else None)"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 411029,
+  "completion_tokens": 26696,
+  "calls_ok": 15,
+  "sum_call_latency_seconds": 291.7922997228452,
+  "true_drifts_recovered": []
+}

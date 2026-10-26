@@ -1,0 +1,116 @@
+{
+  "repo": "arrow",
+  "chunk_size": 128000,
+  "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+  "full_pack_tokens_est": 280937,
+  "chunks_planned": 3,
+  "estimate_prompt_tokens": 339087,
+  "estimate_total_tokens": 357087,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 8,
+      "est_tokens": 104840,
+      "cached": false,
+      "prompt_tokens": 121779,
+      "completion_tokens": 1918,
+      "latency_seconds": 7.603445640997961,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 25,
+      "est_tokens": 90646,
+      "cached": false,
+      "prompt_tokens": 102275,
+      "completion_tokens": 2145,
+      "latency_seconds": 11.137365510017844,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 17,
+      "est_tokens": 85587,
+      "cached": false,
+      "prompt_tokens": 105994,
+      "completion_tokens": 2133,
+      "latency_seconds": 10.128180689993314,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 28.87825646699639,
+  "raw_findings": 1,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The dehumanize docstring documents the first parameter as timestring, but the method signature names it input_string.",
+        "doc_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1349,
+          "end_line": 1349,
+          "quote": ":param timestring: a ``str`` representing a humanized relative time."
+        },
+        "code_citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "proposed_fix": "Replace `:param timestring:` with `:param input_string:` in the dehumanize docstring.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1349,
+            "end_line": 1349,
+            "quote": ":param timestring: a ``str`` representing a humanized relative time."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "arrow/arrow.py",
+            "start_line": 1344,
+            "end_line": 1344,
+            "quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": [
+        "T7"
+      ]
+    }
+  ],
+  "prompt_tokens": 330048,
+  "completion_tokens": 6196,
+  "calls_ok": 3,
+  "sum_call_latency_seconds": 28.86899184100912,
+  "true_drifts_recovered": [
+    "T7"
+  ]
+}

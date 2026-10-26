@@ -1,0 +1,44 @@
+repo,path,line,check,reference,detail
+starlette,docs/testclient.md,53,method-call-signature,client.get(...),no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)
+starlette,docs/websockets.md,74,method-call-signature,websocket.receive_json(...),keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)
+httpx,docs/advanced/clients.md,229,method-call-signature,progress.update(...),no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)
+httpx,docs/advanced/clients.md,256,method-call-signature,f.read(...),1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)
+httpx,docs/advanced/extensions.md,169,call-signature,httpx.get(...),no parameter named 'extensions' (def httpx/_api.py:174)
+httpx,docs/advanced/extensions.md,179,call-signature,httpx.request(...),no parameter named 'extensions' (def httpx/_api.py:39)
+httpx,docs/advanced/transports.md,178,dotted,httpx.Mounts,'Mounts' not found on httpx
+httpx,docs/compatibility.md,56,method-call-signature,session.send(...),no parameter named 'allow_redirects'; no package method 'send' accepts it (e.g. Client.send at httpx/_client.py:879)
+httpx,docs/compatibility.md,232,exception-name:undefined,RequestException,exception-like name defined nowhere in package code
+httpx,httpx/_transports/wsgi.py,50,call-signature,httpx.Client(...),no parameter named 'app' (def httpx/_client.py:639)
+click,docs/exceptions.md,110,role:undefined,FileType,:class: target defined nowhere in package code
+attrs,docs/api.rst,702,dotted,attrs.converter.pipe,'converter' not found on attrs
+attrs,docs/extending.md,255,dotted,attrs.Attribute.alias_is_default,'alias_is_default' not found on attrs.Attribute
+structlog,docs/standard-library.md,117,dotted,structlog.stdlib._NAME_TO_LEVEL,'_NAME_TO_LEVEL' not found on structlog.stdlib
+structlog,src/structlog/stdlib.py,862,dotted,structlog.stdlib._log_levels._NAME_TO_LEVEL,'_log_levels' not found on structlog.stdlib
+structlog,src/structlog/twisted.py,235,role:undefined,PlainFileObserver,:class: target defined nowhere in package code
+structlog,src/structlog/dev.py,1008,docstring-param,columns(value),documented param 'value' not in signature of columns (src/structlog/dev.py:999)
+jinja,docs/extensions.rst,230,dotted,jinja2.ext.with_,'with_' not found on jinja2.ext
+jinja,docs/extensions.rst,241,dotted,jinja2.ext.autoescape,'autoescape' not found on jinja2.ext
+jinja,src/jinja2/runtime.py,490,role:undefined,_last,:attr: target defined nowhere in package code
+nox,docs/tutorial.rst,488,method-call-signature,session.conda_install(...),no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)
+nox,docs/usage.rst,219,dotted:name-not-in-code,nox.options.reuse_venvs,'reuse_venvs' appears nowhere in package code
+arrow,docs/api-guide.rst,23,role,arrow.locale,'locale' not found on arrow
+arrow,arrow/arrow.py,396,dotted,arrow.fromordinal,'fromordinal' not found on arrow
+arrow,arrow/arrow.py,1349,docstring-param,dehumanize(timestring),documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)
+cattrs,docs/customizing.md,279,exception-name:undefined,ForbiddenExtraKeyError,exception-like name defined nowhere in package code
+cattrs,docs/validation.md,107,exception-name:undefined,MyInterestingException,exception-like name defined nowhere in package code
+cattrs,src/cattrs/converters.py,502,docstring-param,get_unstructure_hook(cache),documented param 'cache' not in signature of get_unstructure_hook (src/cattrs/converters.py:491)
+cattrs,src/cattrs/converters.py,651,docstring-param,get_structure_hook(cache),documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)
+marshmallow,docs/extending/custom_error_handling.rst,14,exception-name:undefined,AppError,exception-like name defined nowhere in package code
+marshmallow,docs/extending/custom_error_handling.rst,24,exception-name:undefined,AppError,exception-like name defined nowhere in package code
+marshmallow,docs/extending/custom_error_handling.rst,28,exception-name:undefined,AppError,exception-like name defined nowhere in package code
+marshmallow,docs/extending/overriding_attribute_access.rst,17,method-call-signature,obj.get(...),2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)
+marshmallow,docs/extending/pre_and_post_processing.rst,61,call-signature,marshmallow.pre_load(...),no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)
+marshmallow,docs/extending/pre_and_post_processing.rst,66,call-signature,marshmallow.post_dump(...),no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)
+werkzeug,docs/routing.rst,24,import,werkzeug.routing.NotFound,'NotFound' not found on werkzeug.routing
+werkzeug,docs/routing.rst,64,role,werkzeug.exceptions.RequestRedirect,'RequestRedirect' not found on werkzeug.exceptions
+werkzeug,src/werkzeug/datastructures/headers.py,58,role:undefined,linked,:meth: target defined nowhere in package code
+werkzeug,src/werkzeug/middleware/proxy_fix.py,55,dotted,werkzeug.proxy_fix.orig,'proxy_fix' not found on werkzeug
+werkzeug,src/werkzeug/middleware/proxy_fix.py,83,dotted,werkzeug.proxy_fix.orig,'proxy_fix' not found on werkzeug
+werkzeug,src/werkzeug/serving.py,1021,role,werkzeug.middleware.SharedDataMiddleware,'SharedDataMiddleware' not found on werkzeug.middleware
+werkzeug,src/werkzeug/test.py,1103,role,werkzeug.FileWrapper,'FileWrapper' not found on werkzeug
+werkzeug,src/werkzeug/datastructures/headers.py,433,docstring-param,setlist(value),documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)

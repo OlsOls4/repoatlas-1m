@@ -1,0 +1,499 @@
+{
+  "per_repo": {
+    "starlette": {
+      "fragments": 922,
+      "refs_checked": 266,
+      "calls_checked": 308,
+      "params_checked": 17,
+      "packages": [
+        "starlette"
+      ],
+      "modules": 36,
+      "doc_files": 29,
+      "flags": 2
+    },
+    "httpx": {
+      "fragments": 1035,
+      "refs_checked": 324,
+      "calls_checked": 333,
+      "params_checked": 1,
+      "packages": [
+        "httpx"
+      ],
+      "modules": 23,
+      "doc_files": 23,
+      "flags": 8
+    },
+    "click": {
+      "fragments": 2468,
+      "refs_checked": 563,
+      "calls_checked": 170,
+      "params_checked": 322,
+      "packages": [
+        "click"
+      ],
+      "modules": 17,
+      "doc_files": 35,
+      "flags": 1
+    },
+    "attrs": {
+      "fragments": 1096,
+      "refs_checked": 371,
+      "calls_checked": 93,
+      "params_checked": 109,
+      "packages": [
+        "attr",
+        "attrs",
+        "typing_tests"
+      ],
+      "modules": 23,
+      "doc_files": 17,
+      "flags": 2
+    },
+    "pydantic-settings": {
+      "fragments": 935,
+      "refs_checked": 244,
+      "calls_checked": 52,
+      "params_checked": 131,
+      "packages": [
+        "pydantic_settings"
+      ],
+      "modules": 22,
+      "doc_files": 2,
+      "flags": 0
+    },
+    "structlog": {
+      "fragments": 1234,
+      "refs_checked": 461,
+      "calls_checked": 198,
+      "params_checked": 110,
+      "packages": [
+        "show_off",
+        "structlog",
+        "typing_tests"
+      ],
+      "modules": 24,
+      "doc_files": 23,
+      "flags": 4
+    },
+    "jinja": {
+      "fragments": 1598,
+      "refs_checked": 263,
+      "calls_checked": 54,
+      "params_checked": 78,
+      "packages": [
+        "jinja2"
+      ],
+      "modules": 25,
+      "doc_files": 13,
+      "flags": 3
+    },
+    "nox": {
+      "fragments": 995,
+      "refs_checked": 204,
+      "calls_checked": 185,
+      "params_checked": 87,
+      "packages": [
+        "nox"
+      ],
+      "modules": 25,
+      "doc_files": 6,
+      "flags": 2
+    },
+    "arrow": {
+      "fragments": 353,
+      "refs_checked": 227,
+      "calls_checked": 205,
+      "params_checked": 125,
+      "packages": [
+        "arrow"
+      ],
+      "modules": 10,
+      "doc_files": 5,
+      "flags": 3
+    },
+    "cattrs": {
+      "fragments": 826,
+      "refs_checked": 189,
+      "calls_checked": 53,
+      "params_checked": 76,
+      "packages": [
+        "cattr",
+        "cattrs"
+      ],
+      "modules": 51,
+      "doc_files": 19,
+      "flags": 4
+    },
+    "marshmallow": {
+      "fragments": 864,
+      "refs_checked": 392,
+      "calls_checked": 94,
+      "params_checked": 180,
+      "packages": [
+        "marshmallow"
+      ],
+      "modules": 14,
+      "doc_files": 37,
+      "flags": 6
+    },
+    "werkzeug": {
+      "fragments": 2764,
+      "refs_checked": 584,
+      "calls_checked": 126,
+      "params_checked": 512,
+      "packages": [
+        "werkzeug"
+      ],
+      "modules": 54,
+      "doc_files": 39,
+      "flags": 8
+    }
+  },
+  "flags": [
+    {
+      "repo": "starlette",
+      "path": "docs/testclient.md",
+      "line": 53,
+      "check": "method-call-signature",
+      "reference": "client.get(...)",
+      "detail": "no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)"
+    },
+    {
+      "repo": "starlette",
+      "path": "docs/websockets.md",
+      "line": 74,
+      "check": "method-call-signature",
+      "reference": "websocket.receive_json(...)",
+      "detail": "keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/advanced/clients.md",
+      "line": 229,
+      "check": "method-call-signature",
+      "reference": "progress.update(...)",
+      "detail": "no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/advanced/clients.md",
+      "line": 256,
+      "check": "method-call-signature",
+      "reference": "f.read(...)",
+      "detail": "1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/advanced/extensions.md",
+      "line": 169,
+      "check": "call-signature",
+      "reference": "httpx.get(...)",
+      "detail": "no parameter named 'extensions' (def httpx/_api.py:174)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/advanced/extensions.md",
+      "line": 179,
+      "check": "call-signature",
+      "reference": "httpx.request(...)",
+      "detail": "no parameter named 'extensions' (def httpx/_api.py:39)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/advanced/transports.md",
+      "line": 178,
+      "check": "dotted",
+      "reference": "httpx.Mounts",
+      "detail": "'Mounts' not found on httpx"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/compatibility.md",
+      "line": 56,
+      "check": "method-call-signature",
+      "reference": "session.send(...)",
+      "detail": "no parameter named 'allow_redirects'; no package method 'send' accepts it (e.g. Client.send at httpx/_client.py:879)"
+    },
+    {
+      "repo": "httpx",
+      "path": "docs/compatibility.md",
+      "line": 232,
+      "check": "exception-name:undefined",
+      "reference": "RequestException",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "httpx",
+      "path": "httpx/_transports/wsgi.py",
+      "line": 50,
+      "check": "call-signature",
+      "reference": "httpx.Client(...)",
+      "detail": "no parameter named 'app' (def httpx/_client.py:639)"
+    },
+    {
+      "repo": "click",
+      "path": "docs/exceptions.md",
+      "line": 110,
+      "check": "role:undefined",
+      "reference": "FileType",
+      "detail": ":class: target defined nowhere in package code"
+    },
+    {
+      "repo": "attrs",
+      "path": "docs/api.rst",
+      "line": 702,
+      "check": "dotted",
+      "reference": "attrs.converter.pipe",
+      "detail": "'converter' not found on attrs"
+    },
+    {
+      "repo": "attrs",
+      "path": "docs/extending.md",
+      "line": 255,
+      "check": "dotted",
+      "reference": "attrs.Attribute.alias_is_default",
+      "detail": "'alias_is_default' not found on attrs.Attribute"
+    },
+    {
+      "repo": "structlog",
+      "path": "docs/standard-library.md",
+      "line": 117,
+      "check": "dotted",
+      "reference": "structlog.stdlib._NAME_TO_LEVEL",
+      "detail": "'_NAME_TO_LEVEL' not found on structlog.stdlib"
+    },
+    {
+      "repo": "structlog",
+      "path": "src/structlog/stdlib.py",
+      "line": 862,
+      "check": "dotted",
+      "reference": "structlog.stdlib._log_levels._NAME_TO_LEVEL",
+      "detail": "'_log_levels' not found on structlog.stdlib"
+    },
+    {
+      "repo": "structlog",
+      "path": "src/structlog/twisted.py",
+      "line": 235,
+      "check": "role:undefined",
+      "reference": "PlainFileObserver",
+      "detail": ":class: target defined nowhere in package code"
+    },
+    {
+      "repo": "structlog",
+      "path": "src/structlog/dev.py",
+      "line": 1008,
+      "check": "docstring-param",
+      "reference": "columns(value)",
+      "detail": "documented param 'value' not in signature of columns (src/structlog/dev.py:999)"
+    },
+    {
+      "repo": "jinja",
+      "path": "docs/extensions.rst",
+      "line": 230,
+      "check": "dotted",
+      "reference": "jinja2.ext.with_",
+      "detail": "'with_' not found on jinja2.ext"
+    },
+    {
+      "repo": "jinja",
+      "path": "docs/extensions.rst",
+      "line": 241,
+      "check": "dotted",
+      "reference": "jinja2.ext.autoescape",
+      "detail": "'autoescape' not found on jinja2.ext"
+    },
+    {
+      "repo": "jinja",
+      "path": "src/jinja2/runtime.py",
+      "line": 490,
+      "check": "role:undefined",
+      "reference": "_last",
+      "detail": ":attr: target defined nowhere in package code"
+    },
+    {
+      "repo": "nox",
+      "path": "docs/tutorial.rst",
+      "line": 488,
+      "check": "method-call-signature",
+      "reference": "session.conda_install(...)",
+      "detail": "no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)"
+    },
+    {
+      "repo": "nox",
+      "path": "docs/usage.rst",
+      "line": 219,
+      "check": "dotted:name-not-in-code",
+      "reference": "nox.options.reuse_venvs",
+      "detail": "'reuse_venvs' appears nowhere in package code"
+    },
+    {
+      "repo": "arrow",
+      "path": "docs/api-guide.rst",
+      "line": 23,
+      "check": "role",
+      "reference": "arrow.locale",
+      "detail": "'locale' not found on arrow"
+    },
+    {
+      "repo": "arrow",
+      "path": "arrow/arrow.py",
+      "line": 396,
+      "check": "dotted",
+      "reference": "arrow.fromordinal",
+      "detail": "'fromordinal' not found on arrow"
+    },
+    {
+      "repo": "arrow",
+      "path": "arrow/arrow.py",
+      "line": 1349,
+      "check": "docstring-param",
+      "reference": "dehumanize(timestring)",
+      "detail": "documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)"
+    },
+    {
+      "repo": "cattrs",
+      "path": "docs/customizing.md",
+      "line": 279,
+      "check": "exception-name:undefined",
+      "reference": "ForbiddenExtraKeyError",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "cattrs",
+      "path": "docs/validation.md",
+      "line": 107,
+      "check": "exception-name:undefined",
+      "reference": "MyInterestingException",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "cattrs",
+      "path": "src/cattrs/converters.py",
+      "line": 502,
+      "check": "docstring-param",
+      "reference": "get_unstructure_hook(cache)",
+      "detail": "documented param 'cache' not in signature of get_unstructure_hook (src/cattrs/converters.py:491)"
+    },
+    {
+      "repo": "cattrs",
+      "path": "src/cattrs/converters.py",
+      "line": 651,
+      "check": "docstring-param",
+      "reference": "get_structure_hook(cache)",
+      "detail": "documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/custom_error_handling.rst",
+      "line": 14,
+      "check": "exception-name:undefined",
+      "reference": "AppError",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/custom_error_handling.rst",
+      "line": 24,
+      "check": "exception-name:undefined",
+      "reference": "AppError",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/custom_error_handling.rst",
+      "line": 28,
+      "check": "exception-name:undefined",
+      "reference": "AppError",
+      "detail": "exception-like name defined nowhere in package code"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/overriding_attribute_access.rst",
+      "line": 17,
+      "check": "method-call-signature",
+      "reference": "obj.get(...)",
+      "detail": "2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/pre_and_post_processing.rst",
+      "line": 61,
+      "check": "call-signature",
+      "reference": "marshmallow.pre_load(...)",
+      "detail": "no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)"
+    },
+    {
+      "repo": "marshmallow",
+      "path": "docs/extending/pre_and_post_processing.rst",
+      "line": 66,
+      "check": "call-signature",
+      "reference": "marshmallow.post_dump(...)",
+      "detail": "no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "docs/routing.rst",
+      "line": 24,
+      "check": "import",
+      "reference": "werkzeug.routing.NotFound",
+      "detail": "'NotFound' not found on werkzeug.routing"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "docs/routing.rst",
+      "line": 64,
+      "check": "role",
+      "reference": "werkzeug.exceptions.RequestRedirect",
+      "detail": "'RequestRedirect' not found on werkzeug.exceptions"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/datastructures/headers.py",
+      "line": 58,
+      "check": "role:undefined",
+      "reference": "linked",
+      "detail": ":meth: target defined nowhere in package code"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/middleware/proxy_fix.py",
+      "line": 55,
+      "check": "dotted",
+      "reference": "werkzeug.proxy_fix.orig",
+      "detail": "'proxy_fix' not found on werkzeug"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/middleware/proxy_fix.py",
+      "line": 83,
+      "check": "dotted",
+      "reference": "werkzeug.proxy_fix.orig",
+      "detail": "'proxy_fix' not found on werkzeug"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/serving.py",
+      "line": 1021,
+      "check": "role",
+      "reference": "werkzeug.middleware.SharedDataMiddleware",
+      "detail": "'SharedDataMiddleware' not found on werkzeug.middleware"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/test.py",
+      "line": 1103,
+      "check": "role",
+      "reference": "werkzeug.FileWrapper",
+      "detail": "'FileWrapper' not found on werkzeug"
+    },
+    {
+      "repo": "werkzeug",
+      "path": "src/werkzeug/datastructures/headers.py",
+      "line": 433,
+      "check": "docstring-param",
+      "reference": "setlist(value)",
+      "detail": "documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)"
+    }
+  ]
+}

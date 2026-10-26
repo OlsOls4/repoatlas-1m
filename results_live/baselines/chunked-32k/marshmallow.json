@@ -1,0 +1,336 @@
+{
+  "repo": "marshmallow",
+  "chunk_size": 32000,
+  "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+  "full_pack_tokens_est": 247224,
+  "chunks_planned": 13,
+  "estimate_prompt_tokens": 305645,
+  "estimate_total_tokens": 383645,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 5,
+      "est_tokens": 24934,
+      "cached": false,
+      "prompt_tokens": 30037,
+      "completion_tokens": 3761,
+      "latency_seconds": 25.631995703006396,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 5,
+      "est_tokens": 23187,
+      "cached": false,
+      "prompt_tokens": 27729,
+      "completion_tokens": 2184,
+      "latency_seconds": 11.52415021599154,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 2,
+      "paths": 3,
+      "est_tokens": 24801,
+      "cached": false,
+      "prompt_tokens": 30318,
+      "completion_tokens": 2307,
+      "latency_seconds": 18.697108849009965,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 17,
+      "est_tokens": 25978,
+      "cached": false,
+      "prompt_tokens": 30185,
+      "completion_tokens": 2598,
+      "latency_seconds": 19.10487466902123,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 4,
+      "paths": 37,
+      "est_tokens": 7579,
+      "cached": false,
+      "prompt_tokens": 8862,
+      "completion_tokens": 1875,
+      "latency_seconds": 14.91697115797433,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 5,
+      "paths": 1,
+      "est_tokens": 26037,
+      "cached": false,
+      "prompt_tokens": 32710,
+      "completion_tokens": 318,
+      "latency_seconds": 9.029749598994385,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 1,
+      "est_tokens": 6773,
+      "cached": false,
+      "prompt_tokens": 8317,
+      "completion_tokens": 385,
+      "latency_seconds": 12.419536018976942,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 1,
+      "est_tokens": 26031,
+      "cached": false,
+      "prompt_tokens": 31890,
+      "completion_tokens": 342,
+      "latency_seconds": 11.415891673997976,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 1,
+      "est_tokens": 1334,
+      "cached": false,
+      "prompt_tokens": 2001,
+      "completion_tokens": 1241,
+      "latency_seconds": 5.237809713027673,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 1,
+      "est_tokens": 25142,
+      "cached": false,
+      "prompt_tokens": 30687,
+      "completion_tokens": 3189,
+      "latency_seconds": 10.442879411013564,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 2,
+      "est_tokens": 23163,
+      "cached": false,
+      "prompt_tokens": 28218,
+      "completion_tokens": 284,
+      "latency_seconds": 2.865016045019729,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 6,
+      "est_tokens": 25442,
+      "cached": false,
+      "prompt_tokens": 30570,
+      "completion_tokens": 1544,
+      "latency_seconds": 8.927155208017211,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 18,
+      "est_tokens": 7809,
+      "cached": false,
+      "prompt_tokens": 9273,
+      "completion_tokens": 2379,
+      "latency_seconds": 11.253326510020997,
+      "finish_reason": "stop",
+      "findings": 1
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 161.48839915698045,
+  "raw_findings": 3,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The Url docstring documents a `default` parameter, but Url.__init__ does not declare one; field defaults are handled by the inherited Field parameters such as `load_default` and `dump_default`.",
+        "doc_citation": {
+          "path": "src/marshmallow/fields.py",
+          "start_line": 1751,
+          "end_line": 1751,
+          "quote": "    :param default: Default value for the field if the attribute is not set."
+        },
+        "code_citation": {
+          "path": "src/marshmallow/fields.py",
+          "start_line": 1762,
+          "end_line": 1770,
+          "quote": "    def __init__(\n        self,\n        *,\n        relative: bool = False,\n        absolute: bool = True,\n        schemes: types.StrSequenceOrSet | None = None,\n        require_tld: bool = True,\n        **kwargs: Unpack[_BaseFieldKwargs],\n    ):"
+        },
+        "proposed_fix": "Remove the `:param default:` line from the `Url` docstring.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1751,
+            "end_line": 1751,
+            "quote": "    :param default: Default value for the field if the attribute is not set."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/marshmallow/fields.py",
+            "start_line": 1762,
+            "end_line": 1770,
+            "quote": "    def __init__(\n        self,\n        *,\n        relative: bool = False,\n        absolute: bool = True,\n        schemes: types.StrSequenceOrSet | None = None,\n        require_tld: bool = True,\n        **kwargs: Unpack[_BaseFieldKwargs],\n    ):"
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 1763,
+          "corrected_end_line": 1771,
+          "line_offset": 1
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 1,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "default",
+        "explanation": "The OneOf.options docstring says the default valuegetter is `str()`, but the implementation defaults to the callable `str`.",
+        "doc_citation": {
+          "path": "src/marshmallow/validate.py",
+          "start_line": 641,
+          "end_line": 641,
+          "quote": "            In the latter case, the string specifies the name of an attribute of the choice objects. Defaults to `str()`."
+        },
+        "code_citation": {
+          "path": "src/marshmallow/validate.py",
+          "start_line": 632,
+          "end_line": 632,
+          "quote": "        self,\n        valuegetter: str | typing.Callable[[typing.Any], typing.Any] = str,"
+        },
+        "proposed_fix": "Replace \"Defaults to `str()`\" with \"Defaults to `str`\" in OneOf.options.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/marshmallow/validate.py",
+            "start_line": 641,
+            "end_line": 641,
+            "quote": "            In the latter case, the string specifies the name of an attribute of the choice objects. Defaults to `str()`."
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/marshmallow/validate.py",
+            "start_line": 632,
+            "end_line": 632,
+            "quote": "        self,\n        valuegetter: str | typing.Callable[[typing.Any], typing.Any] = str,"
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 12,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The documentation says invalid input produces a 400 response, but the Flask handler returns ValidationError messages with status 422.",
+        "doc_citation": {
+          "path": "docs/examples/quotes_api.rst",
+          "start_line": 41,
+          "end_line": 41,
+          "quote": "If we provide invalid input data, we get 400 error response. Let's omit \"author\" from the input data."
+        },
+        "code_citation": {
+          "path": "examples/flask_example.py",
+          "start_line": 140,
+          "end_line": 140,
+          "quote": "            return err.messages, 422"
+        },
+        "proposed_fix": "Change \"400 error response\" to \"422 error response\" in docs/examples/quotes_api.rst.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/examples/quotes_api.rst",
+            "start_line": 41,
+            "end_line": 41,
+            "quote": "If we provide invalid input data, we get 400 error response. Let's omit \"author\" from the input data."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "examples/flask_example.py",
+            "start_line": 140,
+            "end_line": 140,
+            "quote": "            return err.messages, 422"
+          },
+          "verified": true,
+          "reason": "whitespace-normalised-match",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 300797,
+  "completion_tokens": 22407,
+  "calls_ok": 13,
+  "sum_call_latency_seconds": 161.46646477407194,
+  "true_drifts_recovered": []
+}

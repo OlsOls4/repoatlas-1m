@@ -1,0 +1,123 @@
+{
+  "repo": "structlog",
+  "chunk_size": 128000,
+  "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+  "full_pack_tokens_est": 318657,
+  "chunks_planned": 4,
+  "estimate_prompt_tokens": 385049,
+  "estimate_total_tokens": 409049,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 26,
+      "est_tokens": 76578,
+      "cached": false,
+      "prompt_tokens": 91805,
+      "completion_tokens": 2474,
+      "latency_seconds": 11.279412194009637,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 18,
+      "est_tokens": 104143,
+      "cached": false,
+      "prompt_tokens": 144655,
+      "completion_tokens": 2263,
+      "latency_seconds": 13.523564520990476,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 44,
+      "est_tokens": 104318,
+      "cached": false,
+      "prompt_tokens": 128734,
+      "completion_tokens": 1932,
+      "latency_seconds": 10.017183074989589,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 27,
+      "est_tokens": 33837,
+      "cached": false,
+      "prompt_tokens": 40181,
+      "completion_tokens": 2369,
+      "latency_seconds": 9.68125700901146,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 44.51168121001683,
+  "raw_findings": 1,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "BytesLoggerFactory documents that positional arguments are silently ignored, but its __call__ passes the first positional argument to BytesLogger as name.",
+        "doc_citation": {
+          "path": "src/structlog/_output.py",
+          "start_line": 368,
+          "end_line": 368,
+          "quote": "Positional arguments are silently ignored."
+        },
+        "code_citation": {
+          "path": "src/structlog/_output.py",
+          "start_line": 378,
+          "end_line": 379,
+          "quote": "return BytesLogger(self._file, name=args[0] if args else None)"
+        },
+        "proposed_fix": "Change the BytesLoggerFactory docstring to state that the first positional argument, if given, is used as the BytesLogger name instead of being ignored.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 368,
+            "end_line": 368,
+            "quote": "Positional arguments are silently ignored."
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/structlog/_output.py",
+            "start_line": 378,
+            "end_line": 379,
+            "quote": "return BytesLogger(self._file, name=args[0] if args else None)"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 405375,
+  "completion_tokens": 9038,
+  "calls_ok": 4,
+  "sum_call_latency_seconds": 44.50141679900116,
+  "true_drifts_recovered": []
+}

@@ -1,0 +1,112 @@
+{
+  "repo": "cattrs",
+  "chunk_size": 128000,
+  "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+  "full_pack_tokens_est": 262894,
+  "chunks_planned": 3,
+  "estimate_prompt_tokens": 317444,
+  "estimate_total_tokens": 335444,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 46,
+      "est_tokens": 104499,
+      "cached": false,
+      "prompt_tokens": 122036,
+      "completion_tokens": 3914,
+      "latency_seconds": 18.979849424998974,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 1,
+      "paths": 57,
+      "est_tokens": 104141,
+      "cached": false,
+      "prompt_tokens": 123235,
+      "completion_tokens": 2935,
+      "latency_seconds": 14.09220838098554,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 67,
+      "est_tokens": 54398,
+      "cached": false,
+      "prompt_tokens": 62304,
+      "completion_tokens": 1593,
+      "latency_seconds": 8.65028214501217,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 41.73147697901004,
+  "raw_findings": 1,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The documentation doctest uses the singular exception name ForbiddenExtraKeyError, while the codebase defines ForbiddenExtraKeysError.",
+        "doc_citation": {
+          "path": "docs/customizing.md",
+          "start_line": 273,
+          "end_line": 273,
+          "quote": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber"
+        },
+        "code_citation": {
+          "path": "src/cattrs/errors.py",
+          "start_line": 118,
+          "end_line": 118,
+          "quote": "class ForbiddenExtraKeysError(CattrsError):"
+        },
+        "proposed_fix": "Replace `ForbiddenExtraKeyError` with `ForbiddenExtraKeysError` in the documentation doctest.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/customizing.md",
+            "start_line": 273,
+            "end_line": 273,
+            "quote": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber"
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/cattrs/errors.py",
+            "start_line": 118,
+            "end_line": 118,
+            "quote": "class ForbiddenExtraKeysError(CattrsError):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 307575,
+  "completion_tokens": 8442,
+  "calls_ok": 3,
+  "sum_call_latency_seconds": 41.722339950996684,
+  "true_drifts_recovered": []
+}

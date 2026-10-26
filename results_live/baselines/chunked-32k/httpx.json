@@ -1,0 +1,529 @@
+{
+  "repo": "httpx",
+  "chunk_size": 32000,
+  "ref": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "full_pack_tokens_est": 327864,
+  "chunks_planned": 15,
+  "estimate_prompt_tokens": 403777,
+  "estimate_total_tokens": 493777,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 9,
+      "est_tokens": 25210,
+      "cached": false,
+      "prompt_tokens": 30572,
+      "completion_tokens": 2008,
+      "latency_seconds": 13.823679145018104,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 4,
+      "est_tokens": 7496,
+      "cached": false,
+      "prompt_tokens": 9184,
+      "completion_tokens": 1065,
+      "latency_seconds": 25.951598594983807,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 2,
+      "est_tokens": 24758,
+      "cached": false,
+      "prompt_tokens": 30213,
+      "completion_tokens": 3037,
+      "latency_seconds": 14.596625805977965,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 3,
+      "paths": 7,
+      "est_tokens": 25480,
+      "cached": false,
+      "prompt_tokens": 30761,
+      "completion_tokens": 2394,
+      "latency_seconds": 10.545921084005386,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 4,
+      "paths": 10,
+      "est_tokens": 25119,
+      "cached": false,
+      "prompt_tokens": 29868,
+      "completion_tokens": 2424,
+      "latency_seconds": 12.733626883011311,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 5,
+      "paths": 26,
+      "est_tokens": 19431,
+      "cached": false,
+      "prompt_tokens": 22065,
+      "completion_tokens": 1639,
+      "latency_seconds": 9.051772020990029,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 1,
+      "est_tokens": 26038,
+      "cached": false,
+      "prompt_tokens": 32114,
+      "completion_tokens": 500,
+      "latency_seconds": 3.851663356006611,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 1,
+      "est_tokens": 26002,
+      "cached": false,
+      "prompt_tokens": 32146,
+      "completion_tokens": 292,
+      "latency_seconds": 4.142662288999418,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 1,
+      "est_tokens": 26024,
+      "cached": false,
+      "prompt_tokens": 32383,
+      "completion_tokens": 223,
+      "latency_seconds": 2.402520265983185,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 1,
+      "est_tokens": 17837,
+      "cached": false,
+      "prompt_tokens": 22031,
+      "completion_tokens": 325,
+      "latency_seconds": 2.5624347050033975,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 2,
+      "est_tokens": 25705,
+      "cached": false,
+      "prompt_tokens": 31733,
+      "completion_tokens": 2431,
+      "latency_seconds": 11.235973037022632,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 3,
+      "est_tokens": 21613,
+      "cached": false,
+      "prompt_tokens": 26589,
+      "completion_tokens": 1394,
+      "latency_seconds": 7.059653728007106,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 6,
+      "est_tokens": 24994,
+      "cached": false,
+      "prompt_tokens": 30359,
+      "completion_tokens": 1622,
+      "latency_seconds": 18.650985962012783,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 11,
+      "est_tokens": 25523,
+      "cached": false,
+      "prompt_tokens": 30421,
+      "completion_tokens": 2040,
+      "latency_seconds": 11.830134132993408,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 14,
+      "paths": 8,
+      "est_tokens": 7756,
+      "cached": false,
+      "prompt_tokens": 9407,
+      "completion_tokens": 1828,
+      "latency_seconds": 7.3853630920057185,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 155.85133956899517,
+  "raw_findings": 6,
+  "findings": [
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The Client docstring describes verify as accepting only True, False, or ssl.SSLContext, but its constructor signature also accepts a str.",
+        "doc_citation": {
+          "path": "httpx/_client.py",
+          "start_line": 617,
+          "end_line": 619,
+          "quote": "* **verify** - *(optional)* Either `True` to use an SSL context with the\ndefault CA bundle, `False` to disable verification, or an instance of\n`ssl.SSLContext` to use a custom context."
+        },
+        "code_citation": {
+          "path": "httpx/_client.py",
+          "start_line": 646,
+          "end_line": 646,
+          "quote": "verify: ssl.SSLContext | str | bool = True,"
+        },
+        "proposed_fix": "Update the Client docstring verify entry to: 'Either `True` to use an SSL context with the default CA bundle, `False` to disable verification, a `str` path to a CA bundle, or an instance of `ssl.SSLContext` to use a custom context.'",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "httpx/_client.py",
+            "start_line": 617,
+            "end_line": 619,
+            "quote": "* **verify** - *(optional)* Either `True` to use an SSL context with the\ndefault CA bundle, `False` to disable verification, or an instance of\n`ssl.SSLContext` to use a custom context."
+          },
+          "verified": true,
+          "reason": "whitespace-normalised-match",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_client.py",
+            "start_line": 646,
+            "end_line": 646,
+            "quote": "verify: ssl.SSLContext | str | bool = True,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "The AsyncClient docstring describes verify as accepting only True, False, or ssl.SSLContext, but its constructor signature also accepts a str.",
+        "doc_citation": {
+          "path": "httpx/_client.py",
+          "start_line": 1331,
+          "end_line": 1333,
+          "quote": "* **verify** - *(optional)* Either `True` to use an SSL context with the\ndefault CA bundle, `False` to disable verification, or an instance of\n`ssl.SSLContext` to use a custom context."
+        },
+        "code_citation": {
+          "path": "httpx/_client.py",
+          "start_line": 1360,
+          "end_line": 1360,
+          "quote": "verify: ssl.SSLContext | str | bool = True,"
+        },
+        "proposed_fix": "Update the AsyncClient docstring verify entry to: 'Either `True` to use an SSL context with the default CA bundle, `False` to disable verification, a `str` path to a CA bundle, or an instance of `ssl.SSLContext` to use a custom context.'",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "httpx/_client.py",
+            "start_line": 1331,
+            "end_line": 1333,
+            "quote": "* **verify** - *(optional)* Either `True` to use an SSL context with the\ndefault CA bundle, `False` to disable verification, or an instance of\n`ssl.SSLContext` to use a custom context."
+          },
+          "verified": true,
+          "reason": "whitespace-normalised-match",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_client.py",
+            "start_line": 1360,
+            "end_line": 1360,
+            "quote": "verify: ssl.SSLContext | str | bool = True,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 3,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "config_key",
+        "explanation": "The transport module documentation lists only uds, local_address, and retries as advanced httpcore keyword arguments, but the HTTPTransport and AsyncHTTPTransport constructors also accept socket_options.",
+        "doc_citation": {
+          "path": "httpx/_transports/default.py",
+          "start_line": 4,
+          "end_line": 9,
+          "quote": "* uds: str\n* local_address: str\n* retries: int"
+        },
+        "code_citation": {
+          "path": "httpx/_transports/default.py",
+          "start_line": 148,
+          "end_line": 148,
+          "quote": "socket_options: typing.Iterable[SOCKET_OPTION] | None = None,"
+        },
+        "proposed_fix": "Add `* socket_options: Iterable[SOCKET_OPTION]` to the module docstring list of supported advanced httpcore keyword arguments.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "httpx/_transports/default.py",
+            "start_line": 4,
+            "end_line": 9,
+            "quote": "* uds: str\n* local_address: str\n* retries: int"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_transports/default.py",
+            "start_line": 148,
+            "end_line": 148,
+            "quote": "socket_options: typing.Iterable[SOCKET_OPTION] | None = None,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 3,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "flag",
+        "explanation": "The CLI help presents --no-verify as disabling SSL verification, but the option defaults to True and the value is passed directly to Client as verify, so the flag does not disable verification as documented.",
+        "doc_citation": {
+          "path": "httpx/_main.py",
+          "start_line": 89,
+          "end_line": 89,
+          "quote": "\"--no-verify\", \"Disable SSL verification.\""
+        },
+        "code_citation": {
+          "path": "httpx/_main.py",
+          "start_line": 420,
+          "end_line": 420,
+          "quote": "default=True,"
+        },
+        "proposed_fix": "Update the --no-verify help and print_help row to state that verification is enabled by default and that this option cannot disable it in the current implementation, or fix the implementation separately.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "httpx/_main.py",
+            "start_line": 89,
+            "end_line": 89,
+            "quote": "\"--no-verify\", \"Disable SSL verification.\""
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 88,
+          "corrected_end_line": 88,
+          "line_offset": -1
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_main.py",
+            "start_line": 420,
+            "end_line": 420,
+            "quote": "default=True,"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 4,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The custom transport example documents a low-level handle_request signature that no longer matches the transport implementation signature.",
+        "doc_citation": {
+          "path": "docs/advanced/transports.md",
+          "start_line": 285,
+          "end_line": 285,
+          "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+        },
+        "code_citation": {
+          "path": "httpx/_transports/mock.py",
+          "start_line": 19,
+          "end_line": 22,
+          "quote": "    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:"
+        },
+        "proposed_fix": "Update the mounting transports example so `handle_request` is written as `def handle_request(self, request):` and returns an `httpx.Response`, matching the transport API.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/advanced/transports.md",
+            "start_line": 285,
+            "end_line": 285,
+            "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_transports/mock.py",
+            "start_line": 19,
+            "end_line": 22,
+            "quote": "    def handle_request(\n        self,\n        request: Request,\n    ) -> Response:"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 13,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "Documentation shows constructing an SSL context with httpx.SSLContext(), but the tested public API uses httpx.create_ssl_context().",
+        "doc_citation": {
+          "path": ".github/CONTRIBUTING.md",
+          "start_line": 213,
+          "end_line": 213,
+          "quote": "ssl_context = httpx.SSLContext()"
+        },
+        "code_citation": {
+          "path": "tests/test_config.py",
+          "start_line": 12,
+          "end_line": 12,
+          "quote": "    context = httpx.create_ssl_context()"
+        },
+        "proposed_fix": "Replace `ssl_context = httpx.SSLContext()` with `ssl_context = httpx.create_ssl_context()` in the proxy/SSL example.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": ".github/CONTRIBUTING.md",
+            "start_line": 213,
+            "end_line": 213,
+            "quote": "ssl_context = httpx.SSLContext()"
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 214,
+          "corrected_end_line": 214,
+          "line_offset": 1
+        },
+        "code_check": {
+          "citation": {
+            "path": "tests/test_config.py",
+            "start_line": 12,
+            "end_line": 12,
+            "quote": "    context = httpx.create_ssl_context()"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 399846,
+  "completion_tokens": 23222,
+  "calls_ok": 15,
+  "sum_call_latency_seconds": 155.82461410202086,
+  "true_drifts_recovered": []
+}

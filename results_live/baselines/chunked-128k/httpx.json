@@ -1,0 +1,184 @@
+{
+  "repo": "httpx",
+  "chunk_size": 128000,
+  "ref": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "full_pack_tokens_est": 327864,
+  "chunks_planned": 4,
+  "estimate_prompt_tokens": 396094,
+  "estimate_total_tokens": 420094,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 31,
+      "est_tokens": 105299,
+      "cached": false,
+      "prompt_tokens": 125705,
+      "completion_tokens": 3193,
+      "latency_seconds": 15.029035090992693,
+      "finish_reason": "stop",
+      "findings": 2
+    },
+    {
+      "chunk": 1,
+      "paths": 27,
+      "est_tokens": 21907,
+      "cached": false,
+      "prompt_tokens": 24926,
+      "completion_tokens": 1815,
+      "latency_seconds": 6.958493253012421,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 1,
+      "est_tokens": 95571,
+      "cached": false,
+      "prompt_tokens": 117014,
+      "completion_tokens": 203,
+      "latency_seconds": 3.9019222579954658,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 30,
+      "est_tokens": 105303,
+      "cached": false,
+      "prompt_tokens": 126477,
+      "completion_tokens": 2489,
+      "latency_seconds": 12.326507343008416,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 38.226853345986456,
+  "raw_findings": 2,
+  "findings": [
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The transports documentation describes an obsolete Transport API where handle_request receives method, url, headers, stream, and extensions separately and returns a tuple. In code, BaseTransport.handle_request accepts a single Request and returns a Response.",
+        "doc_citation": {
+          "path": "docs/advanced/transports.md",
+          "start_line": 285,
+          "end_line": 285,
+          "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+        },
+        "code_citation": {
+          "path": "httpx/_transports/base.py",
+          "start_line": 26,
+          "end_line": 27,
+          "quote": "    def handle_request(self, request: Request) -> Response:"
+        },
+        "proposed_fix": "Update the custom transport example to implement handle_request(self, request) -> Response and return httpx.Response(...) directly.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/advanced/transports.md",
+            "start_line": 285,
+            "end_line": 285,
+            "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_transports/base.py",
+            "start_line": 26,
+            "end_line": 27,
+            "quote": "    def handle_request(self, request: Request) -> Response:"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 0,
+      "finding": {
+        "finding_id": "DD-2",
+        "drift_kind": "signature",
+        "explanation": "WSGITransport's docstring shows Client being constructed with an app= argument, but BaseClient/Client constructors do not accept app; a WSGITransport must be passed via transport=.",
+        "doc_citation": {
+          "path": "httpx/_transports/wsgi.py",
+          "start_line": 49,
+          "end_line": 49,
+          "quote": "    client = httpx.Client(app=app)"
+        },
+        "code_citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 639,
+          "quote": "        transport: BaseTransport | None = None,"
+        },
+        "proposed_fix": "Replace the docstring usage with transport = httpx.WSGITransport(app=app) followed by httpx.Client(transport=transport, base_url=...).",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-2",
+        "doc_check": {
+          "citation": {
+            "path": "httpx/_transports/wsgi.py",
+            "start_line": 49,
+            "end_line": 49,
+            "quote": "    client = httpx.Client(app=app)"
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 50,
+          "corrected_end_line": 50,
+          "line_offset": 1
+        },
+        "code_check": {
+          "citation": {
+            "path": "httpx/_client.py",
+            "start_line": 639,
+            "end_line": 639,
+            "quote": "        transport: BaseTransport | None = None,"
+          },
+          "verified": false,
+          "reason": "quote-not-found-in-range",
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "true_drift_match": [
+        "T3"
+      ]
+    }
+  ],
+  "prompt_tokens": 394122,
+  "completion_tokens": 7700,
+  "calls_ok": 4,
+  "sum_call_latency_seconds": 38.215957945008995,
+  "true_drifts_recovered": [
+    "T3"
+  ]
+}

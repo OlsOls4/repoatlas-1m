@@ -1,0 +1,301 @@
+{
+  "repo": "attrs",
+  "chunk_size": 32000,
+  "ref": "c8bb9bfaa2843e7844b5bb13bed4370b51feec4f",
+  "full_pack_tokens_est": 327857,
+  "chunks_planned": 15,
+  "estimate_prompt_tokens": 403754,
+  "estimate_total_tokens": 493754,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 7,
+      "est_tokens": 11126,
+      "cached": false,
+      "prompt_tokens": 13778,
+      "completion_tokens": 1450,
+      "latency_seconds": 7.025303522998001,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 1,
+      "est_tokens": 26026,
+      "cached": false,
+      "prompt_tokens": 31638,
+      "completion_tokens": 1947,
+      "latency_seconds": 9.410631722013932,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 2,
+      "paths": 9,
+      "est_tokens": 25436,
+      "cached": false,
+      "prompt_tokens": 30698,
+      "completion_tokens": 2031,
+      "latency_seconds": 11.105254944006447,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 3,
+      "paths": 6,
+      "est_tokens": 25159,
+      "cached": false,
+      "prompt_tokens": 30555,
+      "completion_tokens": 2189,
+      "latency_seconds": 9.380388535995735,
+      "finish_reason": "stop",
+      "findings": 1
+    },
+    {
+      "chunk": 4,
+      "paths": 11,
+      "est_tokens": 25179,
+      "cached": false,
+      "prompt_tokens": 34419,
+      "completion_tokens": 2587,
+      "latency_seconds": 11.677368131000549,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 5,
+      "paths": 7,
+      "est_tokens": 22652,
+      "cached": false,
+      "prompt_tokens": 26306,
+      "completion_tokens": 1220,
+      "latency_seconds": 4.921413140982622,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 6,
+      "paths": 34,
+      "est_tokens": 25384,
+      "cached": false,
+      "prompt_tokens": 34377,
+      "completion_tokens": 2059,
+      "latency_seconds": 9.876968579017557,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 7,
+      "paths": 17,
+      "est_tokens": 13068,
+      "cached": false,
+      "prompt_tokens": 15371,
+      "completion_tokens": 3000,
+      "latency_seconds": 12.253369495971128,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 8,
+      "paths": 1,
+      "est_tokens": 26033,
+      "cached": false,
+      "prompt_tokens": 32344,
+      "completion_tokens": 1593,
+      "latency_seconds": 6.554874549008673,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 9,
+      "paths": 2,
+      "est_tokens": 24389,
+      "cached": false,
+      "prompt_tokens": 29621,
+      "completion_tokens": 2341,
+      "latency_seconds": 9.39162644802127,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 10,
+      "paths": 1,
+      "est_tokens": 17820,
+      "cached": false,
+      "prompt_tokens": 21283,
+      "completion_tokens": 458,
+      "latency_seconds": 3.487072347983485,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 11,
+      "paths": 2,
+      "est_tokens": 20915,
+      "cached": false,
+      "prompt_tokens": 26146,
+      "completion_tokens": 1174,
+      "latency_seconds": 6.2722304520139005,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 12,
+      "paths": 3,
+      "est_tokens": 24143,
+      "cached": false,
+      "prompt_tokens": 30224,
+      "completion_tokens": 1791,
+      "latency_seconds": 7.289450688986108,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 13,
+      "paths": 5,
+      "est_tokens": 23816,
+      "cached": false,
+      "prompt_tokens": 29669,
+      "completion_tokens": 1360,
+      "latency_seconds": 6.609313403983833,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 14,
+      "paths": 12,
+      "est_tokens": 17821,
+      "cached": false,
+      "prompt_tokens": 21439,
+      "completion_tokens": 1706,
+      "latency_seconds": 16.674909672001377,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [],
+  "stopped": null,
+  "wall_seconds": 131.9541956569883,
+  "raw_findings": 2,
+  "findings": [
+    {
+      "chunk": 2,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "signature",
+        "explanation": "The make_class docstring restricts attrs to list or dict, but the implementation also accepts tuples.",
+        "doc_citation": {
+          "path": "src/attr/_make.py",
+          "start_line": 3285,
+          "end_line": 3285,
+          "quote": "attrs (list | dict):"
+        },
+        "code_citation": {
+          "path": "src/attr/_make.py",
+          "start_line": 3313,
+          "end_line": 3313,
+          "quote": "elif isinstance(attrs, (list, tuple)):"
+        },
+        "proposed_fix": "Update the make_class docstring to document attrs as list | tuple | dict.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3285,
+            "end_line": 3285,
+            "quote": "attrs (list | dict):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/attr/_make.py",
+            "start_line": 3313,
+            "end_line": 3313,
+            "quote": "elif isinstance(attrs, (list, tuple)):"
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    },
+    {
+      "chunk": 3,
+      "finding": {
+        "finding_id": "DD-1",
+        "drift_kind": "other",
+        "explanation": "The API reference's instance_of example shows the old Python 2 repr style (<type 'int'>), while current code interpolates self.type via repr, producing <class 'int'>.",
+        "doc_citation": {
+          "path": "docs/api.rst",
+          "start_line": 462,
+          "end_line": 462,
+          "quote": "        TypeError: (\"'x' must be <type 'int'> (got '42' that is a <type 'str'>).\", Attribute(name='x', default=NOTHING, validator=<instance_of validator for type <type 'int'>>, type=None, kw_only=False), <type 'int'>, '42')"
+        },
+        "code_citation": {
+          "path": "src/attr/validators.py",
+          "start_line": 101,
+          "end_line": 102,
+          "quote": "        if not isinstance(value, self.type):\n            msg = f\"'{attr.name}' must be {self.type!r} (got {value!r} that is a {value.__class__!r}).\""
+        },
+        "proposed_fix": "Update the instance_of doctest expected output to use Python 3 reprs such as <class 'int'> and <class 'str'> instead of <type 'int'> and <type 'str'>.",
+        "suggested_patch": null,
+        "runnable_probe": null,
+        "fixture_label": null
+      },
+      "verification": {
+        "finding_id": "DD-1",
+        "doc_check": {
+          "citation": {
+            "path": "docs/api.rst",
+            "start_line": 462,
+            "end_line": 462,
+            "quote": "        TypeError: (\"'x' must be <type 'int'> (got '42' that is a <type 'str'>).\", Attribute(name='x', default=NOTHING, validator=<instance_of validator for type <type 'int'>>, type=None, kw_only=False), <type 'int'>, '42')"
+          },
+          "verified": true,
+          "reason": "line-shifted-match",
+          "corrected_start_line": 461,
+          "corrected_end_line": 461,
+          "line_offset": -1
+        },
+        "code_check": {
+          "citation": {
+            "path": "src/attr/validators.py",
+            "start_line": 101,
+            "end_line": 102,
+            "quote": "        if not isinstance(value, self.type):\n            msg = f\"'{attr.name}' must be {self.type!r} (got {value!r} that is a {value.__class__!r}).\""
+          },
+          "verified": true,
+          "reason": null,
+          "corrected_start_line": null,
+          "corrected_end_line": null,
+          "line_offset": null
+        },
+        "probe_check": null,
+        "fully_verified": true
+      },
+      "fully_verified": true,
+      "true_drift_match": []
+    }
+  ],
+  "prompt_tokens": 407868,
+  "completion_tokens": 26906,
+  "calls_ok": 15,
+  "sum_call_latency_seconds": 131.93017563398462,
+  "true_drifts_recovered": []
+}

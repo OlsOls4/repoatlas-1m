@@ -1,0 +1,1623 @@
+{
+  "rows": [
+    {
+      "method": "Whole-repo Beam (one call per repo, 400k)",
+      "calls": 9,
+      "prompt_tokens": 3256903,
+      "completion_tokens": 44198,
+      "wall_seconds": 195.5,
+      "total_findings": 16,
+      "true_recovered": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11"
+      ],
+      "true_recovered_verified": [
+        "T2",
+        "T3",
+        "T4",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10",
+        "T11"
+      ],
+      "true_findings": 11,
+      "precision_note": "11 true / 16 findings on these 9 repos (handcheck.md)",
+      "precision": 0.688
+    },
+    {
+      "method": "Non-AI symbol check (ast)",
+      "calls": 0,
+      "prompt_tokens": 0,
+      "completion_tokens": 0,
+      "total_findings": 43,
+      "total_findings_9repos": 32,
+      "true_recovered": [
+        "T1",
+        "T2",
+        "T3",
+        "T4",
+        "T5",
+        "T6",
+        "T7",
+        "T8",
+        "T9",
+        "T10"
+      ],
+      "precision_sample20": 0.65,
+      "sample_true": 13,
+      "sample_seed": 20261026,
+      "sample": [
+        0,
+        5,
+        6,
+        7,
+        8,
+        10,
+        14,
+        15,
+        19,
+        20,
+        21,
+        22,
+        25,
+        31,
+        32,
+        33,
+        34,
+        38,
+        39,
+        40
+      ],
+      "precision_all_handchecked": 0.581,
+      "all_true": 25,
+      "all_unclear": 3,
+      "precision_9repos": 0.625,
+      "true_9repos": 20,
+      "new_true_not_in_known_21": 14,
+      "verdicts": {
+        "0": {
+          "flag": {
+            "repo": "starlette",
+            "path": "docs/testclient.md",
+            "line": 53,
+            "check": "method-call-signature",
+            "reference": "client.get(...)",
+            "detail": "no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "TestClient subclasses httpx.Client (starlette/testclient.py:440), which accepts headers=; httpx is outside the repo"
+        },
+        "1": {
+          "flag": {
+            "repo": "starlette",
+            "path": "docs/websockets.md",
+            "line": 74,
+            "check": "method-call-signature",
+            "reference": "websocket.receive_json(...)",
+            "detail": "keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)"
+          },
+          "verdict": "true",
+          "true_drift": "T1",
+          "evidence": "known drift: WebSocket.receive_json(mode=...) takes no data arg"
+        },
+        "2": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/advanced/clients.md",
+            "line": 229,
+            "check": "method-call-signature",
+            "reference": "progress.update(...)",
+            "detail": "no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "progress is a rich.progress.Progress object, not an httpx type"
+        },
+        "3": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/advanced/clients.md",
+            "line": 256,
+            "check": "method-call-signature",
+            "reference": "f.read(...)",
+            "detail": "1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "f is io.BytesIO; read(1024) is valid"
+        },
+        "4": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/advanced/extensions.md",
+            "line": 169,
+            "check": "call-signature",
+            "reference": "httpx.get(...)",
+            "detail": "no parameter named 'extensions' (def httpx/_api.py:174)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: httpx.get() (httpx/_api.py:174-185) has no extensions param, so docs/advanced/extensions.md:169 raises TypeError"
+        },
+        "5": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/advanced/extensions.md",
+            "line": 179,
+            "check": "call-signature",
+            "reference": "httpx.request(...)",
+            "detail": "no parameter named 'extensions' (def httpx/_api.py:39)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: httpx.request() (httpx/_api.py:39-56) has no extensions param, so docs/advanced/extensions.md:179 raises TypeError"
+        },
+        "6": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/advanced/transports.md",
+            "line": 178,
+            "check": "dotted",
+            "reference": "httpx.Mounts",
+            "detail": "'Mounts' not found on httpx"
+          },
+          "verdict": "true",
+          "true_drift": "T2",
+          "evidence": "known drift: httpx.Mounts does not exist"
+        },
+        "7": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/compatibility.md",
+            "line": 56,
+            "check": "method-call-signature",
+            "reference": "session.send(...)",
+            "detail": "no parameter named 'allow_redirects'; no package method 'send' accepts it (e.g. Client.send at httpx/_client.py:879)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "requests.Session example in compatibility.md, not httpx"
+        },
+        "8": {
+          "flag": {
+            "repo": "httpx",
+            "path": "docs/compatibility.md",
+            "line": 232,
+            "check": "exception-name:undefined",
+            "reference": "RequestException",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "names requests' RequestException on purpose, for contrast"
+        },
+        "9": {
+          "flag": {
+            "repo": "httpx",
+            "path": "httpx/_transports/wsgi.py",
+            "line": 50,
+            "check": "call-signature",
+            "reference": "httpx.Client(...)",
+            "detail": "no parameter named 'app' (def httpx/_client.py:639)"
+          },
+          "verdict": "true",
+          "true_drift": "T3",
+          "evidence": "known drift: httpx.Client has no app= (wsgi.py:50)"
+        },
+        "10": {
+          "flag": {
+            "repo": "click",
+            "path": "docs/exceptions.md",
+            "line": 110,
+            "check": "role:undefined",
+            "reference": "FileType",
+            "detail": ":class: target defined nowhere in package code"
+          },
+          "verdict": "true",
+          "true_drift": "T4",
+          "evidence": "known drift: {class}FileType; class is click.File"
+        },
+        "11": {
+          "flag": {
+            "repo": "attrs",
+            "path": "docs/api.rst",
+            "line": 702,
+            "check": "dotted",
+            "reference": "attrs.converter.pipe",
+            "detail": "'converter' not found on attrs"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: docs/api.rst:702 attrs.converter.pipe; the module is attrs.converters (attrs/__init__.py:53), so it raises AttributeError"
+        },
+        "12": {
+          "flag": {
+            "repo": "attrs",
+            "path": "docs/extending.md",
+            "line": 255,
+            "check": "dotted",
+            "reference": "attrs.Attribute.alias_is_default",
+            "detail": "'alias_is_default' not found on attrs.Attribute"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "alias_is_default is in Attribute.__slots__ (attr/_make.py:2528); the checker missed slots"
+        },
+        "13": {
+          "flag": {
+            "repo": "structlog",
+            "path": "docs/standard-library.md",
+            "line": 117,
+            "check": "dotted",
+            "reference": "structlog.stdlib._NAME_TO_LEVEL",
+            "detail": "'_NAME_TO_LEVEL' not found on structlog.stdlib"
+          },
+          "verdict": "true",
+          "true_drift": "T5",
+          "evidence": "known drift: structlog.stdlib._NAME_TO_LEVEL doc path"
+        },
+        "14": {
+          "flag": {
+            "repo": "structlog",
+            "path": "src/structlog/stdlib.py",
+            "line": 862,
+            "check": "dotted",
+            "reference": "structlog.stdlib._log_levels._NAME_TO_LEVEL",
+            "detail": "'_log_levels' not found on structlog.stdlib"
+          },
+          "verdict": "true",
+          "true_drift": "T5",
+          "evidence": "known drift, second site: stdlib.py:862 cites structlog.stdlib._log_levels._NAME_TO_LEVEL"
+        },
+        "15": {
+          "flag": {
+            "repo": "structlog",
+            "path": "src/structlog/twisted.py",
+            "line": 235,
+            "check": "role:undefined",
+            "reference": "PlainFileObserver",
+            "detail": ":class: target defined nowhere in package code"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW (minor xref): twisted.py:235 :class:`PlainFileObserver`; class is PlainFileLogObserver (twisted.py:202)"
+        },
+        "16": {
+          "flag": {
+            "repo": "structlog",
+            "path": "src/structlog/dev.py",
+            "line": 1008,
+            "check": "docstring-param",
+            "reference": "columns(value)",
+            "detail": "documented param 'value' not in signature of columns (src/structlog/dev.py:999)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "property docstring documents the setter value (dev.py:999-1008), a deliberate style"
+        },
+        "17": {
+          "flag": {
+            "repo": "jinja",
+            "path": "docs/extensions.rst",
+            "line": 230,
+            "check": "dotted",
+            "reference": "jinja2.ext.with_",
+            "detail": "'with_' not found on jinja2.ext"
+          },
+          "verdict": "unclear",
+          "true_drift": "",
+          "evidence": "jinja2.ext.with_ removed from code; docs/extensions.rst:230 keeps it as a historical 'no longer does anything' section"
+        },
+        "18": {
+          "flag": {
+            "repo": "jinja",
+            "path": "docs/extensions.rst",
+            "line": 241,
+            "check": "dotted",
+            "reference": "jinja2.ext.autoescape",
+            "detail": "'autoescape' not found on jinja2.ext"
+          },
+          "verdict": "unclear",
+          "true_drift": "",
+          "evidence": "same for jinja2.ext.autoescape (docs/extensions.rst:241)"
+        },
+        "19": {
+          "flag": {
+            "repo": "jinja",
+            "path": "src/jinja2/runtime.py",
+            "line": 490,
+            "check": "role:undefined",
+            "reference": "_last",
+            "detail": ":attr: target defined nowhere in package code"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW (minor, private): runtime.py:490 says the cache is :attr:`_last`, but the code uses self._after (runtime.py:493-497)"
+        },
+        "20": {
+          "flag": {
+            "repo": "nox",
+            "path": "docs/tutorial.rst",
+            "line": 488,
+            "check": "method-call-signature",
+            "reference": "session.conda_install(...)",
+            "detail": "no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: tutorial.rst:488 conda_install(channels=...), but the param is channel (nox/sessions.py:721) and there is no **kwargs, so TypeError"
+        },
+        "21": {
+          "flag": {
+            "repo": "nox",
+            "path": "docs/usage.rst",
+            "line": 219,
+            "check": "dotted:name-not-in-code",
+            "reference": "nox.options.reuse_venvs",
+            "detail": "'reuse_venvs' appears nowhere in package code"
+          },
+          "verdict": "true",
+          "true_drift": "T6",
+          "evidence": "known drift: reuse_venvs vs reuse_venv"
+        },
+        "22": {
+          "flag": {
+            "repo": "arrow",
+            "path": "docs/api-guide.rst",
+            "line": 23,
+            "check": "role",
+            "reference": "arrow.locale",
+            "detail": "'locale' not found on arrow"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW (minor xref): api-guide.rst:23 :mod:`arrow.locale`; the module is arrow.locales"
+        },
+        "23": {
+          "flag": {
+            "repo": "arrow",
+            "path": "arrow/arrow.py",
+            "line": 396,
+            "check": "dotted",
+            "reference": "arrow.fromordinal",
+            "detail": "'fromordinal' not found on arrow"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: doctest arrow.py:396 arrow.fromordinal(737741); arrow/__init__.py exports no fromordinal (Arrow.fromordinal), so AttributeError"
+        },
+        "24": {
+          "flag": {
+            "repo": "arrow",
+            "path": "arrow/arrow.py",
+            "line": 1349,
+            "check": "docstring-param",
+            "reference": "dehumanize(timestring)",
+            "detail": "documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)"
+          },
+          "verdict": "true",
+          "true_drift": "T7",
+          "evidence": "known drift: :param timestring: vs input_string"
+        },
+        "25": {
+          "flag": {
+            "repo": "cattrs",
+            "path": "docs/customizing.md",
+            "line": 279,
+            "check": "exception-name:undefined",
+            "reference": "ForbiddenExtraKeyError",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "true",
+          "true_drift": "T8",
+          "evidence": "known drift: ForbiddenExtraKeyError"
+        },
+        "26": {
+          "flag": {
+            "repo": "cattrs",
+            "path": "docs/validation.md",
+            "line": 107,
+            "check": "exception-name:undefined",
+            "reference": "MyInterestingException",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "MyInterestingException is a user placeholder in the example"
+        },
+        "27": {
+          "flag": {
+            "repo": "cattrs",
+            "path": "src/cattrs/converters.py",
+            "line": 502,
+            "check": "docstring-param",
+            "reference": "get_unstructure_hook(cache)",
+            "detail": "documented param 'cache' not in signature of get_unstructure_hook (src/cattrs/converters.py:491)"
+          },
+          "verdict": "true",
+          "true_drift": "T9",
+          "evidence": "known drift"
+        },
+        "28": {
+          "flag": {
+            "repo": "cattrs",
+            "path": "src/cattrs/converters.py",
+            "line": 651,
+            "check": "docstring-param",
+            "reference": "get_structure_hook(cache)",
+            "detail": "documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)"
+          },
+          "verdict": "true",
+          "true_drift": "T10",
+          "evidence": "known drift"
+        },
+        "29": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/custom_error_handling.rst",
+            "line": 14,
+            "check": "exception-name:undefined",
+            "reference": "AppError",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "AppError is defined in the example itself (custom_error_handling.rst:14)"
+        },
+        "30": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/custom_error_handling.rst",
+            "line": 24,
+            "check": "exception-name:undefined",
+            "reference": "AppError",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "same AppError"
+        },
+        "31": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/custom_error_handling.rst",
+            "line": 28,
+            "check": "exception-name:undefined",
+            "reference": "AppError",
+            "detail": "exception-like name defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "same AppError"
+        },
+        "32": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/overriding_attribute_access.rst",
+            "line": 17,
+            "check": "method-call-signature",
+            "reference": "obj.get(...)",
+            "detail": "2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "obj is a dict; dict.get(key, default)"
+        },
+        "33": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/pre_and_post_processing.rst",
+            "line": 61,
+            "check": "call-signature",
+            "reference": "marshmallow.pre_load(...)",
+            "detail": "no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: pre_and_post_processing.rst:61 @pre_load(pass_many=True); renamed to pass_collection in 4.0 (decorators.py:175-178, CHANGELOG.rst:175), so TypeError"
+        },
+        "34": {
+          "flag": {
+            "repo": "marshmallow",
+            "path": "docs/extending/pre_and_post_processing.rst",
+            "line": 66,
+            "check": "call-signature",
+            "reference": "marshmallow.post_dump(...)",
+            "detail": "no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: same for @post_dump(pass_many=True) at :66 (decorators.py:152-156)"
+        },
+        "35": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "docs/routing.rst",
+            "line": 24,
+            "check": "import",
+            "reference": "werkzeug.routing.NotFound",
+            "detail": "'NotFound' not found on werkzeug.routing"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: routing.rst:24 'from werkzeug.routing import ... NotFound' raises ImportError (verified by import)"
+        },
+        "36": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "docs/routing.rst",
+            "line": 64,
+            "check": "role",
+            "reference": "werkzeug.exceptions.RequestRedirect",
+            "detail": "'RequestRedirect' not found on werkzeug.exceptions"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW (minor xref): routing.rst:64 werkzeug.exceptions.RequestRedirect; it lives in werkzeug.routing.exceptions:48"
+        },
+        "37": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/datastructures/headers.py",
+            "line": 58,
+            "check": "role:undefined",
+            "reference": "linked",
+            "detail": ":meth: target defined nowhere in package code"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "a versionchanged note saying linked() was removed"
+        },
+        "38": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "line": 55,
+            "check": "dotted",
+            "reference": "werkzeug.proxy_fix.orig",
+            "detail": "'proxy_fix' not found on werkzeug"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "werkzeug.proxy_fix.orig is a WSGI environ key string, not a module"
+        },
+        "39": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/middleware/proxy_fix.py",
+            "line": 83,
+            "check": "dotted",
+            "reference": "werkzeug.proxy_fix.orig",
+            "detail": "'proxy_fix' not found on werkzeug"
+          },
+          "verdict": "false",
+          "true_drift": "",
+          "evidence": "same environ key"
+        },
+        "40": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/serving.py",
+            "line": 1021,
+            "check": "role",
+            "reference": "werkzeug.middleware.SharedDataMiddleware",
+            "detail": "'SharedDataMiddleware' not found on werkzeug.middleware"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW (minor xref): serving.py:1021 werkzeug.middleware.SharedDataMiddleware; middleware/__init__.py is empty, the class is in middleware.shared_data"
+        },
+        "41": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/test.py",
+            "line": 1103,
+            "check": "role",
+            "reference": "werkzeug.FileWrapper",
+            "detail": "'FileWrapper' not found on werkzeug"
+          },
+          "verdict": "unclear",
+          "true_drift": "",
+          "evidence": "historical 0.5 note citing werkzeug.FileWrapper; now a deprecated werkzeug.wsgi.__getattr__ alias (wsgi.py:623)"
+        },
+        "42": {
+          "flag": {
+            "repo": "werkzeug",
+            "path": "src/werkzeug/datastructures/headers.py",
+            "line": 433,
+            "check": "docstring-param",
+            "reference": "setlist(value)",
+            "detail": "documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)"
+          },
+          "verdict": "true",
+          "true_drift": "",
+          "evidence": "NEW: headers.py:433 :param value: but the signature has values (headers.py:428)"
+        }
+      }
+    },
+    {
+      "method": "Chunked Beam (~32k chunks)",
+      "calls": 129,
+      "prompt_tokens": 3318430,
+      "completion_tokens": 211515,
+      "wall_seconds": 1807.0,
+      "total_findings": 25,
+      "true_recovered": [
+        "T7",
+        "T9",
+        "T10"
+      ],
+      "true_recovered_verified": [
+        "T7",
+        "T9",
+        "T10"
+      ],
+      "true_findings": 15,
+      "precision": 0.6,
+      "per_repo": [
+        {
+          "repo": "starlette",
+          "status": "ok",
+          "calls": 15,
+          "chunks": 15,
+          "prompt_tokens": 401227,
+          "completion_tokens": 24851,
+          "wall_seconds": 134.9,
+          "raw_findings": 0,
+          "merged_findings": 0,
+          "true": []
+        },
+        {
+          "repo": "httpx",
+          "status": "ok",
+          "calls": 15,
+          "chunks": 15,
+          "prompt_tokens": 399846,
+          "completion_tokens": 23222,
+          "wall_seconds": 155.9,
+          "raw_findings": 6,
+          "merged_findings": 6,
+          "true": []
+        },
+        {
+          "repo": "click",
+          "status": "ok",
+          "calls": 16,
+          "chunks": 16,
+          "prompt_tokens": 396520,
+          "completion_tokens": 22794,
+          "wall_seconds": 249.1,
+          "raw_findings": 3,
+          "merged_findings": 3,
+          "true": []
+        },
+        {
+          "repo": "structlog",
+          "status": "ok",
+          "calls": 15,
+          "chunks": 15,
+          "prompt_tokens": 411029,
+          "completion_tokens": 26696,
+          "wall_seconds": 291.8,
+          "raw_findings": 2,
+          "merged_findings": 2,
+          "true": []
+        },
+        {
+          "repo": "nox",
+          "status": "ok",
+          "calls": 14,
+          "chunks": 14,
+          "prompt_tokens": 353050,
+          "completion_tokens": 24383,
+          "wall_seconds": 263.6,
+          "raw_findings": 1,
+          "merged_findings": 1,
+          "true": []
+        },
+        {
+          "repo": "arrow",
+          "status": "ok",
+          "calls": 14,
+          "chunks": 14,
+          "prompt_tokens": 335901,
+          "completion_tokens": 21264,
+          "wall_seconds": 204.9,
+          "raw_findings": 3,
+          "merged_findings": 3,
+          "true": [
+            "T7"
+          ]
+        },
+        {
+          "repo": "cattrs",
+          "status": "ok",
+          "calls": 12,
+          "chunks": 12,
+          "prompt_tokens": 312192,
+          "completion_tokens": 18992,
+          "wall_seconds": 213.3,
+          "raw_findings": 5,
+          "merged_findings": 5,
+          "true": [
+            "T10",
+            "T9"
+          ]
+        },
+        {
+          "repo": "marshmallow",
+          "status": "ok",
+          "calls": 13,
+          "chunks": 13,
+          "prompt_tokens": 300797,
+          "completion_tokens": 22407,
+          "wall_seconds": 161.5,
+          "raw_findings": 3,
+          "merged_findings": 3,
+          "true": []
+        },
+        {
+          "repo": "attrs",
+          "status": "ok",
+          "calls": 15,
+          "chunks": 15,
+          "prompt_tokens": 407868,
+          "completion_tokens": 26906,
+          "wall_seconds": 132.0,
+          "raw_findings": 2,
+          "merged_findings": 2,
+          "true": []
+        }
+      ],
+      "errors": [],
+      "findings": [
+        {
+          "repo": "httpx",
+          "index": 0,
+          "chunk": 2,
+          "doc": "httpx/_client.py:617",
+          "code": "httpx/_client.py:646",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The Client docstring describes verify as accepting only True, False, or ssl.SSLContext, but its constructor signature also accepts a str.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "_client.py:617-619 lists True/False/SSLContext; str is the deprecated CA-path form (_config.py:45-51 warns DeprecationWarning), so leaving it out is deliberate"
+        },
+        {
+          "repo": "httpx",
+          "index": 1,
+          "chunk": 2,
+          "doc": "httpx/_client.py:1331",
+          "code": "httpx/_client.py:1360",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The AsyncClient docstring describes verify as accepting only True, False, or ssl.SSLContext, but its constructor signature also accepts a str.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "same as above, for AsyncClient (_client.py:1331)"
+        },
+        {
+          "repo": "httpx",
+          "index": 2,
+          "chunk": 3,
+          "doc": "httpx/_transports/default.py:4",
+          "code": "httpx/_transports/default.py:148",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The transport module documentation lists only uds, local_address, and retries as advanced httpcore keyword arguments, but the HTTPTransport and AsyncHTTPTransport constructors also accept socket_options.",
+          "verdict": "unclear",
+          "label": "new",
+          "evidence": "default.py:4-8 lists uds/local_address/retries as 'currently supported'; socket_options (:148) missing. An omission, not a contradiction"
+        },
+        {
+          "repo": "httpx",
+          "index": 3,
+          "chunk": 3,
+          "doc": "httpx/_main.py:89",
+          "code": "httpx/_main.py:420",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The CLI help presents --no-verify as disabling SSL verification, but the option defaults to True and the value is passed directly to Client as verify, so the flag does not disable verification as documented.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "_main.py:417-421 is click is_flag with default=True, so passing --no-verify gives verify=False (flag_value = not default). Works as documented"
+        },
+        {
+          "repo": "httpx",
+          "index": 4,
+          "chunk": 4,
+          "doc": "docs/advanced/transports.md:285",
+          "code": "httpx/_transports/mock.py:19",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The custom transport example documents a low-level handle_request signature that no longer matches the transport implementation signature.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "docs/advanced/transports.md:285 handle_request(self, method, url, headers, stream, extensions) on a httpx.BaseTransport subclass; the real API is handle_request(self, request) (_transports/mock.py:19-22, base.py)"
+        },
+        {
+          "repo": "httpx",
+          "index": 5,
+          "chunk": 13,
+          "doc": ".github/CONTRIBUTING.md:213",
+          "code": "tests/test_config.py:12",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "Documentation shows constructing an SSL context with httpx.SSLContext(), but the tested public API uses httpx.create_ssl_context().",
+          "verdict": "true",
+          "label": "new",
+          "evidence": ".github/CONTRIBUTING.md:213 httpx.SSLContext(); httpx/__init__.py exports no SSLContext"
+        },
+        {
+          "repo": "click",
+          "index": 0,
+          "chunk": 0,
+          "doc": "src/click/_compat.py:52",
+          "code": "src/click/_compat.py:53",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The docstring says get_best_encoding returns the default stream encoding if it is not found, but the implementation replaces an ASCII encoding with utf-8.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "_compat.py:52 vague private docstring; the ascii->utf-8 substitution is an unstated extra, not a contradiction"
+        },
+        {
+          "repo": "click",
+          "index": 1,
+          "chunk": 3,
+          "doc": "src/click/shell_completion.py:283",
+          "code": "src/click/shell_completion.py:307",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The ShellComplete class docstring omits the ctx_args constructor parameter that is present in __init__.",
+          "verdict": "unclear",
+          "label": "new",
+          "evidence": "shell_completion.py:283-291 :param list omits ctx_args (__init__ :307). An omission"
+        },
+        {
+          "repo": "click",
+          "index": 2,
+          "chunk": 4,
+          "doc": "src/click/termui.py:814",
+          "code": "src/click/termui.py:848",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The bytes/bytearray overload documents require_save with a default of False, while the runtime implementation declares the default as True.",
+          "verdict": "unclear",
+          "label": "new",
+          "evidence": "termui.py:814-819 is a typing overload with require_save default False vs runtime True (:852). A stub inconsistency, not prose docs"
+        },
+        {
+          "repo": "structlog",
+          "index": 0,
+          "chunk": 0,
+          "doc": "src/structlog/contextvars.py:182",
+          "code": "src/structlog/contextvars.py:176",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The docstring claims bound_contextvars can be used as a decorator, but the function is declared with only contextlib.contextmanager and is called as a context manager factory.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "contextlib.contextmanager objects are ContextDecorators, so bound_contextvars works as a decorator (contextvars.py:176-182)"
+        },
+        {
+          "repo": "structlog",
+          "index": 1,
+          "chunk": 2,
+          "doc": "src/structlog/_output.py:368",
+          "code": "src/structlog/_output.py:379",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "BytesLoggerFactory's docstring says positional arguments are ignored, but its __call__ uses the first positional argument as the logger name.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "_output.py:368 says positional args are silently ignored, but __call__ (:379-380) uses args[0] as the logger name"
+        },
+        {
+          "repo": "nox",
+          "index": 0,
+          "chunk": 2,
+          "doc": "nox/tasks.py:406",
+          "code": "nox/tasks.py:399",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The run_manifest docstring says it returns a two-tuple of sessions and statuses, but its implementation returns list[Result].",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "tasks.py:405-407 Returns: two-tuple of sessions/statuses; signature and body return list[Result] (:399, :457)"
+        },
+        {
+          "repo": "arrow",
+          "index": 0,
+          "chunk": 4,
+          "doc": "arrow/arrow.py:1349",
+          "code": "arrow/arrow.py:1344",
+          "fully_verified": true,
+          "auto_true_match": [
+            "T7"
+          ],
+          "explanation": "The docstring documents the first parameter of dehumanize as `timestring` and locale default as `'en-us'`, while the implementation defines `input_string` and defaults `locale` to `\"en_us\"`.",
+          "verdict": "true",
+          "label": "T7",
+          "evidence": "known drift: dehumanize :param timestring: vs input_string"
+        },
+        {
+          "repo": "arrow",
+          "index": 1,
+          "chunk": 4,
+          "doc": "arrow/arrow.py:740",
+          "code": "arrow/arrow.py:729",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The docstring marks `end` as optional for interval, but the implementation requires `end: dt_datetime`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "arrow.py:740 ':param end: (optional)' for interval, but end: dt_datetime is required (:729)"
+        },
+        {
+          "repo": "arrow",
+          "index": 2,
+          "chunk": 4,
+          "doc": "arrow/arrow.py:658",
+          "code": "arrow/arrow.py:647",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The docstring marks `end` as optional for span_range, but the implementation requires `end: dt_datetime`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "arrow.py:658 ':param end: (optional)' for span_range, but end is required (:647)"
+        },
+        {
+          "repo": "cattrs",
+          "index": 0,
+          "chunk": 1,
+          "doc": "src/cattrs/converters.py:502",
+          "code": "src/cattrs/converters.py:492",
+          "fully_verified": true,
+          "auto_true_match": [
+            "T9"
+          ],
+          "explanation": "The docstring names the parameter `cache`, while the implementation names it `cache_result`.",
+          "verdict": "true",
+          "label": "T9",
+          "evidence": "known drift"
+        },
+        {
+          "repo": "cattrs",
+          "index": 1,
+          "chunk": 1,
+          "doc": "src/cattrs/converters.py:651",
+          "code": "src/cattrs/converters.py:641",
+          "fully_verified": true,
+          "auto_true_match": [
+            "T10"
+          ],
+          "explanation": "The docstring names the parameter `cache`, while the implementation names it `cache_result`.",
+          "verdict": "true",
+          "label": "T10",
+          "evidence": "known drift"
+        },
+        {
+          "repo": "cattrs",
+          "index": 2,
+          "chunk": 2,
+          "doc": "src/cattrs/gen/typeddicts.py:59",
+          "code": "src/cattrs/gen/typeddicts.py:49",
+          "fully_verified": false,
+          "auto_true_match": [],
+          "explanation": "The unstructure docstring names `_cattrs_detailed_validation` as the line-cache parameter, but the corresponding function parameter is `_cattrs_use_linecache`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "gen/typeddicts.py:59 documents _cattrs_detailed_validation, but the param is _cattrs_use_linecache (:49). Verifier rejected the quote, but the drift is real"
+        },
+        {
+          "repo": "cattrs",
+          "index": 3,
+          "chunk": 2,
+          "doc": "src/cattrs/gen/typeddicts.py:257",
+          "code": "src/cattrs/gen/typeddicts.py:244",
+          "fully_verified": false,
+          "auto_true_match": [],
+          "explanation": "The structure docstring lists `_cattrs_detailed_validation` twice; the second entry should document `_cattrs_use_linecache`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "gen/typeddicts.py:251/257 documents _cattrs_detailed_validation twice; the second entry describes _cattrs_use_linecache (:244). Verifier rejected the quote"
+        },
+        {
+          "repo": "cattrs",
+          "index": 4,
+          "chunk": 4,
+          "doc": "src/cattrs/preconf/ujson.py:40",
+          "code": "src/cattrs/preconf/ujson.py:49",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The ujson configure_converter docstring says bytes are serialized as base64, but the implementation uses base85 encoding and decoding.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "preconf/ujson.py:40 says bytes are base64, but the code uses b85encode/b85decode (:49-52)"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 0,
+          "chunk": 0,
+          "doc": "src/marshmallow/fields.py:1751",
+          "code": "src/marshmallow/fields.py:1762",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The Url docstring documents a `default` parameter, but Url.__init__ does not declare one; field defaults are handled by the inherited Field parameters such as `load_default` and `dump_default`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "fields.py:1751 Url ':param default:'; marshmallow 4 has no default kwarg (load_default/dump_default), and __init__ (:1762) takes **_BaseFieldKwargs. Same family as T11, different site"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 1,
+          "chunk": 1,
+          "doc": "src/marshmallow/validate.py:641",
+          "code": "src/marshmallow/validate.py:632",
+          "fully_verified": false,
+          "auto_true_match": [],
+          "explanation": "The OneOf.options docstring says the default valuegetter is `str()`, but the implementation defaults to the callable `str`.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "validate.py:641 'Defaults to `str()`' vs default str (:632) is a nitpick, not drift"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 2,
+          "chunk": 12,
+          "doc": "docs/examples/quotes_api.rst:41",
+          "code": "examples/flask_example.py:140",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The documentation says invalid input produces a 400 response, but the Flask handler returns ValidationError messages with status 422.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "docs/examples/quotes_api.rst:41 says invalid input gives 400; examples/flask_example.py:140 returns 422"
+        },
+        {
+          "repo": "attrs",
+          "index": 0,
+          "chunk": 2,
+          "doc": "src/attr/_make.py:3285",
+          "code": "src/attr/_make.py:3313",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The make_class docstring restricts attrs to list or dict, but the implementation also accepts tuples.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "_make.py:3285 documents list|dict and the code also accepts tuple (:3313). The doc is narrower than the behaviour, so nothing misleads"
+        },
+        {
+          "repo": "attrs",
+          "index": 1,
+          "chunk": 3,
+          "doc": "docs/api.rst:462",
+          "code": "src/attr/validators.py:101",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The API reference's instance_of example shows the old Python 2 repr style (<type 'int'>), while current code interpolates self.type via repr, producing <class 'int'>.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "docs/api.rst:462-466 shows Python 2 <type 'int'> reprs; validators.py:101 builds the message via {self.type!r}, so <class 'int'>"
+        }
+      ]
+    },
+    {
+      "method": "Chunked Beam (~128k chunks)",
+      "calls": 33,
+      "prompt_tokens": 3269063,
+      "completion_tokens": 73138,
+      "wall_seconds": 377.2,
+      "total_findings": 13,
+      "true_recovered": [
+        "T3",
+        "T6",
+        "T7",
+        "T8"
+      ],
+      "true_recovered_verified": [
+        "T6",
+        "T7"
+      ],
+      "true_findings": 9,
+      "precision": 0.692,
+      "per_repo": [
+        {
+          "repo": "starlette",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 396002,
+          "completion_tokens": 7600,
+          "wall_seconds": 42.4,
+          "raw_findings": 0,
+          "merged_findings": 0,
+          "true": []
+        },
+        {
+          "repo": "httpx",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 394122,
+          "completion_tokens": 7700,
+          "wall_seconds": 38.2,
+          "raw_findings": 2,
+          "merged_findings": 2,
+          "true": [
+            "T3"
+          ]
+        },
+        {
+          "repo": "click",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 390258,
+          "completion_tokens": 9186,
+          "wall_seconds": 47.8,
+          "raw_findings": 0,
+          "merged_findings": 0,
+          "true": []
+        },
+        {
+          "repo": "structlog",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 405375,
+          "completion_tokens": 9038,
+          "wall_seconds": 44.5,
+          "raw_findings": 1,
+          "merged_findings": 1,
+          "true": []
+        },
+        {
+          "repo": "nox",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 347930,
+          "completion_tokens": 8935,
+          "wall_seconds": 40.4,
+          "raw_findings": 3,
+          "merged_findings": 3,
+          "true": [
+            "T6"
+          ]
+        },
+        {
+          "repo": "arrow",
+          "status": "ok",
+          "calls": 3,
+          "chunks": 3,
+          "prompt_tokens": 330048,
+          "completion_tokens": 6196,
+          "wall_seconds": 28.9,
+          "raw_findings": 1,
+          "merged_findings": 1,
+          "true": [
+            "T7"
+          ]
+        },
+        {
+          "repo": "cattrs",
+          "status": "ok",
+          "calls": 3,
+          "chunks": 3,
+          "prompt_tokens": 307575,
+          "completion_tokens": 8442,
+          "wall_seconds": 41.7,
+          "raw_findings": 1,
+          "merged_findings": 1,
+          "true": []
+        },
+        {
+          "repo": "marshmallow",
+          "status": "ok",
+          "calls": 3,
+          "chunks": 3,
+          "prompt_tokens": 295581,
+          "completion_tokens": 7107,
+          "wall_seconds": 30.3,
+          "raw_findings": 3,
+          "merged_findings": 3,
+          "true": []
+        },
+        {
+          "repo": "attrs",
+          "status": "ok",
+          "calls": 4,
+          "chunks": 4,
+          "prompt_tokens": 402172,
+          "completion_tokens": 8934,
+          "wall_seconds": 62.9,
+          "raw_findings": 2,
+          "merged_findings": 2,
+          "true": []
+        }
+      ],
+      "errors": [
+        {
+          "repo": "starlette",
+          "chunk": 1,
+          "parse_error": "Model returned no message.content; reasoning fallback: We need answer user's request. Need output strict JSON. Need analyze packed repo. Need likely find documentation drift examples and onboarding claims. We only have repo subset docs and some tests. Must cite exact quotes with line numbers. Need evaluate possible drift. Need not invent. Need every finding cite doc and code. We don't have code source except tests? We have starlette package? Packed fi"
+        },
+        {
+          "repo": "attrs",
+          "chunk": 0,
+          "parse_error": "Model returned no message.content; reasoning fallback: We need answer JSON only. Need analyze packed repo. Task: find documentation drift contradiction code for flags, defaults, signatures, env vars, config keys; onboarding atlas claims architecture entry points data flow. Need cite exact lines. Need be very careful. We have huge repo context but maybe can inspect for obvious drift. Need output strict JSON. We need not overdo? User asks \"Requested ove"
+        }
+      ],
+      "findings": [
+        {
+          "repo": "httpx",
+          "index": 0,
+          "chunk": 0,
+          "doc": "docs/advanced/transports.md:285",
+          "code": "httpx/_transports/base.py:26",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The transports documentation describes an obsolete Transport API where handle_request receives method, url, headers, stream, and extensions separately and returns a tuple. In code, BaseTransport.handle_request accepts a single Request and returns a Response.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "same drift as 32k httpx #4: docs/advanced/transports.md:285 uses the old 5-argument handle_request; base.py:26 takes a Request"
+        },
+        {
+          "repo": "httpx",
+          "index": 1,
+          "chunk": 0,
+          "doc": "httpx/_transports/wsgi.py:49",
+          "code": "httpx/_client.py:639",
+          "fully_verified": false,
+          "auto_true_match": [
+            "T3"
+          ],
+          "explanation": "WSGITransport's docstring shows Client being constructed with an app= argument, but BaseClient/Client constructors do not accept app; a WSGITransport must be passed via transport=.",
+          "verdict": "true",
+          "label": "T3",
+          "evidence": "known drift: wsgi.py:49-51 Client(app=app). Verifier rejected the citation"
+        },
+        {
+          "repo": "structlog",
+          "index": 0,
+          "chunk": 0,
+          "doc": "src/structlog/_output.py:368",
+          "code": "src/structlog/_output.py:378",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "BytesLoggerFactory documents that positional arguments are silently ignored, but its __call__ passes the first positional argument to BytesLogger as name.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "same as 32k structlog #1: _output.py:368 says positional args are ignored, but :379-380 uses args[0]"
+        },
+        {
+          "repo": "nox",
+          "index": 0,
+          "chunk": 0,
+          "doc": "nox/sessions.py:489",
+          "code": "nox/sessions.py:406",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The run() docstring says external defaults to False, but the parameter default is None and behavior is derived from configuration and sandboxing.",
+          "verdict": "unclear",
+          "label": "new",
+          "evidence": "sessions.py:489 'If False (the default)' while external defaults to None (:406), and None resolves from config/sandboxing. Arguably stale"
+        },
+        {
+          "repo": "nox",
+          "index": 1,
+          "chunk": 0,
+          "doc": "nox/sessions.py:954",
+          "code": "nox/sessions.py:932",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The notify() docstring says target is only a string and that passing a session object is unsupported, but the signature accepts str or SessionRunner.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "notify() accepts the internal SessionRunner type (:932); the doc's point that a decorated function is unsupported still holds"
+        },
+        {
+          "repo": "nox",
+          "index": 2,
+          "chunk": 1,
+          "doc": "docs/usage.rst:219",
+          "code": "tests/test_sessions.py:1180",
+          "fully_verified": true,
+          "auto_true_match": [
+            "T6"
+          ],
+          "explanation": "The usage documentation refers to `nox.options.reuse_venvs`, but the documented and tested Noxfile option name is `nox.options.reuse_venv`.",
+          "verdict": "true",
+          "label": "T6",
+          "evidence": "known drift: docs/usage.rst:219 reuse_venvs"
+        },
+        {
+          "repo": "arrow",
+          "index": 0,
+          "chunk": 0,
+          "doc": "arrow/arrow.py:1349",
+          "code": "arrow/arrow.py:1344",
+          "fully_verified": true,
+          "auto_true_match": [
+            "T7"
+          ],
+          "explanation": "The dehumanize docstring documents the first parameter as timestring, but the method signature names it input_string.",
+          "verdict": "true",
+          "label": "T7",
+          "evidence": "known drift"
+        },
+        {
+          "repo": "cattrs",
+          "index": 0,
+          "chunk": 0,
+          "doc": "docs/customizing.md:273",
+          "code": "src/cattrs/errors.py:118",
+          "fully_verified": false,
+          "auto_true_match": [],
+          "explanation": "The documentation doctest uses the singular exception name ForbiddenExtraKeyError, while the codebase defines ForbiddenExtraKeysError.",
+          "verdict": "true",
+          "label": "T8",
+          "evidence": "known drift: docs/customizing.md doctest (cited 273, traceback at :279) ForbiddenExtraKeyError vs errors.py:118 ForbiddenExtraKeysError. The auto-matcher missed it because of the line offset; matched by hand. Verifier rejected"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 0,
+          "chunk": 0,
+          "doc": "docs/extending/pre_and_post_processing.rst:35",
+          "code": "src/marshmallow/decorators.py:178",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The pre/post-processing docs still use the removed `pass_many=True` option; current decorators expose it as `pass_collection`.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "docs/extending/pre_and_post_processing.rst pass_many=True; decorators.py:175-178 has only pass_collection (same drift the symbol check flagged at :61/:66)"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 1,
+          "chunk": 0,
+          "doc": "docs/extending/custom_options.rst:41",
+          "code": "src/marshmallow/schema.py:205",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The custom options example passes `**kwargs` to `SchemaOpts.__init__`, but the current constructor only accepts `meta`.",
+          "verdict": "false",
+          "label": "known-false",
+          "evidence": "same as whole-repo marshmallow DD-1, judged FALSE in handcheck.md:115 (Schema calls OPTIONS_CLASS(meta), so kwargs is empty)"
+        },
+        {
+          "repo": "marshmallow",
+          "index": 2,
+          "chunk": 2,
+          "doc": "docs/examples/quotes_api.rst:41",
+          "code": "examples/flask_example.py:140",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The documentation says invalid input data produces a 400 response, but the Flask example returns 422 when ValidationError is raised.",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "same as 32k marshmallow #2: quotes_api.rst:41 says 400, flask_example.py:140 returns 422"
+        },
+        {
+          "repo": "attrs",
+          "index": 0,
+          "chunk": 1,
+          "doc": "docs/api-attr.rst:17",
+          "code": "tests/test_make.py:1257",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The documented attr.s signature omits the force_kw_only parameter, but code/tests exercise attr.s(..., force_kw_only=False).",
+          "verdict": "true",
+          "label": "new",
+          "evidence": "docs/api-attr.rst:17 hand-written autofunction signature omits force_kw_only (attr/_make.py:1378, added 25.4.0), so the rendered signature is stale (minor)"
+        },
+        {
+          "repo": "attrs",
+          "index": 1,
+          "chunk": 3,
+          "doc": "tests/test_hooks.py:14",
+          "code": "tests/test_hooks.py:29",
+          "fully_verified": true,
+          "auto_true_match": [],
+          "explanation": "The test docstring names a nonexistent `attrs(tranform_value_serializer=func)` API, while the tests actually use the `field_transformer` argument to `attr.s`.",
+          "verdict": "false",
+          "label": "new",
+          "evidence": "a typo in a test-class docstring (tests/test_hooks.py:14), not user docs"
+        }
+      ]
+    }
+  ],
+  "beam_usage_this_work": {
+    "calls": 162,
+    "prompt_tokens": 6587493,
+    "completion_tokens": 284653,
+    "total_tokens": 6872146
+  },
+  "true_drifts": [
+    {
+      "id": "T1",
+      "repo": "starlette",
+      "name": "starlette receive_json(data, mode) vs no data param",
+      "locs": [
+        [
+          "docs/websockets.md",
+          74,
+          74
+        ]
+      ],
+      "kw": [
+        "receive_json"
+      ]
+    },
+    {
+      "id": "T2",
+      "repo": "httpx",
+      "name": "httpx.Mounts does not exist (use mounts=)",
+      "locs": [
+        [
+          "docs/advanced/transports.md",
+          178,
+          193
+        ]
+      ],
+      "kw": [
+        "Mounts"
+      ]
+    },
+    {
+      "id": "T3",
+      "repo": "httpx",
+      "name": "httpx WSGITransport docstring Client(app=app)",
+      "locs": [
+        [
+          "httpx/_transports/wsgi.py",
+          45,
+          52
+        ]
+      ],
+      "kw": [
+        "app"
+      ]
+    },
+    {
+      "id": "T4",
+      "repo": "click",
+      "name": "click {class}FileType vs click.File",
+      "locs": [
+        [
+          "docs/exceptions.md",
+          108,
+          111
+        ]
+      ],
+      "kw": [
+        "FileType"
+      ]
+    },
+    {
+      "id": "T5",
+      "repo": "structlog",
+      "name": "structlog _NAME_TO_LEVEL path",
+      "locs": [
+        [
+          "docs/standard-library.md",
+          117,
+          117
+        ],
+        [
+          "src/structlog/stdlib.py",
+          860,
+          863
+        ]
+      ],
+      "kw": [
+        "NAME_TO_LEVEL"
+      ]
+    },
+    {
+      "id": "T6",
+      "repo": "nox",
+      "name": "nox options.reuse_venvs vs reuse_venv",
+      "locs": [
+        [
+          "docs/usage.rst",
+          219,
+          219
+        ]
+      ],
+      "kw": [
+        "reuse_venvs"
+      ]
+    },
+    {
+      "id": "T7",
+      "repo": "arrow",
+      "name": "arrow dehumanize :param timestring: vs input_string",
+      "locs": [
+        [
+          "arrow/arrow.py",
+          1344,
+          1350
+        ]
+      ],
+      "kw": [
+        "timestring"
+      ]
+    },
+    {
+      "id": "T8",
+      "repo": "cattrs",
+      "name": "cattrs ForbiddenExtraKeyError vs ForbiddenExtraKeysError",
+      "locs": [
+        [
+          "docs/customizing.md",
+          279,
+          279
+        ]
+      ],
+      "kw": [
+        "ForbiddenExtraKey"
+      ]
+    },
+    {
+      "id": "T9",
+      "repo": "cattrs",
+      "name": "cattrs get_unstructure_hook :param cache: vs cache_result",
+      "locs": [
+        [
+          "src/cattrs/converters.py",
+          490,
+          503
+        ]
+      ],
+      "kw": [
+        "cache"
+      ]
+    },
+    {
+      "id": "T10",
+      "repo": "cattrs",
+      "name": "cattrs get_structure_hook :param cache: vs cache_result",
+      "locs": [
+        [
+          "src/cattrs/converters.py",
+          639,
+          652
+        ]
+      ],
+      "kw": [
+        "cache"
+      ]
+    },
+    {
+      "id": "T11",
+      "repo": "marshmallow",
+      "name": "marshmallow ``default`` vs load_default",
+      "locs": [
+        [
+          "docs/top_level.rst",
+          10,
+          16
+        ]
+      ],
+      "kw": [
+        "default"
+      ]
+    }
+  ]
+}

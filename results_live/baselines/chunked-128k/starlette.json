@@ -1,0 +1,70 @@
+{
+  "repo": "starlette",
+  "chunk_size": 128000,
+  "ref": "master",
+  "full_pack_tokens_est": 327836,
+  "chunks_planned": 4,
+  "estimate_prompt_tokens": 395975,
+  "estimate_total_tokens": 419975,
+  "calls": [
+    {
+      "chunk": 0,
+      "paths": 39,
+      "est_tokens": 98636,
+      "cached": false,
+      "prompt_tokens": 116090,
+      "completion_tokens": 3003,
+      "latency_seconds": 14.631562096998096,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 1,
+      "paths": 43,
+      "est_tokens": 96561,
+      "cached": false,
+      "prompt_tokens": 121398,
+      "completion_tokens": 952,
+      "latency_seconds": 7.343391494010575,
+      "finish_reason": "stop",
+      "parse_error": "Model returned no message.content; reasoning fallback: We need answer user's request. Need output strict JSON. Need analyze packed repo. Need likely find documentation drift examples and onboarding claims. We only have repo subset docs and some tests. Must cite exact quotes with line numbers. Need evaluate possible drift. Need not invent. Need every finding cite doc and code. We don't have code source except tests? We have starlette package? Packed fi"
+    },
+    {
+      "chunk": 2,
+      "paths": 17,
+      "est_tokens": 104548,
+      "cached": false,
+      "prompt_tokens": 125515,
+      "completion_tokens": 1889,
+      "latency_seconds": 10.404803221026668,
+      "finish_reason": "stop",
+      "findings": 0
+    },
+    {
+      "chunk": 3,
+      "paths": 20,
+      "est_tokens": 28235,
+      "cached": false,
+      "prompt_tokens": 32999,
+      "completion_tokens": 1756,
+      "latency_seconds": 9.97188238700619,
+      "finish_reason": "stop",
+      "findings": 0
+    }
+  ],
+  "errors": [
+    {
+      "chunk": 1,
+      "parse_error": "Model returned no message.content; reasoning fallback: We need answer user's request. Need output strict JSON. Need analyze packed repo. Need likely find documentation drift examples and onboarding claims. We only have repo subset docs and some tests. Must cite exact quotes with line numbers. Need evaluate possible drift. Need not invent. Need every finding cite doc and code. We don't have code source except tests? We have starlette package? Packed fi"
+    }
+  ],
+  "stopped": null,
+  "wall_seconds": 42.36232162298984,
+  "raw_findings": 0,
+  "findings": [],
+  "prompt_tokens": 396002,
+  "completion_tokens": 7600,
+  "calls_ok": 4,
+  "sum_call_latency_seconds": 42.35163919904153,
+  "true_drifts_recovered": []
+}

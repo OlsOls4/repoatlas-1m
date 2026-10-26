@@ -1,0 +1,1304 @@
+{
+  "calls": 162,
+  "prompt_tokens": 6587493,
+  "completion_tokens": 284653,
+  "total_tokens": 6872146,
+  "entries": [
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 25765,
+      "completion": 2058,
+      "at": "2026-10-26T21:05:40.441290+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 30440,
+      "completion": 1517,
+      "at": "2026-10-26T21:05:48.959477+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30006,
+      "completion": 1616,
+      "at": "2026-10-26T21:05:56.657607+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 31304,
+      "completion": 2753,
+      "at": "2026-10-26T21:06:06.936696+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 30124,
+      "completion": 1730,
+      "at": "2026-10-26T21:06:14.048034+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 32458,
+      "completion": 1164,
+      "at": "2026-10-26T21:06:19.671542+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 26823,
+      "completion": 2226,
+      "at": "2026-10-26T21:06:32.947166+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 17533,
+      "completion": 1355,
+      "at": "2026-10-26T21:06:39.567441+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 31242,
+      "completion": 2304,
+      "at": "2026-10-26T21:06:50.275837+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 24284,
+      "completion": 338,
+      "at": "2026-10-26T21:06:53.290326+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 26012,
+      "completion": 2140,
+      "at": "2026-10-26T21:07:01.806244+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 25421,
+      "completion": 302,
+      "at": "2026-10-26T21:07:09.224664+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 29924,
+      "completion": 2281,
+      "at": "2026-10-26T21:07:18.648684+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 29979,
+      "completion": 1703,
+      "at": "2026-10-26T21:07:34.592434+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 32000,
+      "chunk": 14,
+      "prompt": 9912,
+      "completion": 1364,
+      "at": "2026-10-26T21:07:46.642235+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 30572,
+      "completion": 2008,
+      "at": "2026-10-26T21:08:01.112185+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 9184,
+      "completion": 1065,
+      "at": "2026-10-26T21:08:27.064763+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30213,
+      "completion": 3037,
+      "at": "2026-10-26T21:08:41.662482+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 30761,
+      "completion": 2394,
+      "at": "2026-10-26T21:08:52.211411+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 29868,
+      "completion": 2424,
+      "at": "2026-10-26T21:09:04.946641+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 22065,
+      "completion": 1639,
+      "at": "2026-10-26T21:09:14.000317+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 32114,
+      "completion": 500,
+      "at": "2026-10-26T21:09:17.856496+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 32146,
+      "completion": 292,
+      "at": "2026-10-26T21:09:22.000612+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 32383,
+      "completion": 223,
+      "at": "2026-10-26T21:09:24.404351+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 22031,
+      "completion": 325,
+      "at": "2026-10-26T21:09:26.968018+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 31733,
+      "completion": 2431,
+      "at": "2026-10-26T21:09:38.205366+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 26589,
+      "completion": 1394,
+      "at": "2026-10-26T21:09:45.266498+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 30359,
+      "completion": 1622,
+      "at": "2026-10-26T21:10:03.919469+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 30421,
+      "completion": 2040,
+      "at": "2026-10-26T21:10:15.751209+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 32000,
+      "chunk": 14,
+      "prompt": 9407,
+      "completion": 1828,
+      "at": "2026-10-26T21:10:23.137990+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 18775,
+      "completion": 2515,
+      "at": "2026-10-26T21:10:34.777737+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 31191,
+      "completion": 1728,
+      "at": "2026-10-26T21:10:44.038640+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 27496,
+      "completion": 1861,
+      "at": "2026-10-26T21:10:53.166136+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 26808,
+      "completion": 2616,
+      "at": "2026-10-26T21:11:06.461256+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 23618,
+      "completion": 3799,
+      "at": "2026-10-26T21:11:36.815667+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 24549,
+      "completion": 2090,
+      "at": "2026-10-26T21:11:51.663380+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 30267,
+      "completion": 1628,
+      "at": "2026-10-26T21:12:00.897010+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 30282,
+      "completion": 1537,
+      "at": "2026-10-26T21:12:14.098923+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 30641,
+      "completion": 1375,
+      "at": "2026-10-26T21:12:30.954332+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 6685,
+      "completion": 1242,
+      "at": "2026-10-26T21:12:50.533322+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 31078,
+      "completion": 212,
+      "at": "2026-10-26T21:13:02.440180+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 22079,
+      "completion": 373,
+      "at": "2026-10-26T21:13:11.768631+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 28242,
+      "completion": 305,
+      "at": "2026-10-26T21:13:18.968570+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 26681,
+      "completion": 1022,
+      "at": "2026-10-26T21:13:33.205312+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 14,
+      "prompt": 26576,
+      "completion": 269,
+      "at": "2026-10-26T21:14:25.417392+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 32000,
+      "chunk": 15,
+      "prompt": 11552,
+      "completion": 222,
+      "at": "2026-10-26T21:14:32.751882+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 25310,
+      "completion": 2798,
+      "at": "2026-10-26T21:14:52.463900+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 29970,
+      "completion": 3120,
+      "at": "2026-10-26T21:15:10.649685+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30918,
+      "completion": 2214,
+      "at": "2026-10-26T21:15:22.600406+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 7149,
+      "completion": 2560,
+      "at": "2026-10-26T21:16:12.161495+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 52691,
+      "completion": 301,
+      "at": "2026-10-26T21:16:19.215683+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 21284,
+      "completion": 1010,
+      "at": "2026-10-26T21:16:39.604790+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 34273,
+      "completion": 1222,
+      "at": "2026-10-26T21:16:47.455129+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 29952,
+      "completion": 2153,
+      "at": "2026-10-26T21:17:07.788692+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 31279,
+      "completion": 1581,
+      "at": "2026-10-26T21:17:22.594591+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 17586,
+      "completion": 2021,
+      "at": "2026-10-26T21:17:46.851044+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 20597,
+      "completion": 259,
+      "at": "2026-10-26T21:17:51.325777+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 31543,
+      "completion": 2510,
+      "at": "2026-10-26T21:18:17.962016+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 27889,
+      "completion": 1361,
+      "at": "2026-10-26T21:18:37.127470+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 29253,
+      "completion": 1496,
+      "at": "2026-10-26T21:19:11.372258+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 32000,
+      "chunk": 14,
+      "prompt": 21335,
+      "completion": 2090,
+      "at": "2026-10-26T21:19:24.785081+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 28591,
+      "completion": 2635,
+      "at": "2026-10-26T21:19:54.718634+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 29904,
+      "completion": 2273,
+      "at": "2026-10-26T21:20:10.004295+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30283,
+      "completion": 2720,
+      "at": "2026-10-26T21:20:34.913674+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 16965,
+      "completion": 1952,
+      "at": "2026-10-26T21:20:50.828117+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 30488,
+      "completion": 1474,
+      "at": "2026-10-26T21:21:07.988589+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 29131,
+      "completion": 1792,
+      "at": "2026-10-26T21:21:24.414384+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 6475,
+      "completion": 1969,
+      "at": "2026-10-26T21:21:41.395858+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 28460,
+      "completion": 1830,
+      "at": "2026-10-26T21:22:02.099733+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 20681,
+      "completion": 1966,
+      "at": "2026-10-26T21:22:22.701895+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 22828,
+      "completion": 222,
+      "at": "2026-10-26T21:22:38.120230+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 30861,
+      "completion": 1578,
+      "at": "2026-10-26T21:22:55.499752+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 29629,
+      "completion": 347,
+      "at": "2026-10-26T21:23:09.617059+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 30863,
+      "completion": 1986,
+      "at": "2026-10-26T21:23:30.128963+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 17891,
+      "completion": 1639,
+      "at": "2026-10-26T21:23:48.595679+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 4310,
+      "completion": 2515,
+      "at": "2026-10-26T21:24:08.324675+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 31280,
+      "completion": 1683,
+      "at": "2026-10-26T21:24:27.552683+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30044,
+      "completion": 660,
+      "at": "2026-10-26T21:24:39.052345+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 20800,
+      "completion": 1104,
+      "at": "2026-10-26T21:24:53.378481+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 25668,
+      "completion": 3891,
+      "at": "2026-10-26T21:25:17.215042+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 30705,
+      "completion": 2752,
+      "at": "2026-10-26T21:25:33.912199+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 10497,
+      "completion": 2235,
+      "at": "2026-10-26T21:25:48.216113+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 29161,
+      "completion": 247,
+      "at": "2026-10-26T21:25:59.185929+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 28954,
+      "completion": 527,
+      "at": "2026-10-26T21:26:03.773460+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 16903,
+      "completion": 1268,
+      "at": "2026-10-26T21:26:18.286598+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 32612,
+      "completion": 1249,
+      "at": "2026-10-26T21:26:25.273787+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 17638,
+      "completion": 659,
+      "at": "2026-10-26T21:26:41.103948+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 28389,
+      "completion": 710,
+      "at": "2026-10-26T21:26:56.106605+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 28940,
+      "completion": 1764,
+      "at": "2026-10-26T21:27:14.348200+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 20538,
+      "completion": 1257,
+      "at": "2026-10-26T21:27:28.091397+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 27936,
+      "completion": 1980,
+      "at": "2026-10-26T21:27:36.373057+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 28385,
+      "completion": 2325,
+      "at": "2026-10-26T21:28:00.522876+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 30931,
+      "completion": 2779,
+      "at": "2026-10-26T21:28:26.225108+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 29168,
+      "completion": 2096,
+      "at": "2026-10-26T21:28:48.440815+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 25540,
+      "completion": 2345,
+      "at": "2026-10-26T21:29:08.268220+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 20372,
+      "completion": 372,
+      "at": "2026-10-26T21:29:24.909791+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 27263,
+      "completion": 2001,
+      "at": "2026-10-26T21:29:47.488984+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 31195,
+      "completion": 203,
+      "at": "2026-10-26T21:29:58.783552+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 30355,
+      "completion": 500,
+      "at": "2026-10-26T21:30:15.449832+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 29618,
+      "completion": 1862,
+      "at": "2026-10-26T21:30:36.420596+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 10891,
+      "completion": 1272,
+      "at": "2026-10-26T21:30:47.850033+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 30037,
+      "completion": 3761,
+      "at": "2026-10-26T21:31:13.838467+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 27729,
+      "completion": 2184,
+      "at": "2026-10-26T21:31:25.364251+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30318,
+      "completion": 2307,
+      "at": "2026-10-26T21:31:44.063471+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 30185,
+      "completion": 2598,
+      "at": "2026-10-26T21:32:03.170370+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 8862,
+      "completion": 1875,
+      "at": "2026-10-26T21:32:18.088859+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 32710,
+      "completion": 318,
+      "at": "2026-10-26T21:32:27.120438+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 8317,
+      "completion": 385,
+      "at": "2026-10-26T21:32:39.541454+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 31890,
+      "completion": 342,
+      "at": "2026-10-26T21:32:50.959444+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 2001,
+      "completion": 1241,
+      "at": "2026-10-26T21:32:56.198491+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 30687,
+      "completion": 3189,
+      "at": "2026-10-26T21:33:06.643170+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 28218,
+      "completion": 284,
+      "at": "2026-10-26T21:33:09.509958+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 30570,
+      "completion": 1544,
+      "at": "2026-10-26T21:33:18.438695+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 9273,
+      "completion": 2379,
+      "at": "2026-10-26T21:33:29.693221+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 0,
+      "prompt": 13778,
+      "completion": 1450,
+      "at": "2026-10-26T21:33:37.173341+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 1,
+      "prompt": 31638,
+      "completion": 1947,
+      "at": "2026-10-26T21:33:46.585375+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 2,
+      "prompt": 30698,
+      "completion": 2031,
+      "at": "2026-10-26T21:33:57.692050+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 3,
+      "prompt": 30555,
+      "completion": 2189,
+      "at": "2026-10-26T21:34:07.073984+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 4,
+      "prompt": 34419,
+      "completion": 2587,
+      "at": "2026-10-26T21:34:18.752839+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 5,
+      "prompt": 26306,
+      "completion": 1220,
+      "at": "2026-10-26T21:34:23.676055+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 6,
+      "prompt": 34377,
+      "completion": 2059,
+      "at": "2026-10-26T21:34:33.555351+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 7,
+      "prompt": 15371,
+      "completion": 3000,
+      "at": "2026-10-26T21:34:45.810171+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 8,
+      "prompt": 32344,
+      "completion": 1593,
+      "at": "2026-10-26T21:34:52.366772+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 9,
+      "prompt": 29621,
+      "completion": 2341,
+      "at": "2026-10-26T21:35:01.760294+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 10,
+      "prompt": 21283,
+      "completion": 458,
+      "at": "2026-10-26T21:35:05.248747+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 11,
+      "prompt": 26146,
+      "completion": 1174,
+      "at": "2026-10-26T21:35:11.522367+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 12,
+      "prompt": 30224,
+      "completion": 1791,
+      "at": "2026-10-26T21:35:18.813381+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 13,
+      "prompt": 29669,
+      "completion": 1360,
+      "at": "2026-10-26T21:35:25.424277+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 32000,
+      "chunk": 14,
+      "prompt": 21439,
+      "completion": 1706,
+      "at": "2026-10-26T21:35:42.100545+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 125705,
+      "completion": 3193,
+      "at": "2026-10-26T21:46:35.172291+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 24926,
+      "completion": 1815,
+      "at": "2026-10-26T21:46:42.132689+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 117014,
+      "completion": 203,
+      "at": "2026-10-26T21:46:46.037408+00:00"
+    },
+    {
+      "repo": "httpx",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 126477,
+      "completion": 2489,
+      "at": "2026-10-26T21:46:58.367338+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 122036,
+      "completion": 3914,
+      "at": "2026-10-26T21:47:17.522530+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 123235,
+      "completion": 2935,
+      "at": "2026-10-26T21:47:31.619042+00:00"
+    },
+    {
+      "repo": "cattrs",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 62304,
+      "completion": 1593,
+      "at": "2026-10-26T21:47:40.271552+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 122138,
+      "completion": 3282,
+      "at": "2026-10-26T21:47:52.564799+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 119853,
+      "completion": 1665,
+      "at": "2026-10-26T21:48:01.687031+00:00"
+    },
+    {
+      "repo": "marshmallow",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 53590,
+      "completion": 2160,
+      "at": "2026-10-26T21:48:10.727292+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 116090,
+      "completion": 3003,
+      "at": "2026-10-26T21:48:25.593873+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 121398,
+      "completion": 952,
+      "at": "2026-10-26T21:48:32.940458+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 125515,
+      "completion": 1889,
+      "at": "2026-10-26T21:48:43.348112+00:00"
+    },
+    {
+      "repo": "starlette",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 32999,
+      "completion": 1756,
+      "at": "2026-10-26T21:48:53.322269+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 125782,
+      "completion": 3029,
+      "at": "2026-10-26T21:49:07.017453+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 120372,
+      "completion": 3147,
+      "at": "2026-10-26T21:49:24.410011+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 121299,
+      "completion": 1746,
+      "at": "2026-10-26T21:49:34.888890+00:00"
+    },
+    {
+      "repo": "click",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 22805,
+      "completion": 1264,
+      "at": "2026-10-26T21:49:41.323401+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 91805,
+      "completion": 2474,
+      "at": "2026-10-26T21:49:52.799106+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 144655,
+      "completion": 2263,
+      "at": "2026-10-26T21:50:06.324844+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 128734,
+      "completion": 1932,
+      "at": "2026-10-26T21:50:16.344955+00:00"
+    },
+    {
+      "repo": "structlog",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 40181,
+      "completion": 2369,
+      "at": "2026-10-26T21:50:26.028454+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 104207,
+      "completion": 3281,
+      "at": "2026-10-26T21:50:40.121981+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 113187,
+      "completion": 2825,
+      "at": "2026-10-26T21:50:52.016347+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 125078,
+      "completion": 2440,
+      "at": "2026-10-26T21:51:03.911690+00:00"
+    },
+    {
+      "repo": "nox",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 5458,
+      "completion": 389,
+      "at": "2026-10-26T21:51:06.646120+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 121779,
+      "completion": 1918,
+      "at": "2026-10-26T21:51:14.439670+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 102275,
+      "completion": 2145,
+      "at": "2026-10-26T21:51:25.580228+00:00"
+    },
+    {
+      "repo": "arrow",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 105994,
+      "completion": 2133,
+      "at": "2026-10-26T21:51:35.711537+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 128000,
+      "chunk": 0,
+      "prompt": 128739,
+      "completion": 1338,
+      "at": "2026-10-26T21:51:44.760549+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 128000,
+      "chunk": 1,
+      "prompt": 120830,
+      "completion": 3566,
+      "at": "2026-10-26T21:51:59.710135+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 128000,
+      "chunk": 2,
+      "prompt": 126376,
+      "completion": 1869,
+      "at": "2026-10-26T21:52:30.162704+00:00"
+    },
+    {
+      "repo": "attrs",
+      "chunk_size": 128000,
+      "chunk": 3,
+      "prompt": 26227,
+      "completion": 2161,
+      "at": "2026-10-26T21:52:38.971133+00:00"
+    }
+  ]
+}
