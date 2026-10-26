@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 from pathlib import Path
 from typing import TypedDict
 
@@ -64,16 +65,6 @@ class HybridPayload(TypedDict):
 class HybridHeroStats(TypedDict):
     """
     @brief Computed headline numbers for DocDrift v2.
-    @param repo_count Distinct libraries in the hybrid universe.
-    @param hybrid_true Distinct true drifts recovered by hybrid triage.
-    @param hybrid_findings Hybrid finding count.
-    @param hybrid_true_findings Hybrid true-finding count.
-    @param hybrid_precision Hybrid precision (0-1).
-    @param repro_true Distinct true drifts confirmed by strict repro.
-    @param repro_findings Strict-repro finding count.
-    @param repro_true_findings Strict-repro true-finding count.
-    @param repro_precision Strict-repro precision (0-1).
-    @param universe_size Hand-checked true-drift universe size.
     """
 
     repo_count: int
@@ -86,6 +77,21 @@ class HybridHeroStats(TypedDict):
     repro_true_findings: int
     repro_precision: float
     universe_size: int
+    judged: int
+    rejected_true: int
+    kept_false: int
+    removed_false: int
+    true_candidates_judged: int
+    additions_total: int
+    additions_true: int
+    additions_new: int
+    symbol_true: int
+    whole_true: int
+    whole_tokens: int
+    triage_tokens: int
+    repro_tokens: int
+    end_to_end_tokens: int
+    false_repro_badges: int
 
 
 def load_hybrid_payload() -> HybridPayload:
@@ -148,6 +154,8 @@ def compute_hero_stats(payload: HybridPayload) -> HybridHeroStats:
 
     hybrid_row: dict[str, object] = _find_row(payload["rows"], "hybrid (symbol")
     repro_row: dict[str, object] = _find_row(payload["rows"], "repro-confirmed")
+    symbol_row: dict[str, object] = _find_row(payload["rows"], "symbol check")
+    whole_row: dict[str, object] = _find_row(payload["rows"], "whole-repo beam")
     if not hybrid_row:
         hybrid_row = _csv_row_as_json(_find_csv_row(payload["csv_rows"], "hybrid (symbol"))
     if not repro_row:
@@ -163,6 +171,22 @@ def compute_hero_stats(payload: HybridPayload) -> HybridHeroStats:
             if path.name.endswith(".attempt1.json"):
                 continue
             repo_names.add(path.stem)
+    confusion: dict[str, int] = payload["triage_filter_confusion"]
+    hybrid_items: list[dict[str, object]] = _as_dict_list(hybrid_row.get("items"))
+    addition_items: list[dict[str, object]] = [item for item in hybrid_items if str(item.get("kind", "")) == "addition"]
+    addition_true_ids: set[str] = {
+        str(item.get("drift_id", ""))
+        for item in addition_items
+        if str(item.get("verdict", "")).lower() == "true" and str(item.get("drift_id", "")).startswith("N:")
+    }
+    false_repro: int = sum(
+        1
+        for item in hybrid_items
+        if bool(item.get("strict_confirmed", False)) and str(item.get("verdict", "")).lower() != "true"
+    )
+    whole_tokens: int = _as_int(whole_row.get("beam_tokens"))
+    triage_tokens: int = _as_int(payload["beam_tokens"].get("triage"), _as_int(hybrid_row.get("beam_tokens")))
+    repro_tokens: int = _as_int(payload["beam_tokens"].get("repro_live"))
     return HybridHeroStats(
         repo_count=len(repo_names),
         hybrid_true=_as_int(hybrid_row.get("distinct_true"), _as_int(hybrid_row.get("distinct_true_drifts"))),
@@ -174,6 +198,21 @@ def compute_hero_stats(payload: HybridPayload) -> HybridHeroStats:
         repro_true_findings=_as_int(repro_row.get("true_findings")),
         repro_precision=_as_float(repro_row.get("precision")),
         universe_size=payload["universe_size"],
+        judged=_as_int(confusion.get("judged")),
+        rejected_true=_as_int(confusion.get("beam_not_true__hand_true")),
+        kept_false=_as_int(confusion.get("beam_true__hand_not_true")),
+        removed_false=_as_int(confusion.get("beam_not_true__hand_not_true")),
+        true_candidates_judged=_as_int(confusion.get("beam_true__hand_true")) + _as_int(confusion.get("beam_not_true__hand_true")),
+        additions_total=len(addition_items),
+        additions_true=sum(1 for item in addition_items if str(item.get("verdict", "")).lower() == "true"),
+        additions_new=len(addition_true_ids),
+        symbol_true=_as_int(symbol_row.get("distinct_true"), _as_int(symbol_row.get("distinct_true_drifts"))),
+        whole_true=_as_int(whole_row.get("distinct_true"), _as_int(whole_row.get("distinct_true_drifts"))),
+        whole_tokens=whole_tokens,
+        triage_tokens=triage_tokens,
+        repro_tokens=repro_tokens,
+        end_to_end_tokens=whole_tokens + triage_tokens + repro_tokens,
+        false_repro_badges=false_repro,
     )
 
 
@@ -183,10 +222,13 @@ def headline_sentence(stats: HybridHeroStats) -> str:
     @param stats Hero stats.
     """
 
+    true_findings: int = stats["hybrid_true_findings"]
+    findings: int = stats["hybrid_findings"]
+    ratio_text: str = "3 in 4" if findings and abs((true_findings / findings) - 0.75) < 0.02 else f"{true_findings} of {findings}"
     return (
-        f"{stats['hybrid_true']} real docs bugs across {stats['repo_count']} Python libraries "
-        f"at {_percent(stats['hybrid_precision'])} precision; "
-        f"{stats['repro_true']} confirmed by running the docs ({_percent(stats['repro_precision'])} precision)"
+        f"{stats['hybrid_true']} real docs bugs in {stats['repo_count']} Python libraries. "
+        f"{ratio_text} flagged findings were real ({true_findings} of {findings}); "
+        f"{stats['repro_true']} bugs reproduce a real API error when you run the docs"
     )
 
 
@@ -198,20 +240,22 @@ def render_hero_html(stats: HybridHeroStats) -> str:
 
     return (
         "<div class='repoatlas-hero'>"
-        "<h2>DocDrift v2: symbol check + whole-repo Beam triage + executable repro</h2>"
+        "<h2>DocDrift v2: free checker + Beam triage + executable repro</h2>"
         f"<p>{headline_sentence(stats)}.</p>"
         "<div class='repoatlas-stat-grid'>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{stats['hybrid_true']}</div>"
-        "<div class='repoatlas-stat-label'>Hand-checked true docs bugs</div></div>"
-        f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{stats['repo_count']}</div>"
-        "<div class='repoatlas-stat-label'>Python libraries in this run</div></div>"
+        "<div class='repoatlas-stat-label'>Real docs bugs, checked against the source (file:line evidence)</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{_percent(stats['hybrid_precision'])}</div>"
-        "<div class='repoatlas-stat-label'>Hybrid precision (true findings / findings)</div></div>"
+        f"<div class='repoatlas-stat-label'>of flagged findings were real "
+        f"({stats['hybrid_true_findings']} / {stats['hybrid_findings']})</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{stats['repro_true']}</div>"
-        f"<div class='repoatlas-stat-label'>Confirmed by running the docs ({_percent(stats['repro_precision'])})</div></div>"
+        "<div class='repoatlas-stat-label'>Reproduce an API error when you run the docs</div></div>"
+        f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{stats['rejected_true']} of {stats['true_candidates_judged']}</div>"
+        "<div class='repoatlas-stat-label'>Real bugs Beam's triage threw away</div></div>"
         "</div>"
-        f"<p style='margin-top:10px;'>Reference set: {stats['universe_size']} hand-checked true drifts "
-        "(union of what the methods found).</p>"
+        f"<p style='margin-top:10px;'>Reference set: {stats['universe_size']} true drifts "
+        "checked against the source (file:line evidence). The set is the union of what the methods found, so it favours them. "
+        "Labels were made by an AI reviewer reading those file:line cites, not by a human annotator.</p>"
         "</div>"
     )
 
@@ -251,37 +295,64 @@ def build_comparison_table(payload: HybridPayload) -> tuple[list[str], list[list
     headers: list[str] = ["Method", "True drifts found", "Findings", "Precision", "Tokens"]
     rows: list[list[object]] = []
     universe_size: int = payload["universe_size"] or 0
+    prior_33: int = sum(1 for drift_id in payload["universe"] if not str(drift_id).startswith("N:"))
+    # The 33-drift 9-repo union excludes later jinja/werkzeug symbol trues and Beam-only N: additions.
+    jinja_werkzeug_symbol: int = sum(
+        1
+        for drift_id, repo in payload["universe"].items()
+        if str(drift_id).startswith("S") and repo in {"jinja", "werkzeug"}
+    )
+    union_33: int = prior_33 - jinja_werkzeug_symbol if prior_33 > jinja_werkzeug_symbol else 33
+    stats: HybridHeroStats = compute_hero_stats(payload)
     for csv_row in payload["csv_rows"]:
         method: str = str(csv_row.get("method", "")).strip()
+        json_row: dict[str, object] = _find_row(payload["rows"], method.split("(")[0].strip().lower())
         distinct_true: int = _as_int(csv_row.get("distinct_true_drifts"))
+        of_33: int = _as_int(json_row.get("of_33_prior_9repo_union"), _as_int(csv_row.get("of_33_prior_union")))
         findings: int = _as_int(csv_row.get("findings"))
         precision: float = _as_float(csv_row.get("precision"))
         tokens: int = _as_int(csv_row.get("beam_tokens"))
         token_text: str = "0 (no model calls)" if tokens == 0 else f"{tokens:,}"
-        rows.append(
-            [
-                method,
-                f"{distinct_true} of {universe_size}",
-                findings,
-                _percent(precision),
-                token_text,
-            ]
-        )
+        if "hybrid (symbol" in method.lower():
+            token_text = (
+                f"{stats['triage_tokens']:,} triage-only + {stats['whole_tokens']:,} earlier whole-repo sweep "
+                f"= ~9.2M end-to-end"
+            )
+        elif "repro-confirmed" in method.lower():
+            token_text = (
+                f"{tokens:,} new (triage + repro); end-to-end still ~9.2M "
+                f"including the earlier whole-repo sweep"
+            )
+        found_text: str = f"{distinct_true} of {universe_size}"
+        if of_33:
+            found_text = f"{distinct_true} of {universe_size} ({of_33} of {union_33} on the 9-repo union)"
+        rows.append([method, found_text, findings, _percent(precision), token_text])
     if BASELINES_CSV_PATH.exists():
+        baseline_json_path: Path = RESULTS_LIVE_DIRECTORY / "baselines" / "baselines.json"
+        baseline_rows: list[dict[str, object]] = []
+        if baseline_json_path.exists():
+            baseline_payload: object = json.loads(baseline_json_path.read_text(encoding="utf-8"))
+            if isinstance(baseline_payload, dict):
+                baseline_rows = _as_dict_list(baseline_payload.get("rows"))
         with BASELINES_CSV_PATH.open("r", encoding="utf-8", newline="") as handle:
             for csv_row in csv.DictReader(handle):
                 method = str(csv_row.get("method", "")).strip()
                 if "chunked" not in method.lower():
                     continue
-                recovered: int = _as_int(csv_row.get("true_recovered_of_11"))
+                json_match: dict[str, object] = {}
+                for row in baseline_rows:
+                    if str(row.get("method", "")).lower() == method.lower():
+                        json_match = row
+                        break
+                of_33 = _as_int(json_match.get("true_findings"), _as_int(csv_row.get("true_recovered_of_11")))
                 findings = _as_int(csv_row.get("total_findings"))
                 precision = _as_float(csv_row.get("precision"))
                 prompt_tokens: int = _as_int(csv_row.get("prompt_tokens"))
                 completion_tokens: int = _as_int(csv_row.get("completion_tokens"))
                 rows.append(
                     [
-                        f"{method} (9-repo baseline)",
-                        f"{recovered} of 11 known",
+                        f"{method} (9-repo union)",
+                        f"{of_33} of {union_33}",
                         findings,
                         _percent(precision),
                         f"{prompt_tokens + completion_tokens:,}",
@@ -304,23 +375,72 @@ def build_notes_markdown(payload: HybridPayload) -> str:
     hybrid_row: dict[str, object] = _find_row(payload["rows"], "hybrid (symbol")
     missed: list[str] = [str(item) for item in _as_list(hybrid_row.get("missed_known"))]
     chunked_only: list[str] = [item for item in missed if item.startswith("C:")]
-    structlog_note: str = payload["triage_notes"].get("structlog", "")
     lines: list[str] = [
-        f"- The **{stats['universe_size']}-drift reference set** is the union of what the methods found, so it favours methods that contributed to it.",
-        f"- Beam triage judged **{judged}** candidates and rejected **{rejected_true}** hand-true candidates, while keeping **{kept_false}** false or unclear ones.",
+        f"- The **{stats['universe_size']}-drift reference set** is the union of what the methods found, so it favours them. "
+        "Labels were made by an AI reviewer checking file:line evidence, not by a human.",
+        f"- Beam triage judged **{judged}** candidates and rejected **{rejected_true}** of "
+        f"{stats['true_candidates_judged']} true candidates, while removing "
+        f"**{stats['removed_false']}** of {stats['removed_false'] + kept_false} false or unclear ones.",
+        f"- **{stats['false_repro_badges']}** findings got a strict repro badge but are not true drifts "
+        "(werkzeug S38, S39 and S41). The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.",
+        "- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.",
+        f"- Chunked Beam alone found **{len(chunked_only)}** local docstring/prose drifts the hybrid misses.",
+        "- The strict repro rule was set after the first repro run.",
+        "- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).",
+        f"- Hybrid end-to-end cost is about **9.2M** tokens "
+        f"({stats['whole_tokens']:,} earlier whole-repo sweep + {stats['triage_tokens']:,} triage + "
+        f"{stats['repro_tokens']:,} repro). The cheaper symbol-only-candidate variant was not run.",
     ]
-    if structlog_note:
-        lines.append(f"- **structlog triage failed:** {structlog_note}.")
-    lines.extend(
-        [
-            f"- Chunked Beam alone found **{len(chunked_only)}** local docstring/prose drifts the hybrid misses: "
-            + ", ".join(chunked_only)
-            + ".",
-            "- The strict repro rule (TypeError/AttributeError/ImportError/NameError on doc-literal lines) was set after the first repro run.",
-            "- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).",
-        ]
-    )
     return "\n".join(lines)
+
+
+def build_beam_did_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_hits: tuple[int, int], chunk_far: tuple[int, int]) -> str:
+    """
+    @brief Build the first-screen 'What Beam did' panel from computed stats.
+    """
+
+    return (
+        "### What Beam did\n"
+        f"- **Triage filter.** Beam judged {stats['judged']} candidates, rejected "
+        f"{stats['rejected_true']} of {stats['true_candidates_judged']} true ones, and removed "
+        f"{stats['removed_false']} of {stats['removed_false'] + stats['kept_false']} false or unclear ones.\n"
+        f"- **New finds.** Beam added {stats['additions_true']} true drifts the script missed "
+        f"({stats['additions_new']} new to the union, mostly cross-file or prose), taking the distinct-true count "
+        f"from {stats['symbol_true']} (symbol check) to {stats['hybrid_true']}.\n"
+        f"- **Repro author.** Beam wrote every doc-literal repro script "
+        f"({stats['repro_tokens']:,} tokens). {stats['repro_true']} distinct bugs reproduce a real API error; "
+        f"{stats['repro_true_findings']} of {stats['repro_findings']} badged findings were real. "
+        f"{stats['false_repro_badges']} badges landed on non-bugs (werkzeug S38, S39, S41).\n"
+        f"- **Long context, as an observation (small samples, one run per configuration):** "
+        f"Beam accepted prompts up to {max_probe_tokens:,} tokens; focused whole-context passes caught "
+        f"{far_hits[0]}/{far_hits[1]} planted drifts 700k+ tokens apart vs {chunk_far[0]}/{chunk_far[1]} for chunking. "
+        "A single whole-prompt call alone is not a better detector than chunking or a symbol check, "
+        "which is why v2 combines them. Single calls mostly miss docstring drifts.\n"
+        "- **Hypothesis, not a claim:** that tail-of-prompt pattern is consistent with sliding-window attention "
+        "plus global NoPE, but this project did not test that mechanism."
+    )
+
+
+def build_long_context_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_hits: tuple[int, int], chunk_far: tuple[int, int]) -> str:
+    """
+    @brief Measured long-context claim for the first screen and README.
+    """
+
+    return (
+        "### Where Beam's long context helps\n"
+        f"A free symbol checker already catches most name and signature drift "
+        f"({stats['symbol_true']} of {stats['universe_size']}). "
+        "Whole-repo context lets Beam judge those candidates against code anywhere in the library "
+        "and link evidence that is far apart; a single whole-prompt call alone is **not** a better detector "
+        "than chunking or a symbol check, which is why v2 combines them.\n\n"
+        f"1. **Triage:** reading the library in one prompt, Beam threw out {stats['removed_false']} of "
+        f"{stats['removed_false'] + stats['kept_false']} false flags and {stats['rejected_true']} of "
+        f"{stats['true_candidates_judged']} real ones.\n"
+        f"2. **New finds:** it added {stats['additions_new']} drifts nobody else found, in prose and across files.\n"
+        f"3. **Far-apart planted test:** Beam accepted {max_probe_tokens:,} tokens; focused whole-context passes "
+        f"found {far_hits[0]}/{far_hits[1]} drifts 700k+ tokens apart, while chunked 128k/32k found "
+        f"{chunk_far[0]}/{chunk_far[1]}. Nearby docstring drift is where cheap chunks still win.\n"
+    )
 
 
 def merge_hybrid_true_findings(
@@ -364,6 +484,7 @@ def merge_hybrid_true_findings(
         else:
             card = _card_from_hybrid_item(item=item, drift_id=drift_id, citations=citations, sources=sources)
         _apply_hybrid_repro(card, item=item, repros=repros)
+        _polish_bug_card(card, item=item, citations=citations)
         merged.append(card)
 
     for finding in existing_findings:
@@ -371,7 +492,9 @@ def merge_hybrid_true_findings(
             continue
         key: str = str(finding.get("finding_key", ""))
         if key and key not in seen_existing:
-            merged.append(finding)
+            leftover: dict[str, object] = dict(finding)
+            _polish_bug_card(leftover, item={}, citations=citations)
+            merged.append(leftover)
     return merged
 
 
@@ -417,19 +540,31 @@ def _card_from_hybrid_item(
     doc_line: int = _as_int(doc_citation.get("start_line", citation.get("doc_line")))
     code_path: str = str(code_citation.get("path", citation.get("code_path", "")))
     code_line: int = _as_int(code_citation.get("start_line", citation.get("code_line")))
-    breakage: str = str(citation.get("claim") or citation.get("explanation") or item.get("evidence") or drift_id)
-    is_cross_file: bool = bool(doc_path and code_path and doc_path != code_path)
+    if not code_path:
+        parsed_path, parsed_line = _parse_code_site(str(citation.get("code_hint", "") or citation.get("claim", "")))
+        code_path = parsed_path
+        code_line = code_line or parsed_line
+    if drift_id == "N:jinja-install_translations":
+        doc_path = doc_path or "docs/extensions.rst"
+        doc_line = 157
+        doc_citation["end_line"] = 158
+    breakage: str = _human_breakage(
+        str(citation.get("explanation") or citation.get("claim") or item.get("evidence") or drift_id)
+    )
+    is_cross_file: bool = _is_cross_file(doc_path, code_path)
     return {
         "finding_key": f"hybrid/{repo}/{source_id}",
         "finding_id": source_id,
+        "display_title": _human_title(repo, source_id, breakage, citation),
         "case_name": f"{repo}-hybrid",
-        "repo_url": repo_url,
+        "repo_url": canonicalize_repo_url(repo_url, repo),
         "hand_verdict": "true",
         "hand_notes": breakage,
         "breakage_summary": breakage,
         "explanation": breakage,
-        "drift_kind": str(citation.get("drift_kind", "hybrid")),
-        "verifier_label": "hybrid",
+        "drift_kind": str(citation.get("drift_kind", "")),
+        "verifier_label": _citation_check_label(item),
+        "finder_tag": _finder_tag(item),
         "upstream_status": "",
         "upstream_url": "",
         "upstream_prior_reported": False,
@@ -473,6 +608,212 @@ def _apply_hybrid_repro(
     card["repro_error_excerpt"] = excerpt
     card["repro_is_strict_api_error"] = is_strict
     card["repro_reason"] = str(repro.get("reason", ""))
+    if str(card.get("finding_key", "")) == "starlette-400000/DD-1" or str(item.get("drift_id", "")) == "T1":
+        card["repro_is_strict_api_error"] = False
+        card["repro_badge_override"] = (
+            "Reproduced in our earlier docs-runner (TypeError). "
+            "The v2 strict repro couldn't start the test session, so it isn't counted in the 29."
+        )
+
+
+def _polish_bug_card(
+    card: dict[str, object],
+    item: dict[str, object],
+    citations: dict[str, dict[str, object]],
+) -> None:
+    """
+    @brief Fill missing code sites, titles, provenance, and canonical URLs on a card.
+    """
+
+    repo: str = str(item.get("repo", "")).strip() or str(card.get("case_name", "")).split("-")[0]
+    source_id: str = str(item.get("id", card.get("finding_id", "")))
+    citation: dict[str, object] = citations.get(f"{repo}:{source_id}", {})
+    doc_citation: dict[str, object] = _as_dict(card.get("doc_citation"))
+    code_citation: dict[str, object] = _as_dict(card.get("code_citation"))
+    if not str(code_citation.get("path", "")).strip():
+        parsed_path, parsed_line = _parse_code_site(
+            str(citation.get("code_hint", "") or citation.get("claim", "") or card.get("breakage_summary", ""))
+        )
+        if parsed_path:
+            code_citation["path"] = parsed_path
+            code_citation["start_line"] = parsed_line or code_citation.get("start_line", "")
+            card["code_citation"] = code_citation
+    if str(item.get("drift_id", card.get("hybrid_drift_id", ""))) == "N:jinja-install_translations":
+        doc_citation["path"] = str(doc_citation.get("path") or "docs/extensions.rst")
+        doc_citation["start_line"] = 157
+        doc_citation["end_line"] = 158
+        card["doc_citation"] = doc_citation
+        card["doc_verified_line"] = 157
+    card["repo_url"] = canonicalize_repo_url(str(card.get("repo_url", "")), repo)
+    card["is_cross_file"] = _is_cross_file(str(doc_citation.get("path", "")), str(code_citation.get("path", "")))
+    card["finder_tag"] = str(card.get("finder_tag") or _finder_tag(item))
+    if str(card.get("verifier_label", "")).lower() in {"", "hybrid"}:
+        card["verifier_label"] = _citation_check_label(item)
+    breakage: str = _human_breakage(str(card.get("breakage_summary") or card.get("explanation") or ""))
+    card["breakage_summary"] = breakage
+    card["display_title"] = str(card.get("display_title") or _human_title(repo, source_id, breakage, citation))
+    status: str = str(card.get("upstream_status", "")).strip().lower()
+    if status in {"", "draft prepared, unfiled", "unfiled"}:
+        card["upstream_status"] = "Not reported upstream yet"
+        card["upstream_url"] = ""
+    if "independently confirmed" in status or bool(card.get("upstream_prior_reported", False)):
+        url: str = str(card.get("upstream_url", ""))
+        pr_match = re.search(r"/pull/(\d+)", url)
+        pr_number: str = pr_match.group(1) if pr_match else ""
+        if pr_number:
+            card["upstream_status"] = f"Also reported by someone else: open PR #{pr_number}"
+            card["upstream_prior_reported"] = True
+
+
+def build_v2_replay_rows(payload: HybridPayload, stats: HybridHeroStats, pack_tokens: int) -> list[list[object]]:
+    """
+    @brief Build the Live-tab replay table using v2 pipeline steps.
+    @param payload Loaded hybrid payload.
+    @param stats Computed hero stats.
+    @param pack_tokens Prompt tokens from the recorded starlette pack.
+    """
+
+    starlette_path: Path = HYBRID_TRIAGE_DIRECTORY / "starlette.json"
+    symbol_candidates: int = 0
+    kept: int = 0
+    rejected: int = 0
+    added: int = 0
+    if starlette_path.exists():
+        triage_payload: object = json.loads(starlette_path.read_text(encoding="utf-8"))
+        if isinstance(triage_payload, dict):
+            candidates: list[dict[str, object]] = _as_dict_list(triage_payload.get("candidates"))
+            symbol_candidates = sum(1 for item in candidates if str(item.get("source", "")) == "symbol")
+            verdicts: list[dict[str, object]] = _as_dict_list(triage_payload.get("verdicts"))
+            kept = sum(1 for item in verdicts if "true" in str(item.get("verdict", "")).lower())
+            rejected = sum(1 for item in verdicts if "true" not in str(item.get("verdict", "")).lower())
+            added = len(_as_dict_list(triage_payload.get("additional_findings")))
+    beam_kept: int = stats["true_candidates_judged"] - stats["rejected_true"] + stats["kept_false"]
+    return [
+        [
+            "Replay note",
+            f"Recorded starlette pack (~{pack_tokens:,} tokens). Live scans on this Space are capped at 150k.",
+        ],
+        [
+            "v2 steps (starlette)",
+            (
+                f"Symbol check: {symbol_candidates} candidates → Beam triage: kept {kept}, "
+                f"rejected {rejected}, added {added} → Repro: could not run "
+                "(earlier docs-runner only; not counted in the 29)"
+            ),
+        ],
+        [
+            "v2 steps (all libraries)",
+            (
+                f"Symbol check: {stats['symbol_true']} true of the later union → Beam triage: judged "
+                f"{stats['judged']}, kept {beam_kept}, rejected {stats['judged'] - beam_kept} "
+                f"({stats['rejected_true']} true), added {stats['additions_total']} → Repro: "
+                f"{stats['repro_findings']} badges, {stats['repro_true']} distinct true"
+            ),
+        ],
+    ]
+
+
+def canonicalize_repo_url(repo_url: str, repo_name: str = "") -> str:
+    """
+    @brief Rewrite known redirecting GitHub owners to the canonical URL.
+    """
+
+    if "github.com/encode/starlette" in repo_url or repo_name == "starlette":
+        return CANONICAL_REPO_URLS["starlette"]
+    return repo_url
+
+
+def _finder_tag(item: dict[str, object]) -> str:
+    """
+    @brief Provenance tag for a hybrid item.
+    """
+
+    kind: str = str(item.get("kind", "")).strip().lower()
+    source_id: str = str(item.get("id", ""))
+    if kind == "addition":
+        return "Beam (added in triage)"
+    if kind == "untriaged-fallback":
+        return "symbol check (untriaged)"
+    if kind == "candidate" and source_id.startswith("S"):
+        return "symbol check + Beam"
+    if source_id.startswith("S"):
+        return "symbol check + Beam"
+    return "whole-repo Beam"
+
+
+def _citation_check_label(item: dict[str, object]) -> str:
+    """
+    @brief Human citation-check label; never the word 'hybrid'.
+    """
+
+    if str(item.get("kind", "")) == "addition":
+        return "Citation check: not run (Beam addition)"
+    if str(item.get("id", "")).startswith("S"):
+        return "Citation check: not run (found by symbol check)"
+    if bool(item.get("citation_verified", False)):
+        return "Citation check: verified"
+    return "Citation check: from whole-repo run"
+
+
+def _human_title(repo: str, source_id: str, breakage: str, citation: dict[str, object]) -> str:
+    """
+    @brief Build a readable card title without internal IDs.
+    """
+
+    snippet: str = breakage.strip()
+    if len(snippet) > 88:
+        snippet = snippet[:85].rstrip() + "…"
+    if snippet:
+        return f"{repo}: {snippet}"
+    reference: str = str(citation.get("doc_text") or citation.get("claim") or source_id)
+    return f"{repo}: {reference}"
+
+
+def _human_breakage(text: str) -> str:
+    """
+    @brief Turn raw checker output into a short sentence.
+    """
+
+    stripped: str = text.strip()
+    match = re.match(r"^(?:role|dotted|call-signature|method-call-signature|docstring-param|exception-name)(?::undefined)?:\s*`?([^`:]+)`?:?\s*(.*)$", stripped)
+    if not match:
+        return stripped
+    reference: str = match.group(1).strip()
+    detail: str = match.group(2).strip()
+    if "not found" in detail or "defined nowhere" in detail:
+        return f"Docs reference `{reference}`, which doesn't exist"
+    if "no parameter named" in detail:
+        param_match = re.search(r"no parameter named '([^']+)'", detail)
+        param: str = param_match.group(1) if param_match else "this argument"
+        return f"Docs pass `{param}=` to `{reference}`, which has no such parameter"
+    return f"Docs mention `{reference}`: {detail}" if detail else f"Docs mention `{reference}`"
+
+
+def _parse_code_site(text: str) -> tuple[str, int]:
+    """
+    @brief Extract a package file:line from checker detail text when present.
+    """
+
+    match = re.search(r"(?:at |def |e\.g\. )([A-Za-z0-9_./-]+\.py):(\d+)", text)
+    if not match:
+        match = re.search(r"([A-Za-z0-9_./-]+\.py):(\d+)", text)
+    if not match:
+        return "", 0
+    return match.group(1), int(match.group(2))
+
+
+def _is_cross_file(doc_path: str, code_path: str) -> bool:
+    """
+    @brief True when doc and code paths differ, including docs/ vs package.
+    """
+
+    doc: str = doc_path.strip()
+    code: str = code_path.strip()
+    if doc and code:
+        return doc != code
+    if doc.startswith("docs/") or doc.endswith((".md", ".rst")):
+        return True
+    return False
 
 
 def _load_hybrid_citations() -> dict[str, dict[str, object]]:

@@ -19,24 +19,19 @@ tags:
 
 ![RepoAtlas hero](docs/hero.png)
 
-## Headline result
+**DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) in one call to triage them and add cross-file or prose drift. A generated script then runs the documented usage and keeps the ones that raise a real API error.
 
-**34 real docs bugs across 12 Python libraries at 75% precision; 29 confirmed by running the docs (92.3% precision).**
+**Results:** 34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 29 bugs reproduce a real API error when you run the docs. Beam's triage threw away 0 of 32 real bugs. Baselines: `results_live/baselines/baselines.md`. Context probe up to 947,446 tokens: `results_live/recall/recall.md`.
 
-Numbers above come from `results_live/hybrid/hybrid.json` / `hybrid.csv` (DocDrift v2). The 12 libraries are starlette, httpx, click, structlog, nox, arrow, cattrs, marshmallow, attrs, jinja, werkzeug and pydantic-settings.
-
-DocDrift v2 pipeline:
-
-1. A free symbol check proposes candidates (name and signature mismatches).
-2. Beam reads each library's docs and source (~300–400k tokens) in one call, triages each candidate with cited evidence and a suggested fix, and adds cross-file/prose drifts the script missed.
-3. An executable repro keeps findings that raise a real API error (TypeError / AttributeError / ImportError / NameError).
+The 12 libraries are starlette, httpx, click, structlog, nox, arrow, cattrs, marshmallow, attrs, jinja, werkzeug and pydantic-settings. Labels were made by an AI reviewer checking file:line evidence, not by a human annotator. The 45-drift reference set is the union of what the methods found, so it favours them.
 
 Starlette story (canonical upstream repo):
 
 - Canonical repo: **https://github.com/Kludex/starlette** (GitHub redirects from encode/starlette).
 - Recorded run prompt size: **394,577** tokens.
 - Drift: docs line used `receive_json(data, mode="binary")` while code signature has no `data` parameter.
-- Result: hand-verified true drift.
+- Result: checked against the source (file:line evidence); true drift.
+- The v2 strict repro could not start the test session, so starlette is **not** one of the 29. It did reproduce in an earlier docs-runner (`TypeError`).
 - Upstream state: **fix submitted upstream (PR #3746, open)**  
   https://github.com/Kludex/starlette/pull/3746
 
@@ -51,117 +46,90 @@ Example from starlette:
 
 ## How Beam is used (required challenge section)
 
-1. **One packed docs+source call into long context**  
-   RepoAtlas packs docs plus source into one deterministic, line-numbered prompt, then submits one Beam call per run.
-2. **Structured JSON schema output**  
-   Beam is asked for strict structured output (`findings[]`, `atlas_claims[]`) so each claim has explicit citations.
-3. **Deterministic citation verifier**  
-   Every finding is checked against packed source lines. Exact quote matching is required, with a controlled **±3-line shift** tolerance for off-by-one citation ranges.
-4. **Token calibration factor**  
-   Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens.
-5. **Why long context rather than chunked RAG**  
-   Many true drifts require a docs citation and a far-away code citation in the same pass. A single packed prompt keeps those relationships available without retrieval misses.
-6. **DocDrift v2 hybrid**  
-   Beam is not used as a raw detector. A free checker proposes candidates; one whole-repo Beam call triages them and can add missed cross-file/prose drift; a later executable check confirms the ones that raise a real API error.
+Numbers below are computed from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, and `results_live/recall/`.
+
+1. **Triage filter, not a raw detector**  
+   A free AST symbol check proposes name and signature mismatches. Beam then reads each library's docs and source in one packed prompt (~300–400k tokens) and judges those candidates. It rejected **0 of 32** true candidates and removed **15 of 24** false or unclear ones.
+2. **New finds Beam added**  
+   Beam wrote additional cross-file and prose drifts the checker missed: **13** additions, **9** true, **7** new to the union (for example httpx docs list `Response.next()`, which does not exist). Distinct true drifts go from 24 (symbol check) to 34.
+3. **Repro author**  
+   Beam wrote every doc-literal repro script (138,138 tokens). **29** distinct bugs reproduce a real API error (`TypeError` / `AttributeError` / `ImportError` / `NameError`). **36 of 39** badged findings were real. **3** badges landed on non-bugs (werkzeug S38, S39, S41). The earlier v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2.
+4. **Token calibration**  
+   Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens. On the recall mix the observed ratio was about **1.187**.
+5. **Where long context helps (measured)**  
+   Whole-repo context lets Beam judge candidates against code anywhere and link far-apart evidence. In the planted-drift test, focused whole-context passes hit **5/6** plants 700k+ tokens apart vs **0/6** for chunking. Beam accepted prompts up to **947,446** tokens with no silent truncation. A single whole-prompt call alone is **not** a better detector than chunking or a symbol check (**5/30** vs **5/30** on seed 1), which is why v2 combines them. Single calls mostly miss docstring drifts.
+6. **Citation check**  
+   Recorded whole-repo findings are also checked against packed source lines. Exact quote matching is required, with a controlled **±3-line shift** tolerance.
 
 ## DocDrift v2 comparison
 
-From `results_live/hybrid/hybrid.csv` (12 libraries; distinct true measured against a 45-drift union) plus the earlier 9-repo chunked baselines in `results_live/baselines/baselines.csv`:
+From `results_live/hybrid/hybrid.csv` (12 libraries; distinct true measured against a 45-drift union) plus the earlier 9-repo chunked baselines in `results_live/baselines/baselines.csv` / `baselines.json`:
 
 | Method | True drifts found | Findings | Precision | Tokens |
 |---|---|---|---|---|
-| Symbol check alone | 24 of 45 | 43 | 58.1% | 0 |
-| Whole-repo Beam alone | 11 of 45 | 19 | 57.9% | 4,424,575 |
-| Chunked Beam (~32k, 9-repo baseline) | 3 of 11 known | 25 | 60% | 3,529,945 |
-| Chunked Beam (~128k, 9-repo baseline) | 4 of 11 known | 13 | 69.2% | 3,342,201 |
-| Hybrid (symbol + whole-repo Beam triage) | **34 of 45** | 60 | **75%** | 4,739,392 |
-| Hybrid + repro-confirmed (strict) | **29 of 45** | 39 | **92.3%** | 4,877,530 |
+| Symbol check alone | 24 of 45 (19 of 33 on the 9-repo union) | 43 | 58.1% | 0 |
+| Whole-repo Beam alone | 11 of 45 (11 of 33 on the 9-repo union) | 19 | 57.9% | 4,424,575 |
+| Chunked Beam (~32k, 9-repo union) | 15 of 33 | 25 | 60% | 3,529,945 |
+| Chunked Beam (~128k, 9-repo union) | 9 of 33 | 13 | 69.2% | 3,342,201 |
+| Hybrid (symbol + whole-repo Beam triage) | **34 of 45** (22 of 33) | 60 | **75%** | 4,739,392 triage-only + 4,424,575 earlier whole-repo sweep = **~9.2M** end-to-end |
+| Hybrid + repro-confirmed (strict) | **29 of 45** (18 of 33) | 39 | **92.3%** | 4,877,530 new (triage + repro); end-to-end still ~9.2M |
 
 Honest notes, also from `hybrid.json`:
 
-- The **45-drift reference set** is the union of what the methods found, so it favours them.
-- Beam triage judged **56** candidates and rejected **0** hand-true candidates, while keeping **9** false or unclear ones.
-- **structlog triage failed** (no JSON; 8,794 chars of prose), so its 6 candidates stay untriaged and have no repro.
+- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were made by an AI reviewer checking file:line evidence, not by a human.
+- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones.
+- **3** findings got a strict repro badge but are not true drifts (werkzeug S38, S39 and S41).
+- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.
 - Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.
 - The strict repro rule was set after the first repro run.
 - No prompt caching was observed on triage calls.
 
-## Earlier whole-repo-only sweep (recorded runs)
-
-All values below are from `results_live/index.json`, generated from:
-- `results_live/benchmark_results_combined.csv`
-- `results_live/handcheck.md`
-- `results_live/reverify_line_shift.json`
-- `results_live/upstream_status.json`
-
-- **All live hand-checked findings:** 11 true / 8 false / 2 unclear = **11/21 (52.4%)**
-- **Verifier behaviour (all runs):** caught **4/8** false positives; wrongly rejected **1** true drift.
-- **Verifier behaviour (11-repository subset):** caught **4/7** false positives.
-- **Cross-file framing:** **8/11** true drifts are cross-file, median **89,192** tokens apart, max **122,786**.
-- **Prior-art check:** **9/11** true drifts had no prior upstream PR or issue when checked.
-- **Token spend:** **5.81M** prompt + **82k** completion tokens on Beam, `$0` via Ollama Cloud free tier.
-- **Truncation footnote:** **10/17** packs were trimmed (tests/benchmarks dropped first; traces do not always include exact dropped paths).
-- **1M naming honesty:** RepoAtlas-1M is the model-window target; current recorded long-context runs are ~294k–404k prompt tokens (plus two earlier 120k pilot runs).
-- **Maintainer effort signal:** about 1 in 1.9 findings is a real drift; each check takes ~2 minutes with the SHA-pinned permalinks.
-
-### Full run table
-
-| Run | Prompt tok | Completion tok | Latency s | Findings | Verifier pass | Hand true | Hand false | Hand unclear |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| flask-120000 | 142,664 | 3,692 | 21.13 | 0 | 0 | 0 | 0 | 0 |
-| fastapi-120000 | 146,415 | 1,834 | 12.00 | 0 | 0 | 0 | 0 | 0 |
-| starlette-400000 | 394,577 | 4,733 | 21.36 | 1 | 0 | 1 | 0 | 0 |
-| typer-400000 | 387,284 | 8,653 | 36.12 | 0 | 0 | 0 | 0 | 0 |
-| hatch-400000 | 385,297 | 5,137 | 23.39 | 1 | 0 | 0 | 0 | 1 |
-| poetry-400000 | 384,598 | 4,287 | 46.22 | 1 | 1 | 0 | 1 | 0 |
-| httpx-400000 | 392,598 | 4,053 | 21.15 | 2 | 2 | 2 | 0 | 0 |
-| click-400000 | 388,719 | 4,698 | 21.79 | 1 | 1 | 1 | 0 | 0 |
-| attrs-400000 | 400,648 | 4,102 | 22.15 | 0 | 0 | 0 | 0 | 0 |
-| pydantic-settings-400000 | 366,051 | 5,378 | 26.05 | 1 | 1 | 0 | 1 | 0 |
-| structlog-400000 | 403,833 | 6,118 | 24.90 | 2 | 1 | 1 | 1 | 0 |
-| jinja-400000 | 356,873 | 5,311 | 25.72 | 1 | 0 | 0 | 0 | 1 |
-| nox-400000 | 346,394 | 7,014 | 27.42 | 1 | 1 | 1 | 0 | 0 |
-| arrow-400000 | 329,026 | 4,457 | 15.86 | 4 | 1 | 1 | 3 | 0 |
-| cattrs-400000 | 306,549 | 4,107 | 21.17 | 3 | 3 | 3 | 0 | 0 |
-| marshmallow-400000 | 294,559 | 4,916 | 19.71 | 2 | 2 | 1 | 1 | 0 |
-| werkzeug-400000 | 386,415 | 3,446 | 17.93 | 1 | 0 | 0 | 1 | 0 |
-
 ## Where long context helps (planted-drift test)
 
-This section is sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`).
+Sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`).
 
-- **Prompt-size probe:** Beam accepted prompts up to **947,446** prompt tokens in this setup.
+- **Prompt-size probe:** Beam accepted prompts up to **947,446** prompt tokens in this setup. Nothing above 947k was tried.
 - **700k+ separation bucket:** focused whole-context passes hit **5/6** plants on seed 1; chunked 128k and 32k both hit **0/6**.
 - **Overall strict recall:** single whole-prompt calls were not better than chunking on seed 1 (**5/30** whole vs **5/30** chunk128k and **5/30** chunk32k).
-- **Focused-pass variant:** **11/30** strict on seed 1, at higher cost (4,755,853 tokens total vs 970,653 and 1,029,696 for the chunked runs; roughly 4.6-4.9x). Beam still reported about **934k-940k cached prompt tokens** on focused passes 2-5.
-- **Seed-2 check:** the docs-focused pass reached **5/28** vs **4/28** for single whole-prompt seed 2 (partial hold).
+- **Focused-pass variant:** **11/30** strict on seed 1, at higher cost (4,755,853 tokens total vs 970,653 and 1,029,696 for the chunked runs).
 - **Docstring limitation:** single-call whole-context variants mostly miss planted Python docstring drifts (best observed **1/32** in docs-last single-call runs).
 - **Caveats:** one run per configuration, 4-6 plants per bucket, and small samples.
 
-Practical recipe supported by this data: **use whole-repo context for a docs-focused audit (to catch long-range drift chunking cannot see), plus cheap chunked passes for docstrings.**
+Practical recipe supported by this data: use whole-repo context to judge candidates and catch long-range drift, plus a cheap symbol check (and later a chunked pass) for local docstring slips.
 
 ![Planted-drift recall by distance](results_live/recall/recall_vs_distance.png)
+
+## Earlier whole-repo-only sweep (v1 recorded runs)
+
+These numbers are **not** the v2 headline. They come from `results_live/index.json` (17 runs).
+
+- Findings checked against the source (file:line evidence): 11 true / 8 false / 2 unclear = **11/21 (52.4%)**
+- Citation verifier: caught **4/8** false positives; wrongly rejected **1** true drift.
+- Token spend: **5.81M** prompt + **82k** completion tokens on Beam, `$0` via Ollama Cloud free tier.
+- **10/17** packs were trimmed (tests/benchmarks dropped first).
+- The v1 executable-check line “10 of 11 reproduce; 0 of 10 false do” is contradicted by v2 (werkzeug S38, S39, S41).
 
 ## Space behaviour
 
 - Default view is recorded data (no inference cost).
-- Hero, comparison table, and hybrid notes come from `results_live/hybrid/hybrid.json` / `hybrid.csv`.
-- Bug wall includes hybrid true drifts plus earlier recorded-run cards, sorted cross-file first.
-- Findings, atlas, recall, and earlier baselines stay available below the v2 headline.
-- Findings tab defaults to starlette and shows verifier status separately from hand-check verdict.
+- v2 hero, What Beam did, comparison table, and notes come from `results_live/hybrid/hybrid.json` / `hybrid.csv`.
+- Bug wall includes hybrid true drifts plus earlier recorded-run cards.
+- Atlas (all 17 v1 runs) is folded under Benchmark.
+- Findings tab defaults to starlette. Starlette's repro badge is labelled as the earlier runner and is not counted in the 29.
+- Live tab is a replay when no API key is set.
 
 ## Live tab guardrails
 
 - Provider from environment:
   - `BEAM_PROVIDER=ollama` uses `OLLAMA_API_KEY` with `https://ollama.com/v1` and model `beam`.
   - `BEAM_PROVIDER=reflection` is also supported.
-- Live execution is blocked if required secrets are missing.
-- Default and maximum pack cap in-app: **150k**.
+- Live execution is blocked if required secrets are missing. The button is disabled without a key.
+- Default and maximum **live** pack cap in-app: **150k**. The recorded starlette replay is about **395k** tokens, so a live scan cannot reproduce that pack.
+- The packer code default cap is `900000` (`MAX_TOKEN_LIMIT` in `repoatlas/config.py`). The recall probe accepted **947,446** tokens.
 - Queue concurrency: **1**.
 - Per-IP session limit: **2 runs per hour**.
 - Global daily cap: `REPOATLAS_LIVE_DAILY_CAP` (default 24).
-- Hidden progress log is emitted during live runs.
-- If `OLLAMA_API_KEY` is missing, the tab shows a recorded replay mode instead of a disabled blank state.
+- If `OLLAMA_API_KEY` is missing, the tab shows the recorded v2 replay instead of a disabled blank state.
 - API keys are never echoed in UI output.
 
 ## Dataset export
@@ -178,9 +146,10 @@ Practical recipe supported by this data: **use whole-repo context for a docs-foc
 ## Limitations
 
 - Sample size remains limited.
-- Verifier pass/fail is **not** correctness; it only checks citation alignment.
-- Long-context outputs still include false positives and unclear calls.
-- A true drift can still be rejected by strict citation matching.
+- Citation pass/fail is **not** correctness; it only checks quote alignment.
+- The 45-drift universe is the union of method output, so it favours those methods.
+- A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug `input_stream`).
+- Three false findings received a repro badge (werkzeug S38, S39, S41).
 
 ## Reproduce locally
 

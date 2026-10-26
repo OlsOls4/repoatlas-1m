@@ -18,8 +18,12 @@ import pandas as pd
 from repoatlas.analyser import analyse_repository
 from repoatlas.config import RepoAtlasConfig
 from repoatlas.hybrid_view import (
+    build_beam_did_markdown,
     build_comparison_table,
+    build_long_context_markdown,
     build_notes_markdown,
+    build_v2_replay_rows,
+    canonicalize_repo_url,
     compute_hero_stats,
     headline_sentence,
     load_hybrid_payload,
@@ -221,6 +225,9 @@ class RecallPanelData(TypedDict):
     bucket_rows: list[list[object]]
     run_rows: list[list[object]]
     chart_path: str
+    max_probe_tokens: int
+    far_hits: tuple[int, int]
+    chunk_far: tuple[int, int]
 
 
 class BaselinePanelData(TypedDict):
@@ -292,8 +299,14 @@ def build_app() -> gr.Blocks:
     baseline_panel_data: BaselinePanelData = _load_baseline_panel_data()
     hybrid_payload = load_hybrid_payload()
     hybrid_stats = compute_hero_stats(hybrid_payload) if hybrid_payload["available"] else None
-    findings: list[dict[str, object]] = _attach_repro_records(live_index["findings"], repros_map=repros_map)
-    runs: list[dict[str, object]] = live_index["runs"]
+    findings: list[dict[str, object]] = [
+        _rewrite_finding_display_fields(finding)
+        for finding in _attach_repro_records(live_index["findings"], repros_map=repros_map)
+    ]
+    runs: list[dict[str, object]] = [
+        {**run, "repo_url": canonicalize_repo_url(str(run.get("repo_url", "")), str(run.get("case_name", "")).split("-")[0])}
+        for run in live_index["runs"]
+    ]
     summary: dict[str, object] = live_index["summary"]
     hero_html: str = (
         render_hybrid_hero_html(hybrid_stats) if hybrid_stats is not None else _render_hero_html(summary)
@@ -304,9 +317,13 @@ def build_app() -> gr.Blocks:
     bug_wall_html: str = _render_bug_wall_html(hybrid_true_findings)
     live_enabled, live_status_message = get_live_mode_status()
     live_mode_summary: str = (
-        f"🟢 **Live mode enabled** — {live_status_message}"
+        f"🟢 **Live mode enabled** — {live_status_message} Live scans are capped at 150k tokens, so they cover smaller libraries only."
         if live_enabled
-        else "🟡 **Replay mode** — showing a recorded starlette run because no live provider key is set."
+        else (
+            "🟡 **Replay** of a recorded starlette run (about 395k tokens). "
+            "Live scans are off on this Space (no API key set) and are capped at 150k tokens when on, "
+            "so they cover smaller libraries only."
+        )
     )
 
     all_choice_map: dict[str, dict[str, object]] = _build_finding_choice_map(findings)
@@ -341,11 +358,18 @@ def build_app() -> gr.Blocks:
     ]
     atlas_rows: list[list[object]] = _build_atlas_rows(runs, findings)
     benchmark_rows: list[list[object]] = _build_benchmark_rows(runs)
+    starlette_pack_tokens: int = 0
+    for run in runs:
+        if str(run.get("case_name", "")) == "starlette-400000":
+            starlette_pack_tokens = _coerce_int(run.get("input_tokens"), 0)
+            break
     replay_rows: list[list[object]] = _build_replay_rows(findings=findings, runs=runs)
+    if hybrid_stats is not None:
+        replay_rows = build_v2_replay_rows(hybrid_payload, hybrid_stats, starlette_pack_tokens) + replay_rows
     benchmark_plot_rows: pd.DataFrame = pd.DataFrame(
         [
             {
-                "case_name": str(run.get("case_name", "")),
+                "library_budget": str(run.get("case_name", "")),
                 "input_tokens": _coerce_int(run.get("input_tokens"), 0),
                 "output_tokens": _coerce_int(run.get("output_tokens"), 0),
                 "latency_seconds": _coerce_float(run.get("latency_seconds"), 0.0),
@@ -365,35 +389,40 @@ def build_app() -> gr.Blocks:
             if hybrid_stats is not None
             else "Recorded DocDrift results from whole-repo Beam runs."
         )
+        gr.HTML(hero_html)
         gr.Markdown(
             "# RepoAtlas-1M · DocDrift v2\n"
-            f"### {hybrid_headline}.\n\n"
-            "**What is docs drift?** Documentation says one thing, but the code actually does another.\n\n"
+            f"**{hybrid_headline}.**\n\n"
+            "**What is docs drift?** Docs say one thing, but the code does another.\n\n"
             "**Worked example (starlette):** docs line `receive_json(data, mode=\"binary\")`; code signature "
             "`receive_json(self, mode: str = \"text\")`; following the docs can raise `TypeError`.\n\n"
-            "Pipeline: a free symbol check proposes candidates; Beam then reads each library's docs and source "
-            "(~300–400k tokens) in one call to triage those candidates and add cross-file/prose drifts; "
-            "an executable repro keeps the ones that raise a real API error.\n\n"
-            "Starlette status remains **"
+            "Starlette status: **"
             f"{starlette_status_markdown}** on "
-            "[github.com/Kludex/starlette](https://github.com/Kludex/starlette), sourced from "
-            "`results_live/upstream_status.json`."
+            "[github.com/Kludex/starlette](https://github.com/Kludex/starlette)."
         )
-        gr.Markdown(_build_summary_markdown(summary))
-        repro_summary_markdown: str = _build_repro_summary_markdown(repro_summary)
-        if repro_summary_markdown:
-            gr.Markdown(repro_summary_markdown)
+        if hybrid_stats is not None:
+            gr.Markdown(
+                build_beam_did_markdown(
+                    hybrid_stats,
+                    recall_panel_data["max_probe_tokens"],
+                    recall_panel_data["far_hits"],
+                    recall_panel_data["chunk_far"],
+                )
+            )
+            gr.Markdown(
+                build_long_context_markdown(
+                    hybrid_stats,
+                    recall_panel_data["max_probe_tokens"],
+                    recall_panel_data["far_hits"],
+                    recall_panel_data["chunk_far"],
+                )
+            )
+        with gr.Accordion("v1 recorded runs (earlier method)", open=False):
+            gr.Markdown(_build_summary_markdown(summary))
 
         with gr.Tab("Recorded runs"):
-            gr.HTML(hero_html)
             gr.Markdown("### DocDrift v2 pipeline")
             gr.HTML(render_pipeline_html())
-            gr.Markdown(
-                "### Why long context matters\n"
-                "Most true drifts need a docs line and a far-away code line in the same prompt. "
-                "A single long-context call can compare those directly."
-            )
-            gr.HTML(_render_long_context_diagram_html())
             gr.Markdown("### Bug wall (true drifts, hybrid + earlier recorded runs)")
             gr.HTML(bug_wall_html)
             with gr.Accordion("Full run table", open=False):
@@ -407,15 +436,15 @@ def build_app() -> gr.Blocks:
 
         with gr.Tab("Findings"):
             gr.Markdown(
-                "Verifier status and hand-check verdict are separate. "
-                "Verifier pass means quote/citation alignment only, not guaranteed correctness."
+                "Citation-check status and the source-checked verdict are separate. "
+                "A citation pass means quote alignment only, not that the drift is real. "
+                "v2 has 3 false repro-badged findings (werkzeug S38, S39, S41); "
+                "the earlier “10 of 11 reproduce; 0 of 10 false do” line does not apply here."
             )
-            if repro_summary_markdown:
-                gr.Markdown(repro_summary_markdown)
             verdict_filter = gr.Dropdown(
                 choices=["all", "true", "false", "unclear"],
                 value="all",
-                label="Filter by hand verdict",
+                label="Filter by source-checked verdict",
                 interactive=True,
             )
             selected_finding = gr.Dropdown(
@@ -447,7 +476,7 @@ def build_app() -> gr.Blocks:
                     "Repo",
                     "Drift kind",
                     "Verifier",
-                    "Hand verdict",
+                    "Source-checked verdict",
                     "Upstream status",
                     "Executable repro",
                     "Cross-file",
@@ -457,25 +486,6 @@ def build_app() -> gr.Blocks:
                 interactive=False,
                 wrap=True,
             )
-
-        with gr.Tab("Atlas"):
-            if atlas_rows:
-                gr.Dataframe(
-                    headers=[
-                        "Case",
-                        "Repo",
-                        "Atlas claims",
-                        "Atlas citations",
-                        "Atlas citations verified",
-                        "Verifier finding passes",
-                        "Model findings",
-                    ],
-                    value=atlas_rows,
-                    interactive=False,
-                    wrap=True,
-                )
-            else:
-                gr.Markdown("Atlas rows are unavailable for this run set.")
 
         with gr.Tab("Benchmark"):
             if hybrid_payload["available"]:
@@ -489,43 +499,20 @@ def build_app() -> gr.Blocks:
                     wrap=True,
                 )
                 gr.Markdown(build_notes_markdown(hybrid_payload))
-            gr.Markdown(
-                "Token scales below are the earlier recorded whole-repo sweep. "
-                "Prompt and completion counts stay on separate axes."
-            )
-            gr.BarPlot(
-                value=benchmark_plot_rows,
-                x="case_name",
-                y="input_tokens",
-                title="Prompt tokens by run",
-                y_title="Prompt tokens",
-                x_label_angle=35,
-            )
-            gr.BarPlot(
-                value=benchmark_plot_rows,
-                x="case_name",
-                y="output_tokens",
-                title="Completion tokens by run",
-                y_title="Completion tokens",
-                x_label_angle=35,
-            )
-            gr.LinePlot(
-                value=benchmark_plot_rows,
-                x="case_name",
-                y="latency_seconds",
-                title="Latency by run",
-                y_title="Latency (seconds)",
-                x_label_angle=35,
-            )
-            gr.Dataframe(
-                headers=benchmark_headers,
-                value=benchmark_rows,
-                interactive=False,
-                wrap=True,
-            )
             if recall_panel_data["available"]:
-                gr.Markdown("### Where long context helps (planted-drift test)")
+                gr.Markdown("### Planted-drift recall")
+                gr.Markdown(
+                    f"Beam accepted prompts up to **{recall_panel_data['max_probe_tokens']:,}** tokens "
+                    "with no silent truncation (`results_live/recall/recall.md`)."
+                )
                 gr.Markdown(recall_panel_data["summary_markdown"])
+                if recall_panel_data["chart_path"]:
+                    gr.Image(
+                        value=recall_panel_data["chart_path"],
+                        label="Planted-drift strict recall by distance bucket",
+                        interactive=False,
+                        buttons=["fullscreen"],
+                    )
                 if recall_panel_data["probe_rows"]:
                     with gr.Accordion("Context probe table (Beam prompt-size acceptance)", open=False):
                         gr.Dataframe(
@@ -534,13 +521,6 @@ def build_app() -> gr.Blocks:
                             interactive=False,
                             wrap=True,
                         )
-                if recall_panel_data["chart_path"]:
-                    gr.Image(
-                        value=recall_panel_data["chart_path"],
-                        label="Planted-drift strict recall by distance bucket",
-                        interactive=False,
-                        buttons=["fullscreen"],
-                    )
                 with gr.Accordion("Bucket recall table (strict and loose)", open=False):
                     gr.Dataframe(
                         headers=recall_panel_data["bucket_headers"],
@@ -564,36 +544,91 @@ def build_app() -> gr.Blocks:
                         wrap=True,
                     )
             else:
-                gr.Markdown("### Where long context helps (planted-drift test)\nRecall artifacts are not available in this checkout.")
+                gr.Markdown("### Planted-drift recall\nRecall artifacts are not available in this checkout.")
             if has_baselines:
-                with gr.Accordion("Baselines", open=False):
-                    gr.Markdown("**Takeaway:** " + baseline_panel_data["takeaway_markdown"])
-                    gr.Dataframe(
-                        headers=baseline_panel_data["headers"],
-                        value=baseline_panel_data["rows"],
-                        interactive=False,
-                        wrap=True,
-                    )
-                    gr.Markdown(baseline_panel_data["notes_markdown"])
-
-        with gr.Tab("Live try it"):
-            gr.Markdown(
-                f"{live_mode_summary}\n\n"
-                "Guardrails: one job at a time, max 150k token pack budget, per-IP rate limit (2/hour), "
-                "and a global daily cap via environment."
-            )
-            if not live_enabled:
-                gr.Markdown(
-                    "#### Recorded replay: starlette (~395k prompt tokens)\n"
-                    "This is a step-by-step replay from a recorded run: pack size, model call, finding, and verifier outcome."
-                )
+                gr.Markdown("### Baselines")
+                gr.Markdown("**Takeaway:** " + baseline_panel_data["takeaway_markdown"])
                 gr.Dataframe(
-                    headers=["Step", "Details"],
-                    value=replay_rows,
+                    headers=baseline_panel_data["headers"],
+                    value=baseline_panel_data["rows"],
                     interactive=False,
                     wrap=True,
                 )
-            else:
+                gr.Markdown(baseline_panel_data["notes_markdown"])
+            gr.Markdown("### Earlier v1 whole-repo runs")
+            gr.BarPlot(
+                value=benchmark_plot_rows,
+                x="library_budget",
+                y="input_tokens",
+                title="Earlier v1 whole-repo runs: prompt size",
+                x_title="Library (token budget)",
+                y_title="Prompt tokens",
+                y_lim=[0, None],
+                x_label_angle=35,
+            )
+            gr.BarPlot(
+                value=benchmark_plot_rows,
+                x="library_budget",
+                y="output_tokens",
+                title="Earlier v1 whole-repo runs: completion size",
+                x_title="Library (token budget)",
+                y_title="Completion tokens",
+                y_lim=[0, None],
+                x_label_angle=35,
+            )
+            gr.LinePlot(
+                value=benchmark_plot_rows,
+                x="library_budget",
+                y="latency_seconds",
+                title="Earlier v1 whole-repo runs: latency",
+                x_title="Library (token budget)",
+                y_title="Latency (seconds)",
+                y_lim=[0, None],
+                x_label_angle=35,
+            )
+            with gr.Accordion("Atlas (all 17 recorded v1 runs)", open=False):
+                if atlas_rows:
+                    gr.Dataframe(
+                        headers=[
+                            "Case",
+                            "Repo",
+                            "Atlas claims",
+                            "Atlas citations",
+                            "Atlas citations verified",
+                            "Verifier finding passes",
+                            "Model findings",
+                        ],
+                        value=atlas_rows,
+                        interactive=False,
+                        wrap=True,
+                    )
+                else:
+                    gr.Markdown("Atlas rows are unavailable for this run set.")
+                gr.Dataframe(
+                    headers=benchmark_headers,
+                    value=benchmark_rows,
+                    interactive=False,
+                    wrap=True,
+                )
+
+        with gr.Tab("Try it live"):
+            gr.Markdown(
+                f"{live_mode_summary}\n\n"
+                "Guardrails: one job at a time, 150k live token cap, per-IP rate limit (2/hour), "
+                "and a global daily cap via environment."
+            )
+            gr.Markdown(
+                "#### Recorded replay: starlette (~395k prompt tokens)\n"
+                "v2 steps from the later hybrid run, plus the earlier recorded pack size. "
+                "A 150k live scan cannot reproduce this 395k pack."
+            )
+            gr.Dataframe(
+                headers=["Step", "Details"],
+                value=replay_rows,
+                interactive=False,
+                wrap=True,
+            )
+            if live_enabled:
                 gr.Markdown("### One-click example repositories")
                 gr.Dataframe(
                     headers=["Repo URL", "Ref"],
@@ -606,24 +641,28 @@ def build_app() -> gr.Blocks:
                     example_fastapi_button = gr.Button("Use fastapi/fastapi")
                     example_starlette_button = gr.Button("Use Kludex/starlette")
             live_repo_url = gr.Textbox(label="Public GitHub repository URL", placeholder="https://github.com/pallets/flask")
-            live_ref = gr.Textbox(label="Reference", value="main")
+            live_ref = gr.Textbox(label="Branch, tag or commit", value="main")
             live_token_limit = gr.Slider(
                 minimum=40_000,
                 maximum=LIVE_MAX_TOKEN_LIMIT,
                 step=10_000,
                 value=LIVE_DEFAULT_TOKEN_LIMIT,
-                label="Pack token cap",
+                label="How much of the repo to read (tokens)",
             )
             with gr.Row():
-                estimate_button = gr.Button("Dry-run token estimate")
-                run_button = gr.Button("Run DocDrift live")
-            live_estimate = gr.Markdown(value="Estimate not run yet.")
+                estimate_button = gr.Button("Dry-run token estimate", interactive=live_enabled)
+                run_button = gr.Button(
+                    "Scan a repo" if live_enabled else "Scan a repo (needs API key)",
+                    interactive=live_enabled,
+                )
+            live_estimate = gr.Markdown(value="Estimate not run yet." if live_enabled else "Live estimate needs an API key.")
             live_status = gr.Markdown(value="No live run started.")
             live_findings = gr.Dataframe(
                 headers=["Finding ID", "Drift kind", "Verifier", "Doc citation", "Code citation", "Explanation"],
                 value=[],
                 interactive=False,
                 wrap=True,
+                visible=False,
             )
             hidden_progress_log = gr.Textbox(visible=False, label="Hidden live progress log", value="")
 
@@ -913,6 +952,9 @@ def _load_recall_panel_data() -> RecallPanelData:
             bucket_rows=[],
             run_rows=[],
             chart_path="",
+            max_probe_tokens=0,
+            far_hits=(0, 0),
+            chunk_far=(0, 0),
         )
 
     run_summary_payload: object = json.loads(RESULTS_LIVE_RECALL_RUN_SUMMARY_PATH.read_text(encoding="utf-8"))
@@ -1046,6 +1088,9 @@ def _load_recall_panel_data() -> RecallPanelData:
         bucket_rows=bucket_rows,
         run_rows=run_rows,
         chart_path=chart_path,
+        max_probe_tokens=max_probe_prompt_tokens,
+        far_hits=focused_seed1_far,
+        chunk_far=chunk128_seed1_far if chunk128_seed1_far[1] else chunk32_seed1_far,
     )
 
 
@@ -1337,13 +1382,13 @@ def _render_hero_html(summary: dict[str, object]) -> str:
         "<p>Recorded runs view (no live inference needed to browse).</p>"
         "<div class='repoatlas-stat-grid'>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{true_count}</div>"
-        "<div class='repoatlas-stat-label'>Hand-verified docs bugs</div></div>"
+        "<div class='repoatlas-stat-label'>Docs bugs checked against the source (file:line evidence)</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{repo_count}</div>"
         "<div class='repoatlas-stat-label'>Libraries around 300k–400k prompt tokens</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{calls_text}</div>"
         "<div class='repoatlas-stat-label'>Model call cadence</div></div>"
         f"<div class='repoatlas-stat-tile'><div class='repoatlas-stat-value'>{precision:.1f}%</div>"
-        "<div class='repoatlas-stat-label'>Hand-checked precision</div></div>"
+        "<div class='repoatlas-stat-label'>Precision, checked against the source (file:line evidence)</div></div>"
         "</div>"
         f"<p style='margin-top:10px;'>Footnote: {pack_trimmed_count} of {pack_total_count} packs were trimmed "
         "(tests/benchmarks dropped first; trace files do not always list exact dropped paths).</p>"
@@ -1396,9 +1441,11 @@ def _render_bug_wall_html(findings: list[dict[str, object]]) -> str:
         doc_citation: dict[str, object] = _as_dict(finding.get("doc_citation"))
         code_citation: dict[str, object] = _as_dict(finding.get("code_citation"))
         breakage_summary: str = str(finding.get("breakage_summary", "")).strip() or str(finding.get("hand_notes", ""))
-        upstream_status: str = str(finding.get("upstream_status", "draft prepared, unfiled"))
-        upstream_url: str = str(finding.get("upstream_url", ""))
-        verifier_label: str = str(finding.get("verifier_label", ""))
+        display_title: str = str(finding.get("display_title", "")).strip() or f"{library_name}: {breakage_summary.split('.')[0]}"
+        upstream_status: str = str(finding.get("upstream_status", "")).strip()
+        upstream_url: str = str(finding.get("upstream_url", "")).strip()
+        verifier_label: str = str(finding.get("verifier_label", "")).strip()
+        finder_tag: str = str(finding.get("finder_tag", "")).strip()
         doc_model_line: int = _coerce_int(finding.get("doc_model_line"), 0)
         doc_verified_line: int = _coerce_int(finding.get("doc_verified_line"), 0)
         cross_file: bool = bool(finding.get("is_cross_file", False))
@@ -1407,49 +1454,80 @@ def _render_bug_wall_html(findings: list[dict[str, object]]) -> str:
         token_distance_text: str = (
             f"{cross_file_label}, {int(token_distance):,} tokens apart"
             if isinstance(token_distance, int)
-            else f"{cross_file_label}, distance not derivable"
+            else cross_file_label
         )
         badge_class: str = "repoatlas-badge-open" if "open" in upstream_status.lower() else "repoatlas-badge-linked"
-        prior_reported: bool = bool(finding.get("upstream_prior_reported", False))
-        prior_badge: str = (
-            "<span class='repoatlas-badge repoatlas-badge-linked'>already reported upstream</span>"
-            if prior_reported
-            else ""
-        )
         repro_status: str = str(finding.get("repro_status", ""))
         repro_evidence: str = str(finding.get("repro_evidence", ""))
         repro_error_excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
         repro_is_strict: bool = bool(finding.get("repro_is_strict_api_error", False))
+        repro_override: str = str(finding.get("repro_badge_override", "")).strip()
         repro_badge_html: str = ""
-        if repro_is_strict:
+        if repro_override:
+            repro_badge_html = f"<span class='repoatlas-badge repoatlas-badge-open'>{repro_override}</span>"
+        elif repro_is_strict:
             excerpt: str = repro_error_excerpt[:160] if repro_error_excerpt else "API error observed."
             repro_badge_html = f"<span class='repoatlas-badge repoatlas-badge-open'>Reproduced: {excerpt}</span>"
         elif repro_status == "reproduced" and repro_evidence == "assertion":
             repro_badge_html = "<span class='repoatlas-badge repoatlas-badge-linked'>repro: assertion only (weak)</span>"
         elif repro_status == "reproduced":
             repro_badge_html = "<span class='repoatlas-badge repoatlas-badge-linked'>repro: non-interface exception (weak)</span>"
-        upstream_markup: str = (
-            f"<a href='{upstream_url}' target='_blank'>{upstream_status}</a>"
-            if upstream_url
-            else upstream_status
+        finder_badge_html: str = (
+            f"<span class='repoatlas-badge repoatlas-badge-linked'>{finder_tag}</span>" if finder_tag else ""
         )
+        upstream_badge_html: str = ""
+        if upstream_status:
+            upstream_markup: str = (
+                f"<a href='{upstream_url}' target='_blank'>{upstream_status}</a>"
+                if upstream_url
+                else upstream_status
+            )
+            upstream_badge_html = f"<span class='repoatlas-badge {badge_class}'>{upstream_markup}</span>"
         line_match_text: str = ""
         if doc_verified_line > 0 and doc_model_line > 0 and doc_verified_line != doc_model_line:
             line_match_text = (
-                f"<div style='font-size:0.82rem;margin-top:6px;'><b>Verifier line match</b>: "
+                f"<div style='font-size:0.82rem;margin-top:6px;'><b>Citation line match</b>: "
                 f"model cited L{doc_model_line}, verifier matched L{doc_verified_line}.</div>"
             )
+        doc_path: str = str(doc_citation.get("path", "")).strip()
+        doc_line: str = str(doc_citation.get("start_line", "")).strip()
+        doc_end: str = str(doc_citation.get("end_line", "")).strip()
+        if doc_verified_line > 0 and doc_model_line > 0 and doc_verified_line != doc_model_line:
+            doc_line_text: str = f"{doc_path} L{doc_verified_line} (model cited L{doc_model_line})"
+        elif doc_end and doc_end != doc_line and doc_path:
+            doc_line_text = f"{doc_path} L{doc_line}–{doc_end}"
+        elif doc_path:
+            doc_line_text = f"{doc_path}:{doc_line}" if doc_line else doc_path
+        else:
+            doc_line_text = ""
+        code_path: str = str(code_citation.get("path", "")).strip()
+        code_line: str = str(code_citation.get("start_line", "")).strip()
+        code_line_html: str = ""
+        if code_path:
+            code_site: str = f"{code_path}:{code_line}" if code_line else code_path
+            code_line_html = f"<div style='font-size:0.84rem;'><b>Code</b>: {code_site}</div>"
+        citation_line: str = ""
+        if verifier_label and verifier_label.lower() != "hybrid":
+            citation_heading: str = "Citation check" if verifier_label.lower().startswith("citation") else "Citation check"
+            citation_value: str = verifier_label
+            citation_line = (
+                f"<div style='font-size:0.82rem;margin-top:6px;'><b>{citation_heading}</b>: {citation_value}</div>"
+            )
+        doc_line_html: str = (
+            f"<div style='font-size:0.84rem;'><b>Doc</b>: {doc_line_text}</div>" if doc_line_text else ""
+        )
+        pills: str = "".join(part for part in (finder_badge_html, repro_badge_html, upstream_badge_html) if part)
         cards.append(
             "<div class='repoatlas-bug-card'>"
-            f"<div class='repoatlas-bug-title'>{library_name}: {finding.get('finding_id', '')}</div>"
+            f"<div class='repoatlas-bug-title'>{display_title}</div>"
             f"<div style='font-size:0.88rem;color:var(--body-text-color, #334155);margin-bottom:8px;'>{breakage_summary}</div>"
-            f"<div style='font-size:0.84rem;'><b>Doc</b>: {doc_citation.get('path', '')}:{doc_citation.get('start_line', '')}</div>"
-            f"<div style='font-size:0.84rem;'><b>Code</b>: {code_citation.get('path', '')}:{code_citation.get('start_line', '')}</div>"
+            f"{doc_line_html}"
+            f"{code_line_html}"
             f"<div style='font-size:0.84rem;margin-top:6px;'><b>Distance</b>: {token_distance_text}</div>"
-            f"<div style='font-size:0.82rem;margin-top:6px;'><b>Verifier</b>: {verifier_label}</div>"
+            f"{citation_line}"
             f"{line_match_text}"
             f"<div style='font-size:0.84rem;margin-top:6px;'><b>Repo</b>: <a href='{repo_url}' target='_blank'>{repo_url}</a></div>"
-            f"<div style='margin-top:8px;'>{repro_badge_html}{prior_badge}<span class='repoatlas-badge {badge_class}'>{upstream_markup}</span></div>"
+            f"{'<div style=\"margin-top:8px;\">' + pills + '</div>' if pills else ''}"
             "</div>"
         )
     return "<div class='repoatlas-bug-grid'>" + "".join(cards) + "</div>"
@@ -1499,8 +1577,8 @@ def _build_finding_choice_map(findings: list[dict[str, object]]) -> dict[str, di
     for finding in findings:
         finding_key: str = str(finding.get("finding_key", ""))
         hand_verdict: str = str(finding.get("hand_verdict", ""))
-        verifier: str = str(finding.get("verifier_label", "reject"))
-        label: str = f"{finding_key} · hand={hand_verdict} · verifier={verifier}"
+        display_title: str = str(finding.get("display_title", "")).strip()
+        label: str = f"{display_title or finding_key} · source-checked={hand_verdict}"
         choice_map[label] = finding
     return choice_map
 
@@ -1655,12 +1733,24 @@ def _render_finding_panel(finding: dict[str, object]) -> FindingPanelState:
     upstream_url: str = str(finding.get("upstream_url", "")).strip()
     if upstream_url:
         upstream_badge = f"**Upstream:** [{upstream_status}]({upstream_url})"
+    elif upstream_status:
+        upstream_badge = f"**Upstream:** {upstream_status}"
+    elif hand_verdict == "true":
+        upstream_badge = "**Upstream:** Not reported upstream yet"
     else:
-        upstream_badge = f"**Upstream:** {upstream_status}" if upstream_status else "**Upstream:** unfiled"
-    doc_header: str = (
-        f"**Doc citation:** `{doc_citation.get('path', '')}` "
-        f"L{doc_citation.get('start_line', '')}–L{doc_citation.get('end_line', '')}"
-    )
+        upstream_badge = "**Upstream:** n/a"
+    doc_model_line: int = _coerce_int(finding.get("doc_model_line"), 0)
+    doc_verified_line: int = _coerce_int(finding.get("doc_verified_line"), 0)
+    if doc_verified_line > 0 and doc_model_line > 0 and doc_verified_line != doc_model_line:
+        doc_header = (
+            f"**Doc citation:** `{doc_citation.get('path', '')}` "
+            f"L{doc_verified_line} (model cited L{doc_model_line})"
+        )
+    else:
+        doc_header = (
+            f"**Doc citation:** `{doc_citation.get('path', '')}` "
+            f"L{doc_citation.get('start_line', '')}–L{doc_citation.get('end_line', '')}"
+        )
     code_header: str = (
         f"**Code citation:** `{code_citation.get('path', '')}` "
         f"L{code_citation.get('start_line', '')}–L{code_citation.get('end_line', '')}"
@@ -1669,10 +1759,8 @@ def _render_finding_panel(finding: dict[str, object]) -> FindingPanelState:
     token_distance_line: str = (
         f"**Doc/code token distance:** {int(token_distance):,}"
         if isinstance(token_distance, int)
-        else "**Doc/code token distance:** not derivable from pack order"
+        else "**Doc/code token distance:** not computed for this card"
     )
-    doc_model_line: int = _coerce_int(finding.get("doc_model_line"), 0)
-    doc_verified_line: int = _coerce_int(finding.get("doc_verified_line"), 0)
     line_shift_line: str = ""
     if doc_model_line > 0 and doc_verified_line > 0 and doc_model_line != doc_verified_line:
         line_shift_line = (
@@ -1696,8 +1784,11 @@ def _render_finding_panel(finding: dict[str, object]) -> FindingPanelState:
         upstream_badge_text = "**Upstream:** n/a for false positive"
     repro_badge_text: str = _badge_for_repro(finding)
     repro_error_excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
+    repro_override: str = str(finding.get("repro_badge_override", "")).strip()
     repro_line: str = ""
-    if bool(finding.get("repro_is_strict_api_error", False)):
+    if repro_override:
+        repro_line = f"**Executable repro:** {repro_override}"
+    elif bool(finding.get("repro_is_strict_api_error", False)):
         repro_line = f"**Executable repro:** Reproduced via API error: `{repro_error_excerpt}`."
     elif str(finding.get("repro_status", "")) == "reproduced" and str(finding.get("repro_evidence", "")) == "assertion":
         repro_line = "**Executable repro:** repro: assertion only (weak)."
@@ -1753,40 +1844,59 @@ def _build_summary_markdown(summary: dict[str, object]) -> str:
     total_output_tokens: int = _coerce_int(summary.get("total_output_tokens"), 0)
     pack_trimmed_count: int = _coerce_int(summary.get("pack_trimmed_count"), 0)
     pack_total_count: int = _coerce_int(summary.get("pack_total_count"), 0)
-    findings_per_true: float = judged_count / true_count if true_count else 0.0
     return (
-        f"- **Live hand-checked precision:** {true_count}/{judged_count} = {precision_percent:.1f}% "
-        f"(true={true_count}, false={false_count}, unclear={unclear_count})\n"
-        f"- **Verifier behaviour (all runs):** caught {verifier_caught_false_all}/{verifier_false_total_all} false positives; "
-        f"wrongly rejected {verifier_rejected_true_all} true drift.\n"
-        f"- **Verifier behaviour (11-repository subset):** caught {verifier_caught_false_sweep}/{verifier_false_total_sweep} false positives.\n"
-        f"- **Cross-file framing:** {true_cross_file_count}/{true_count} true drifts are cross-file, median ~{true_cross_file_median:,} tokens apart, max ~{true_cross_file_max:,}.\n"
-        f"- **Prior-art check:** {true_no_prior} of {true_count} true drifts had no prior upstream PR or issue when checked.\n"
-        f"- **Cost (recorded runs):** {total_input_tokens / 1_000_000:.2f}M prompt + {total_output_tokens / 1_000:.0f}k completion tokens on Beam, $0 via Ollama Cloud free tier.\n"
-        f"- **Packing footnote:** {pack_trimmed_count} of {pack_total_count} packs were trimmed; when trimming happens, tests/benchmarks are dropped first.\n"
-        f"- **Maintainer note:** about 1 in {findings_per_true:.1f} findings is a real drift; each takes roughly two minutes to check with the permalinks."
+        "These numbers are the earlier **v1 whole-repo-only sweep** (17 runs), not DocDrift v2.\n\n"
+        f"- Findings checked against the source (file:line evidence): {true_count}/{judged_count} = {precision_percent:.1f}% "
+        f"(true={true_count}, false={false_count}, unclear={unclear_count}).\n"
+        f"- Citation verifier: caught {verifier_caught_false_all}/{verifier_false_total_all} false positives; "
+        f"wrongly rejected {verifier_rejected_true_all} true drift "
+        f"(11-repository subset: {verifier_caught_false_sweep}/{verifier_false_total_sweep}).\n"
+        f"- {true_cross_file_count}/{true_count} true drifts were cross-file, median ~{true_cross_file_median:,} tokens apart, max ~{true_cross_file_max:,}.\n"
+        f"- {true_no_prior} of {true_count} true drifts had no prior upstream PR or issue when checked.\n"
+        f"- Cost: {total_input_tokens / 1_000_000:.2f}M prompt + {total_output_tokens / 1_000:.0f}k completion tokens on Beam, $0 via Ollama Cloud free tier.\n"
+        f"- {pack_trimmed_count} of {pack_total_count} packs were trimmed to fit the token cap.\n"
+        "- v2 has 3 false repro-badged findings (werkzeug S38, S39, S41). "
+        "The v1 line “10 of 11 reproduce; 0 of 10 false do” does not apply to v2."
     )
+
+
+def _rewrite_finding_display_fields(finding: dict[str, object]) -> dict[str, object]:
+    """
+    @brief Rewrite recorded-finding badges for honest v2 display.
+    @param finding Finding row from index.json.
+    """
+
+    rewritten: dict[str, object] = dict(finding)
+    repo_name: str = str(rewritten.get("case_name", "")).split("-")[0]
+    rewritten["repo_url"] = canonicalize_repo_url(str(rewritten.get("repo_url", "")), repo_name)
+    status: str = str(rewritten.get("upstream_status", "")).strip()
+    status_lower: str = status.lower()
+    if status_lower in {"", "draft prepared, unfiled", "unfiled"}:
+        rewritten["upstream_status"] = "Not reported upstream yet" if str(rewritten.get("hand_verdict", "")).lower() == "true" else ""
+        rewritten["upstream_url"] = ""
+    if "independently confirmed" in status_lower or bool(rewritten.get("upstream_prior_reported", False)):
+        url: str = str(rewritten.get("upstream_url", ""))
+        pr_match = re.search(r"/pull/(\d+)", url)
+        if pr_match:
+            rewritten["upstream_status"] = f"Also reported by someone else: open PR #{pr_match.group(1)}"
+            rewritten["upstream_prior_reported"] = True
+    if str(rewritten.get("finding_key", "")) == "starlette-400000/DD-1":
+        rewritten["repro_is_strict_api_error"] = False
+        rewritten["repro_badge_override"] = (
+            "Reproduced in our earlier docs-runner (TypeError). "
+            "The v2 strict repro couldn't start the test session, so it isn't counted in the 29."
+        )
+    return rewritten
 
 
 def _build_repro_summary_markdown(repro_summary: dict[str, object]) -> str:
     """
-    @brief Build markdown for strict executable repro metrics.
+    @brief Unused v1 repro blurb kept for tests; v2 copy lives in the first-screen panels.
     @param repro_summary Summary payload from results_live/repros/summary.json.
     """
 
-    if not repro_summary:
-        return ""
-    true_total: int = _coerce_int(repro_summary.get("hand_true"), 0)
-    false_unclear_total: int = _coerce_int(repro_summary.get("hand_false_or_unclear"), 0)
-    strict_kept: int = _coerce_int(repro_summary.get("kept_with_strict_filter"), 0)
-    strict_true: int = _coerce_int(repro_summary.get("kept_true_with_strict_filter"), 0)
-    strict_false_unclear: int = max(0, strict_kept - strict_true)
-    return (
-        f"- **Executable check:** {strict_true} of {true_total} true drifts reproduce as a real API error when you run "
-        f"the docs literally; {strict_false_unclear} of {false_unclear_total} false/unclear findings do.\n"
-        "- **Strict rule note:** the API-error rule (TypeError/AttributeError/ImportError/NameError) was defined "
-        "after seeing these 21 results, and is pending confirmation on new findings."
-    )
+    del repro_summary
+    return ""
 
 
 def _copy_issue_draft(text: str) -> str:
@@ -1846,25 +1956,26 @@ def _run_live_analysis_stream(
     selected_ref: str = ref.strip() or "main"
     bounded_limit: int = max(1, min(int(token_limit), LIVE_MAX_TOKEN_LIMIT))
     live_enabled, live_mode_message = get_live_mode_status()
+    hidden_table: object = gr.update(value=[], visible=False)
     if not live_enabled:
-        yield (f"Live run blocked: {live_mode_message}", [], "Estimate unavailable.", "live: disabled")
+        yield (f"Live run blocked: {live_mode_message}", hidden_table, "Estimate unavailable.", "live: disabled")
         return
     if not _is_public_github_url(stripped_url):
-        yield ("Live run rejected: only public GitHub URLs are allowed.", [], "Estimate unavailable.", "live: invalid-url")
+        yield ("Live run rejected: only public GitHub URLs are allowed.", hidden_table, "Estimate unavailable.", "live: invalid-url")
         return
 
     ip_address: str = _request_ip(request)
     allowed, rate_message = _record_rate_limited_request(ip_address=ip_address)
     if not allowed:
-        yield (f"Live run blocked: {rate_message}", [], "Estimate unavailable.", "live: rate-limited")
+        yield (f"Live run blocked: {rate_message}", hidden_table, "Estimate unavailable.", "live: rate-limited")
         return
 
     daily_ok, daily_message = _reserve_daily_live_slot()
     if not daily_ok:
-        yield (f"Live run blocked: {daily_message}", [], "Estimate unavailable.", "live: daily-cap-reached")
+        yield (f"Live run blocked: {daily_message}", hidden_table, "Estimate unavailable.", "live: daily-cap-reached")
         return
 
-    yield ("Preparing live run…", [], "Estimating token usage…", "live: started")
+    yield ("Preparing live run…", hidden_table, "Estimating token usage…", "live: started")
     try:
         config: RepoAtlasConfig = RepoAtlasConfig.from_environment(token_limit=bounded_limit)
         pack = pack_repository(
@@ -1877,7 +1988,7 @@ def _run_live_analysis_stream(
         projected_tokens: int = estimate_prompt_tokens(pack.total_tokens, config.token_calibration_factor)
         yield (
             "Pack ready. Running Beam DocDrift analysis…",
-            [],
+            hidden_table,
             (
                 f"Estimated pack tokens: **{pack.total_tokens:,}**; projected prompt tokens: **{projected_tokens:,}**; "
                 f"truncated={pack.truncated}."
@@ -1899,7 +2010,7 @@ def _run_live_analysis_stream(
         )
         yield (
             status,
-            rows,
+            gr.update(value=rows, visible=bool(rows)),
             (
                 f"Estimated pack tokens: **{pack.total_tokens:,}**; projected prompt tokens: **{projected_tokens:,}**; "
                 f"truncated={pack.truncated}."
@@ -1908,7 +2019,7 @@ def _run_live_analysis_stream(
         )
         return
     except Exception as exc:
-        yield (f"Live run failed: `{exc}`", [], "Estimate available above.", "live: failed")
+        yield (f"Live run failed: `{exc}`", hidden_table, "Estimate available above.", "live: failed")
         return
 
 
@@ -2051,12 +2162,12 @@ def _badge_for_hand_verdict(verdict: str) -> str:
 
     normalised: str = verdict.strip().lower()
     if normalised == "true":
-        return "🟢 **Hand-check:** true drift"
+        return "🟢 **Checked against the source:** true drift"
     if normalised == "false":
-        return "🔴 **Hand-check:** false positive"
+        return "🔴 **Checked against the source:** false positive"
     if normalised == "unclear":
-        return "🟠 **Hand-check:** unclear"
-    return "⚪ **Hand-check:** unlabelled"
+        return "🟠 **Checked against the source:** unclear"
+    return "⚪ **Checked against the source:** unlabelled"
 
 
 def _badge_for_repro(finding: dict[str, object]) -> str:
@@ -2065,6 +2176,9 @@ def _badge_for_repro(finding: dict[str, object]) -> str:
     @param finding Finding record with attached repro metadata.
     """
 
+    override: str = str(finding.get("repro_badge_override", "")).strip()
+    if override:
+        return f"🟢 **Reproduced:** {override}"
     status: str = str(finding.get("repro_status", "")).strip()
     evidence: str = str(finding.get("repro_evidence", "")).strip()
     excerpt: str = str(finding.get("repro_error_excerpt", "")).strip()
