@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 8918,
+  "completion_tokens": 1885,
+  "finish_reason": "stop",
+  "latency_seconds": 19.797044829989318,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "This is an intentional historical note about an API removed in 0.9, so the absent `linked` method is expected.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 57,
+        "end_line": 59,
+        "quote": "    .. versionchanged:: 0.9\n       The :meth:`linked` function was removed without replacement as it\n       was an API that does not support the changes to the encoding model."
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S37"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S37",
+    "doc_path": "src/werkzeug/datastructures/headers.py",
+    "doc_line": 58,
+    "doc_end": 58,
+    "doc_text": "The :meth:`linked` function was removed without replacement as it",
+    "claim": "role:undefined: `linked`: :meth: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "src/werkzeug/datastructures/headers.py"
+  ],
+  "prompt_chars": 28118
+}

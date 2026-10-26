@@ -1,0 +1,32 @@
+{
+  "label": "arrow:C03:arrow-400000:DD-1",
+  "payload_sha256": "dfd275e705e9352870fce534f7a20470867c50965c1be2a00e7b05a3659d7a99",
+  "latency_seconds": 7.6745127710164525,
+  "body": {
+    "id": "chatcmpl-899",
+    "object": "chat.completion",
+    "created": 1793055614,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C03\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The dehumanize method's docstring documents the first parameter as timestring, but the actual method signature names it input_string.\",\n      \"code_citation\": {\n        \"path\": \"arrow/arrow.py\",\n        \"start_line\": 1344,\n        \"end_line\": 1344,\n        \"quote\": \"    def dehumanize(self, input_string: str, locale: str = \\\"en_us\\\") -> \\\"Arrow\\\":\"\n      },\n      \"suggested_doc_fix\": \"Change \\\":param timestring:\\\" to \\\":param input_string:\\\" in the dehumanize docstring.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "Candidate C03: docstring dehumanize names first parameter `timestring` but actual signature is `input_string`. The report says at arrow/arrow.py:1349 doc text `:param timestring: ...`, code at 1344 `def dehumanize(self, input_string: str, ...)`. This is a true name mismatch. So true_drift. Code citation lines around 1344-1349 or 1349. Need code citation where relied on. They want single code location relied on. For verdict, code_citation. Could cite 1344. Suggested doc fix: change `:param timestring:` to `:param input_string:`.\n\nNeed output JSON. Also additional findings. Let's inspect potential other drifts. The prompt asks list any OTHER documentation drifts candidates missed, especially cross-file. We only have arrow/arrow.py. Could find other mismatches: `humanize` dehumanize etc. Need think.\n\nCheck docstring parameters vs signatures.\n\n- now: tzinfo param doc says local time default. code: defaults None then local. OK.\n- fromtimestamp: doc tzinfo defaults to local time. code yes.\n- format: signature fmt, locale. doc ok.\n- humanize: signature other, locale, only_distance, granularity. doc ok.\n- dehumanize: input_string vs timestring mismatch. Also uses `DEHUMANIZE_LOCALES`. Fine.\n- shift: no :param doc but Parameters prose `check_imaginary`. okay.\n- span: week_start doc maybe off? code accepts week_start default 1. doc says Monday is 1 Sunday 7. okay.\n- floor/ceil pass **kwargs; doc param week_start. okay.\n\nMaybe `__init__` fold? doc says 0 or1. code.\n\nCould be `timestamp()` returns float but no param. no.\n\nAdditional drift in prose? Candidate only C03. Maybe there are other doc mismatches in same file: \"stride\"? But task says don't repeat candidates. We can list others if certain. Need maybe check `DEHUMANIZE` default locale 'en_us', doc says defaults to 'en-us'. This could be a minor mismatch? doc says locale defaults to 'en-us' (with hyphen) while parameter default \"en_us\" underscore. User passes either? `locales.get_locale` handles normalization? Let's check not provided. Only arrow.py file. But locales likely normalizes underscores/dashes? Not in pack, can't rely. The report focus is maybe param name only. We shouldn't invent.\n\nPotential additional: dehumanize signature first param `input_string`, doc calls `timestring`; already C03. No others.\n\nMaybe `humanize` granularity default \"auto\"; doc says optional defines. ok.\n\nCould find cross-file? No other files packed. So additional_findings empty.\n\nNeed JSON with verdicts array. For code citation quote verbatim from lines. Let's specify start_line 1344 end_line 1344 quote \"    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\". But the relied on location could be doc line 1349? The instruction says single code location relied on. The code signature is line 1344. We'll cite 1344.\n\nsuggested_doc_fix: 'Change \":param timestring:\" to \":param input_string:\" in the dehumanize docstring.' That's doc-only. Good.\n\nReturn strict JSON, no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 25978,
+      "completion_tokens": 940,
+      "total_tokens": 26918,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:00:14.730462+00:00"
+}

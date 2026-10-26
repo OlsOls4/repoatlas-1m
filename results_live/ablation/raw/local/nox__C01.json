@@ -1,0 +1,32 @@
+{
+  "label": "nox:C01:S20",
+  "payload_sha256": "5d8b192e0828ed8ae20e14ebd42ce8fb1f6d5cb0a905dfa4db03563ee6bb04e7",
+  "latency_seconds": 7.318731953011593,
+  "body": {
+    "id": "chatcmpl-798",
+    "object": "chat.completion",
+    "created": 1793055549,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C01\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The tutorial calls `conda_install` with `channels=`, but the implementation parameter is named `channel`.\",\n      \"code_citation\": {\n        \"path\": \"nox/sessions.py\",\n        \"start_line\": 717,\n        \"end_line\": 721,\n        \"quote\": \"    def conda_install(\\n        self,\\n        *args: str,\\n        auto_offline: bool = True,\\n        channel: str | Sequence[str] = \\\"\\\",\\n\"\n      },\n      \"suggested_doc_fix\": \"Change `session.conda_install(\\\"pytest\\\", channels=[\\\"conda-forge\\\"])` to `session.conda_install(\\\"pytest\\\", channel=[\\\"conda-forge\\\"])`.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Need analyze candidate. User asks strict. Need determine verdict for C01 and additional drifts. We have repo. C01 doc tutorial line 488: 'session.conda_install(\"pytest\", channels=[\"conda-forge\"])'. report method-call-signature: method signature uses channel, not channels. Code: conda_install signature channel: str | Sequence[str] = \"\". Also code docstring uses session.conda_install('dask==2.1.0', channel='conda-forge'), channels singular. So doc snippet wrong parameter name. true_drift. Suggested doc fix: use channel=[\"conda-forge\"]? Since code accepts Sequence[str], plural list allowed but param named channel. Doc says \"You can specify a conda channel using `channel=` ... You can specify a list of channels if needed.\" So fix to session.conda_install(\"pytest\", channel=[\"conda-forge\"]). Need code citation lines. Candidate requires code location relied on: nox/sessions.py conda_install start 717? They said Session.conda_install at nox/sessions.py:717. But actual def starts 717? Let's verify: line 717 def conda_install? In output line 717 is \"    def conda_install(\" yes. end maybe 731. We need single code location relied. Could use def signature lines 718-721 or 717-721. Quote verbatim from those lines. Let's choose start 717 end 721:\n717|    def conda_install(\n718|        self,\n719|        *args: str,\n720|        auto_offline: bool = True,\n721|        channel: str | Sequence[str] = \"\",\nNeed quote without line prefix includes newlines? JSON string with \\n. Fine.\n\nNeed additional findings. Need inspect for other documentation drifts, especially cross-file. We only have docs/tutorial.rst and nox/sessions.py. Could be additional in tutorial. Need identify. Candidate missed other drifts perhaps doc says \"session.conda_install(\"pytest\", channels=[\"conda-forge\"])\" only. Need check tutorial line 488. Maybe other doc errors? Need use whole repo limited files. Could examine nox code and tutorial. Need find any other docs drifts. Could mention docs/tutorial says `session.conda_install(\"pytest\", channels=[\"conda-forge\"])` but code param `channel`. Also tutorial line 484 says \"Install packages with conda\". Then maybe doc line 486 example. True drift already candidate. Need any other candidate-missed. Could be code docstring example uses `channel='conda-forge'` correct. No.\n\nMaybe docs have wrong method signature? Let's inspect tutorial:\n- line 488 as candidate.\n- line 494 \"You should always specify channels\" maybe okay.\n- line 340 nox.options.sessions okay?\n- code nox installed hassession.\nNo additional obvious. But task asks list any OTHER documentation drifts candidates missed, especially cross-file ones. Need not invent. Could provide empty additional_findings. But maybe there are more subtle. Let's thoroughly inspect.\n\nGiven only docs/tutorial.rst and nox/sessions.py. Potential other drifts:\n1. Tutorial section \"Testing with conda\": `session.conda_install(\"pytest\", channels=[\"conda-forge\"])`. Fix channels to channel. Candidate.\n2. Docs say \"It is possible to install packages with pip into the conda environment...\" no code issue.\n3. Code docstring for conda_install says `session.conda_install('dask==2.1.0', channel='conda-forge')` correct.\n4. `conda_install` supports `channel` accepts str or Sequence. Tutorial uses channels list, plural, wrong. \n5. Maybe `session.install` docs in tutorial have `session.run_install(... external=True ...)` method exists. okay.\n6. nox.project.load_toml returns dict? code not shown.\nNo additional.\n\nNeed output only JSON object. Ensure no candidate missing. Verdict true_drift. reason one-line. suggested_doc_fix documentation-only. \"Change `channels=[\"conda-forge\"]` to `channel=[\"conda-forge\"]` (or `channel=\"conda-forge\"`).\" Maybe docs style perhaps `channel=[\"conda-forge\"]`. Since original intent plural list. Use that.\n\nCode citation exact quote. Let's make JSON. Additional findings [].\n\nNeed be careful line numbers: candidate reference doc text line 488. Could include doc citation? Schema verdict doesn't require doc citation except additional. Verdict requires code_citation. We'll include. Need maybe doc_citation not part. Fine.\n\nFinal only JSON."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 24599,
+      "completion_tokens": 1220,
+      "total_tokens": 25819,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T22:59:09.250789+00:00"
+}

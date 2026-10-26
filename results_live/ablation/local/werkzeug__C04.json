@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 8940,
+  "completion_tokens": 926,
+  "finish_reason": "stop",
+  "latency_seconds": 5.848725716990884,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The method signature names the iterable parameter 'values', but the docstring documents it as 'value'.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 428,
+        "end_line": 428,
+        "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+      },
+      "suggested_doc_fix": "Change ':param value: An iterable of header values...' to ':param values: An iterable of header values...'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S42"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S42",
+    "doc_path": "src/werkzeug/datastructures/headers.py",
+    "doc_line": 433,
+    "doc_end": 433,
+    "doc_text": ":param value: An iterable of header values. Newlines are not allowed and",
+    "claim": "docstring-param: `setlist(value)`: documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "local_files": [
+    "src/werkzeug/datastructures/headers.py"
+  ],
+  "prompt_chars": 28187
+}

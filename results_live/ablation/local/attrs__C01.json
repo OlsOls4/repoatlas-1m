@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 10477,
+  "completion_tokens": 1021,
+  "finish_reason": "stop",
+  "latency_seconds": 13.308619814983103,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The converters module is `attrs.converters` (plural), so `attrs.converter.pipe` does not exist; the docs should use the plural form.",
+      "code_citation": {
+        "path": "docs/api.rst",
+        "start_line": 696,
+        "end_line": 696,
+        "quote": ".. autofunction:: attrs.converters.pipe"
+      },
+      "suggested_doc_fix": "Change `attrs.converter.pipe` to `attrs.converters.pipe`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S11"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "attrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S11",
+    "doc_path": "docs/api.rst",
+    "doc_line": 702,
+    "doc_end": 702,
+    "doc_text": "x = attrs.field(converter=attrs.converter.pipe(c1, c2, c3))",
+    "claim": "dotted: `attrs.converter.pipe`: 'converter' not found on attrs",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "docs/api.rst"
+  ],
+  "prompt_chars": 30889
+}

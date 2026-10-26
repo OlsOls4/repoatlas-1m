@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 4514,
+  "completion_tokens": 3165,
+  "finish_reason": "stop",
+  "latency_seconds": 19.84223302299506,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "The documentation itself includes a working doctest that uses `field.alias_is_default`, so the report is a false positive.",
+      "code_citation": {
+        "path": "docs/extending.md",
+        "start_line": 257,
+        "end_line": 274,
+        "quote": "```{doctest}\n>>> def dataclass_names(cls, fields):\n...     return [\n...         field.evolve(alias=field.name)\n...         if field.alias_is_default\n...         else field\n...         for field in fields\n...     ]\n...\n>>> @frozen(field_transformer=dataclass_names)\n... class Data:\n...     public: int\n...     _private: str\n...     explicit: str = field(alias=\"aliased_name\")\n...\n>>> Data(public=42, _private=\"spam\", aliased_name=\"yes\")\nData(public=42, _private='spam', explicit='yes')\n```"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S12"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "attrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S12",
+    "doc_path": "docs/extending.md",
+    "doc_line": 255,
+    "doc_end": 255,
+    "doc_text": "You can use the `attrs.Attribute.alias_is_default` flag to detect whether an alias was explicitly provided by the user or auto-generated.",
+    "claim": "dotted: `attrs.Attribute.alias_is_default`: 'alias_is_default' not found on attrs.Attribute",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "docs/extending.md"
+  ],
+  "prompt_chars": 13883
+}

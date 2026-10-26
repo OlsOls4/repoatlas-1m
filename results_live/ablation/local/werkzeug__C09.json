@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 19075,
+  "completion_tokens": 2617,
+  "finish_reason": "stop",
+  "latency_seconds": 26.484642964001978,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C09",
+      "verdict": "true_drift",
+      "reason": "The docstring references werkzeug.FileWrapper, but FileWrapper is provided by werkzeug.wsgi, not the top-level werkzeug namespace.",
+      "code_citation": {
+        "path": "src/werkzeug/test.py",
+        "start_line": 1102,
+        "end_line": 1103,
+        "quote": "            instead of ``mimetype``. This change was made for\n            consistency with :class:`werkzeug.FileWrapper`."
+      },
+      "suggested_doc_fix": "Change `:class:\\`werkzeug.FileWrapper\\`` to `:class:\\`werkzeug.wsgi.FileWrapper\\``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S41"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S41",
+    "doc_path": "src/werkzeug/test.py",
+    "doc_line": 1103,
+    "doc_end": 1103,
+    "doc_text": "consistency with :class:`werkzeug.FileWrapper`.",
+    "claim": "role: `werkzeug.FileWrapper`: 'FileWrapper' not found on werkzeug",
+    "code_hint": "",
+    "candidate_id": "C09"
+  },
+  "local_files": [
+    "src/werkzeug/test.py"
+  ],
+  "prompt_chars": 62625
+}

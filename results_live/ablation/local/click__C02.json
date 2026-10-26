@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 2675,
+  "completion_tokens": 1596,
+  "finish_reason": "stop",
+  "latency_seconds": 15.886378393013729,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "Click's relevant type is named `File`, and `FileType` is not a documented class in this repository, so the sentence points readers at a non-existent class.",
+      "code_citation": {
+        "path": "docs/exceptions.md",
+        "start_line": 109,
+        "end_line": 110,
+        "quote": "- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file."
+      },
+      "suggested_doc_fix": "Replace `{class}`FileType`` with `{class}`File``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S10"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "click",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S10",
+    "doc_path": "docs/exceptions.md",
+    "doc_line": 110,
+    "doc_end": 110,
+    "doc_text": "{class}`FileType` if Click encounters issues opening the file.",
+    "claim": "role:undefined: `FileType`: :class: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "docs/exceptions.md"
+  ],
+  "prompt_chars": 8880
+}

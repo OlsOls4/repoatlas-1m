@@ -1,0 +1,32 @@
+{
+  "label": "httpx:C10:S9",
+  "payload_sha256": "6d4d43faacc6d690bd4778e8ed337f4aa9305fe3309a6af4a3814b79894c4c18",
+  "latency_seconds": 10.958254786994075,
+  "body": {
+    "id": "chatcmpl-735",
+    "object": "chat.completion",
+    "created": 1793055510,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C10\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The example uses an `app` keyword that `httpx.Client.__init__` does not accept; WSGI apps must be passed through `WSGITransport` and `transport`.\",\n      \"code_citation\": {\n        \"path\": \"httpx/_client.py\",\n        \"start_line\": 639,\n        \"end_line\": 639,\n        \"quote\": \"    def __init__(\"\n      },\n      \"suggested_doc_fix\": \"Replace `client = httpx.Client(app=app)` with `client = httpx.Client(transport=httpx.WSGITransport(app=app))`.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Need analyze C10 candidate. Candidate says docs httpx/_transports/wsgi.py:50 doc text 'client = httpx.Client(app=app)' report call-signature: no parameter named app. Need decide true_drift? Looking at code, Client.__init__ has no app param. But docs perhaps historically intended? In transport docs, simplest way app argument? Actually Client doesn't accept app, WSGITransport does. So doc example `client = httpx.Client(app=app)` is wrong. True drift. Code citation maybe Client __init__ lines 639 no app. Suggested doc fix likely change to transport=WSGITransport(app=app) or httpx.Client(transport=httpx.WSGITransport(app=app)). Need one-line reason.\n\nNeed also additional findings. Task says list other documentation drifts candidates missed, especially cross-file. Need inspect repo files provided only two files. We can find drifts in docstrings. Need not repeat candidate. Potential additional: WSGI doc says `httpx.WSGITransport` and `httpx.Client(transport=transport)` okay. Any docs? In Client docstring maybe missing `app`? Actually Client doesn't support app. No.\n\nCould be doc in wsgi says \"app argument\" simplest way but Client no app. Candidate covers example. Additional maybe WSGITransport doc example uses `httpx.Client(app=app)` only. Could propose fix. But task asks additional findings not repeat candidates, so no.\n\nNeed output only JSON. Ensure valid. For C10 code_citation path httpx/_client.py start 639 end 639? The candidate references def line 639. Actually def httpx/_client.py:639. In file line 639 is `def __init__(`. Quote verbatim. Could cite line 639-639 \"    def __init__(\". But better maybe code location signature lacks app. They require single code location relied on. Use httpx/_client.py lines 639-640? Need verbatim exact. Let's cite start 639 end 639 quote \"    def __init__(\" or 639-661? The location def line. Fine.\n\nFor verdict true_drift. suggested_doc_fix documentation-only. \"Change the example to client = httpx.Client(transport=httpx.WSGITransport(app=app)).\" That's doc fix. Ensure no code change.\n\nAdditional findings maybe ASGI transport? Not included in files. Only wsgi file. Could there be `WSGITransport` doc `httpx.WSGITransport` no issue. No additional.\n\nNeed maybe mark report C10 as false? Let's double-check: `httpx.Client(app=app)` maybe some re-export? Client.__init__ no app. definitely true.\n\nLet's craft final."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 25076,
+      "completion_tokens": 805,
+      "total_tokens": 25881,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T22:58:30.442314+00:00"
+}

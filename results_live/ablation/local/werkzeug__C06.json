@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 2952,
+  "completion_tokens": 1664,
+  "finish_reason": "stop",
+  "latency_seconds": 12.478440584993223,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "false",
+      "reason": "The string is a WSGI environ key, not an importable `werkzeug.proxy_fix.orig` attribute; the code stores the dict under that exact environ key.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/proxy_fix.py",
+        "start_line": 138,
+        "end_line": 148,
+        "quote": "environ_get = environ.get\n        environ.update(\n            {\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }\n            }\n        )"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "S38"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S38",
+    "doc_path": "src/werkzeug/middleware/proxy_fix.py",
+    "doc_line": 55,
+    "doc_end": 55,
+    "doc_text": "environ as ``werkzeug.proxy_fix.orig``, a dict.",
+    "claim": "dotted: `werkzeug.proxy_fix.orig`: 'proxy_fix' not found on werkzeug",
+    "code_hint": "",
+    "candidate_id": "C06"
+  },
+  "local_files": [
+    "src/werkzeug/middleware/proxy_fix.py"
+  ],
+  "prompt_chars": 9744
+}

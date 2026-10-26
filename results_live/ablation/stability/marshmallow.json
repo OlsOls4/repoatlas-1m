@@ -1,0 +1,238 @@
+{
+  "prompt_tokens": 295439,
+  "completion_tokens": 4951,
+  "finish_reason": "stop",
+  "latency_seconds": 21.533298182999715,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "`AppError` is intentionally defined by the user in the example schema, not an undefined package export.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 14,
+        "quote": "    class AppError(Exception):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S29"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "The example defines and raises its own user-created `AppError`, so the undefined-package report is a false positive.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 14,
+        "quote": "    class AppError(Exception):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S30"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "The example's load call is expected to raise the user-defined `AppError` from `handle_error`, not a package exception.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 14,
+        "quote": "    class AppError(Exception):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S31"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "`SchemaOpts.__init__` only accepts `meta`, but the docs subclass passes and forwards `**kwargs`.",
+      "code_citation": {
+        "path": "src/marshmallow/schema.py",
+        "start_line": 205,
+        "end_line": 205,
+        "quote": "    def __init__(self, meta: type):"
+      },
+      "suggested_doc_fix": "Change the example to `def __init__(self, meta):` and call `SchemaOpts.__init__(self, meta)` without `**kwargs`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "marshmallow-400000:DD-1"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "The override assumes a dictionary source object, so `obj.get(key, default)` has the correct two-argument dict method call.",
+      "code_citation": {
+        "path": "docs/extending/overriding_attribute_access.rst",
+        "start_line": 17,
+        "end_line": 17,
+        "quote": "            return obj.get(key, default)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S32"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The decorator's collection argument is named `pass_collection`, not the removed `pass_many` alias.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 178,
+        "end_line": 178,
+        "quote": "    pass_collection: bool = False,"
+      },
+      "suggested_doc_fix": "Replace `@pre_load(pass_many=True)` with `@pre_load(pass_collection=True)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S33"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The decorator's collection argument is named `pass_collection`, not the removed `pass_many` alias.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 155,
+        "end_line": 155,
+        "quote": "    pass_collection: bool = False,"
+      },
+      "suggested_doc_fix": "Replace `@post_dump(pass_many=True)` with `@post_dump(pass_collection=True)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S34"
+    },
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "The `missing` sentinel resolves to `load_default` during deserialization, not an unnamed `default`.",
+      "code_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 380,
+        "end_line": 381,
+        "quote": "        if value is missing_:\n            _miss = self.load_default"
+      },
+      "suggested_doc_fix": "Change the docs sentence to say `its ``load_default`` value is used` instead of `its ``default`` value is used`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "marshmallow-400000:DD-2"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S29",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 14,
+      "doc_end": 14,
+      "doc_text": "class AppError(Exception):",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S30",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 24,
+      "doc_end": 24,
+      "doc_text": "raise AppError(\"An error occurred with input: {0}\".format(data))",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S31",
+      "doc_path": "docs/extending/custom_error_handling.rst",
+      "doc_line": 28,
+      "doc_end": 28,
+      "doc_text": "schema.load({\"email\": \"invalid-email\"})  # raises AppError",
+      "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "marshmallow-400000:DD-1",
+      "doc_path": "docs/extending/custom_options.rst",
+      "doc_line": 40,
+      "doc_end": 41,
+      "doc_text": "        def __init__(self, meta, **kwargs):\n            SchemaOpts.__init__(self, meta, **kwargs)",
+      "claim": "The docs show a custom `SchemaOpts` subclass accepting and forwarding `**kwargs` to `SchemaOpts.__init__`, but the implementation accepts only `meta`.",
+      "code_hint": "src/marshmallow/schema.py:205-205 '    def __init__(self, meta: type):'",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S32",
+      "doc_path": "docs/extending/overriding_attribute_access.rst",
+      "doc_line": 17,
+      "doc_end": 17,
+      "doc_text": "return obj.get(key, default)",
+      "claim": "method-call-signature: `obj.get(...)`: 2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)",
+      "code_hint": "",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S33",
+      "doc_path": "docs/extending/pre_and_post_processing.rst",
+      "doc_line": 61,
+      "doc_end": 61,
+      "doc_text": "@pre_load(pass_many=True)",
+      "claim": "call-signature: `marshmallow.pre_load(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)",
+      "code_hint": "",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S34",
+      "doc_path": "docs/extending/pre_and_post_processing.rst",
+      "doc_line": 66,
+      "doc_end": 66,
+      "doc_text": "@post_dump(pass_many=True)",
+      "claim": "call-signature: `marshmallow.post_dump(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)",
+      "code_hint": "",
+      "candidate_id": "C07"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "marshmallow-400000:DD-2",
+      "doc_path": "docs/top_level.rst",
+      "doc_line": 10,
+      "doc_end": 14,
+      "doc_text": ".. data:: missing\n\n   Singleton value that indicates that a field's value is missing from input\n   dict passed to `Schema.load <marshmallow.Schema.load>`. If the field's value is not required,\n   its ``default`` value is used.",
+      "claim": "The top-level docs describe the missing singleton as falling back to a field's \"default\" value, while deserialization uses the `load_default` parameter.",
+      "code_hint": "src/marshmallow/fields.py:380-381 '        if value is missing_:\\n            _miss = self.load_default'",
+      "candidate_id": "C08"
+    }
+  ]
+}

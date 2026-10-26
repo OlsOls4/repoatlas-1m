@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 938,
+  "completion_tokens": 955,
+  "finish_reason": "stop",
+  "latency_seconds": 12.661988920997828,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "The heading names `arrow.locale`, but the automodule directive targets the actual `arrow.locales` module.",
+      "code_citation": {
+        "path": "docs/api-guide.rst",
+        "start_line": 26,
+        "end_line": 26,
+        "quote": ".. automodule:: arrow.locales"
+      },
+      "suggested_doc_fix": "Change line 23 from `:mod:`arrow.locale`` to `:mod:`arrow.locales``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S22"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S22",
+    "doc_path": "docs/api-guide.rst",
+    "doc_line": 23,
+    "doc_end": 23,
+    "doc_text": ":mod:`arrow.locale`",
+    "claim": "role: `arrow.locale`: 'locale' not found on arrow",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "local_files": [
+    "docs/api-guide.rst"
+  ],
+  "prompt_chars": 3110
+}

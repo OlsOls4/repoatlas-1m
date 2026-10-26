@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C05:cattrs-400000:DD-2",
+  "payload_sha256": "dab74a0d948ef54411765433a0a6c50ad7f9e5af8a465a36eeb1b3fbc866dfd3",
+  "latency_seconds": 14.188203293015249,
+  "body": {
+    "id": "chatcmpl-79",
+    "object": "chat.completion",
+    "created": 1793055741,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C05\", \"verdict\": \"true_drift\", \"reason\": \"The `get_unstructure_hook` docstring names the caching parameter `cache`, but the actual method signature uses `cache_result`.\", \"code_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 492, \"end_line\": 492, \"quote\": \"        self, type: Any, cache_result: bool = True\"}, \"suggested_doc_fix\": \"Change ':param cache:' to ':param cache_result:'.\"}], \"additional_findings\": [{\"finding_id\": \"AD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The `get_structure_hook` docstring also refers to the caching parameter as `cache`, while its signature uses `cache_result`.\", \"doc_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 651, \"end_line\": 651, \"quote\": \":param cache: Whether to cache the returned hook.\"}, \"code_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 642, \"end_line\": 642, \"quote\": \"        self, type: TypeForm[T], cache_result: bool = True\"}, \"proposed_fix\": \"Change ':param cache:' to ':param cache_result:' in `get_structure_hook`.\"}]}",
+          "reasoning": "We need answer JSON only. Need triage C05. We have file. Candidate: docs src/cattrs/converters.py:502 doc text ':param cache: Whether to cache returned hook.' report method get_unstructure_hook actual signature cache_result. Line 491-492 confirms. Verdict true_drift. We need code citation location relied on, verbatim. Lines 491-492 maybe start 491 end 492 quote \"    def get_unstructure_hook(\\n        self, type: Any, cache_result: bool = True\". But line format: 491|    def get_unstructure_hook( 492|        self, type: Any, cache_result: bool = True. Could cite 492-492? Candidate specifically code cited 492-492 quote. We can use start 492 end 492 quote \"        self, type: Any, cache_result: bool = True\". Need suggested doc fix documentation-only. Could change ':param cache:' to ':param cache_result:'. Also get_structure_hook same drift at line 651? Candidate only get_unstructure_hook, but additional drift maybe get_structure_hook docstring also says param cache while signature cache_result line 641? Let's inspect. It has line 641 def get_structure_hook(self, type: TypeForm[T], cache_result...) line 651 ':param cache: Whether to cache...'. This is cross? It's in same file but candidate missed. Additional finding. Need not repeat C05? Additional should be other missed. Include AD-1 for get_structure_hook. Need maybe additional finding for public API? Let's also check same pattern elsewhere? In converters.py only these two. Candidate C05 only unstructure. We can add structure. Need ensure not duplicate candidates? \"Do not repeat candidates.\" Fine.\n\nPotential question: docs in docstring of same file. Need exact quotes. For additional: doc citation lines 651-651 quote \":param cache: Whether to cache the returned hook.\" code citation 641-642? Let's see line 641 `    def get_structure_hook(`, 642 `        self, type: TypeForm[T], cache_result: bool = True`. Could quote single line 642. But if start 641 end 642 includes two lines. Need verbatim quote full text maybe with newline. They ask quotes copied without prefix. Can include multiline? likely okay. Better single line 642 quote \"        self, type: TypeForm[T], cache_result: bool = True\". Good.\n\nFor C05 code citation: line 492 quote as candidate. Or line 491? It's start line 492 end 492. The report cited 492-492. Use same.\n\nNeed output JSON. Let's formulate concise reason. suggested_doc_fix: \"Change ':param cache:' to ':param cache_result:'.\" Additional proposed_fix same.\n\nNeed ensure verdict true_drift. Yes.\n\nCheck if any other missed docs: Maybe get_unstructure_hook doc says `:param cache` actually parameter is cache_result, true. Also get_structure_hook. Good.\n\nLet's produce."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19663,
+      "completion_tokens": 1024,
+      "total_tokens": 20687,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:21.714061+00:00"
+}

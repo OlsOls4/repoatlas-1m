@@ -1,0 +1,294 @@
+{
+  "prompt_tokens": 393820,
+  "completion_tokens": 9687,
+  "finish_reason": "stop",
+  "latency_seconds": 33.92618674100959,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "The `progress` object is Rich's `rich.progress.Progress`, whose `update()` method accepts `completed=...`; the report incorrectly compares it against httpx APIs.",
+      "code_citation": {
+        "path": "httpx/_main.py",
+        "start_line": 270,
+        "end_line": 270,
+        "quote": "progress.update(download_task, completed=response.num_bytes_downloaded)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S2"
+    },
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "In that example `f` is a file-like `io.BytesIO`, whose `read(size)` accepts a byte count; the report incorrectly treats it as httpx's `Request.read()`.",
+      "code_citation": {
+        "path": "httpx/_content.py",
+        "start_line": 57,
+        "end_line": 57,
+        "quote": "chunk = self._stream.read(self.CHUNK_SIZE)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S3"
+    },
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The top-level helper `httpx.get()` does not accept an `extensions` keyword, so the documented call would raise an unexpected keyword argument error.",
+      "code_citation": {
+        "path": "httpx/_api.py",
+        "start_line": 174,
+        "end_line": 186,
+        "quote": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:"
+      },
+      "suggested_doc_fix": "Use an explicit client: `client = httpx.Client(); response = client.get(\"https://www.example.com\", extensions=extensions)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S4"
+    },
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The top-level helper `httpx.request()` does not accept an `extensions` keyword, so the documented call would raise an unexpected keyword argument error.",
+      "code_citation": {
+        "path": "httpx/_api.py",
+        "start_line": 39,
+        "end_line": 56,
+        "quote": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:"
+      },
+      "suggested_doc_fix": "Use an explicit client: `client = httpx.Client(); response = client.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S5"
+    },
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "HTTPX does not export a `Mounts` class; client mounts are plain mappings passed to `mounts=...`.",
+      "code_citation": {
+        "path": "httpx/_transports/__init__.py",
+        "start_line": 7,
+        "end_line": 15,
+        "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+      },
+      "suggested_doc_fix": "Replace `httpx.Mounts(...)` with a plain dictionary assigned to `mounts`, then pass it as `client = httpx.Client(mounts=mounts)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S6"
+    },
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The example constructs `httpx.Mounts(...)`, but the client's `mounts` argument is a mapping of URL patterns to transports or `None`.",
+      "code_citation": {
+        "path": "httpx/_transports/__init__.py",
+        "start_line": 7,
+        "end_line": 15,
+        "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+      },
+      "suggested_doc_fix": "Use `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "httpx-400000:DD-1"
+    },
+    {
+      "candidate_id": "C07",
+      "verdict": "false",
+      "reason": "In that compatibility example, `session` is an instance of `requests.Session`, not `httpx.Client`; the snippet is illustrating the requests API before showing the HTTPX equivalent.",
+      "code_citation": {
+        "path": "docs/compatibility.md",
+        "start_line": 53,
+        "end_line": 56,
+        "quote": "session = requests.Session()\nrequest = requests.Request(\"GET\", ...).prepare()\nwhile request is not None:\n    response = session.send(request, allow_redirects=False)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S7"
+    },
+    {
+      "candidate_id": "C08",
+      "verdict": "false",
+      "reason": "The documentation is comparing exception hierarchies: `RequestException` is a requests API name, while HTTPX exposes `HTTPError`; it is not claiming that HTTPX defines `RequestException`.",
+      "code_citation": {
+        "path": "httpx/_exceptions.py",
+        "start_line": 2,
+        "end_line": 5,
+        "quote": "Our exception hierarchy:\n\n* HTTPError"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S8"
+    },
+    {
+      "candidate_id": "C09",
+      "verdict": "true_drift",
+      "reason": "The WSGI transport docstring still recommends `httpx.Client(app=app)`, but `Client` has no `app` parameter; the app must be passed to `WSGITransport(app=app)`.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 639,
+        "end_line": 661,
+        "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+      },
+      "suggested_doc_fix": "Replace `client = httpx.Client(app=app)` with `transport = httpx.WSGITransport(app=app); client = httpx.Client(transport=transport)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "httpx-400000:DD-2"
+    },
+    {
+      "candidate_id": "C10",
+      "verdict": "true_drift",
+      "reason": "`httpx.Client(...)` has no `app` parameter, although the WSGI docstring calls it with `app=app`.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 639,
+        "end_line": 661,
+        "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+      },
+      "suggested_doc_fix": "Replace the docstring example's `client = httpx.Client(app=app)` with the explicit WSGI transport form.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S9"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidates": [
+    {
+      "source": "symbol",
+      "source_id": "S2",
+      "doc_path": "docs/advanced/clients.md",
+      "doc_line": 229,
+      "doc_end": 229,
+      "doc_text": "progress.update(download_task, completed=response.num_bytes_downloaded)",
+      "claim": "method-call-signature: `progress.update(...)`: no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)",
+      "code_hint": "",
+      "candidate_id": "C01"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S3",
+      "doc_path": "docs/advanced/clients.md",
+      "doc_line": 256,
+      "doc_end": 256,
+      "doc_text": "while data := f.read(1024):",
+      "claim": "method-call-signature: `f.read(...)`: 1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)",
+      "code_hint": "",
+      "candidate_id": "C02"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S4",
+      "doc_path": "docs/advanced/extensions.md",
+      "doc_line": 169,
+      "doc_end": 169,
+      "doc_text": "response = httpx.get(\"https://www.example.com\", extensions=extensions)",
+      "claim": "call-signature: `httpx.get(...)`: no parameter named 'extensions' (def httpx/_api.py:174)",
+      "code_hint": "",
+      "candidate_id": "C03"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S5",
+      "doc_path": "docs/advanced/extensions.md",
+      "doc_line": 179,
+      "doc_end": 179,
+      "doc_text": "response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)",
+      "claim": "call-signature: `httpx.request(...)`: no parameter named 'extensions' (def httpx/_api.py:39)",
+      "code_hint": "",
+      "candidate_id": "C04"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S6",
+      "doc_path": "docs/advanced/transports.md",
+      "doc_line": 178,
+      "doc_end": 178,
+      "doc_text": "Or this example, which uses a custom transport and `httpx.Mounts` to always redirect `http://` requests.",
+      "claim": "dotted: `httpx.Mounts`: 'Mounts' not found on httpx",
+      "code_hint": "",
+      "candidate_id": "C05"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "httpx-400000:DD-1",
+      "doc_path": "docs/advanced/transports.md",
+      "doc_line": 187,
+      "doc_end": 190,
+      "doc_text": "transport = httpx.Mounts({\n    'http://': HTTPSRedirect()\n    'https://': httpx.HTTPTransport()\n})",
+      "claim": "The transports documentation references `httpx.Mounts(...)`, but the package does not export a `Mounts` class; client mounts are configured with a plain mapping passed to `mounts=...`.",
+      "code_hint": "httpx/_transports/__init__.py:7-15 '__all__ = [\\n    \"ASGITransport\",\\n    \"AsyncBaseTransport\",\\n    \"BaseTransport\",\\n    \"AsyncHTTPTransport\",\\n    \"HTTPTransport\",\\n    \"MockTransport\",\\n    \"WSGITransport\",\\n]'",
+      "candidate_id": "C06"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S7",
+      "doc_path": "docs/compatibility.md",
+      "doc_line": 56,
+      "doc_end": 56,
+      "doc_text": "response = session.send(request, allow_redirects=False)",
+      "claim": "method-call-signature: `session.send(...)`: no parameter named 'allow_redirects'; no package method 'send' accepts it (e.g. Client.send at httpx/_client.py:879)",
+      "code_hint": "",
+      "candidate_id": "C07"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S8",
+      "doc_path": "docs/compatibility.md",
+      "doc_line": 232,
+      "doc_end": 232,
+      "doc_text": "`requests` exception hierarchy is slightly different to the `httpx` exception hierarchy. `requests` exposes a top level `RequestException`, where as `httpx` exposes a top level `HTTPError`. see the exceptions exposes in requests [here](https://requests.readthedocs.io/en/latest/_modules/requests/exceptions/). See the `httpx` error hierarchy [here](https://www.python-httpx.org/exceptions/).",
+      "claim": "exception-name:undefined: `RequestException`: exception-like name defined nowhere in package code",
+      "code_hint": "",
+      "candidate_id": "C08"
+    },
+    {
+      "source": "whole_repo",
+      "source_id": "httpx-400000:DD-2",
+      "doc_path": "httpx/_transports/wsgi.py",
+      "doc_line": 49,
+      "doc_end": 51,
+      "doc_text": "    ```\n    client = httpx.Client(app=app)\n    ```",
+      "claim": "The WSGITransport docstring still shows `httpx.Client(app=app)`, but `Client` does not accept an `app` argument; WSGI apps must be passed through `WSGITransport(app=app)`.",
+      "code_hint": "httpx/_client.py:639-661 '    def __init__(\\n        self,\\n        *,\\n        auth: AuthTypes | None = None,\\n        params: QueryParamTypes | None = None,\\n        headers: HeaderTypes | None = None,\\n        cookies: CookieTypes | None = None,\\n        verify: ssl.SSLContext | str | bool = True,\\n        cert: CertTypes | None = None,\\n        trust_env: bool = True,\\n        http1: bool = True,\\n        http2: bool = False,\\n        proxy: ProxyTypes | None = None,'",
+      "candidate_id": "C09"
+    },
+    {
+      "source": "symbol",
+      "source_id": "S9",
+      "doc_path": "httpx/_transports/wsgi.py",
+      "doc_line": 50,
+      "doc_end": 50,
+      "doc_text": "client = httpx.Client(app=app)",
+      "claim": "call-signature: `httpx.Client(...)`: no parameter named 'app' (def httpx/_client.py:639)",
+      "code_hint": "",
+      "candidate_id": "C10"
+    }
+  ]
+}

@@ -1,0 +1,3404 @@
+{
+  "metrics": {
+    "whole": {
+      "n": 56,
+      "n_true": 32,
+      "n_false_or_unclear": 24,
+      "kept_true": 32,
+      "rejected_false": 15,
+      "kept": 41,
+      "precision": 0.78,
+      "recall": 1.0,
+      "accuracy": 0.839,
+      "missing_verdict": 0,
+      "gradable_for_citation": 52,
+      "cite_correct": 41,
+      "verdict_and_cite_correct": 39,
+      "true_kept_with_correct_cite": 31,
+      "cite_verified": 54,
+      "cross_file_cases": 30,
+      "cross_file_verdict_right": 26,
+      "cross_file_verdict_and_cite_right": 25,
+      "gold_outside_local_cases": 13,
+      "outside_local_verdict_right": 12,
+      "outside_local_verdict_and_cite_right": 11
+    },
+    "local": {
+      "n": 56,
+      "n_true": 32,
+      "n_false_or_unclear": 24,
+      "kept_true": 32,
+      "rejected_false": 15,
+      "kept": 41,
+      "precision": 0.78,
+      "recall": 1.0,
+      "accuracy": 0.839,
+      "missing_verdict": 0,
+      "gradable_for_citation": 52,
+      "cite_correct": 34,
+      "verdict_and_cite_correct": 33,
+      "true_kept_with_correct_cite": 22,
+      "cite_verified": 52,
+      "cross_file_cases": 30,
+      "cross_file_verdict_right": 26,
+      "cross_file_verdict_and_cite_right": 14,
+      "gold_outside_local_cases": 13,
+      "outside_local_verdict_right": 12,
+      "outside_local_verdict_and_cite_right": 0
+    },
+    "stability": {
+      "n": 27,
+      "n_true": 13,
+      "n_false_or_unclear": 14,
+      "kept_true": 13,
+      "rejected_false": 10,
+      "kept": 17,
+      "precision": 0.765,
+      "recall": 1.0,
+      "accuracy": 0.852,
+      "missing_verdict": 0,
+      "gradable_for_citation": 26,
+      "cite_correct": 22,
+      "verdict_and_cite_correct": 20,
+      "true_kept_with_correct_cite": 13,
+      "cite_verified": 27,
+      "cross_file_cases": 13,
+      "cross_file_verdict_right": 12,
+      "cross_file_verdict_and_cite_right": 12,
+      "gold_outside_local_cases": 4,
+      "outside_local_verdict_right": 4,
+      "outside_local_verdict_and_cite_right": 4
+    },
+    "whole_on_stability_subset": {
+      "n": 27,
+      "n_true": 13,
+      "n_false_or_unclear": 14,
+      "kept_true": 13,
+      "rejected_false": 9,
+      "kept": 18,
+      "precision": 0.722,
+      "recall": 1.0,
+      "accuracy": 0.815,
+      "missing_verdict": 0,
+      "gradable_for_citation": 26,
+      "cite_correct": 19,
+      "verdict_and_cite_correct": 17,
+      "true_kept_with_correct_cite": 13,
+      "cite_verified": 25,
+      "cross_file_cases": 13,
+      "cross_file_verdict_right": 12,
+      "cross_file_verdict_and_cite_right": 12,
+      "gold_outside_local_cases": 4,
+      "outside_local_verdict_right": 4,
+      "outside_local_verdict_and_cite_right": 4
+    },
+    "local_on_stability_subset": {
+      "n": 27,
+      "n_true": 13,
+      "n_false_or_unclear": 14,
+      "kept_true": 13,
+      "rejected_false": 12,
+      "kept": 15,
+      "precision": 0.867,
+      "recall": 1.0,
+      "accuracy": 0.926,
+      "missing_verdict": 0,
+      "gradable_for_citation": 26,
+      "cite_correct": 19,
+      "verdict_and_cite_correct": 19,
+      "true_kept_with_correct_cite": 9,
+      "cite_verified": 26,
+      "cross_file_cases": 13,
+      "cross_file_verdict_right": 12,
+      "cross_file_verdict_and_cite_right": 8,
+      "gold_outside_local_cases": 4,
+      "outside_local_verdict_right": 4,
+      "outside_local_verdict_and_cite_right": 0
+    }
+  },
+  "tokens": {
+    "whole": 4331995,
+    "local": 830527,
+    "stability": 1099815,
+    "whole_calls": 12,
+    "whole_final_call_per_repo": 4022532,
+    "ablation_ledger_total": 1948469,
+    "ablation_ledger_calls": 60,
+    "local_as_spent": 848654,
+    "local_calls_as_spent": 57
+  },
+  "stability": {
+    "stability_vs_whole_verdict_agreement": 26,
+    "n": 27,
+    "flips": [
+      {
+        "key": "httpx:S7",
+        "whole": "true_drift",
+        "rerun": "false",
+        "label": "false"
+      }
+    ]
+  },
+  "local_vs_whole_disagreements": [
+    {
+      "key": "httpx:S7",
+      "label": "false",
+      "cross_file": false,
+      "gold_outside_local": false,
+      "whole": "true_drift",
+      "local": "false",
+      "whole_reason": "Client.send does not accept allow_redirects; it accepts follow_redirects.",
+      "local_reason": "The snippet on line 56 is demonstrating the requests library API (requests.Session), where Session.send accepts allow_redirects; it is not an HTTPX client call."
+    },
+    {
+      "key": "jinja:S17",
+      "label": "unclear",
+      "cross_file": null,
+      "gold_outside_local": false,
+      "whole": "false",
+      "local": "true_drift",
+      "whole_reason": "The page intentionally documents the removed built-in with_ extension for historical context; jinja2.ext intentionally no longer exports it.",
+      "local_reason": "The documentation still gives an import name for the with extension, but the current code does not expose `with_` on `jinja2.ext`, so following the documented import path would fail."
+    },
+    {
+      "key": "jinja:S18",
+      "label": "unclear",
+      "cross_file": null,
+      "gold_outside_local": false,
+      "whole": "false",
+      "local": "true_drift",
+      "whole_reason": "The page intentionally documents the removed built-in autoescape extension for historical context; jinja2.ext intentionally no longer exports it.",
+      "local_reason": "The autoescape extension was removed and built in, so the documented import path jinja2.ext.autoescape does not exist in jinja2.ext."
+    },
+    {
+      "key": "werkzeug:S38",
+      "label": "false",
+      "cross_file": false,
+      "gold_outside_local": false,
+      "whole": "true_drift",
+      "local": "false",
+      "whole_reason": "The documented `werkzeug.proxy_fix.orig` text reads like a module attribute, but ProxyFix stores the original environ under the string key `werkzeug.proxy_fix.orig`.",
+      "local_reason": "The string is a WSGI environ key, not an importable `werkzeug.proxy_fix.orig` attribute; the code stores the dict under that exact environ key."
+    },
+    {
+      "key": "werkzeug:S39",
+      "label": "false",
+      "cross_file": false,
+      "gold_outside_local": false,
+      "whole": "true_drift",
+      "local": "false",
+      "whole_reason": "The same wording repeats the misleading dotted-name reference; the actual value is the `werkzeug.proxy_fix.orig` environ key.",
+      "local_reason": "The documented value is the WSGI environ key string, not a Python attribute path; the code stores the original values under environ['werkzeug.proxy_fix.orig']."
+    },
+    {
+      "key": "pydantic-settings:pydantic-settings-400000:DD-1",
+      "label": "false",
+      "cross_file": false,
+      "gold_outside_local": false,
+      "whole": "false",
+      "local": "true_drift",
+      "whole_reason": "The quoted prose describes the behaviour of setting cli_kebab_case=True, not a claim that kebab case is enabled by default; BaseSettings.model_config defaults it to False.",
+      "local_reason": "The docs describe kebab case as enabled by default, but BaseSettings.model_config sets cli_kebab_case to False."
+    }
+  ],
+  "rows": [
+    {
+      "key": "starlette:S0",
+      "repo": "starlette",
+      "candidate_id": "C01",
+      "source_id": "S0",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "starlette/testclient.py",
+          440,
+          440
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "starlette/config.py",
+        "docs/testclient.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 6162,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "starlette/testclient.py",
+          "start_line": 440,
+          "end_line": 440,
+          "quote": "class TestClient(httpx.Client):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "TestClient inherits httpx's client API, where request methods such as get accept a `headers` argument."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "starlette/config.py",
+          "start_line": 94,
+          "end_line": 99,
+          "quote": "    def get(\n        self,\n        key: str,\n        cast: Callable[[Any], Any] | None = None,\n        default: Any = undefined,\n    ) -> Any:"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The report misattributes TestClient.get to Config.get; TestClient request methods inherit the wrapped httpx session interface, so headers= is valid."
+      }
+    },
+    {
+      "key": "starlette:starlette-400000:DD-1",
+      "repo": "starlette",
+      "candidate_id": "C02",
+      "source_id": "starlette-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "starlette/websockets.py",
+          136,
+          136
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "starlette/websockets.py",
+        "docs/websockets.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 4848,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "starlette/websockets.py",
+          "start_line": 136,
+          "end_line": 136,
+          "quote": "async def receive_json(self, mode: str = \"text\") -> Any:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented call passes a positional `data` argument, but `WebSocket.receive_json` accepts only `mode`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "starlette/websockets.py",
+          "start_line": 136,
+          "end_line": 136,
+          "quote": "async def receive_json(self, mode: str = \"text\") -> Any:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documentation shows `receive_json(data, mode=\"binary\")`, but the implementation's `receive_json` has no `data` parameter and only accepts `mode`."
+      }
+    },
+    {
+      "key": "starlette:S1",
+      "repo": "starlette",
+      "candidate_id": "C03",
+      "source_id": "S1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "starlette/websockets.py",
+          136,
+          136
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "starlette/testclient.py",
+        "docs/websockets.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 9920,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "starlette/testclient.py",
+          "start_line": 188,
+          "end_line": 188,
+          "quote": "def receive_json(self, mode: Literal[\"text\", \"binary\"] = \"text\") -> Any:"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The WebSocket test session's `receive_json` also accepts only `mode` and has no `data` parameter."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "starlette/testclient.py",
+          "start_line": 188,
+          "end_line": 195,
+          "quote": "def receive_json(self, mode: Literal[\"text\", \"binary\"] = \"text\") -> Any:\n        message = self.receive()\n        self._raise_on_close(message)\n        if mode == \"text\":\n            text = message[\"text\"]\n        else:\n            text = message[\"bytes\"].decode(\"utf-8\")\n        return json.loads(text)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "Documentation incorrectly adds a `data` positional argument to `receive_json`, but the method takes only `mode` and returns received data."
+      }
+    },
+    {
+      "key": "httpx:S2",
+      "repo": "httpx",
+      "candidate_id": "C01",
+      "source_id": "S2",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/advanced/clients.md",
+          212,
+          229
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "httpx/_models.py",
+        "docs/advanced/clients.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19407,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_main.py",
+          "start_line": 270,
+          "end_line": 270,
+          "quote": "            progress.update(download_task, completed=response.num_bytes_downloaded)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The example calls Rich's progress.update, which supports completed; the report mistook it for httpx APIs."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_models.py",
+          "start_line": 855,
+          "end_line": 857,
+          "quote": "    @property\n    def num_bytes_downloaded(self) -> int:\n        return self._num_bytes_downloaded"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "`progress` is a `rich.progress.Progress` instance, not httpx's `Headers`, and rich's `update()` accepts `completed=`."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_main.py",
+          "start_line": 270,
+          "end_line": 270,
+          "quote": "progress.update(download_task, completed=response.num_bytes_downloaded)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The `progress` object is Rich's `rich.progress.Progress`, whose `update()` method accepts `completed=...`; the report incorrectly compares it against httpx APIs."
+      }
+    },
+    {
+      "key": "httpx:S3",
+      "repo": "httpx",
+      "candidate_id": "C02",
+      "source_id": "S3",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/advanced/clients.md",
+          240,
+          256
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "httpx/_models.py",
+        "docs/advanced/clients.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19411,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_content.py",
+          "start_line": 57,
+          "end_line": 57,
+          "quote": "            chunk = self._stream.read(self.CHUNK_SIZE)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "f is an io.BytesIO in the example, whose read accepts a chunk size; this is not httpx's Request.read."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/advanced/clients.md",
+          "start_line": 255,
+          "end_line": 255,
+          "quote": "with io.BytesIO(random.randbytes(total)) as f:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "In the example, `f` is an `io.BytesIO` instance, and `BytesIO.read(size)` accepts a size argument; the report incorrectly compared it to `httpx.Request.read`."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_content.py",
+          "start_line": 57,
+          "end_line": 57,
+          "quote": "chunk = self._stream.read(self.CHUNK_SIZE)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "In that example `f` is a file-like `io.BytesIO`, whose `read(size)` accepts a byte count; the report incorrectly treats it as httpx's `Request.read()`."
+      }
+    },
+    {
+      "key": "httpx:S4",
+      "repo": "httpx",
+      "candidate_id": "C03",
+      "source_id": "S4",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/_api.py",
+          174,
+          186
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "httpx/_api.py",
+        "docs/advanced/extensions.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 8476,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 174,
+          "end_line": 186,
+          "quote": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "httpx.get has no extensions parameter; request-level extensions are a client/Request feature."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 174,
+          "end_line": 186,
+          "quote": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The published top-level `httpx.get()` signature has no `extensions` parameter, so the documented call cannot be used as written."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 174,
+          "end_line": 186,
+          "quote": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The top-level helper `httpx.get()` does not accept an `extensions` keyword, so the documented call would raise an unexpected keyword argument error."
+      }
+    },
+    {
+      "key": "httpx:S5",
+      "repo": "httpx",
+      "candidate_id": "C04",
+      "source_id": "S5",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/_api.py",
+          39,
+          56
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "httpx/_api.py",
+        "docs/advanced/extensions.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 8478,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 39,
+          "end_line": 56,
+          "quote": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The top-level httpx.request has no extensions argument."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 39,
+          "end_line": 56,
+          "quote": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented top-level `httpx.request` call passes `extensions=...`, but `httpx.request` does not accept an `extensions` parameter."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_api.py",
+          "start_line": 39,
+          "end_line": 56,
+          "quote": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The top-level helper `httpx.request()` does not accept an `extensions` keyword, so the documented call would raise an unexpected keyword argument error."
+      }
+    },
+    {
+      "key": "httpx:S6",
+      "repo": "httpx",
+      "candidate_id": "C05",
+      "source_id": "S6",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/__init__.py",
+          29,
+          103
+        ],
+        [
+          "httpx/_transports/__init__.py",
+          7,
+          15
+        ],
+        [
+          "httpx/_client.py",
+          652,
+          652
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/advanced/transports.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 5918,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_transports/__init__.py",
+          "start_line": 7,
+          "end_line": 15,
+          "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "httpx does not export a Mounts class; mounts is a plain mapping."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/advanced/transports.md",
+          "start_line": 298,
+          "end_line": 299,
+          "quote": "mounts = {'http://': HTTPSRedirectTransport()}\nclient = httpx.Client(mounts=mounts)"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The example passes a non-existent `httpx.Mounts` object to `transport=`, while the documented routing API uses a mounts dictionary passed to `Client(mounts=...)`."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_transports/__init__.py",
+          "start_line": 7,
+          "end_line": 15,
+          "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "HTTPX does not export a `Mounts` class; client mounts are plain mappings passed to `mounts=...`."
+      }
+    },
+    {
+      "key": "httpx:httpx-400000:DD-1",
+      "repo": "httpx",
+      "candidate_id": "C06",
+      "source_id": "httpx-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/__init__.py",
+          29,
+          103
+        ],
+        [
+          "httpx/_transports/__init__.py",
+          7,
+          15
+        ],
+        [
+          "httpx/_client.py",
+          652,
+          652
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "httpx/_transports/__init__.py",
+        "docs/advanced/transports.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 6171,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_transports/__init__.py",
+          "start_line": 7,
+          "end_line": 15,
+          "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "There is no httpx.Mounts constructor; client mounts are a plain dictionary passed to mounts=."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_transports/__init__.py",
+          "start_line": 7,
+          "end_line": 15,
+          "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs construct `httpx.Mounts`, but the transports package does not export `Mounts`; mounts are configured as a plain dictionary passed to `Client(mounts=...)`."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_transports/__init__.py",
+          "start_line": 7,
+          "end_line": 15,
+          "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example constructs `httpx.Mounts(...)`, but the client's `mounts` argument is a mapping of URL patterns to transports or `None`."
+      }
+    },
+    {
+      "key": "httpx:S7",
+      "repo": "httpx",
+      "candidate_id": "C07",
+      "source_id": "S7",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/compatibility.md",
+          50,
+          58
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "httpx/_client.py",
+        "docs/compatibility.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 26560,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 879,
+          "end_line": 886,
+          "quote": "    def send(\n        self,\n        request: Request,\n        *,\n        stream: bool = False,\n        auth: AuthTypes | UseClientDefault | None = USE_CLIENT_DEFAULT,\n        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,\n    ) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "Client.send does not accept allow_redirects; it accepts follow_redirects."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 879,
+          "end_line": 886,
+          "quote": "    def send(\n        self,\n        request: Request,\n        *,\n        stream: bool = False,\n        auth: AuthTypes | UseClientDefault | None = USE_CLIENT_DEFAULT,\n        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,\n    ) -> Response:"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The snippet on line 56 is demonstrating the requests library API (requests.Session), where Session.send accepts allow_redirects; it is not an HTTPX client call."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/compatibility.md",
+          "start_line": 53,
+          "end_line": 56,
+          "quote": "session = requests.Session()\nrequest = requests.Request(\"GET\", ...).prepare()\nwhile request is not None:\n    response = session.send(request, allow_redirects=False)"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "In that compatibility example, `session` is an instance of `requests.Session`, not `httpx.Client`; the snippet is illustrating the requests API before showing the HTTPX equivalent."
+      }
+    },
+    {
+      "key": "httpx:S8",
+      "repo": "httpx",
+      "candidate_id": "C08",
+      "source_id": "S8",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/compatibility.md",
+          230,
+          232
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "docs/compatibility.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 3912,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_exceptions.py",
+          "start_line": 74,
+          "end_line": 76,
+          "quote": "class HTTPError(Exception):\n    \"\"\"\n    Base class for `RequestError` and `HTTPStatusError`."
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The sentence describes requests' RequestException, not an httpx API name; httpx's top-level base is HTTPError."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/compatibility.md",
+          "start_line": 232,
+          "end_line": 232,
+          "quote": "`requests` exception hierarchy is slightly different to the `httpx` exception hierarchy. `requests` exposes a top level `RequestException`, where as `httpx` exposes a top level `HTTPError`. see the exceptions exposes in requests [here](https://requests.readthedocs.io/en/latest/_modules/requests/exceptions/). See the `httpx` error hierarchy [here](https://www.python-httpx.org/exceptions/)."
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`RequestException` refers to a `requests` library exception discussed in compatibility prose, not an `httpx` API symbol, so its absence from `httpx` code is expected."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "httpx/_exceptions.py",
+          "start_line": 2,
+          "end_line": 5,
+          "quote": "Our exception hierarchy:\n\n* HTTPError"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation is comparing exception hierarchies: `RequestException` is a requests API name, while HTTPX exposes `HTTPError`; it is not claiming that HTTPX defines `RequestException`."
+      }
+    },
+    {
+      "key": "httpx:httpx-400000:DD-2",
+      "repo": "httpx",
+      "candidate_id": "C09",
+      "source_id": "httpx-400000:DD-2",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/_client.py",
+          639,
+          661
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "httpx/_client.py",
+        "httpx/_transports/wsgi.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 25205,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 661,
+          "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "Client.__init__ has no app argument; WSGI apps are configured through WSGITransport."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 661,
+          "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`Client.__init__` has no `app` parameter, so the documented `httpx.Client(app=app)` example cannot be used as written."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 661,
+          "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The WSGI transport docstring still recommends `httpx.Client(app=app)`, but `Client` has no `app` parameter; the app must be passed to `WSGITransport(app=app)`."
+      }
+    },
+    {
+      "key": "httpx:S9",
+      "repo": "httpx",
+      "candidate_id": "C10",
+      "source_id": "S9",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "httpx/_client.py",
+          639,
+          661
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "httpx/_client.py",
+        "httpx/_transports/wsgi.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 25076,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 661,
+          "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "Client.__init__ has no app parameter, so the docstring example is invalid."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 639,
+          "quote": "    def __init__("
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example uses an `app` keyword that `httpx.Client.__init__` does not accept; WSGI apps must be passed through `WSGITransport` and `transport`."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "httpx/_client.py",
+          "start_line": 639,
+          "end_line": 661,
+          "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`httpx.Client(...)` has no `app` parameter, although the WSGI docstring calls it with `app=app`."
+      }
+    },
+    {
+      "key": "click:click-400000:DD-1",
+      "repo": "click",
+      "candidate_id": "C01",
+      "source_id": "click-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/click/types.py",
+          915,
+          915
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/click/types.py",
+        "docs/exceptions.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19881,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/click/types.py",
+          "start_line": 915,
+          "end_line": 915,
+          "quote": "class File(ParamType[t.IO[t.Any]]):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs refer to a non-existent `FileType` class, while Click's public file type is named `File`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/click/types.py",
+          "start_line": 915,
+          "end_line": 915,
+          "quote": "class File(ParamType[t.IO[t.Any]]):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documentation calls the public file parameter type `FileType`, but the code defines and uses the class `File`."
+      }
+    },
+    {
+      "key": "click:S10",
+      "repo": "click",
+      "candidate_id": "C02",
+      "source_id": "S10",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/click/types.py",
+          915,
+          915
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/exceptions.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 2675,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/click/types.py",
+          "start_line": 915,
+          "end_line": 915,
+          "quote": "class File(ParamType[t.IO[t.Any]]):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`FileType` is not defined or re-exported anywhere in the package, so the role target is undefined."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/exceptions.md",
+          "start_line": 109,
+          "end_line": 110,
+          "quote": "- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file."
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "Click's relevant type is named `File`, and `FileType` is not a documented class in this repository, so the sentence points readers at a non-existent class."
+      }
+    },
+    {
+      "key": "nox:S20",
+      "repo": "nox",
+      "candidate_id": "C01",
+      "source_id": "S20",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "nox/sessions.py",
+          717,
+          721
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "nox/sessions.py",
+        "docs/tutorial.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 24599,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "nox/sessions.py",
+          "start_line": 717,
+          "end_line": 721,
+          "quote": "    def conda_install(\n        self,\n        *args: str,\n        auto_offline: bool = True,\n        channel: str | Sequence[str] = \"\","
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "conda_install accepts `channel` (singular), not `channels`, so the documented call would raise an unexpected keyword argument error."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "nox/sessions.py",
+          "start_line": 717,
+          "end_line": 721,
+          "quote": "    def conda_install(\n        self,\n        *args: str,\n        auto_offline: bool = True,\n        channel: str | Sequence[str] = \"\",\n"
+        },
+        "cite_verified": false,
+        "cite_correct": true,
+        "reason": "The tutorial calls `conda_install` with `channels=`, but the implementation parameter is named `channel`."
+      }
+    },
+    {
+      "key": "nox:S21",
+      "repo": "nox",
+      "candidate_id": "C02",
+      "source_id": "S21",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "nox/_options.py",
+          333,
+          333
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/usage.rst"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 8200,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "nox/_options.py",
+          "start_line": 333,
+          "end_line": 333,
+          "quote": "    reuse_venv: ReuseVenvType = attrs.field("
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The Noxfile option defined by code is `reuse_venv`, not `reuse_venvs`, so referencing `nox.options.reuse_venvs` is invalid."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/usage.rst",
+          "start_line": 219,
+          "end_line": 219,
+          "quote": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``."
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The option documented as `nox.options.reuse_venvs` does not match the code option name, which is `reuse_venv`."
+      }
+    },
+    {
+      "key": "nox:nox-400000:DD-1",
+      "repo": "nox",
+      "candidate_id": "C03",
+      "source_id": "nox-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "nox/_options.py",
+          333,
+          333
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "nox/_options.py",
+        "docs/usage.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 15485,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "nox/_options.py",
+          "start_line": 333,
+          "end_line": 333,
+          "quote": "    reuse_venv: ReuseVenvType = attrs.field("
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs misspell the noxfile option name; the code defines it as `reuse_venv`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "nox/_options.py",
+          "start_line": 333,
+          "end_line": 333,
+          "quote": "reuse_venv: ReuseVenvType = attrs.field("
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documentation refers to `nox.options.reuse_venvs`, but Noxfile options define the setting as `reuse_venv`."
+      }
+    },
+    {
+      "key": "arrow:S23",
+      "repo": "arrow",
+      "candidate_id": "C01",
+      "source_id": "S23",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "arrow/__init__.py",
+          1,
+          40
+        ],
+        [
+          "arrow/arrow.py",
+          386,
+          390
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "arrow/arrow.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 25919,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 387,
+          "end_line": 388,
+          "quote": "    @classmethod\n    def fromordinal(cls, ordinal: int) -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`fromordinal` is defined as a classmethod on `Arrow`, not as a module-level `arrow.fromordinal` function."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 388,
+          "end_line": 399,
+          "quote": "    @classmethod\n    def fromordinal(cls, ordinal: int) -> \"Arrow\":\n        \"\"\"Constructs an :class:`Arrow <arrow.arrow.Arrow>` object corresponding\n            to the Gregorian Ordinal.\n\n        :param ordinal: an ``int`` corresponding to a Gregorian Ordinal.\n\n        Usage::\n\n            >>> arrow.fromordinal(737741)\n            <Arrow [2020-11-12T00:00:00+00:00]>\n\n        \"\"\""
+        },
+        "cite_verified": false,
+        "cite_correct": true,
+        "reason": "`fromordinal` is defined as an `Arrow` classmethod, not a module-level `arrow` function, so `arrow.fromordinal(...)` does not resolve."
+      }
+    },
+    {
+      "key": "arrow:S24",
+      "repo": "arrow",
+      "candidate_id": "C02",
+      "source_id": "S24",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "arrow/arrow.py",
+          1344,
+          1344
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "arrow/arrow.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 25946,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The dehumanize docstring uses parameter name `timestring`, but the method signature uses `input_string`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The dehumanize docstring documents a parameter named 'timestring', but the actual method parameter is named 'input_string'."
+      }
+    },
+    {
+      "key": "arrow:arrow-400000:DD-1",
+      "repo": "arrow",
+      "candidate_id": "C03",
+      "source_id": "arrow-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "arrow/arrow.py",
+          1344,
+          1344
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "arrow/arrow.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 25978,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The dehumanize documentation names the first parameter `timestring`, while the implementation declares it as `input_string`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The dehumanize method's docstring documents the first parameter as timestring, but the actual method signature names it input_string."
+      }
+    },
+    {
+      "key": "arrow:arrow-400000:DD-2",
+      "repo": "arrow",
+      "candidate_id": "C04",
+      "source_id": "arrow-400000:DD-2",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "arrow/locales.py",
+          54,
+          55
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "arrow/arrow.py"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 25987,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documented default locale `'en-us'` does not match the implementation default `'en_us'`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/arrow.py",
+          "start_line": 1344,
+          "end_line": 1344,
+          "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The dehumanize docstring says the locale defaults to 'en-us', but the function signature defaults to 'en_us'."
+      }
+    },
+    {
+      "key": "arrow:S22",
+      "repo": "arrow",
+      "candidate_id": "C05",
+      "source_id": "S22",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "arrow/locales.py",
+          1,
+          10
+        ],
+        [
+          "arrow/__init__.py",
+          1,
+          40
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/api-guide.rst"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 938,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/locales.py",
+          "start_line": 1,
+          "end_line": 1,
+          "quote": "\"\"\"Provides internationalization for arrow in over 60 languages and dialects.\"\"\""
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The module reference uses the singular `arrow.locale`, but the implementation module is `arrow.locales`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/api-guide.rst",
+          "start_line": 26,
+          "end_line": 26,
+          "quote": ".. automodule:: arrow.locales"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The heading names `arrow.locale`, but the automodule directive targets the actual `arrow.locales` module."
+      }
+    },
+    {
+      "key": "arrow:arrow-400000:DD-3",
+      "repo": "arrow",
+      "candidate_id": "C06",
+      "source_id": "arrow-400000:DD-3",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "arrow/parser.py",
+          791,
+          797
+        ],
+        [
+          "docs/guide.rst",
+          381,
+          381
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "arrow/formatter.py",
+        "docs/guide.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 11658,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/formatter.py",
+          "start_line": 81,
+          "end_line": 81,
+          "quote": "            return f\"{dt.hour:02d}\""
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The token table claims `HH` can output `24`, but formatting returns `dt.hour`, whose valid values are 00-23."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/formatter.py",
+          "start_line": 81,
+          "end_line": 81,
+          "quote": "            return f\"{dt.hour:02d}\""
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The HH formatter renders datetime.hour with two digits, whose valid range is 00-23, not 24."
+      }
+    },
+    {
+      "key": "arrow:arrow-400000:DD-4",
+      "repo": "arrow",
+      "candidate_id": "C07",
+      "source_id": "arrow-400000:DD-4",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "arrow/parser.py",
+          791,
+          797
+        ],
+        [
+          "docs/guide.rst",
+          381,
+          381
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "arrow/formatter.py",
+        "docs/guide.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 11642,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/formatter.py",
+          "start_line": 83,
+          "end_line": 83,
+          "quote": "            return f\"{dt.hour}\""
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The token table claims `H` can output `24`, but formatting returns the un-padded hour, whose valid values are 0-23."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "arrow/formatter.py",
+          "start_line": 83,
+          "end_line": 83,
+          "quote": "            return f\"{dt.hour}\""
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "Python datetime hours are 0-23, so token H can never produce 24; the documented endpoint is impossible."
+      }
+    },
+    {
+      "key": "cattrs:S25",
+      "repo": "cattrs",
+      "candidate_id": "C01",
+      "source_id": "S25",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/errors.py",
+          118,
+          118
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/customizing.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 7951,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/errors.py",
+          "start_line": 118,
+          "end_line": 118,
+          "quote": "class ForbiddenExtraKeysError(CattrsError):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs call the exception ForbiddenExtraKeyError, but the package defines ForbiddenExtraKeysError."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/customizing.md",
+          "start_line": 135,
+          "end_line": 135,
+          "quote": "cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation uses the singular exception name `ForbiddenExtraKeyError`, while the codebase/doc example at line 135 uses the plural `ForbiddenExtraKeysError`."
+      }
+    },
+    {
+      "key": "cattrs:cattrs-400000:DD-1",
+      "repo": "cattrs",
+      "candidate_id": "C02",
+      "source_id": "cattrs-400000:DD-1",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/errors.py",
+          118,
+          118
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/cattrs/errors.py",
+        "docs/customizing.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 9438,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/errors.py",
+          "start_line": 118,
+          "end_line": 118,
+          "quote": "class ForbiddenExtraKeysError(CattrsError):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs name the exception ForbiddenExtraKeyError, while src/cattrs/errors.py defines ForbiddenExtraKeysError."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/errors.py",
+          "start_line": 118,
+          "end_line": 118,
+          "quote": "class ForbiddenExtraKeysError(CattrsError):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The traceback documentation names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError."
+      }
+    },
+    {
+      "key": "cattrs:S26",
+      "repo": "cattrs",
+      "candidate_id": "C03",
+      "source_id": "S26",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/validation.md",
+          103,
+          110
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "docs/validation.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 2548,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/validation.md",
+          "start_line": 107,
+          "end_line": 107,
+          "quote": "    if isinstance(exc, MyInterestingException):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "MyInterestingException is an illustrative user-defined exception in the example, not an undocumented cattrs API."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/validation.md",
+          "start_line": 107,
+          "end_line": 107,
+          "quote": "...     if isinstance(exc, MyInterestingException):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "MyInterestingException is an illustrative user-defined exception placeholder in an example custom formatter, not a name promised by cattrs."
+      }
+    },
+    {
+      "key": "cattrs:S27",
+      "repo": "cattrs",
+      "candidate_id": "C04",
+      "source_id": "S27",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/converters.py",
+          491,
+          493
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/cattrs/converters.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19641,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 491,
+          "end_line": 493,
+          "quote": "    def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring says `cache`, but get_unstructure_hook's parameter is `cache_result`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 492,
+          "end_line": 492,
+          "quote": "        self, type: Any, cache_result: bool = True"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The method signature parameter is named 'cache_result', but the docstring refers to 'cache'."
+      }
+    },
+    {
+      "key": "cattrs:cattrs-400000:DD-2",
+      "repo": "cattrs",
+      "candidate_id": "C05",
+      "source_id": "cattrs-400000:DD-2",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/converters.py",
+          491,
+          493
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/cattrs/converters.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19663,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 491,
+          "end_line": 493,
+          "quote": "    def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring documents the caching option as `cache`, while the actual signature uses `cache_result`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 492,
+          "end_line": 492,
+          "quote": "        self, type: Any, cache_result: bool = True"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The `get_unstructure_hook` docstring names the caching parameter `cache`, but the actual method signature uses `cache_result`."
+      }
+    },
+    {
+      "key": "cattrs:cattrs-400000:DD-3",
+      "repo": "cattrs",
+      "candidate_id": "C06",
+      "source_id": "cattrs-400000:DD-3",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/converters.py",
+          640,
+          642
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/cattrs/converters.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19664,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 640,
+          "end_line": 642,
+          "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring says `cache`, but get_structure_hook's parameter is `cache_result`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 641,
+          "end_line": 641,
+          "quote": "self, type: TypeForm[T], cache_result: bool = True"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring uses parameter name `cache`, but the method signature defines `cache_result`."
+      }
+    },
+    {
+      "key": "cattrs:S28",
+      "repo": "cattrs",
+      "candidate_id": "C07",
+      "source_id": "S28",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/cattrs/converters.py",
+          640,
+          642
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/cattrs/converters.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19639,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 640,
+          "end_line": 642,
+          "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring documents the caching option as `cache`, while the actual signature uses `cache_result`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/cattrs/converters.py",
+          "start_line": 640,
+          "end_line": 642,
+          "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The parameter is named `cache_result`, but the docstring refers to `cache`."
+      }
+    },
+    {
+      "key": "marshmallow:S29",
+      "repo": "marshmallow",
+      "candidate_id": "C01",
+      "source_id": "S29",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/extending/custom_error_handling.rst",
+          14,
+          15
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "docs/extending/custom_error_handling.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 1067,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "    class AppError(Exception):\n        pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "AppError is a user-defined exception shown inline in the documentation example."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "    class AppError(Exception):\n        pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "AppError is intentionally defined by the user in the documentation example, not an undefined package API."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 14,
+          "quote": "    class AppError(Exception):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`AppError` is intentionally defined by the user in the example schema, not an undefined package export."
+      }
+    },
+    {
+      "key": "marshmallow:S30",
+      "repo": "marshmallow",
+      "candidate_id": "C02",
+      "source_id": "S30",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/extending/custom_error_handling.rst",
+          14,
+          15
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "docs/extending/custom_error_handling.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 1078,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "    class AppError(Exception):\n        pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example consistently uses the same user-defined AppError exception."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "class AppError(Exception):\n    pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "AppError is defined in the documentation example itself before it is used."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 14,
+          "quote": "    class AppError(Exception):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example defines and raises its own user-created `AppError`, so the undefined-package report is a false positive."
+      }
+    },
+    {
+      "key": "marshmallow:S31",
+      "repo": "marshmallow",
+      "candidate_id": "C03",
+      "source_id": "S31",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/extending/custom_error_handling.rst",
+          14,
+          15
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "docs/extending/custom_error_handling.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 1076,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "    class AppError(Exception):\n        pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example consistently uses the same user-defined AppError exception."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 15,
+          "quote": "class AppError(Exception):\n    pass"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "AppError is explicitly defined in the documentation example at lines 14-15."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/custom_error_handling.rst",
+          "start_line": 14,
+          "end_line": 14,
+          "quote": "    class AppError(Exception):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The example's load call is expected to raise the user-defined `AppError` from `handle_error`, not a package exception."
+      }
+    },
+    {
+      "key": "marshmallow:marshmallow-400000:DD-1",
+      "repo": "marshmallow",
+      "candidate_id": "C04",
+      "source_id": "marshmallow-400000:DD-1",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/marshmallow/schema.py",
+          119,
+          119
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/marshmallow/schema.py",
+        "docs/extending/custom_options.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 17040,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/schema.py",
+          "start_line": 205,
+          "end_line": 205,
+          "quote": "    def __init__(self, meta: type):"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation forwards extra keyword arguments to SchemaOpts.__init__, but the implementation accepts only meta."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/schema.py",
+          "start_line": 205,
+          "end_line": 205,
+          "quote": "    def __init__(self, meta: type):"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The code's SchemaOpts.__init__ accepts only meta, so forwarding **kwargs as documented would raise a TypeError."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/schema.py",
+          "start_line": 205,
+          "end_line": 205,
+          "quote": "    def __init__(self, meta: type):"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "`SchemaOpts.__init__` only accepts `meta`, but the docs subclass passes and forwards `**kwargs`."
+      }
+    },
+    {
+      "key": "marshmallow:S32",
+      "repo": "marshmallow",
+      "candidate_id": "C05",
+      "source_id": "S32",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/extending/overriding_attribute_access.rst",
+          14,
+          17
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/marshmallow/experimental/context.py",
+        "docs/extending/overriding_attribute_access.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 1716,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/marshmallow/schema.py",
+          "start_line": 500,
+          "end_line": 506,
+          "quote": "    def get_attribute(\n        self,\n        obj: typing.Any,\n        attr: str,\n        default: typing.Any,\n    ):\n        return get_value(obj, attr, default)"
+        },
+        "cite_verified": false,
+        "cite_correct": false,
+        "reason": "The documented override receives a user object and may legitimately call that object's own get method; marshmallow only defines get_attribute itself."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/overriding_attribute_access.rst",
+          "start_line": 16,
+          "end_line": 17,
+          "quote": "        def get_attribute(self, obj, key, default):\n            return obj.get(key, default)"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "In this example, `obj` is the serialized input object (expected to be a dict), so `obj.get(key, default)` uses `dict.get`, which accepts two positional arguments. The report incorrectly compares it to `Context.get`."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending/overriding_attribute_access.rst",
+          "start_line": 17,
+          "end_line": 17,
+          "quote": "            return obj.get(key, default)"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The override assumes a dictionary source object, so `obj.get(key, default)` has the correct two-argument dict method call."
+      }
+    },
+    {
+      "key": "marshmallow:S33",
+      "repo": "marshmallow",
+      "candidate_id": "C06",
+      "source_id": "S33",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/marshmallow/decorators.py",
+          175,
+          179
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/marshmallow/decorators.py",
+        "docs/extending/pre_and_post_processing.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 6803,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 175,
+          "end_line": 179,
+          "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "pre_load has no pass_many parameter in marshmallow 4; the parameter is named pass_collection."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 175,
+          "end_line": 179,
+          "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented decorator argument `pass_many` was renamed to `pass_collection` in v4, so `@pre_load(pass_many=True)` no longer calls a valid parameter."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 178,
+          "end_line": 178,
+          "quote": "    pass_collection: bool = False,"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The decorator's collection argument is named `pass_collection`, not the removed `pass_many` alias."
+      }
+    },
+    {
+      "key": "marshmallow:S34",
+      "repo": "marshmallow",
+      "candidate_id": "C07",
+      "source_id": "S34",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/marshmallow/decorators.py",
+          152,
+          157
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/marshmallow/decorators.py",
+        "docs/extending/pre_and_post_processing.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 6803,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 152,
+          "end_line": 157,
+          "quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n    pass_original: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "post_dump has no pass_many parameter in marshmallow 4; the parameter is named pass_collection."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 152,
+          "end_line": 157,
+          "quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n    pass_original: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "marshmallow 4.0 renamed the decorator option from `pass_many` to `pass_collection`, so the docs' `@post_dump(pass_many=True)` example uses a nonexistent parameter."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/decorators.py",
+          "start_line": 155,
+          "end_line": 155,
+          "quote": "    pass_collection: bool = False,"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The decorator's collection argument is named `pass_collection`, not the removed `pass_many` alias."
+      }
+    },
+    {
+      "key": "marshmallow:marshmallow-400000:DD-2",
+      "repo": "marshmallow",
+      "candidate_id": "C08",
+      "source_id": "marshmallow-400000:DD-2",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/marshmallow/fields.py",
+          380,
+          383
+        ],
+        [
+          "src/marshmallow/fields.py",
+          92,
+          93
+        ],
+        [
+          "src/marshmallow/fields.py",
+          195,
+          195
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/marshmallow/fields.py",
+        "docs/top_level.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 27925,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/fields.py",
+          "start_line": 380,
+          "end_line": 383,
+          "quote": "        self._validate_missing(value)\n        if value is missing_:\n            _miss = self.load_default\n            return _miss() if callable(_miss) else _miss"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "Deserialization uses load_default when a field's value is missing, not a generic default."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/fields.py",
+          "start_line": 380,
+          "end_line": 381,
+          "quote": "        if value is missing_:\n            _miss = self.load_default"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs say missing falls back to a field's ``default`` value, but deserialization uses ``load_default``."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/marshmallow/fields.py",
+          "start_line": 380,
+          "end_line": 381,
+          "quote": "        if value is missing_:\n            _miss = self.load_default"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The `missing` sentinel resolves to `load_default` during deserialization, not an unnamed `default`."
+      }
+    },
+    {
+      "key": "attrs:S11",
+      "repo": "attrs",
+      "candidate_id": "C01",
+      "source_id": "S11",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/attrs/__init__.py",
+          53,
+          53
+        ],
+        [
+          "src/attr/__init__.py",
+          83,
+          83
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/api.rst"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 10477,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/attr/__init__.py",
+          "start_line": 83,
+          "end_line": 83,
+          "quote": "_LAZY_SUBMODULES = {\"converters\", \"validators\", \"filters\"}"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "attrs exposes a `converters` submodule, not a singular `converter` module, so `attrs.converter.pipe` does not exist as documented."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/api.rst",
+          "start_line": 696,
+          "end_line": 696,
+          "quote": ".. autofunction:: attrs.converters.pipe"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The converters module is `attrs.converters` (plural), so `attrs.converter.pipe` does not exist; the docs should use the plural form."
+      }
+    },
+    {
+      "key": "attrs:S12",
+      "repo": "attrs",
+      "candidate_id": "C02",
+      "source_id": "S12",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/attr/_make.py",
+          2476,
+          2530
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/extending.md"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 4514,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/attr/_make.py",
+          "start_line": 2528,
+          "end_line": 2529,
+          "quote": "\"alias\",\n        \"alias_is_default\","
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The `Attribute` class has an `alias_is_default` slot populated at runtime, so the documented flag exists."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "docs/extending.md",
+          "start_line": 257,
+          "end_line": 274,
+          "quote": "```{doctest}\n>>> def dataclass_names(cls, fields):\n...     return [\n...         field.evolve(alias=field.name)\n...         if field.alias_is_default\n...         else field\n...         for field in fields\n...     ]\n...\n>>> @frozen(field_transformer=dataclass_names)\n... class Data:\n...     public: int\n...     _private: str\n...     explicit: str = field(alias=\"aliased_name\")\n...\n>>> Data(public=42, _private=\"spam\", aliased_name=\"yes\")\nData(public=42, _private='spam', explicit='yes')\n```"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation itself includes a working doctest that uses `field.alias_is_default`, so the report is a false positive."
+      }
+    },
+    {
+      "key": "jinja:jinja-400000:DD-1",
+      "repo": "jinja",
+      "candidate_id": "C01",
+      "source_id": "jinja-400000:DD-1",
+      "label": "unclear",
+      "truth": false,
+      "gold": [
+        [
+          "src/jinja2/ext.py",
+          268,
+          301
+        ]
+      ],
+      "cross_file": null,
+      "local_files": [
+        "src/jinja2/ext.py",
+        "docs/extensions.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 15542,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/jinja2/ext.py",
+          "start_line": 268,
+          "end_line": 270,
+          "quote": "    def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\n    ) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented method signatures show newstyle=False, but the implementations default to None to preserve the current environment setting."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/jinja2/ext.py",
+          "start_line": 268,
+          "end_line": 305,
+          "quote": "    def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\n    ) -> None:\n        # ugettext and ungettext are preferred in case the I18N library\n        # is providing compatibility with older Python versions.\n        gettext = getattr(translations, \"ugettext\", None)\n        if gettext is None:\n            gettext = translations.gettext\n        ngettext = getattr(translations, \"ungettext\", None)\n        if ngettext is None:\n            ngettext = translations.ngettext\n\n        pgettext = getattr(translations, \"pgettext\", None)\n        npgettext = getattr(translations, \"npgettext\", None)\n        self._install_callables(\n            gettext, ngettext, newstyle=newstyle, pgettext=pgettext, npgettext=npgettext\n        )\n\n    def _install_null(self, newstyle: bool | None = None) -> None:\n        import gettext\n\n        translations = gettext.NullTranslations()\n        self._install_callables(\n            gettext=translations.gettext,\n            ngettext=translations.ngettext,\n            newstyle=newstyle,\n            pgettext=translations.pgettext,\n            npgettext=translations.npgettext,\n        )\n\n    def _install_callables(\n        self,\n        gettext: t.Callable[[str], str],\n        ngettext: t.Callable[[str, str, int], str],\n        newstyle: bool | None = None,"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented method signatures show newstyle=False, but all three implementations default newstyle to None and only change the environment setting when a value is explicitly passed."
+      }
+    },
+    {
+      "key": "jinja:S17",
+      "repo": "jinja",
+      "candidate_id": "C02",
+      "source_id": "S17",
+      "label": "unclear",
+      "truth": false,
+      "gold": [],
+      "cross_file": null,
+      "local_files": [
+        "docs/extensions.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 5382,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/jinja2/ext.py",
+          "start_line": 840,
+          "end_line": 844,
+          "quote": "#: nicer import names\ni18n = InternationalizationExtension\ndo = ExprStmtExtension\nloopcontrols = LoopControlExtension\ndebug = DebugExtension"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The page intentionally documents the removed built-in with_ extension for historical context; jinja2.ext intentionally no longer exports it."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/extensions.rst",
+          "start_line": 227,
+          "end_line": 231,
+          "quote": "With Statement\n--------------\n\n**Import name:** ``jinja2.ext.with_``\n\n.. versionchanged:: 2.9"
+        },
+        "cite_verified": false,
+        "cite_correct": false,
+        "reason": "The documentation still gives an import name for the with extension, but the current code does not expose `with_` on `jinja2.ext`, so following the documented import path would fail."
+      }
+    },
+    {
+      "key": "jinja:S18",
+      "repo": "jinja",
+      "candidate_id": "C03",
+      "source_id": "S18",
+      "label": "unclear",
+      "truth": false,
+      "gold": [],
+      "cross_file": null,
+      "local_files": [
+        "docs/extensions.rst"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 5383,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/jinja2/ext.py",
+          "start_line": 840,
+          "end_line": 844,
+          "quote": "#: nicer import names\ni18n = InternationalizationExtension\ndo = ExprStmtExtension\nloopcontrols = LoopControlExtension\ndebug = DebugExtension"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The page intentionally documents the removed built-in autoescape extension for historical context; jinja2.ext intentionally no longer exports it."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/extensions.rst",
+          "start_line": 243,
+          "end_line": 246,
+          "quote": ".. versionchanged:: 2.9\n\n    This extension was removed and is now built-in. Enabling the\n    extension no longer does anything."
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The autoescape extension was removed and built in, so the documented import path jinja2.ext.autoescape does not exist in jinja2.ext."
+      }
+    },
+    {
+      "key": "jinja:S19",
+      "repo": "jinja",
+      "candidate_id": "C04",
+      "source_id": "S19",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/jinja2/runtime.py",
+          493,
+          497
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/jinja2/runtime.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 12908,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/jinja2/runtime.py",
+          "start_line": 493,
+          "end_line": 497,
+          "quote": "        if self._after is not missing:\n            return self._after\n\n        self._after = next(self._iterator, missing)\n        return self._after"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring refers to _last, but the implementation caches the peeked element in _after."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/jinja2/runtime.py",
+          "start_line": 487,
+          "end_line": 492,
+          "quote": "    def _peek_next(self) -> t.Any:\n        \"\"\"Return the next element in the iterable, or :data:`missing`\n        if the iterable is exhausted. Only peeks one item ahead, caching\n        the result in :attr:`_last` for use in subsequent checks. The\n        cache is reset when :meth:`__next__` is called.\n        \"\"\""
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring says _peek_next caches in :attr:`_last`, but the implementation stores the peeked value in `self._after`."
+      }
+    },
+    {
+      "key": "werkzeug:S35",
+      "repo": "werkzeug",
+      "candidate_id": "C01",
+      "source_id": "S35",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/werkzeug/routing/__init__.py",
+          109,
+          134
+        ],
+        [
+          "src/werkzeug/exceptions.py",
+          347,
+          347
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/routing.rst"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 5278,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/routing/__init__.py",
+          "start_line": 116,
+          "end_line": 122,
+          "quote": "from .exceptions import BuildError as BuildError\nfrom .exceptions import NoMatch as NoMatch\nfrom .exceptions import RequestAliasRedirect as RequestAliasRedirect\nfrom .exceptions import RequestPath as RequestPath\nfrom .exceptions import RequestRedirect as RequestRedirect\nfrom .exceptions import RoutingException as RoutingException\nfrom .exceptions import WebsocketMismatch as WebsocketMismatch"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "NotFound is defined in werkzeug.exceptions and is not re-exported from werkzeug.routing; the routing example imports it from the wrong module."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/routing.rst",
+          "start_line": 24,
+          "end_line": 24,
+          "quote": "    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The quickstart imports `NotFound` from `werkzeug.routing`, but the documentation itself places `NotFound` in `werkzeug.exceptions`; only `RequestRedirect` is part of routing's documented exception surface shown here."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/routing/__init__.py",
+          "start_line": 117,
+          "end_line": 123,
+          "quote": "from .exceptions import BuildError as BuildError\nfrom .exceptions import NoMatch as NoMatch\nfrom .exceptions import RequestAliasRedirect as RequestAliasRedirect\nfrom .exceptions import RequestPath as RequestPath\nfrom .exceptions import RequestRedirect as RequestRedirect\nfrom .exceptions import RoutingException as RoutingException\nfrom .exceptions import WebsocketMismatch as WebsocketMismatch"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`werkzeug.routing` does not export `NotFound`; it is not imported in its `__init__.py`."
+      }
+    },
+    {
+      "key": "werkzeug:S36",
+      "repo": "werkzeug",
+      "candidate_id": "C02",
+      "source_id": "S36",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/werkzeug/routing/exceptions.py",
+          48,
+          48
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "docs/routing.rst"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 5283,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/routing/exceptions.py",
+          "start_line": 48,
+          "end_line": 50,
+          "quote": "class RequestRedirect(HTTPException, RoutingException):\n    \"\"\"Raise if the map requests a redirect. This is for example the case if"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "RequestRedirect is a routing exception, not a werkzeug.exceptions exception; the cross-reference points to the wrong module."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "docs/routing.rst",
+          "start_line": 24,
+          "end_line": 24,
+          "quote": "    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation points to RequestRedirect under werkzeug.exceptions, but the routing docs themselves import it from werkzeug.routing."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/routing/exceptions.py",
+          "start_line": 48,
+          "end_line": 48,
+          "quote": "class RequestRedirect(HTTPException, RoutingException):"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`RequestRedirect` is defined in `werkzeug.routing.exceptions`, not `werkzeug.exceptions`."
+      }
+    },
+    {
+      "key": "werkzeug:S37",
+      "repo": "werkzeug",
+      "candidate_id": "C03",
+      "source_id": "S37",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/werkzeug/datastructures/headers.py",
+          57,
+          59
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/werkzeug/datastructures/headers.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 8918,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 18,
+          "end_line": 19,
+          "quote": "class Headers:"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The note is historically documenting the removal of a prior `linked` method and does not claim that `linked` currently exists."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 57,
+          "end_line": 59,
+          "quote": "    .. versionchanged:: 0.9\n       The :meth:`linked` function was removed without replacement as it\n       was an API that does not support the changes to the encoding model."
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "This is an intentional historical note about an API removed in 0.9, so the absent `linked` method is expected."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 57,
+          "end_line": 59,
+          "quote": "    .. versionchanged:: 0.9\n       The :meth:`linked` function was removed without replacement as it\n       was an API that does not support the changes to the encoding model."
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docstring is a historical note that the removed method no longer exists, not a claim that it is available."
+      }
+    },
+    {
+      "key": "werkzeug:S42",
+      "repo": "werkzeug",
+      "candidate_id": "C04",
+      "source_id": "S42",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/werkzeug/datastructures/headers.py",
+          428,
+          428
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/werkzeug/datastructures/headers.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 8940,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 428,
+          "end_line": 428,
+          "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "MultiDict.setlist's parameter is named `values`, but its docstring documents it as `value`."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 428,
+          "end_line": 428,
+          "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The method signature names the iterable parameter 'values', but the docstring documents it as 'value'."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/datastructures/headers.py",
+          "start_line": 428,
+          "end_line": 428,
+          "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The `setlist()` signature uses the parameter name `values`, but the docstring documents `value`."
+      }
+    },
+    {
+      "key": "werkzeug:werkzeug-400000:DD-1",
+      "repo": "werkzeug",
+      "candidate_id": "C05",
+      "source_id": "werkzeug-400000:DD-1",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/werkzeug/http.py",
+          1451,
+          1452
+        ],
+        [
+          "src/werkzeug/http.py",
+          1401,
+          1401
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/werkzeug/http.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 21627,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/http.py",
+          "start_line": 1401,
+          "end_line": 1401,
+          "quote": "    path: str | None = \"/\" ,"
+        },
+        "cite_verified": false,
+        "cite_correct": true,
+        "reason": "The `path=None` statement is a historical versionchanged note; the current default `\"/\"` is documented separately under versionchanged 2.3.3 and matches the signature."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/http.py",
+          "start_line": 1401,
+          "end_line": 1401,
+          "quote": "    path: str | None = \"/\" ,"
+        },
+        "cite_verified": false,
+        "cite_correct": true,
+        "reason": "The 2.3 note is a historical change followed by a 2.3.3 change setting the default back to '/', so it does not conflict with the current signature."
+      },
+      "stability": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/http.py",
+          "start_line": 1451,
+          "end_line": 1452,
+          "quote": "    .. versionchanged:: 2.3.3\n        The ``path`` parameter is ``/`` by default."
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The 2.3 note is historical; version 2.3.3 later changed the default to `/`, which matches the current signature."
+      }
+    },
+    {
+      "key": "werkzeug:S38",
+      "repo": "werkzeug",
+      "candidate_id": "C06",
+      "source_id": "S38",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/werkzeug/middleware/proxy_fix.py",
+          54,
+          55
+        ],
+        [
+          "src/werkzeug/middleware/proxy_fix.py",
+          138,
+          138
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/werkzeug/middleware/proxy_fix.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 2952,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 138,
+          "end_line": 138,
+          "quote": "                \"werkzeug.proxy_fix.orig\": {"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented `werkzeug.proxy_fix.orig` text reads like a module attribute, but ProxyFix stores the original environ under the string key `werkzeug.proxy_fix.orig`."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 138,
+          "end_line": 148,
+          "quote": "environ_get = environ.get\n        environ.update(\n            {\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }\n            }\n        )"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The string is a WSGI environ key, not an importable `werkzeug.proxy_fix.orig` attribute; the code stores the dict under that exact environ key."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 138,
+          "end_line": 145,
+          "quote": "                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The original values are stored under the `environ` key `werkzeug.proxy_fix.orig`, not the importable `werkzeug.proxy_fix.orig` attribute."
+      }
+    },
+    {
+      "key": "werkzeug:S39",
+      "repo": "werkzeug",
+      "candidate_id": "C07",
+      "source_id": "S39",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "src/werkzeug/middleware/proxy_fix.py",
+          83,
+          83
+        ],
+        [
+          "src/werkzeug/middleware/proxy_fix.py",
+          138,
+          138
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "src/werkzeug/middleware/proxy_fix.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 2958,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 138,
+          "end_line": 138,
+          "quote": "                \"werkzeug.proxy_fix.orig\": {"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The same wording repeats the misleading dotted-name reference; the actual value is the `werkzeug.proxy_fix.orig` environ key."
+      },
+      "local": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 136,
+          "end_line": 145,
+          "quote": "environ.update(\n            {\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }\n            }\n        )"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The documented value is the WSGI environ key string, not a Python attribute path; the code stores the original values under environ['werkzeug.proxy_fix.orig']."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/proxy_fix.py",
+          "start_line": 138,
+          "end_line": 145,
+          "quote": "                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The original values are stored under the `environ` key `werkzeug.proxy_fix.orig`, not the importable `werkzeug.proxy_fix.orig` attribute."
+      }
+    },
+    {
+      "key": "werkzeug:S40",
+      "repo": "werkzeug",
+      "candidate_id": "C08",
+      "source_id": "S40",
+      "label": "true",
+      "truth": true,
+      "gold": [
+        [
+          "src/werkzeug/middleware/shared_data.py",
+          29,
+          29
+        ],
+        [
+          "src/werkzeug/middleware/__init__.py",
+          1,
+          1
+        ]
+      ],
+      "cross_file": true,
+      "local_files": [
+        "src/werkzeug/serving.py"
+      ],
+      "gold_outside_local": true,
+      "local_prompt_tokens": 14479,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/shared_data.py",
+          "start_line": 29,
+          "end_line": 29,
+          "quote": "class SharedDataMiddleware:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "SharedDataMiddleware lives in werkzeug.middleware.shared_data, not werkzeug.middleware."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/serving.py",
+          "start_line": 1075,
+          "end_line": 1075,
+          "quote": "        from .middleware.shared_data import SharedDataMiddleware"
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The documentation references `SharedDataMiddleware` directly on `werkzeug.middleware`, but the implementation imports it from the shared_data submodule."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/middleware/shared_data.py",
+          "start_line": 29,
+          "end_line": 29,
+          "quote": "class SharedDataMiddleware:"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`SharedDataMiddleware` is defined in `werkzeug.middleware.shared_data`, not directly on `werkzeug.middleware`."
+      }
+    },
+    {
+      "key": "werkzeug:S41",
+      "repo": "werkzeug",
+      "candidate_id": "C09",
+      "source_id": "S41",
+      "label": "unclear",
+      "truth": false,
+      "gold": [
+        [
+          "src/werkzeug/wsgi.py",
+          623,
+          623
+        ]
+      ],
+      "cross_file": null,
+      "local_files": [
+        "src/werkzeug/test.py"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 19075,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/wsgi.py",
+          "start_line": 623,
+          "end_line": 623,
+          "quote": "        if name == \"FileWrapper\":"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "FileWrapper is provided by werkzeug.wsgi, not by the top-level werkzeug package."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/test.py",
+          "start_line": 1102,
+          "end_line": 1103,
+          "quote": "            instead of ``mimetype``. This change was made for\n            consistency with :class:`werkzeug.FileWrapper`."
+        },
+        "cite_verified": true,
+        "cite_correct": false,
+        "reason": "The docstring references werkzeug.FileWrapper, but FileWrapper is provided by werkzeug.wsgi, not the top-level werkzeug namespace."
+      },
+      "stability": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "src/werkzeug/wsgi.py",
+          "start_line": 623,
+          "end_line": 630,
+          "quote": "        if name == \"FileWrapper\":\n            warnings.warn(\n                \"'FileWrapper' is deprecated and will be removed in Werkzeug 4.0. Use\"\n                \" 'wrap_file' instead.\",\n                DeprecationWarning,\n                stacklevel=2,\n            )\n            return _FileWrapper"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "`FileWrapper` is available as `werkzeug.wsgi.FileWrapper`, not `werkzeug.FileWrapper`."
+      }
+    },
+    {
+      "key": "pydantic-settings:pydantic-settings-400000:DD-1",
+      "repo": "pydantic-settings",
+      "candidate_id": "C01",
+      "source_id": "pydantic-settings-400000:DD-1",
+      "label": "false",
+      "truth": false,
+      "gold": [
+        [
+          "docs/index.md",
+          1893,
+          1897
+        ],
+        [
+          "pydantic_settings/main.py",
+          726,
+          726
+        ]
+      ],
+      "cross_file": false,
+      "local_files": [
+        "pydantic_settings/main.py",
+        "docs/index.md"
+      ],
+      "gold_outside_local": false,
+      "local_prompt_tokens": 64417,
+      "local_finish": "stop",
+      "local_error": null,
+      "whole": {
+        "verdict": "false",
+        "kept": false,
+        "citation": {
+          "path": "pydantic_settings/main.py",
+          "start_line": 726,
+          "end_line": 726,
+          "quote": "cli_kebab_case=False,"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The quoted prose describes the behaviour of setting cli_kebab_case=True, not a claim that kebab case is enabled by default; BaseSettings.model_config defaults it to False."
+      },
+      "local": {
+        "verdict": "true_drift",
+        "kept": true,
+        "citation": {
+          "path": "pydantic_settings/main.py",
+          "start_line": 726,
+          "end_line": 726,
+          "quote": "cli_kebab_case=False,"
+        },
+        "cite_verified": true,
+        "cite_correct": true,
+        "reason": "The docs describe kebab case as enabled by default, but BaseSettings.model_config sets cli_kebab_case to False."
+      }
+    }
+  ],
+  "notes": [
+    "labels from an AI reviewer checking against pinned source; unclear counts as not-true",
+    "whole = reused hybrid triage verdicts (one batched call per repo, ~290k-405k prompt tokens)",
+    "local = one call per candidate, pack restricted to the doc file + code files named in the candidate",
+    "citation correct = path match and line overlap with gold +/-3 lines"
+  ]
+}

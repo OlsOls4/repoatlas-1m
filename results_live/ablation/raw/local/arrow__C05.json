@@ -1,0 +1,32 @@
+{
+  "label": "arrow:C05:S22",
+  "payload_sha256": "c96205fd186fa6693396fcc0d9eef1e550dbf2090d07512828811f85ae47f6a9",
+  "latency_seconds": 12.661988920997828,
+  "body": {
+    "id": "chatcmpl-41",
+    "object": "chat.completion",
+    "created": 1793055648,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C05\", \"verdict\": \"true_drift\", \"reason\": \"The heading names `arrow.locale`, but the automodule directive targets the actual `arrow.locales` module.\", \"code_citation\": {\"path\": \"docs/api-guide.rst\", \"start_line\": 26, \"end_line\": 26, \"quote\": \".. automodule:: arrow.locales\"}, \"suggested_doc_fix\": \"Change line 23 from `:mod:`arrow.locale`` to `:mod:`arrow.locales``.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON only. Need analyze candidate. Candidate C05: docs/api-guide.rst:23 doc text ':mod:`arrow.locale`' report role arrow.locale 'locale' not found on arrow. We have repo only docs/api-guide.rst. Need decide true_drift? Docs line 23 says :mod:`arrow.locale`, but automodule line 26 says arrow.locales. There is no arrow.locale module? Need whole repo not provided? Only docs file. But knowledge arrow package has arrow/locales.py, not locale.py. So documentation heading uses wrong module path. Is that true drift? \"Arrow locale\" maybe arrow.locale does not exist; docs heading says arrow.locale but automodule correct arrow.locales. A user following heading? Sphinx might fail? The doc as written wrong. Candidate likely true_drift. suggested fix maybe change to :mod:`arrow.locales`. Need code citation? We need cite one code location relied on. But repository pack only includes docs file, no code. Could cite docs/api-guide.rst lines? They ask code location. Maybe can cite docs? Candidate code location? The \"code location\" maybe package? We only have docs. Need maybe no code files. Could use docs/api-guide.rst lines 26 as \"code location\"? They want code location, but no source. Could cite same doc lines? Hmm.\n\nTask: \"Give ... the single code location you relied on (path, start_line, end_line and a verbatim quote from those lines)\" For candidate, code location could be docs/api-guide.rst? Not code, but only available. Maybe use lines 26-27 to show actual module is arrow.locales. They ask code location perhaps location in repository (any file). We can cite docs/api-guide.rst:26-26. Quote \".. automodule:: arrow.locales\". That supports. But requested code location maybe okay.\n\nNeed additional findings. We only have docs file. Could inspect likely drifts: docs/api-guide.rst:5 heading arrow.arrow exists; likely. :mod:`arrow.factory`, arrow.api, arrow.locales. Could be package __init__? Need no code. Candidate only one. Additional findings maybe heading line 23 mismatch. But that's candidate itself; don't repeat. Could there be another drift in same file? Lines 6? no. Could line 23 doc text singular while module plural. That's candidate. We should only output verdict for C05 and additional empty unless we find something. But task says especially cross-file. No other files. So additional empty. But maybe because repository includes only docs, can't verify arrow.locales exists? But known. We can still.\n\nNeed strict JSON. Ensure no markdown. Reason one-line. suggested_doc_fix for true_drift: \"Change line 23 from ':mod:`arrow.locale`' to ':mod:`arrow.locales`'.\" Maybe documentation-only. code citation quote exact. Let's construct.\n\nBut let's deeply consider if candidate might be false positive due to re-export? Does arrow expose locale attr? Report says role `arrow.locale`: 'locale' not found on arrow. Is there `arrow.locale`? Arrow package maybe has submodule `arrow.locale`? Let's check known arrow repo. Files: arrow/__init__.py, arrow/api.py, arrow/arrow.py, arrow/constants.py, arrow/factory.py, arrow/formatter.py, arrow/locales.py, arrow/parser.py, arrow/util.py. No locale.py. In __init__ maybe imports? Could alias locale = locales? Unlikely. Docs heading is wrong. true_drift.\n\nNeed maybe code citation could be docs line 26 because no code. The requirement says single code location; docs file isn't code but only available. We can cite. Could alternatively cite \"arrow/__init__.py\" but not in pack; not allowed (no lines). So docs.\n\nLet's produce final."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 938,
+      "completion_tokens": 955,
+      "total_tokens": 1893,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:00:48.491746+00:00"
+}

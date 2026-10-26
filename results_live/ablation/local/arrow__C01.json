@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 25919,
+  "completion_tokens": 2223,
+  "finish_reason": "stop",
+  "latency_seconds": 15.821420474996557,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "`fromordinal` is defined as an `Arrow` classmethod, not a module-level `arrow` function, so `arrow.fromordinal(...)` does not resolve.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 388,
+        "end_line": 399,
+        "quote": "    @classmethod\n    def fromordinal(cls, ordinal: int) -> \"Arrow\":\n        \"\"\"Constructs an :class:`Arrow <arrow.arrow.Arrow>` object corresponding\n            to the Gregorian Ordinal.\n\n        :param ordinal: an ``int`` corresponding to a Gregorian Ordinal.\n\n        Usage::\n\n            >>> arrow.fromordinal(737741)\n            <Arrow [2020-11-12T00:00:00+00:00]>\n\n        \"\"\""
+      },
+      "suggested_doc_fix": "Change the example to `>>> arrow.Arrow.fromordinal(737741)`.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S23"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S23",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 396,
+    "doc_end": 396,
+    "doc_text": ">>> arrow.fromordinal(737741)",
+    "claim": "dotted: `arrow.fromordinal`: 'fromordinal' not found on arrow",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 76003
+}

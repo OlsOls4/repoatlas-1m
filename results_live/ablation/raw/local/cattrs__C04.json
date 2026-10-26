@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C04:S27",
+  "payload_sha256": "dea17a42cf19d9d461b5dfbcb4b345e3109ecac3b10f3c67824ad4f7a6eae3c1",
+  "latency_seconds": 6.499492024013307,
+  "body": {
+    "id": "chatcmpl-904",
+    "object": "chat.completion",
+    "created": 1793055727,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C04\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The method signature parameter is named 'cache_result', but the docstring refers to 'cache'.\",\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 492,\n        \"end_line\": 492,\n        \"quote\": \"        self, type: Any, cache_result: bool = True\"\n      },\n      \"suggested_doc_fix\": \"Change ':param cache:' to ':param cache_result:' in the get_unstructure_hook docstring.\"\n    }\n  ],\n  \"additional_findings\": [\n    {\n      \"finding_id\": \"AD-1\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"get_structure_hook has the same documentation mismatch: its parameter is named 'cache_result', but the docstring says 'cache'.\",\n      \"doc_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 651,\n        \"end_line\": 651,\n        \"quote\": \"        :param cache: Whether to cache the returned hook.\"\n      },\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 641,\n        \"end_line\": 641,\n        \"quote\": \"        self, type: TypeForm[T], cache_result: bool = True\"\n      },\n      \"proposed_fix\": \"Change ':param cache:' to ':param cache_result:' in the get_structure_hook docstring.\"\n    }\n  ]\n}",
+          "reasoning": "Let me analyze the candidate C04. The report says: in src/cattrs/converters.py:502, doc text ':param cache: Whether to cache the returned hook.' but the actual signature of `get_unstructure_hook` is `get_unstructure_hook(self, type, cache_result=True)` with param named `cache_result`, not `cache`.\n\nLooking at the code:\n```python\ndef get_unstructure_hook(\n    self, type: Any, cache_result: bool = True\n) -> UnstructureHook:\n```\nDocstring:\n```\n:param cache: Whether to cache the returned hook.\n```\n\nSo indeed, the parameter name in doc is `cache` but actual param is `cache_result`. This is true drift. The fix: change `:param cache:` to `:param cache_result:`.\n\nSimilarly, `get_structure_hook` at line 651 has same doc text `:param cache: Whether to cache the returned hook.` with param `cache_result`. That's an additional finding (cross-file within same file). Let me check line 651. Yes line 651 `:param cache: Whether to cache the returned hook.` and signature line 641 `cache_result: bool = True`.\n\nSo both are drifts. C04 covers get_unstructure_hook. Additional AD-1 for get_structure_hook.\n\nAlso check BaseConverter.__init__ documents params. Does it miss dict_factory / unstruct_strat / prefer_attrib_converters? Not asked, stick. Additional finding should be documented? The task says list any OTHER documentation drifts candidates missed. So get_structure_hook analogous.\n\nLet me craft JSON.\n\nFor C04 verdict true_drift. code_citation path src/cattrs/converters.py, start 491? The report says signature line 491. Actually function def starts 491. Quote: \"def get_unstructure_hook(\\n        self, type: Any, cache_result: bool = True\\n    ) -> UnstructureHook:\" spans lines 491-493. Better choose start_line 491 end_line 493 quote verbatim includes. Or start 492. Let's use lines 491-493.\n\nQuote:\n491: \"    def get_unstructure_hook(\"\n492: \"        self, type: Any, cache_result: bool = True\"\n493: \"    ) -> UnstructureHook:\"\n\nNeed verbatim quote across those lines without line numbers:\n\"    def get_unstructure_hook(\\n        self, type: Any, cache_result: bool = True\\n    ) -> UnstructureHook:\"\n\nOr simpler line 492 only: \"        self, type: Any, cache_result: bool = True\". That's verbatim. Good.\n\nsuggested_doc_fix: change \":param cache:\" to \":param cache_result:\".\n\nAdditional finding AD-1: doc path line 651 for get_structure_hook. signature line 641 `cache_result`. drift_kind param. doc_citation lines 651-651 quote \":param cache: Whether to cache the returned hook.\" code_citation line 641 quote \"        self, type: TypeForm[T], cache_result: bool = True\". proposed_fix adjust.\n\nOutput JSON only."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19641,
+      "completion_tokens": 1067,
+      "total_tokens": 20708,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:07.522065+00:00"
+}

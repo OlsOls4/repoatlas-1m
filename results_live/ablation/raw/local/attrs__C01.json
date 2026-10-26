@@ -1,0 +1,32 @@
+{
+  "label": "attrs:C01:S11",
+  "payload_sha256": "545e3cea5953e0c7ae0095c12c2c542efd68bc22bc6a6a127fe91650921e2adc",
+  "latency_seconds": 13.308619814983103,
+  "body": {
+    "id": "chatcmpl-522",
+    "object": "chat.completion",
+    "created": 1793055885,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C01\", \"verdict\": \"true_drift\", \"reason\": \"The converters module is `attrs.converters` (plural), so `attrs.converter.pipe` does not exist; the docs should use the plural form.\", \"code_citation\": {\"path\": \"docs/api.rst\", \"start_line\": 696, \"end_line\": 696, \"quote\": \".. autofunction:: attrs.converters.pipe\"}, \"suggested_doc_fix\": \"Change `attrs.converter.pipe` to `attrs.converters.pipe`.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need analyze candidate C01. Docs line 702: \"x = attrs.field(converter=attrs.converter.pipe(c1, c2, c3))\". Report dotted attrs.converter.pipe not found; should be attrs.converters.pipe (plural? directory). Code citation: docs maybe no code candidate? Need inspect repo provided only docs/api.rst. We know package attrs has converters module, attrs.converters. attrs.converter likely missing. So true_drift. Suggested fix: attrs.converters.pipe.\n\nNeed possible additional drifts. We can scan provided doc for other obvious cross-file. Candidate only C01. Need list other documentation drifts. Must use repository, only api.rst shown. Could inspect names? We only have docs/api.rst. Need identify obvious references to wrong module: `attrs.converter.pipe` should be `attrs.converters.pipe`. Others? Search text mentions attrs.filter? Let's inspect. Docs says `attrs.converter.pipe` one. `attrs.filters` okay. `attrs.setters.pipe`. It uses attr.setters in examples (valid). `attrs.validators` okay. `attrs.converters.optional` etc. Maybe `attrs.Converter`? It's in attrs namespace? likely. Need only in provided file. Additional findings especially cross-file. We need be careful.\n\nCandidate says attrs.converter.pipe nonexistent. Additional perhaps line 702? Already candidate, don't repeat. Could there be `attrs.converter` elsewhere? only line 702. Are there other \"pipe\" under converters? No.\n\nMaybe report false? Let's verify from context. `.. module:: attrs.converters` at 692, autofunction pipe at 696. So docs line 702 erroneously uses singular. true.\n\nNeed output JSON. Code citation: need single code location relied on. Could cite doc line itself? They require code location perhaps code in repo. The pack only includes docs/api.rst. We can cite docs file line 702? \"code location\" maybe documentation location? But schema requires path start end quote. Candidate code citation maybe docs? They ask code location. Could use `docs/api.rst` line 692/696 module/autofunction? Better cite line 692 `.. module:: attrs.converters` as code/doc context. Or line 696 `.. autofunction:: attrs.converters.pipe`. A user-defined? quote verbatim. We need one location relied on. Use path docs/api.rst? Is that \"code\"? In this repo docs are rst, yes. Could cite line 696. But maybe actual Python code not included. Since only file provided, cite that. Alternatively no Python code in pack. Must quote exact. Let's make code_citation path \"docs/api.rst\", start 696 end 696 quote \".. autofunction:: attrs.converters.pipe\". This proves correct name. Good.\n\nSuggested doc fix: \"Change `attrs.converter.pipe` to `attrs.converters.pipe`.\" Perhaps also consistent attrs? The doc line uses attrs.converter.pipe and attrs.field. Should be attrs.converters.pipe. Yes.\n\nAdditional findings: maybe `attrs.converter` at 684? It uses `attrs.Converter` capital (class), likely exists. Could check? Top of validators? The docs likely correct. `attrs.converter` singular nonexistent but `attrs.Converter` exists maybe. no.\n\nCould there be issue line 205 `on_setattr_hook=<function pipe.<locals>.wrapped_pipe at ...>` okay generated. `attrs.inspect` maybe. No.\n\nPotential additional finding: docs line 313 `@define(on_setattr=attrs.setters.NO_OP)`? Actually line 314 uses `attrs.setters.NO_OP` okay. line 785 uses `attr.setters.frozen` okay.\n\nMaybe typo line 788 `attrs.exceptions.FrozenAttributeError: ()` maybe okay.\n\nPotential cross-file: `attrs.converter.pipe` only. Additional missed drifts could include `attrs.filters.include`? no.\n\nNeed maybe mention \"attrs.converter.pipe\" should be \"attrs.converters.pipe\", candidate already. Additional no.\n\nReturn JSON valid. Ensure no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 10477,
+      "completion_tokens": 1021,
+      "total_tokens": 11498,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:04:46.148823+00:00"
+}

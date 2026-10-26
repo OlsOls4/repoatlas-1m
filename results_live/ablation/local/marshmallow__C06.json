@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 6803,
+  "completion_tokens": 3181,
+  "finish_reason": "stop",
+  "latency_seconds": 22.51505032001296,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The documented decorator argument `pass_many` was renamed to `pass_collection` in v4, so `@pre_load(pass_many=True)` no longer calls a valid parameter.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 175,
+        "end_line": 179,
+        "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "suggested_doc_fix": "Replace `pass_many=True` with `pass_collection=True` in the example on line 61.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S33"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S33",
+    "doc_path": "docs/extending/pre_and_post_processing.rst",
+    "doc_line": 61,
+    "doc_end": 61,
+    "doc_text": "@pre_load(pass_many=True)",
+    "claim": "call-signature: `marshmallow.pre_load(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)",
+    "code_hint": "",
+    "candidate_id": "C06"
+  },
+  "local_files": [
+    "src/marshmallow/decorators.py",
+    "docs/extending/pre_and_post_processing.rst"
+  ],
+  "prompt_chars": 22925
+}

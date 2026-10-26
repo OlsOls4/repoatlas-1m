@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 6162,
+  "completion_tokens": 1990,
+  "finish_reason": "stop",
+  "latency_seconds": 14.593249809986446,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "The report misattributes TestClient.get to Config.get; TestClient request methods inherit the wrapped httpx session interface, so headers= is valid.",
+      "code_citation": {
+        "path": "starlette/config.py",
+        "start_line": 94,
+        "end_line": 99,
+        "quote": "    def get(\n        self,\n        key: str,\n        cast: Callable[[Any], Any] | None = None,\n        default: Any = undefined,\n    ) -> Any:"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S0"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "starlette",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S0",
+    "doc_path": "docs/testclient.md",
+    "doc_line": 53,
+    "doc_end": 53,
+    "doc_text": "response = client.get(\"/\", headers={\"Authorization\": \"...\"})",
+    "claim": "method-call-signature: `client.get(...)`: no parameter named 'headers'; no package method 'get' accepts it (e.g. Config.get at starlette/config.py:94)",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "starlette/config.py",
+    "docs/testclient.md"
+  ],
+  "prompt_chars": 20495
+}

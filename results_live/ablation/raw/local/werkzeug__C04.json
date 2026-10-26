@@ -1,0 +1,32 @@
+{
+  "label": "werkzeug:C04:S42",
+  "payload_sha256": "6ca4492b66597c82fe9b3cc0cfb8d670ad0349da656c3a69ac5ea17ba8ea2b44",
+  "latency_seconds": 5.848725716990884,
+  "body": {
+    "id": "chatcmpl-512",
+    "object": "chat.completion",
+    "created": 1793056011,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C04\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The method signature names the iterable parameter 'values', but the docstring documents it as 'value'.\",\n      \"code_citation\": {\n        \"path\": \"src/werkzeug/datastructures/headers.py\",\n        \"start_line\": 428,\n        \"end_line\": 428,\n        \"quote\": \"    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:\"\n      },\n      \"suggested_doc_fix\": \"Change ':param value: An iterable of header values...' to ':param values: An iterable of header values...'.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Candidate C04: doc at headers.py:433 says :param value: An iterable ... but signature setlist(self, key, values). Report says documented param 'value' not in signature. Indeed signature uses values. Docstring uses :param value: for setlist. Drift? It should be :param values:. So true_drift. Need verdict. Also additional findings? Need scan whole repo. Only one file given. Could find cross-file drifts perhaps in docs? No packed docs beyond headers.py. Additional findings if candidates missed, especially cross-file ones. We can search maybe no. Need output only JSON.\n\nWe must provide code location relied on path start end quote. For C04 code citation could be signature lines 428-428 or maybe doc lines? Task says single code location relied on. Likely code signature: \"def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:\" lines 428-428. Verdict true_drift. suggested_doc_fix documentation-only: change \":param value:\" to \":param values:\". Could also mention code? empty unless true_drift, can provide suggested fix. We need maybe candidate report false? Let's scrutinize: docstring says \":param value: An iterable...\" but parameter is named values. Is that necessarily drift? In Sphinx, documenting wrong param name is drift. User following docs? Not error in code, but reference name doesn't match. Report true_drift. Yes.\n\nAdditional findings: Could be other similar mismatched doc params in headers.py: setlist default parameter documented :param default but signature default; okay. setkey? Let's inspect systematically. Candidate only one. There may be additional drift not candidate. Need list any others especially cross-file. Since only headers.py file provided, additional findings must be from same file? We can inspect. For example `setlist` doc param mismatch obvious. Another: `get_all` no doc maybe. `set` `value`; okay. `add` okay. `extend` no param doc? okay. `pop` default missing? Signature has default, docs says key omitted. No mismatch. `get` param \"type\" and signature type. Good.\n\nMaybe doc says `setlist(value)` in report, but code `values`. yes.\n\nWhat about `setlistdefault` param `default` documented correctly. `setdefault` correct. `getlist` correct. `get` default correct.\n\nCould there be a documentation drift: `setlist` doc says \":param value:\" instead of \":param values:\"; exactly candidate. Are there similar in `update`? no param docs.\n\nMaybe additional finding: docstring `set` says newly added key appears at end of list if no entry or replaces first one; code first occurrence replace, remaining removed; okay.\n\nMaybe `Headers.__init__` doc `:param defaults` matches. no.\n\nLet's formulate JSON. Ensure quote verbatim without line prefix. For code citation one location. For candidate code location perhaps signature line 428. Quote: \"    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:\". Need exact with indent. Candidate doc line 433 quote maybe \":param value: An iterable of header values. Newlines are not allowed and\" (from prompt). But task says code location relied on. We can use signature.\n\nAdditional findings empty array. But maybe need consider doc at line 433 as citation? They asked candidate verdict code citation. Fine.\n\nLet's answer."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8940,
+      "completion_tokens": 926,
+      "total_tokens": 9866,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:06:51.504401+00:00"
+}

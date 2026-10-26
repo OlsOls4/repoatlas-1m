@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 19664,
+  "completion_tokens": 974,
+  "finish_reason": "stop",
+  "latency_seconds": 16.312086259014904,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The docstring uses parameter name `cache`, but the method signature defines `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 641,
+        "end_line": 641,
+        "quote": "self, type: TypeForm[T], cache_result: bool = True"
+      },
+      "suggested_doc_fix": ":param cache_result: Whether to cache the returned hook.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-3"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "cattrs-400000:DD-3",
+    "doc_path": "src/cattrs/converters.py",
+    "doc_line": 650,
+    "doc_end": 650,
+    "doc_text": ":param cache: Whether to cache the returned hook.",
+    "claim": "The get_structure_hook docstring documents the caching parameter as `cache`, while the actual signature uses `cache_result`.",
+    "code_hint": "src/cattrs/converters.py:641-641 'self, type: TypeForm[T], cache_result: bool = True'",
+    "candidate_id": "C06"
+  },
+  "local_files": [
+    "src/cattrs/converters.py"
+  ],
+  "prompt_chars": 67969
+}

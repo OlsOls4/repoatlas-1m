@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 11658,
+  "completion_tokens": 2955,
+  "finish_reason": "stop",
+  "latency_seconds": 20.669252672989387,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The HH formatter renders datetime.hour with two digits, whose valid range is 00-23, not 24.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": "            return f\"{dt.hour:02d}\""
+      },
+      "suggested_doc_fix": "Change the HH token output row from `00, 01, 02 ... 23, 24` to `00, 01, 02 ... 23`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-3"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-3",
+    "doc_path": "docs/guide.rst",
+    "doc_line": 416,
+    "doc_end": 416,
+    "doc_text": "||                                |HH            |00, 01, 02 ... 23, 24                      |",
+    "claim": "The supported-token table lists HH as producing hours through 24, but the formatter only renders the datetime hour field, whose valid range is 00-23.",
+    "code_hint": "arrow/formatter.py:81-81 '            return f\"{dt.hour:02d}\"'",
+    "candidate_id": "C06"
+  },
+  "local_files": [
+    "arrow/formatter.py",
+    "docs/guide.rst"
+  ],
+  "prompt_chars": 30604
+}

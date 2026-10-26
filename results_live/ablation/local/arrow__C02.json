@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 25946,
+  "completion_tokens": 3091,
+  "finish_reason": "stop",
+  "latency_seconds": 14.198190156981582,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The dehumanize docstring documents a parameter named 'timestring', but the actual method parameter is named 'input_string'.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Change `:param timestring:` to `:param input_string:`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S24"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S24",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 1349,
+    "doc_end": 1349,
+    "doc_text": ":param timestring: a ``str`` representing a humanized relative time.",
+    "claim": "docstring-param: `dehumanize(timestring)`: documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 76107
+}

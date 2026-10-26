@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 5382,
+  "completion_tokens": 2522,
+  "finish_reason": "stop",
+  "latency_seconds": 20.22841364800115,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documentation still gives an import name for the with extension, but the current code does not expose `with_` on `jinja2.ext`, so following the documented import path would fail.",
+      "code_citation": {
+        "path": "docs/extensions.rst",
+        "start_line": 227,
+        "end_line": 231,
+        "quote": "With Statement\n--------------\n\n**Import name:** ``jinja2.ext.with_``\n\n.. versionchanged:: 2.9"
+      },
+      "suggested_doc_fix": "Remove or correct the `**Import name:** ``jinja2.ext.with_``` line, since that name is not available in `jinja2.ext`; state that the with statement is built in and no extension import is needed.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S17"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S17",
+    "doc_path": "docs/extensions.rst",
+    "doc_line": 230,
+    "doc_end": 230,
+    "doc_text": "**Import name:** ``jinja2.ext.with_``",
+    "claim": "dotted: `jinja2.ext.with_`: 'with_' not found on jinja2.ext",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "docs/extensions.rst"
+  ],
+  "prompt_chars": 17283
+}

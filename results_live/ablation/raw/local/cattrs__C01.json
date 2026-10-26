@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C01:S25",
+  "payload_sha256": "126c300e7fb0ea5510ee5b9f629a4035fbba81a2d6fb5aa052a3e890f0df04f5",
+  "latency_seconds": 17.656957306986442,
+  "body": {
+    "id": "chatcmpl-83",
+    "object": "chat.completion",
+    "created": 1793055697,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C01\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The documentation uses the singular exception name `ForbiddenExtraKeyError`, while the codebase/doc example at line 135 uses the plural `ForbiddenExtraKeysError`.\",\n      \"code_citation\": {\n        \"path\": \"docs/customizing.md\",\n        \"start_line\": 135,\n        \"end_line\": 135,\n        \"quote\": \"cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else\"\n      },\n      \"suggested_doc_fix\": \"Replace `ForbiddenExtraKeyError` with `ForbiddenExtraKeysError` on line 279.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Need decide C01. Doc says error class ForbiddenExtraKeyError? Code location. Need search repository packed only docs/customizing.md? We only have file. Need find code. Packed only one file? It says packed repository, only docs/customizing.md maybe filter includes. We need use whole repo but only provided. Could infer exception defined where? Maybe cattrs.errors.ForbiddenExtraKeysError (plural Keys). Doc line says ForbiddenExtraKeyError (singular). Candidate says undefined. Need code citation. But no code files provided? Possibly hidden? The pack only docs/customizing? That seems odd. We need answer with code_citation path/lines quote from provided. Could cite docs line? But code location required. Maybe need search within given file only. Candidate is docs-only file, no code citation. But task expects code citation. Could cite? We can't invent. Maybe exception name actually cattrs.errors.ForbiddenExtraKeysError, but no code file in pack. Additional findings perhaps other doc drifts. Need be accurate.\n\nLet's reason: cattrs exception likely `ForbiddenExtraKeysError` (plural keys). Doc line 279 says `ForbiddenExtraKeyError`. True drift. Code citation need path, start_line, end_line, quote. We don't have code. Could cite in docs? The instruction \"single code location you relied on\" likely can cite docs? But called code location. Since only docs/customizing.md, maybe quote doc line 279? But that's doc, not code. Hmm maybe repository pack omitted source due filter? It included only docs file relevant to candidates. Could answer code_citation with path `docs/customizing.md`? That's not code. But no alternative. Could use `cattrs/errors.py` lines unknown. Can't quote. Maybe \"unclear\"? Candidate clearly false report? Let's inspect: Docs line says `cattrs.errors.ForbiddenExtraKeysError`? Wait doc line 135: `cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else`. At line 279: `ForbiddenExtraKeyError: ...` likely exact doc typo. Candidate says `ForbiddenExtraKeyError` undefined. True drift. Code exception is `ForbiddenExtraKeysError`. Could cite doc line 135 as evidence, but code citation expected. Maybe cite line 135 in docs as code? It's documentation though. The schema doesn't permit no citation. We can put path docs/customizing.md start 135 end 135 quote `cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else`. That's a doc snippet but demonstrates correct spelling. But \"code location\" perhaps okay? Need maybe no additional findings.\n\nCould there be other drifts? Candidate only C01. Need additional findings maybe docs line 135 vs 279 mismatch. But that's same candidate; don't repeat. Cross-file? No other code. Additional findings could include `Converter` default? no. Since only one file, cannot verify. Omit additional.\n\nNeed output JSON only. Should verdict true_drift, reason. suggested_doc_fix: change `ForbiddenExtraKeyError` to `ForbiddenExtraKeysError`. code_citation path docs/customizing.md line 135 quote. Is that acceptable? The code citation field says path; could be docs. We can explain? final only JSON.\n\nLet's ensure no hidden issue: C01 doc text exact line 279: `ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber`. Report undefined. True. Good.\n\nPotential additional finding: line 279 singular vs line 135 plural in same doc; but candidate already covers. Maybe line 279 should match code: `ForbiddenExtraKeysError`. Yes.\n\nLet's output."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 7951,
+      "completion_tokens": 988,
+      "total_tokens": 8939,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:01:37.187888+00:00"
+}

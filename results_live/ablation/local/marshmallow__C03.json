@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 1076,
+  "completion_tokens": 344,
+  "finish_reason": "stop",
+  "latency_seconds": 8.541067174024647,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "AppError is explicitly defined in the documentation example at lines 14-15.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "class AppError(Exception):\n    pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "whitespace-normalised-match"
+      },
+      "source_id": "S31"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S31",
+    "doc_path": "docs/extending/custom_error_handling.rst",
+    "doc_line": 28,
+    "doc_end": 28,
+    "doc_text": "schema.load({\"email\": \"invalid-email\"})  # raises AppError",
+    "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "docs/extending/custom_error_handling.rst"
+  ],
+  "prompt_chars": 3839
+}

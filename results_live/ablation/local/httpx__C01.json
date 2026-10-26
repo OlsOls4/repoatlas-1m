@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 19407,
+  "completion_tokens": 1734,
+  "finish_reason": "stop",
+  "latency_seconds": 15.275130280992016,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "`progress` is a `rich.progress.Progress` instance, not httpx's `Headers`, and rich's `update()` accepts `completed=`.",
+      "code_citation": {
+        "path": "httpx/_models.py",
+        "start_line": 855,
+        "end_line": 857,
+        "quote": "    @property\n    def num_bytes_downloaded(self) -> int:\n        return self._num_bytes_downloaded"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S2"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S2",
+    "doc_path": "docs/advanced/clients.md",
+    "doc_line": 229,
+    "doc_end": 229,
+    "doc_text": "progress.update(download_task, completed=response.num_bytes_downloaded)",
+    "claim": "method-call-signature: `progress.update(...)`: no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "httpx/_models.py",
+    "docs/advanced/clients.md"
+  ],
+  "prompt_chars": 65461
+}

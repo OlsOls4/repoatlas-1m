@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 19641,
+  "completion_tokens": 1067,
+  "finish_reason": "stop",
+  "latency_seconds": 6.499492024013307,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The method signature parameter is named 'cache_result', but the docstring refers to 'cache'.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 492,
+        "end_line": 492,
+        "quote": "        self, type: Any, cache_result: bool = True"
+      },
+      "suggested_doc_fix": "Change ':param cache:' to ':param cache_result:' in the get_unstructure_hook docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S27"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S27",
+    "doc_path": "src/cattrs/converters.py",
+    "doc_line": 502,
+    "doc_end": 502,
+    "doc_text": ":param cache: Whether to cache the returned hook.",
+    "claim": "docstring-param: `get_unstructure_hook(cache)`: documented param 'cache' not in signature of get_unstructure_hook (src/cattrs/converters.py:491)",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "local_files": [
+    "src/cattrs/converters.py"
+  ],
+  "prompt_chars": 67875
+}

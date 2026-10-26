@@ -1,0 +1,32 @@
+{
+  "label": "httpx:C06:httpx-400000:DD-1",
+  "payload_sha256": "52eac9353c262e1af33d03c956531cc3b26fd61860e9b6243a8dbe4fd32ffc61",
+  "latency_seconds": 9.315843521995703,
+  "body": {
+    "id": "chatcmpl-840",
+    "object": "chat.completion",
+    "created": 1793055460,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C06\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The docs construct `httpx.Mounts`, but the transports package does not export `Mounts`; mounts are configured as a plain dictionary passed to `Client(mounts=...)`.\",\n      \"code_citation\": {\n        \"path\": \"httpx/_transports/__init__.py\",\n        \"start_line\": 7,\n        \"end_line\": 15,\n        \"quote\": \"__all__ = [\\n    \\\"ASGITransport\\\",\\n    \\\"AsyncBaseTransport\\\",\\n    \\\"BaseTransport\\\",\\n    \\\"AsyncHTTPTransport\\\",\\n    \\\"HTTPTransport\\\",\\n    \\\"MockTransport\\\",\\n    \\\"WSGITransport\\\",\\n]\"\n      },\n      \"suggested_doc_fix\": \"Replace `transport = httpx.Mounts({...})` and `client = httpx.Client(transport=transport)` with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Need analyze candidate C06 and search repo context maybe only files. We have enough. Candidate says docs lines 187-190 reference httpx.Mounts but package no export. Need verify. The doc snippet in provided: lines 178-195 use httpx.Mounts. Code __all__ no Mounts. Also later docs use plain mounts dict passed to mounts arg. So true drift. Suggested fix documentation-only: replace `transport = httpx.Mounts({...})` and `client = httpx.Client(transport=transport)` with `mounts = {...}` and `client = httpx.Client(mounts=mounts)` perhaps because intended redirect transports? Need maybe not exact API? Let's inspect custom HTTPSRedirect: it's BaseTransport. Could mount with mounts={'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}. And client mounts=... But HTTPSRedirect handle_request uses url copy etc outdated? But docs custom transport example line 185-187 maybe wrong? Candidate only about httpx.Mounts. The question asks one-line reason, single code location relied, suggested doc fix empty unless true. Could suggest replace. Need ensure suggested fix doc-only. Maybe:\n\"Replace `transport = httpx.Mounts({...})` and `client = httpx.Client(transport=transport)` with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.\" But then HTTPSRedirect is BaseTransport with handle_request url = request.url... Actually docs old custom transport uses new Request? Let's see if handle_request returns Response? httpx.BaseTransport.handle_request signature request. url is URL object with copy_with method, okay. But Response needs status_code and headers, no stream, okay. Actually in newer httpx, BaseTransport.handle_request(request) -> Response. Fine.\n\nNeed provide additional_findings missed, cross-file, drifts in prose. We need search docs for API mismatches. We only have docs file and transports init. Maybe additional drift in same doc: example Custom transport HTTPSRedirectTransport handle_request signature `handle_request(self, method, url, headers, stream, extensions)` old transport API maybe wrong? Let's inspect repo maybe base.py not included. Candidate only one file code. Packed only __init__ and docs. We cannot verify other APIs. Need be cautious. The prompt says list OTHER documentation drifts candidates missed, especially cross-file ones. But repository packed only relevant files? It includes full? It only includes two files. No client.py. So maybe no ability to verify. Could identify obvious in-doc inconsistency: custom mounts example uses `httpx.Mounts` same drift variant maybe single code location? Candidate covers one occurrence at lines 189-193. Another occurrence? Let's search: only httpx.Mounts in doc? grep mentally: line 178 and 190. Actually one block. Additional maybe `HTTPSRedirect` missing 'Transport' name? Doc defines class HTTPSRedirect(httpx.BaseTransport) then uses in Mounts? But no. The `mounts` example uses HTTPSRedirectTransport. Not drift.\n\nCould there be API drift: line 181 `class HTTPSRedirect(httpx.BaseTransport)` then calls `httpx.Response(303, headers={\"Location\": str(url)})` maybe valid. Code can't verify but likely.\n\nShould we include additional finding for same candidate? No.\n\nNeed output exact JSON. code_citation must path start end quote. For C06 choose code citation possibly docs? The item asks single code location relied on. We rely on httpx/_transports/__init__.py lines 7-15. Good. Need perhaps doc citation not required in verdict. Suggested doc fix string.\n\nLet's formulate reason one-line: \"The doc says to construct httpx.Mounts, but transports __all__ does not define Mounts; mounts are passed as a dict to Client(mounts=...).\" Good.\n\nsuggested_doc_fix: \"Replace lines 178-195's `transport = httpx.Mounts({...})` / `client = httpx.Client(transport=transport)` with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.\" Is that too much? Doc-only suggested fix. Fine.\n\nNeed maybe mention preserve HTTPSRedirect class. Actually class lacks \"Transport\" suffix but inherits BaseTransport. Mounts can map to transport instances. Good.\n\nPotential issue: The doc example's request.url.copy_with(scheme=\"https\") and Response(303...) might be outdated API. Could be another drift. But no code to verify in repo? Could inspect Client transports maybe not provided. We only have one code file. The base transport API not packed. The prompt says whole repo but packed only relevant files? It might filter. We should not invent additional findings without code citation. Thus additional_findings empty.\n\nEnsure JSON valid, no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 6171,
+      "completion_tokens": 1339,
+      "total_tokens": 7510,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T22:57:40.714877+00:00"
+}

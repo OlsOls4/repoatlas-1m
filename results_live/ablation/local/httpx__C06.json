@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 6171,
+  "completion_tokens": 1339,
+  "finish_reason": "stop",
+  "latency_seconds": 9.315843521995703,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The docs construct `httpx.Mounts`, but the transports package does not export `Mounts`; mounts are configured as a plain dictionary passed to `Client(mounts=...)`.",
+      "code_citation": {
+        "path": "httpx/_transports/__init__.py",
+        "start_line": 7,
+        "end_line": 15,
+        "quote": "__all__ = [\n    \"ASGITransport\",\n    \"AsyncBaseTransport\",\n    \"BaseTransport\",\n    \"AsyncHTTPTransport\",\n    \"HTTPTransport\",\n    \"MockTransport\",\n    \"WSGITransport\",\n]"
+      },
+      "suggested_doc_fix": "Replace `transport = httpx.Mounts({...})` and `client = httpx.Client(transport=transport)` with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "httpx-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "httpx-400000:DD-1",
+    "doc_path": "docs/advanced/transports.md",
+    "doc_line": 187,
+    "doc_end": 190,
+    "doc_text": "transport = httpx.Mounts({\n    'http://': HTTPSRedirect()\n    'https://': httpx.HTTPTransport()\n})",
+    "claim": "The transports documentation references `httpx.Mounts(...)`, but the package does not export a `Mounts` class; client mounts are configured with a plain mapping passed to `mounts=...`.",
+    "code_hint": "httpx/_transports/__init__.py:7-15 '__all__ = [\\n    \"ASGITransport\",\\n    \"AsyncBaseTransport\",\\n    \"BaseTransport\",\\n    \"AsyncHTTPTransport\",\\n    \"HTTPTransport\",\\n    \"MockTransport\",\\n    \"WSGITransport\",\\n]'",
+    "candidate_id": "C06"
+  },
+  "local_files": [
+    "httpx/_transports/__init__.py",
+    "docs/advanced/transports.md"
+  ],
+  "prompt_chars": 19385
+}

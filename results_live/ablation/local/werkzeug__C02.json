@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 5283,
+  "completion_tokens": 2224,
+  "finish_reason": "stop",
+  "latency_seconds": 12.561720030993456,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documentation points to RequestRedirect under werkzeug.exceptions, but the routing docs themselves import it from werkzeug.routing.",
+      "code_citation": {
+        "path": "docs/routing.rst",
+        "start_line": 24,
+        "end_line": 24,
+        "quote": "    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect"
+      },
+      "suggested_doc_fix": "Change `:exc:`~werkzeug.exceptions.RequestRedirect`` to `:exc:`~werkzeug.routing.RequestRedirect``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S36"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S36",
+    "doc_path": "docs/routing.rst",
+    "doc_line": 64,
+    "doc_end": 64,
+    "doc_text": "or :exc:`~werkzeug.exceptions.RequestRedirect`.  For more details about those",
+    "claim": "role: `werkzeug.exceptions.RequestRedirect`: 'RequestRedirect' not found on werkzeug.exceptions",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "docs/routing.rst"
+  ],
+  "prompt_chars": 17771
+}

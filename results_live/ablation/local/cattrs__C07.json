@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 19639,
+  "completion_tokens": 600,
+  "finish_reason": "stop",
+  "latency_seconds": 9.15029127598973,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The parameter is named `cache_result`, but the docstring refers to `cache`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 640,
+        "end_line": 642,
+        "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S28"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S28",
+    "doc_path": "src/cattrs/converters.py",
+    "doc_line": 651,
+    "doc_end": 651,
+    "doc_text": ":param cache: Whether to cache the returned hook.",
+    "claim": "docstring-param: `get_structure_hook(cache)`: documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "local_files": [
+    "src/cattrs/converters.py"
+  ],
+  "prompt_chars": 67871
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 19411,
+  "completion_tokens": 1571,
+  "finish_reason": "stop",
+  "latency_seconds": 13.185845156986034,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "In the example, `f` is an `io.BytesIO` instance, and `BytesIO.read(size)` accepts a size argument; the report incorrectly compared it to `httpx.Request.read`.",
+      "code_citation": {
+        "path": "docs/advanced/clients.md",
+        "start_line": 255,
+        "end_line": 255,
+        "quote": "with io.BytesIO(random.randbytes(total)) as f:"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S3"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S3",
+    "doc_path": "docs/advanced/clients.md",
+    "doc_line": 256,
+    "doc_end": 256,
+    "doc_text": "while data := f.read(1024):",
+    "claim": "method-call-signature: `f.read(...)`: 1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "httpx/_models.py",
+    "docs/advanced/clients.md"
+  ],
+  "prompt_chars": 65413
+}

@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C07:S28",
+  "payload_sha256": "131fda05bdae7d44136d6e86064adfc52683b0381b956b1bc93de54b64271b6b",
+  "latency_seconds": 9.15029127598973,
+  "body": {
+    "id": "chatcmpl-609",
+    "object": "chat.completion",
+    "created": 1793055767,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C07\", \"verdict\": \"true_drift\", \"reason\": \"The parameter is named `cache_result`, but the docstring refers to `cache`.\", \"code_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 640, \"end_line\": 642, \"quote\": \"    def get_structure_hook(\\n        self, type: TypeForm[T], cache_result: bool = True\\n    ) -> Callable[[Any, TypeForm[T]], T]:\"}, \"suggested_doc_fix\": \"Change `:param cache:` to `:param cache_result:`.\"}], \"additional_findings\": [{\"finding_id\": \"AD-1\", \"drift_kind\": \"signature\", \"explanation\": \"`get_unstructure_hook` also documents its caching parameter as `cache`, while the actual parameter is `cache_result`.\", \"doc_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 502, \"end_line\": 502, \"quote\": \"        :param cache: Whether to cache the returned hook.\"}, \"code_citation\": {\"path\": \"src/cattrs/converters.py\", \"start_line\": 491, \"end_line\": 493, \"quote\": \"    def get_unstructure_hook(\\n        self, type: Any, cache_result: bool = True\\n    ) -> UnstructureHook:\"}, \"proposed_fix\": \"Change `:param cache:` to `:param cache_result:`.\"}]}",
+          "reasoning": "Candidate C07: docstring at get_structure_hook says \":param cache: Whether to cache the returned hook.\" but actual param is `cache_result`. So true_drift. Suggested fix change \"cache\" to \"cache_result\".\n\nAdditional drifts: get_unstructure_hook same issue? line 502 says \":param cache:\" but param is cache_result. That is cross-file? same file. Candidate only C07 but task 2 asks other drifts candidates missed. We should list get_unstructure_hook too. Also maybe copy methods: BaseConverter.copy docstring only detailed_validation but signature has dict_factory, unstruct_strat, prefer_attrib_converters, detailed_validation; not a drift? Doc incomplete but not wrong? Probably not.\n\nAlso GenConverter alias etc.\n\nLet's identify any others: get_structure_hook/get_unstructure_hook both use cache_result but doc says cache. Both true drift. Candidate covers get_structure_hook. Additional finding get_unstructure_hook.\n\nAny docstring param mismatches in convert? BaseConverter.get_unstructure_hook line 502 \":param cache:\" vs cache_result. Yes.\n\nAlso _gen_attrs_union_structure says use_literals but fine.\n\nMaybe unstructure method? no.\n\nLet's output JSON."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19639,
+      "completion_tokens": 600,
+      "total_tokens": 20239,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:47.184917+00:00"
+}

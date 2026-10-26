@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 12908,
+  "completion_tokens": 1849,
+  "finish_reason": "stop",
+  "latency_seconds": 16.00073709199205,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The docstring says _peek_next caches in :attr:`_last`, but the implementation stores the peeked value in `self._after`.",
+      "code_citation": {
+        "path": "src/jinja2/runtime.py",
+        "start_line": 487,
+        "end_line": 492,
+        "quote": "    def _peek_next(self) -> t.Any:\n        \"\"\"Return the next element in the iterable, or :data:`missing`\n        if the iterable is exhausted. Only peeks one item ahead, caching\n        the result in :attr:`_last` for use in subsequent checks. The\n        cache is reset when :meth:`__next__` is called.\n        \"\"\""
+      },
+      "suggested_doc_fix": "Only peeks one item ahead, caching the result in :attr:`_after` for use in subsequent checks.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S19"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S19",
+    "doc_path": "src/jinja2/runtime.py",
+    "doc_line": 490,
+    "doc_end": 490,
+    "doc_text": "the result in :attr:`_last` for use in subsequent checks. The",
+    "claim": "role:undefined: `_last`: :attr: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "local_files": [
+    "src/jinja2/runtime.py"
+  ],
+  "prompt_chars": 41005
+}

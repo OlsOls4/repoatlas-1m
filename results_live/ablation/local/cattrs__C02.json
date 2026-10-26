@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 9438,
+  "completion_tokens": 502,
+  "finish_reason": "stop",
+  "latency_seconds": 12.65812070798711,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The traceback documentation names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError.",
+      "code_citation": {
+        "path": "src/cattrs/errors.py",
+        "start_line": 118,
+        "end_line": 118,
+        "quote": "class ForbiddenExtraKeysError(CattrsError):"
+      },
+      "suggested_doc_fix": "Change `ForbiddenExtraKeyError` to `ForbiddenExtraKeysError` in docs/customizing.md.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "cattrs-400000:DD-1",
+    "doc_path": "docs/customizing.md",
+    "doc_line": 279,
+    "doc_end": 279,
+    "doc_text": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber",
+    "claim": "The documentation example names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError.",
+    "code_hint": "src/cattrs/errors.py:118-118 'class ForbiddenExtraKeysError(CattrsError):'",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "src/cattrs/errors.py",
+    "docs/customizing.md"
+  ],
+  "prompt_chars": 31308
+}

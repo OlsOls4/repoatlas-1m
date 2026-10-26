@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 14479,
+  "completion_tokens": 1869,
+  "finish_reason": "stop",
+  "latency_seconds": 19.283897778979735,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "The documentation references `SharedDataMiddleware` directly on `werkzeug.middleware`, but the implementation imports it from the shared_data submodule.",
+      "code_citation": {
+        "path": "src/werkzeug/serving.py",
+        "start_line": 1075,
+        "end_line": 1075,
+        "quote": "        from .middleware.shared_data import SharedDataMiddleware"
+      },
+      "suggested_doc_fix": "Change the reference to `:class:`~werkzeug.middleware.shared_data.SharedDataMiddleware`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S40"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S40",
+    "doc_path": "src/werkzeug/serving.py",
+    "doc_line": 1021,
+    "doc_end": 1021,
+    "doc_text": ":class:`~werkzeug.middleware.SharedDataMiddleware`.",
+    "claim": "role: `werkzeug.middleware.SharedDataMiddleware`: 'SharedDataMiddleware' not found on werkzeug.middleware",
+    "code_hint": "",
+    "candidate_id": "C08"
+  },
+  "local_files": [
+    "src/werkzeug/serving.py"
+  ],
+  "prompt_chars": 47655
+}

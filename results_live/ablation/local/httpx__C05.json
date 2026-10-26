@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 5918,
+  "completion_tokens": 2772,
+  "finish_reason": "stop",
+  "latency_seconds": 15.669586933014216,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "The example passes a non-existent `httpx.Mounts` object to `transport=`, while the documented routing API uses a mounts dictionary passed to `Client(mounts=...)`.",
+      "code_citation": {
+        "path": "docs/advanced/transports.md",
+        "start_line": 298,
+        "end_line": 299,
+        "quote": "mounts = {'http://': HTTPSRedirectTransport()}\nclient = httpx.Client(mounts=mounts)"
+      },
+      "suggested_doc_fix": "Replace the `httpx.Mounts` example with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and `client = httpx.Client(mounts=mounts)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S6"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S6",
+    "doc_path": "docs/advanced/transports.md",
+    "doc_line": 178,
+    "doc_end": 178,
+    "doc_text": "Or this example, which uses a custom transport and `httpx.Mounts` to always redirect `http://` requests.",
+    "claim": "dotted: `httpx.Mounts`: 'Mounts' not found on httpx",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "local_files": [
+    "docs/advanced/transports.md"
+  ],
+  "prompt_chars": 18604
+}

@@ -1,0 +1,32 @@
+{
+  "label": "httpx:C04:S5",
+  "payload_sha256": "3e01247c6b2ed23ba69ad52e1a2240003e63905a4d8f2bf108e3750be9c0f68e",
+  "latency_seconds": 13.992163579998305,
+  "body": {
+    "id": "chatcmpl-273",
+    "object": "chat.completion",
+    "created": 1793055435,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C04\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The documented top-level `httpx.request` call passes `extensions=...`, but `httpx.request` does not accept an `extensions` parameter.\",\n      \"code_citation\": {\n        \"path\": \"httpx/_api.py\",\n        \"start_line\": 39,\n        \"end_line\": 56,\n        \"quote\": \"def request(\\n    method: str,\\n    url: URL | str,\\n    *,\\n    params: QueryParamTypes | None = None,\\n    content: RequestContent | None = None,\\n    data: RequestData | None = None,\\n    files: RequestFiles | None = None,\\n    json: typing.Any | None = None,\\n    headers: HeaderTypes | None = None,\\n    cookies: CookieTypes | None = None,\\n    auth: AuthTypes | None = None,\\n    proxy: ProxyTypes | None = None,\\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\\n    follow_redirects: bool = False,\\n    verify: ssl.SSLContext | str | bool = True,\\n    trust_env: bool = True,\\n) -> Response:\"\n      },\n      \"suggested_doc_fix\": \"Use a Client instance instead, e.g. `client = httpx.Client(); response = client.request(\\\"CONNECT\\\", \\\"https://www.example.com\\\", extensions=extensions)`.\"\n    }\n  ],\n  \"additional_findings\": [\n    {\n      \"finding_id\": \"AD-1\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"The documentation calls the top-level `httpx.get` with `extensions=extensions`, but `httpx.get` has no `extensions` parameter.\",\n      \"doc_citation\": {\n        \"path\": \"docs/advanced/extensions.md\",\n        \"start_line\": 168,\n        \"end_line\": 170,\n        \"quote\": \"extensions = {\\\"target\\\": b\\\"/test^path\\\"}\\nresponse = httpx.get(\\\"https://www.example.com\\\", extensions=extensions)\"\n      },\n      \"code_citation\": {\n        \"path\": \"httpx/_api.py\",\n        \"start_line\": 174,\n        \"end_line\": 186,\n        \"quote\": \"def get(\\n    url: URL | str,\\n    *,\\n    params: QueryParamTypes | None = None,\\n    headers: HeaderTypes | None = None,\\n    cookies: CookieTypes | None = None,\\n    auth: AuthTypes | None = None,\\n    proxy: ProxyTypes | None = None,\\n    follow_redirects: bool = False,\\n    verify: ssl.SSLContext | str | bool = True,\\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\\n    trust_env: bool = True,\\n) -> Response:\"\n      },\n      \"proposed_fix\": \"Change the example to instantiate a client, e.g. `client = httpx.Client(); response = client.get(\\\"https://www.example.com\\\", extensions=extensions)`.\"\n    }\n  ]\n}",
+          "reasoning": "Candidate C04: docs line 179 uses `httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)`. httpx.request signature in httpx/_api.py:39 has no extensions param. So user following would hit TypeError. True drift. Code location: def request lines 39-56. Quote verbatim. Suggested fix: use client.request? Or use extensions support? Let's check how extensions are passed. Client.request method likely accepts extensions? Let's inspect. Packed only _api.py and docs. Client.request? Not included. But candidate specifically says no param named extensions in httpx.request. True drift. Suggested doc fix: maybe change to `client = httpx.Client(); response = client.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)` or `httpx.request(\"CONNECT\", ..., extensions=...)` not supported at top-level. But docs first example uses client.get with extensions. Top-level httpx.get? Does it support extensions? From httpx.get signature no extensions. Wait docs line 57 uses client.get with extensions. httpx package-level get? _api.get also no extensions. So top-level functions don't support extensions parameter? Let's check _client.py not packed. Client.get probably accepts extensions via request. But httpx.get top-level calls request without extensions. So any docs using extensions with httpx.get/httpx.request top-level? Line 169 `response = httpx.get(\"https://www.example.com\", extensions=extensions)` also would be invalid. But candidate only C04 mentions line 179. Additional findings can include line 169 and 179? They ask cross-file drifts. Let's verify code: httpx.request signature no extensions. httpx.get no extensions. So docs line 169 and 179 are drifts. Also line 25, 48 etc all use client.get with extensions, valid likely Client supports. Line 225 httpx.get in docs Response extensions uses no extensions so valid. Line 169 and 179 invalid. Should we add AD findings for those? Candidate missed. The task says list other drifts candidates missed, cross-file/prose. C04 specifically line179. Line169 also true drift (httpx.get no extensions). Add AD-1 maybe. Also line? Let's scan: docs line 169 `response = httpx.get(\"https://www.example.com\", extensions=extensions)`; line 179 `response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)`. Both. Could be additional finding. Need JSON.\n\nAlso maybe target extension line 179 comment says CONNECT *. Actually text \"CONNECT * HTTP/1.1\" but url https://www.example.com? Hmm doc says target \"*\" extension. The request would be CONNECT https? Not maybe. But focus signature.\n\nVerdict C04 true_drift. Code citation path httpx/_api.py start 39 end 56 quote \"def request(\\n    method: str,\" etc. Need exact verbatim lines 39-56. We'll quote from \"def request(\" to \"trust_env: bool = True,\\n) -> Response:\". The line format includes 56|) -> Response:. Good.\n\nAdditional finding AD-1 for line 169. Drift kind signature. Doc citation lines 168-170? Quote includes extensions line. Code citation same def request? But httpx.get signature maybe _api.get lines 174-186. Use that. Quote `def get(` no extensions. Good.\n\nLet's output."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 8478,
+      "completion_tokens": 1472,
+      "total_tokens": 9950,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T22:57:15.720191+00:00"
+}

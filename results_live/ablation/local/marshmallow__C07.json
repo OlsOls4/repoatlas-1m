@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 6803,
+  "completion_tokens": 2940,
+  "finish_reason": "stop",
+  "latency_seconds": 20.73150079601328,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "marshmallow 4.0 renamed the decorator option from `pass_many` to `pass_collection`, so the docs' `@post_dump(pass_many=True)` example uses a nonexistent parameter.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 152,
+        "end_line": 157,
+        "quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n    pass_original: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "suggested_doc_fix": "Replace `@post_dump(pass_many=True)` with `@post_dump(pass_collection=True)` in docs/extending/pre_and_post_processing.rst.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S34"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S34",
+    "doc_path": "docs/extending/pre_and_post_processing.rst",
+    "doc_line": 66,
+    "doc_end": 66,
+    "doc_text": "@post_dump(pass_many=True)",
+    "claim": "call-signature: `marshmallow.post_dump(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "local_files": [
+    "src/marshmallow/decorators.py",
+    "docs/extending/pre_and_post_processing.rst"
+  ],
+  "prompt_chars": 22927
+}

@@ -1,0 +1,32 @@
+{
+  "label": "marshmallow:C01:S29",
+  "payload_sha256": "4541c1e76ac024837fe079e8c914d9389aaee4659d5803f231811958b6173865",
+  "latency_seconds": 9.699942468985682,
+  "body": {
+    "id": "chatcmpl-559",
+    "object": "chat.completion",
+    "created": 1793055776,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C01\",\n      \"verdict\": \"false\",\n      \"reason\": \"AppError is intentionally defined by the user in the documentation example, not an undefined package API.\",\n      \"code_citation\": {\n        \"path\": \"docs/extending/custom_error_handling.rst\",\n        \"start_line\": 14,\n        \"end_line\": 15,\n        \"quote\": \"    class AppError(Exception):\\n        pass\"\n      },\n      \"suggested_doc_fix\": \"\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON. Need assess candidate. Candidate says docs/extending/custom_error_handling.rst:14 doc text 'class AppError(Exception):' report exception-name undefined, AppError defined nowhere in package code. Is that drift? It's user-defined exception in example. False. Need code citation. Which code location relied on? Could cite this doc itself? Candidate asks code location you relied on. Maybe entire example? We need one code location. We can cite file lines 13-15? But \"code location\" maybe repository file outside docs? Since no package code defines AppError, but it's defined in doc example itself lines 14-15. Need verbatim quote. Start 14 end 15 perhaps. \"class AppError(Exception): pass\". But is that \"code\"? In packed repo only docs file. Could cite lines 14-15. Verdict false. Suggested doc fix empty.\n\nNeed additional findings? Maybe inspect docs? Only file provided. \"especially cross-file\". We only have one file. Candidate missed? Perhaps handle_error signature changed? We don't have code. Only candidate doc. No marshmallow source in pack, so cannot determine. Must omit if unsure. Could maybe identify from doc only? No code. So additional_findings empty. But Task 2 says list any OTHER drifts candidates missed, especially cross-file. No repository code available except doc, so no.\n\nNeed ensure JSON strict. verdicts array one. candidate_id C01. Verdict false. Reason: AppError is intentionally user-defined exception in example, not package API. code citation path docs/...? Usually code location maybe doc example lines. They say single code location you relied on. start_line 14 end_line 15 quote \"class AppError(Exception):\\n    pass\"? The line format no prefix. We need exact quote lines. Lines 14 and 15: 14 class AppError(Exception):, 15 pass (indented? Looking shown: 14|    class AppError(Exception): 15|        pass). Actually indentation: line 14 has 4 spaces? Let's preserve exact from packed: \n14|    class AppError(Exception):\n15|        pass\nThus quote should be \"    class AppError(Exception):\\n        pass\". JSON escaped. Could choose start 10 end 28 entire example, but one location. Better 14-15.\n\nNote \"code_citation\" quote copied without <line> prefix. Yes.\n\nShould suggested_doc_fix empty string false. final only JSON."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 1067,
+      "completion_tokens": 679,
+      "total_tokens": 1746,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:56.900279+00:00"
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 4848,
+  "completion_tokens": 1146,
+  "finish_reason": "stop",
+  "latency_seconds": 11.301776000997052,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documentation shows `receive_json(data, mode=\"binary\")`, but the implementation's `receive_json` has no `data` parameter and only accepts `mode`.",
+      "code_citation": {
+        "path": "starlette/websockets.py",
+        "start_line": 136,
+        "end_line": 136,
+        "quote": "async def receive_json(self, mode: str = \"text\") -> Any:"
+      },
+      "suggested_doc_fix": "Change `websocket.receive_json(data, mode=\"binary\")` to `websocket.receive_json(mode=\"binary\")`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "starlette-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "starlette",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "starlette-400000:DD-1",
+    "doc_path": "docs/websockets.md",
+    "doc_line": 73,
+    "doc_end": 73,
+    "doc_text": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+    "claim": "The WebSocket documentation calls `receive_json` with a positional `data` argument, but the implementation only accepts `mode`.",
+    "code_hint": "starlette/websockets.py:136-136 'async def receive_json(self, mode: str = \"text\") -> Any:'",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "starlette/websockets.py",
+    "docs/websockets.md"
+  ],
+  "prompt_chars": 17458
+}

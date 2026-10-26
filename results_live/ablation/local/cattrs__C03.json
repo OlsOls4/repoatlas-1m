@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 2548,
+  "completion_tokens": 805,
+  "finish_reason": "stop",
+  "latency_seconds": 11.164247470995178,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "MyInterestingException is an illustrative user-defined exception placeholder in an example custom formatter, not a name promised by cattrs.",
+      "code_citation": {
+        "path": "docs/validation.md",
+        "start_line": 107,
+        "end_line": 107,
+        "quote": "...     if isinstance(exc, MyInterestingException):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S26"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S26",
+    "doc_path": "docs/validation.md",
+    "doc_line": 107,
+    "doc_end": 107,
+    "doc_text": "...     if isinstance(exc, MyInterestingException):",
+    "claim": "exception-name:undefined: `MyInterestingException`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "docs/validation.md"
+  ],
+  "prompt_chars": 8857
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 9920,
+  "completion_tokens": 1536,
+  "finish_reason": "stop",
+  "latency_seconds": 15.37281842099037,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "Documentation incorrectly adds a `data` positional argument to `receive_json`, but the method takes only `mode` and returns received data.",
+      "code_citation": {
+        "path": "starlette/testclient.py",
+        "start_line": 188,
+        "end_line": 195,
+        "quote": "def receive_json(self, mode: Literal[\"text\", \"binary\"] = \"text\") -> Any:\n        message = self.receive()\n        self._raise_on_close(message)\n        if mode == \"text\":\n            text = message[\"text\"]\n        else:\n            text = message[\"bytes\"].decode(\"utf-8\")\n        return json.loads(text)"
+      },
+      "suggested_doc_fix": "Use `websocket.receive_json(mode=\"binary\")` to receive JSON over binary data frames.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "starlette",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S1",
+    "doc_path": "docs/websockets.md",
+    "doc_line": 74,
+    "doc_end": 74,
+    "doc_text": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+    "claim": "method-call-signature: `websocket.receive_json(...)`: keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "starlette/testclient.py",
+    "docs/websockets.md"
+  ],
+  "prompt_chars": 34654
+}

@@ -1,0 +1,428 @@
+{
+  "calls": 60,
+  "prompt_tokens": 1830688,
+  "completion_tokens": 117781,
+  "total_tokens": 1948469,
+  "entries": [
+    {
+      "kind": "local",
+      "label": "starlette:C01:S0",
+      "prompt": 6162,
+      "completion": 1990,
+      "at": "2026-10-26T22:55:53.972933+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "starlette:C02:starlette-400000:DD-1",
+      "prompt": 4848,
+      "completion": 1146,
+      "at": "2026-10-26T22:56:05.279551+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "starlette:C03:S1",
+      "prompt": 9920,
+      "completion": 1536,
+      "at": "2026-10-26T22:56:20.657377+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C01:S2",
+      "prompt": 19407,
+      "completion": 1734,
+      "at": "2026-10-26T22:56:35.952075+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C02:S3",
+      "prompt": 19411,
+      "completion": 1571,
+      "at": "2026-10-26T22:56:49.142516+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C03:S4",
+      "prompt": 8476,
+      "completion": 2233,
+      "at": "2026-10-26T22:57:01.723729+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C04:S5",
+      "prompt": 8478,
+      "completion": 1472,
+      "at": "2026-10-26T22:57:15.719944+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C05:S6",
+      "prompt": 5918,
+      "completion": 2772,
+      "at": "2026-10-26T22:57:31.393532+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C06:httpx-400000:DD-1",
+      "prompt": 6171,
+      "completion": 1339,
+      "at": "2026-10-26T22:57:40.714662+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C07:S7",
+      "prompt": 26560,
+      "completion": 2289,
+      "at": "2026-10-26T22:57:52.343085+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C08:S8",
+      "prompt": 3912,
+      "completion": 1599,
+      "at": "2026-10-26T22:58:09.849142+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C09:httpx-400000:DD-2",
+      "prompt": 25205,
+      "completion": 1326,
+      "at": "2026-10-26T22:58:19.479908+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "httpx:C10:S9",
+      "prompt": 25076,
+      "completion": 805,
+      "at": "2026-10-26T22:58:30.442167+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "click:C01:click-400000:DD-1",
+      "prompt": 19881,
+      "completion": 1268,
+      "at": "2026-10-26T22:58:46.024958+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "click:C02:S10",
+      "prompt": 2675,
+      "completion": 1596,
+      "at": "2026-10-26T22:59:01.916172+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "nox:C01:S20",
+      "prompt": 24599,
+      "completion": 1220,
+      "at": "2026-10-26T22:59:09.250559+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "nox:C02:S21",
+      "prompt": 8200,
+      "completion": 1723,
+      "at": "2026-10-26T22:59:22.386056+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "nox:C03:nox-400000:DD-1",
+      "prompt": 15485,
+      "completion": 1561,
+      "at": "2026-10-26T22:59:37.011555+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C01:S23",
+      "prompt": 25919,
+      "completion": 2223,
+      "at": "2026-10-26T22:59:52.850555+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C02:S24",
+      "prompt": 25946,
+      "completion": 3091,
+      "at": "2026-10-26T23:00:07.052150+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C03:arrow-400000:DD-1",
+      "prompt": 25978,
+      "completion": 940,
+      "at": "2026-10-26T23:00:14.730221+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C04:arrow-400000:DD-2",
+      "prompt": 25987,
+      "completion": 2079,
+      "at": "2026-10-26T23:00:35.826255+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C05:S22",
+      "prompt": 938,
+      "completion": 955,
+      "at": "2026-10-26T23:00:48.491573+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C06:arrow-400000:DD-3",
+      "prompt": 11658,
+      "completion": 2955,
+      "at": "2026-10-26T23:01:09.164545+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "arrow:C07:arrow-400000:DD-4",
+      "prompt": 11642,
+      "completion": 1583,
+      "at": "2026-10-26T23:01:19.517803+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C01:S25",
+      "prompt": 7951,
+      "completion": 988,
+      "at": "2026-10-26T23:01:37.187638+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C02:cattrs-400000:DD-1",
+      "prompt": 9438,
+      "completion": 502,
+      "at": "2026-10-26T23:01:49.850026+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C03:S26",
+      "prompt": 2548,
+      "completion": 805,
+      "at": "2026-10-26T23:02:01.018658+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C04:S27",
+      "prompt": 19641,
+      "completion": 1067,
+      "at": "2026-10-26T23:02:07.521882+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C05:cattrs-400000:DD-2",
+      "prompt": 19663,
+      "completion": 1024,
+      "at": "2026-10-26T23:02:21.713810+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C06:cattrs-400000:DD-3",
+      "prompt": 19664,
+      "completion": 974,
+      "at": "2026-10-26T23:02:38.030197+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "cattrs:C07:S28",
+      "prompt": 19639,
+      "completion": 600,
+      "at": "2026-10-26T23:02:47.184712+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C01:S29",
+      "prompt": 1067,
+      "completion": 679,
+      "at": "2026-10-26T23:02:56.900046+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C02:S30",
+      "prompt": 1078,
+      "completion": 552,
+      "at": "2026-10-26T23:03:05.541411+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C03:S31",
+      "prompt": 1076,
+      "completion": 344,
+      "at": "2026-10-26T23:03:14.085340+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C04:marshmallow-400000:DD-1",
+      "prompt": 17040,
+      "completion": 1488,
+      "at": "2026-10-26T23:03:28.412084+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C05:S32",
+      "prompt": 1716,
+      "completion": 1092,
+      "at": "2026-10-26T23:03:40.103508+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C06:S33",
+      "prompt": 6803,
+      "completion": 3181,
+      "at": "2026-10-26T23:04:02.622988+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C07:S34",
+      "prompt": 6803,
+      "completion": 2940,
+      "at": "2026-10-26T23:04:23.359346+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "marshmallow:C08:marshmallow-400000:DD-2",
+      "prompt": 27925,
+      "completion": 2205,
+      "at": "2026-10-26T23:04:32.818967+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "attrs:C01:S11",
+      "prompt": 10477,
+      "completion": 1021,
+      "at": "2026-10-26T23:04:46.148534+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "attrs:C02:S12",
+      "prompt": 4514,
+      "completion": 3165,
+      "at": "2026-10-26T23:05:05.995518+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "jinja:C01:jinja-400000:DD-1",
+      "prompt": 15542,
+      "completion": 2585,
+      "at": "2026-10-26T23:05:16.029179+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "jinja:C02:S17",
+      "prompt": 5382,
+      "completion": 2522,
+      "at": "2026-10-26T23:05:36.262528+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "jinja:C03:S18",
+      "prompt": 5383,
+      "completion": 1655,
+      "at": "2026-10-26T23:05:48.845366+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "jinja:C04:S19",
+      "prompt": 12908,
+      "completion": 1849,
+      "at": "2026-10-26T23:06:04.850317+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C01:S35",
+      "prompt": 5278,
+      "completion": 1721,
+      "at": "2026-10-26T23:06:13.280286+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C02:S36",
+      "prompt": 5283,
+      "completion": 2224,
+      "at": "2026-10-26T23:06:25.846180+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C03:S37",
+      "prompt": 8918,
+      "completion": 1885,
+      "at": "2026-10-26T23:06:45.649143+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C04:S42",
+      "prompt": 8940,
+      "completion": 926,
+      "at": "2026-10-26T23:06:51.504123+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C05:werkzeug-400000:DD-1",
+      "prompt": 21627,
+      "completion": 2062,
+      "at": "2026-10-26T23:07:00.470321+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C06:S38",
+      "prompt": 2952,
+      "completion": 1664,
+      "at": "2026-10-26T23:07:12.953477+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C07:S39",
+      "prompt": 2958,
+      "completion": 1519,
+      "at": "2026-10-26T23:07:26.120791+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C08:S40",
+      "prompt": 14479,
+      "completion": 1869,
+      "at": "2026-10-26T23:07:45.408851+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "werkzeug:C09:S41",
+      "prompt": 19075,
+      "completion": 2617,
+      "at": "2026-10-26T23:08:11.897583+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "pydantic-settings:C01:pydantic-settings-400000:DD-1",
+      "prompt": 64417,
+      "completion": 1774,
+      "at": "2026-10-26T23:08:30.325246+00:00"
+    },
+    {
+      "kind": "local",
+      "label": "jinja:C01:jinja-400000:DD-1:resend-1",
+      "prompt": 15542,
+      "completion": 1970,
+      "at": "2026-10-26T23:10:24.000742+00:00"
+    },
+    {
+      "kind": "stability",
+      "label": "httpx",
+      "prompt": 393820,
+      "completion": 9687,
+      "at": "2026-10-26T23:11:04.501406+00:00"
+    },
+    {
+      "kind": "stability",
+      "label": "werkzeug",
+      "prompt": 387250,
+      "completion": 8668,
+      "at": "2026-10-26T23:11:38.927108+00:00"
+    },
+    {
+      "kind": "stability",
+      "label": "marshmallow",
+      "prompt": 295439,
+      "completion": 4951,
+      "at": "2026-10-26T23:12:00.475381+00:00"
+    }
+  ]
+}

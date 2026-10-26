@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 5278,
+  "completion_tokens": 1721,
+  "finish_reason": "stop",
+  "latency_seconds": 8.412153284996748,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The quickstart imports `NotFound` from `werkzeug.routing`, but the documentation itself places `NotFound` in `werkzeug.exceptions`; only `RequestRedirect` is part of routing's documented exception surface shown here.",
+      "code_citation": {
+        "path": "docs/routing.rst",
+        "start_line": 24,
+        "end_line": 24,
+        "quote": "    from werkzeug.routing import Map, Rule, NotFound, RequestRedirect"
+      },
+      "suggested_doc_fix": "Change the import to `from werkzeug.routing import Map, Rule, RequestRedirect` (or import `NotFound` from `werkzeug.exceptions` instead).",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S35"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S35",
+    "doc_path": "docs/routing.rst",
+    "doc_line": 24,
+    "doc_end": 24,
+    "doc_text": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect",
+    "claim": "import: `werkzeug.routing.NotFound`: 'NotFound' not found on werkzeug.routing",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "docs/routing.rst"
+  ],
+  "prompt_chars": 17741
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 19881,
+  "completion_tokens": 1268,
+  "finish_reason": "stop",
+  "latency_seconds": 15.565546867990633,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The documentation calls the public file parameter type `FileType`, but the code defines and uses the class `File`.",
+      "code_citation": {
+        "path": "src/click/types.py",
+        "start_line": 915,
+        "end_line": 915,
+        "quote": "class File(ParamType[t.IO[t.Any]]):"
+      },
+      "suggested_doc_fix": "Change `{class}`FileType`` to `{class}`File`` in the `FileError` bullet.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "click-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "click",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "click-400000:DD-1",
+    "doc_path": "docs/exceptions.md",
+    "doc_line": 109,
+    "doc_end": 110,
+    "doc_text": "- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file.",
+    "claim": "The documentation calls Click's file parameter type `FileType`, but the implemented public type class is named `File`.",
+    "code_hint": "src/click/types.py:915-915 'class File(ParamType[t.IO[t.Any]]):'",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "src/click/types.py",
+    "docs/exceptions.md"
+  ],
+  "prompt_chars": 62565
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 24599,
+  "completion_tokens": 1220,
+  "finish_reason": "stop",
+  "latency_seconds": 7.318731953011593,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The tutorial calls `conda_install` with `channels=`, but the implementation parameter is named `channel`.",
+      "code_citation": {
+        "path": "nox/sessions.py",
+        "start_line": 717,
+        "end_line": 721,
+        "quote": "    def conda_install(\n        self,\n        *args: str,\n        auto_offline: bool = True,\n        channel: str | Sequence[str] = \"\",\n"
+      },
+      "suggested_doc_fix": "Change `session.conda_install(\"pytest\", channels=[\"conda-forge\"])` to `session.conda_install(\"pytest\", channel=[\"conda-forge\"])`.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S20"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S20",
+    "doc_path": "docs/tutorial.rst",
+    "doc_line": 488,
+    "doc_end": 488,
+    "doc_text": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+    "claim": "method-call-signature: `session.conda_install(...)`: no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "nox/sessions.py",
+    "docs/tutorial.rst"
+  ],
+  "prompt_chars": 79911
+}

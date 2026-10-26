@@ -1,0 +1,32 @@
+{
+  "label": "httpx:C09:httpx-400000:DD-2",
+  "payload_sha256": "3584b46b0271cddb010923ed8cd617d0f06cdc9bf0ffd903231789cd6134b8b7",
+  "latency_seconds": 9.626184126012959,
+  "body": {
+    "id": "chatcmpl-926",
+    "object": "chat.completion",
+    "created": 1793055499,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C09\", \"verdict\": \"true_drift\", \"reason\": \"`Client.__init__` has no `app` parameter, so the documented `httpx.Client(app=app)` example cannot be used as written.\", \"code_citation\": {\"path\": \"httpx/_client.py\", \"start_line\": 639, \"end_line\": 661, \"quote\": \"    def __init__(\\n        self,\\n        *,\\n        auth: AuthTypes | None = None,\\n        params: QueryParamTypes | None = None,\\n        headers: HeaderTypes | None = None,\\n        cookies: CookieTypes | None = None,\\n        verify: ssl.SSLContext | str | bool = True,\\n        cert: CertTypes | None = None,\\n        trust_env: bool = True,\\n        http1: bool = True,\\n        http2: bool = False,\\n        proxy: ProxyTypes | None = None,\\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\\n        follow_redirects: bool = False,\\n        limits: Limits = DEFAULT_LIMITS,\\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\\n        base_url: URL | str = \\\"\\\",\\n        transport: BaseTransport | None = None,\\n        default_encoding: str | typing.Callable[[bytes], str] = \\\"utf-8\\\",\\n    ) -> None:\"}, \"suggested_doc_fix\": \"Replace the incorrect example with explicit transport construction: `transport = httpx.WSGITransport(app=app)` and `client = httpx.Client(transport=transport)`, and remove the suggestion that `app` is a `Client` argument.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need decide candidate C09. Need perhaps additional drift. Let's inspect.\n\nCandidate: docs in httpx/_transports/wsgi.py lines 49-51:\n```\nclient = httpx.Client(app=app)\n```\nreport: WSGITransport docstring still shows httpx.Client(app=app), but Client does not accept app argument; WSGI apps must be passed through WSGITransport(app=app).\n\nCode: _client.py init no app. Indeed Client.__init__ no app. WSGITransport docs show simplified `client = httpx.Client(app=app)` which is wrong. Is it true_drift? Need consider maybe httpx.Client(app=app) used to be supported? At this ref, no. Thus true_drift.\n\nNeed code citation single location relied. Could cite _client.py 639-661 showing no app, or WSGI file lines? Report code cited. Need one-line reason, code citation. We can cite httpx/_client.py lines 639-661 quote. But note line 639 def __init__, no app. Good.\n\nsuggested_doc_fix: documentation-only e.g. \"Replace `client = httpx.Client(app=app)` with explicit transport usage: `transport = httpx.WSGITransport(app=app); client = httpx.Client(transport=transport)`.\" Keep empty? For true_drift should fix. They ask suggested fix empty unless true_drift. We'll fill.\n\nAdditional findings: need scan for cross-file drifts missed, especially doc in one file names API/param/default/import path/error type another file. Need find. Only files _client.py and _transports/wsgi.py. Candidate only one. We can look for docs. WSGI doc says \"The simplest way to use this functionality is to use the `app` argument.\" and example client = httpx.Client(app=app). Since Client doesn't accept app, true. Could possibly additional: Asgi? Not present. Let's inspect docstrings in _client. Client docstring doesn't mention app. Fine.\n\nMaybe wsgi doc's Arguments list \"remote_addr\" default? code default 127.0.0.1 yes. \"raise_app_exceptions default True\" yes. \"script_name\" default \"\". okay. \"wsgi_errors\" not documented? Not necessarily drift.\n\nMaybe Client docstring mentions verify etc. No cross mismatch.\n\nCould additional finding: WSGIByteStream? No.\n\nNeed output strict JSON. Need ensure quotes verbatim and line numbers. For candidate code citation, quote can be lines 639-661. Need include exact prefix without line numbers. We can include full block. JSON escaping. Could simplify quote to a shorter verbatim span? start/end must correspond. We can choose 44-661? Let's cite 639-642 maybe:\n639|    def __init__(\n640|        self,\n641|        *,\n642|        auth: AuthTypes | None = None,\nNeed quote include those lines. It proves no app? Actually first args not enough; but code signature. Report cited broader. We need quote from those lines. Could use 639-661 exact. Long but okay. JSON string escapes newlines.\n\nFor doc citation? Candidate's asked verdict only requires code citation, not doc citation. Schema verdict has code_citation. Good.\n\nAdditional findings maybe none. Should be [].\n\nNeed be careful: The docs do show example both ways; first way wrong. So true_drift. Could there be a possibility httpx.Client supports `app` via transport mount? No. Code confirms no. Good.\n\nLet's formulate reason: \"Client.__init__ has no `app` parameter, so the documented `httpx.Client(app=app)` cannot work; WSGI apps must be supplied via WSGITransport.\" one line.\n\nsuggested_doc_fix: \"Update the docstring example to use `transport = httpx.WSGITransport(app=app)` and `client = httpx.Client(transport=transport)`, removing the claim that `app` is an argument.\" (documentation-only). Good.\n\nLet's create JSON. Ensure no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 25205,
+      "completion_tokens": 1326,
+      "total_tokens": 26531,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T22:58:19.480079+00:00"
+}

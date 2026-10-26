@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C06:cattrs-400000:DD-3",
+  "payload_sha256": "edc5ff99e6d2664634b8fa777f7070f692268bcb8fcb9a796d108548be632625",
+  "latency_seconds": 16.312086259014904,
+  "body": {
+    "id": "chatcmpl-832",
+    "object": "chat.completion",
+    "created": 1793055757,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C06\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The docstring uses parameter name `cache`, but the method signature defines `cache_result`.\",\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 641,\n        \"end_line\": 641,\n        \"quote\": \"self, type: TypeForm[T], cache_result: bool = True\"\n      },\n      \"suggested_doc_fix\": \":param cache_result: Whether to cache the returned hook.\"\n    }\n  ],\n  \"additional_findings\": [\n    {\n      \"finding_id\": \"AD-1\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"The same parameter-name mismatch occurs in get_unstructure_hook: the docstring says `cache`, while the signature uses `cache_result`.\",\n      \"doc_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 502,\n        \"end_line\": 502,\n        \"quote\": \":param cache: Whether to cache the returned hook.\"\n      },\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 492,\n        \"end_line\": 492,\n        \"quote\": \"self, type: Any, cache_result: bool = True\"\n      },\n      \"proposed_fix\": \"Change the docstring to `:param cache_result: Whether to cache the returned hook.`\"\n    }\n  ]\n}",
+          "reasoning": "We need answer JSON. Need decide candidate. C06 doc get_structure_hook says :param cache: while actual cache_result. true_drift. One-line reason. code citation lines 641. Suggested doc fix maybe ':param cache_result: Whether to cache the returned hook.' Also additional findings? Need inspect possible docs drift within file. Candidate only. Need maybe same issue in get_unstructure_hook line 502 says :param cache: actual cache_result. Candidate report says C06 structure, but get_unstructure likely analogous. Should list additional finding. Need check maybe other docs drifts: copy docstrings only document detailed_validation but signature lots params. Is that documentation drift? In doc, BaseConverter.copy signature has many params but doc only detailed_validation. Is that considered? Candidate asks any OTHER documentation drifts, especially cross-file. We need be careful. We can find from file. Let's inspect all docstrings maybe no. Need identify actual wrong param names/defaults. Could be BaseConverter.__init__ docs lacking many params but not wrong? Docs don't list all params, only detailed_validation and fallback factories; not wrong necessarily. Copy docstrings same. The only clear mismatch param name likely both get hooks. Candidate C06 structure. Additional AD-1 unstructure get hook. Maybe check if code line 502 exactly same. Yes. Could there be \"param cache\" vs \"cache_result\" in both. Suggested fix. Need not overreach.\n\nQuestion output one JSON object. We can include true drift verdict. Need code citations verbatim without prefix. For C06 path starts 641 end 641 quote \"    def get_structure_hook(\\n        self, type: TypeForm[T], cache_result: bool = True\" ? They requested single code location path start end and a verbatim quote from those lines. Candidate code cited 641-641 only \"'self, type: TypeForm[T], cache_result: bool = True'\" but line 641 includes \"self, type: TypeForm[T], cache_result: bool = True\". We'll quote that. Reason: doc param named cache while signature uses cache_result. suggested_doc_fix \":param cache_result: Whether to cache the returned hook.\"\n\nAdditional finding AD-1: get_unstructure_hook doc mismatch. Doc citation lines 502? Let's verify exact. Line 502 ':param cache: Whether to cache the returned hook.' code line 492 maybe signature line 492 include entire 'self, type: Any, cache_result: bool = True'. Could code citation start 491-494? They want single code location maybe line 492. Quote line 492. Doc citation line 502. Drift kind flag? Parameter name. Use \"signature\". Proposed fix.\n\nAny other potential: In GenConverter? no.\n\nLet's make valid JSON, no markdown. Ensure escaping."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 19664,
+      "completion_tokens": 974,
+      "total_tokens": 20638,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:38.030376+00:00"
+}

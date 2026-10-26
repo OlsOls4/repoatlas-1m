@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C02:cattrs-400000:DD-1",
+  "payload_sha256": "32251d6ab1d7bf71adaa59c583903dbeb82ef6db27dacf9ab82edb33b4f0bfbb",
+  "latency_seconds": 12.65812070798711,
+  "body": {
+    "id": "chatcmpl-278",
+    "object": "chat.completion",
+    "created": 1793055709,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C02\", \"verdict\": \"true_drift\", \"reason\": \"The traceback documentation names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError.\", \"code_citation\": {\"path\": \"src/cattrs/errors.py\", \"start_line\": 118, \"end_line\": 118, \"quote\": \"class ForbiddenExtraKeysError(CattrsError):\"}, \"suggested_doc_fix\": \"Change `ForbiddenExtraKeyError` to `ForbiddenExtraKeysError` in docs/customizing.md.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need assess candidate. Candidate C02 docs/customizing.md:279 says ForbiddenExtraKeyError? Actually line 279 quote says \"ForbiddenExtraKeyError: Extra fields...\" report says code defines ForbiddenExtraKeysError (plural keys). Candidate report likely true_drift: actual exception is ForbiddenExtraKeysError. Need verify any case where docs name ForbiddenExtraKeyError? It says plural in code. So true_drift. Need output JSON exact.\n\nTask 2 additional findings? Need find other documentation drifts cross-file. We only have docs/customizing.md and src/cattrs/errors.py. Need inspect whole repo pack only these files? User provided packed repository context includes only these two files. So can only examine. Additional findings maybe docs line 135 uses `cattrs.errors.ForbiddenExtraKeysError` correctly (plural). Candidate at 279 lacks s. Could there be docs line 279 only. Need maybe report additional? Candidate missed? Could doc example at line 279 actually traceback line in doctest, class name from raised exception. Wrong, should ForbiddenExtraKeysError. That's candidate. Are there other drifts? Maybe doc line 279 says exactly \"ForbiddenExtraKeyError\", code says \"ForbiddenExtraKeysError\". Candidate covers. Additional maybe none. Need be strict. Could mention only candidate.\n\nNeed provide code citation for verdict: likely docs? They ask code location you relied on. For C02 code citation src/cattrs/errors.py lines 118-118 class... quote class ForbiddenExtraKeysError. suggested doc fix: change \"ForbiddenExtraKeyError\" to \"ForbiddenExtraKeysError\". one-line reason.\n\nJSON only. Ensure no extra."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 9438,
+      "completion_tokens": 502,
+      "total_tokens": 9940,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:01:49.850242+00:00"
+}

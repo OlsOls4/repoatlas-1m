@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 25076,
+  "completion_tokens": 805,
+  "finish_reason": "stop",
+  "latency_seconds": 10.958254786994075,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C10",
+      "verdict": "true_drift",
+      "reason": "The example uses an `app` keyword that `httpx.Client.__init__` does not accept; WSGI apps must be passed through `WSGITransport` and `transport`.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 639,
+        "end_line": 639,
+        "quote": "    def __init__("
+      },
+      "suggested_doc_fix": "Replace `client = httpx.Client(app=app)` with `client = httpx.Client(transport=httpx.WSGITransport(app=app))`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S9"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S9",
+    "doc_path": "httpx/_transports/wsgi.py",
+    "doc_line": 50,
+    "doc_end": 50,
+    "doc_text": "client = httpx.Client(app=app)",
+    "claim": "call-signature: `httpx.Client(...)`: no parameter named 'app' (def httpx/_client.py:639)",
+    "code_hint": "",
+    "candidate_id": "C10"
+  },
+  "local_files": [
+    "httpx/_client.py",
+    "httpx/_transports/wsgi.py"
+  ],
+  "prompt_chars": 82731
+}

@@ -1,0 +1,54 @@
+{
+  "prompt_tokens": 15542,
+  "completion_tokens": 1970,
+  "finish_reason": "stop",
+  "latency_seconds": 12.456998887995724,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The documented method signatures show newstyle=False, but all three implementations default newstyle to None and only change the environment setting when a value is explicitly passed.",
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 268,
+        "end_line": 305,
+        "quote": "    def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\n    ) -> None:\n        # ugettext and ungettext are preferred in case the I18N library\n        # is providing compatibility with older Python versions.\n        gettext = getattr(translations, \"ugettext\", None)\n        if gettext is None:\n            gettext = translations.gettext\n        ngettext = getattr(translations, \"ungettext\", None)\n        if ngettext is None:\n            ngettext = translations.ngettext\n\n        pgettext = getattr(translations, \"pgettext\", None)\n        npgettext = getattr(translations, \"npgettext\", None)\n        self._install_callables(\n            gettext, ngettext, newstyle=newstyle, pgettext=pgettext, npgettext=npgettext\n        )\n\n    def _install_null(self, newstyle: bool | None = None) -> None:\n        import gettext\n\n        translations = gettext.NullTranslations()\n        self._install_callables(\n            gettext=translations.gettext,\n            ngettext=translations.ngettext,\n            newstyle=newstyle,\n            pgettext=translations.pgettext,\n            npgettext=translations.npgettext,\n        )\n\n    def _install_callables(\n        self,\n        gettext: t.Callable[[str], str],\n        ngettext: t.Callable[[str, str, int], str],\n        newstyle: bool | None = None,"
+      },
+      "suggested_doc_fix": "Change the documented defaults from newstyle=False to newstyle=None for install_gettext_translations, install_null_translations, and install_gettext_callables.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "jinja-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "jinja-400000:DD-1",
+    "doc_path": "docs/extensions.rst",
+    "doc_line": 52,
+    "doc_end": 76,
+    "doc_text": ".. method:: jinja2.Environment.install_gettext_translations(translations, newstyle=False)\n..\n.. method:: jinja2.Environment.install_null_translations(newstyle=False)\n..\n.. method:: jinja2.Environment.install_gettext_callables(gettext, ngettext, newstyle=False, pgettext=None, npgettext=None)",
+    "claim": "The documentation lists newstyle=False as the default for three i18n installation methods, but the implementations use newstyle=None, leaving the existing environment setting unchanged rather than forcing false.",
+    "code_hint": "src/jinja2/ext.py:268-301 '    def _install(\\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\\n    ) -> None:\\n...\\n    def _install_null(self, newstyle: bool | None = None) -> None:\\n...\\n    def _install_callables(\\n        self,\\n        gettext: t.Callable[[str], str],\\n        ngettext: t.Callable[[str, str, int], str],\\n        newstyle: bool | None = None,\\n'",
+    "candidate_id": "C01"
+  },
+  "local_files": [
+    "src/jinja2/ext.py",
+    "docs/extensions.rst"
+  ],
+  "prompt_chars": 52469,
+  "resend": {
+    "nonce": "resend-1",
+    "first_attempt": {
+      "prompt_tokens": 15542,
+      "completion_tokens": 2585,
+      "finish_reason": "stop",
+      "error": "parse: unparseable JSON"
+    }
+  }
+}

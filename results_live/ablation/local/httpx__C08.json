@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 3912,
+  "completion_tokens": 1599,
+  "finish_reason": "stop",
+  "latency_seconds": 17.502599807980005,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C08",
+      "verdict": "false",
+      "reason": "`RequestException` refers to a `requests` library exception discussed in compatibility prose, not an `httpx` API symbol, so its absence from `httpx` code is expected.",
+      "code_citation": {
+        "path": "docs/compatibility.md",
+        "start_line": 232,
+        "end_line": 232,
+        "quote": "`requests` exception hierarchy is slightly different to the `httpx` exception hierarchy. `requests` exposes a top level `RequestException`, where as `httpx` exposes a top level `HTTPError`. see the exceptions exposes in requests [here](https://requests.readthedocs.io/en/latest/_modules/requests/exceptions/). See the `httpx` error hierarchy [here](https://www.python-httpx.org/exceptions/)."
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S8"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S8",
+    "doc_path": "docs/compatibility.md",
+    "doc_line": 232,
+    "doc_end": 232,
+    "doc_text": "`requests` exception hierarchy is slightly different to the `httpx` exception hierarchy. `requests` exposes a top level `RequestException`, where as `httpx` exposes a top level `HTTPError`. see the exceptions exposes in requests [here](https://requests.readthedocs.io/en/latest/_modules/requests/exceptions/). See the `httpx` error hierarchy [here](https://www.python-httpx.org/exceptions/).",
+    "claim": "exception-name:undefined: `RequestException`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C08"
+  },
+  "local_files": [
+    "docs/compatibility.md"
+  ],
+  "prompt_chars": 13630
+}

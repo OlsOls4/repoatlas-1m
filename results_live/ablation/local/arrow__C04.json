@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 25987,
+  "completion_tokens": 2079,
+  "finish_reason": "stop",
+  "latency_seconds": 21.09214446900296,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The dehumanize docstring says the locale defaults to 'en-us', but the function signature defaults to 'en_us'.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Change the documented default to 'en_us'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-2"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-2",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 1350,
+    "doc_end": 1350,
+    "doc_text": ":param locale: (optional) a ``str`` specifying a locale. Defaults to 'en-us'.",
+    "claim": "The dehumanize docstring says the locale defaults to 'en-us', but the implementation defaults to the underscore form 'en_us'.",
+    "code_hint": "arrow/arrow.py:1344-1344 '    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":'",
+    "candidate_id": "C04"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 76250
+}

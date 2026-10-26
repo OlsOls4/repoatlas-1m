@@ -1,0 +1,32 @@
+{
+  "label": "arrow:C07:arrow-400000:DD-4",
+  "payload_sha256": "5b86f001f0cffe61754a4b91c019da281225e553a05225781c5af0504d561e51",
+  "latency_seconds": 10.349845698015997,
+  "body": {
+    "id": "chatcmpl-580",
+    "object": "chat.completion",
+    "created": 1793055679,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C07\", \"verdict\": \"true_drift\", \"reason\": \"Python datetime hours are 0-23, so token H can never produce 24; the documented endpoint is impossible.\", \"code_citation\": {\"path\": \"arrow/formatter.py\", \"start_line\": 83, \"end_line\": 83, \"quote\": \"            return f\\\"{dt.hour}\\\"\"}, \"suggested_doc_fix\": \"Change the H row output to \\\"0, 1, 2 ... 22, 23\\\" (remove 24).\"}], \"additional_findings\": [{\"finding_id\": \"AD-1\", \"drift_kind\": \"default\", \"explanation\": \"The HH row has the same incorrect upper bound as H: dt.hour ranges 0-23, so zero-padded output cannot be 24.\", \"doc_citation\": {\"path\": \"docs/guide.rst\", \"start_line\": 416, \"end_line\": 416, \"quote\": \"||                                |HH            |00, 01, 02 ... 23, 24                      |\"}, \"code_citation\": {\"path\": \"arrow/formatter.py\", \"start_line\": 81, \"end_line\": 81, \"quote\": \"            return f\\\"{dt.hour:02d}\\\"\"}, \"proposed_fix\": \"Change the HH row output to \\\"00, 01, 02 ... 22, 23\\\" (remove 24).\"}]}",
+          "reasoning": "Let me analyze the candidate C07.\n\nThe doc says supported tokens table:\n- HH: 00, 01, 02 ... 23, 24\n- H: 0, 1, 2 ... 23, 24\n\nBut code at arrow/formatter.py:80-83:\n- HH: f\"{dt.hour:02d}\" \u2192 00..23 (datetime hour is 0..23, never 24)\n- H: f\"{dt.hour}\" \u2192 0..23\n\nSo the doc's \"24\" is wrong. It should be 23. This is a true_drift.\n\nWait, is hour ever 24 in Python datetime? No, datetime hour is 0-23. So \"24\" is impossible. The report's claim is that formatter renders hour without zero padding, but the issue is actually the \"24\" endpoint is wrong (and HH zero-padding issue? No, HH pads). The report says \"the formatter renders the datetime hour field without zero padding\" which is about H token - that's intended (single H = no padding). But the real drift is the \"24\" endpoint. Still true_drift either way: a user following doc thinks H can produce 24, but code never produces 24.\n\nLet me verify: HH also lists 24. So both HH and H lines have 24. The candidate only cites H line. But candidate is specifically about H. Verdict true_drift.\n\nsuggested_doc_fix: change \"23, 24\" to \"23\" in both? The candidate doc text is H row only. Suggested fix: '|                                |H             |0, 1, 2 ... 22, 23                         |' perhaps. Let me suggest minimal.\n\nNow additional findings. Need to check other drifts cross-file. Let's look.\n\ndocs guide tokens:\n- Day of Year DDDD: 001, 002, 003 ... 364, 365. Code DDDD = dt.timetuple().tm_yday:03d \u2192 001..366. So 365 doc wrong? Actually days in year up to 366. Minor. Could be additional. Hmm.\n\n- d: 1..7 (isoweekday, Monday=1). Code: f\"{dt.isoweekday()}\" \u2192 1..7. OK.\n\n- HH: 00..24 should be 00..23. H: 0..24 \u2192 0..23. Both drift. Candidate only covers H. Should I add HH as additional? The task says do not repeat candidates, list OTHER drifts. HH row is other. Yes add AD-1.\n\n- h: 1..12, code: hour if 0<hour<13 else abs(hour-12). For hour=0 \u2192 12, hour=12 \u2192 12? Let's see 0<12<13 true \u2192 12. hour=13 \u2192 abs(1)=1. OK range 1..12. OK. But formatting: for midnight 0 \u2192 12. Fine.\n\n- ss/s: 00..58,59? doc says 58,59 (should be 00..59). Actually doc says \"00, 01, 02 ... 58, 59\" skipping 59? wait 59 is last. It says 58, 59 - OK covers. mm m: 58,59 - OK should be 59 max. fine. But what about minute values 0..59, doc range \"0,1,2...58,59\" ok.\n\n- M month: code fine.\n\n- DDDD max 365 vs 366. Could be drift but leap year. Let's add? The doc example typical. Hmm. Maybe not a real drift since \"...\" implies. But endpoint 365 is wrong for leap years. Might be considered minor. I'll add cautiously? The instructions say when unsure omit. I'll include HH as clear additional. Maybe DDDD not.\n\n- Day of Week: docs d 1..7 OK.\n\n- X timestamp: returns f\"{dt.timestamp()}\" arbitrary.\n\n- Built-in format examples maybe.\n\nAlso possible cross-file drifts: docs reference packages? Let me check other potential. The task wants additional documentation drifts candidates missed especially cross-file. We only saw docs/guide.rst and formatter.py. Could check Arrow's format? Let's not over-reach. I'll add HH row drift as additional finding.\n\nLet me format JSON.\n\nFor C07 verdicts: true_drift. code citation: docs? Need code location relied on: arrow/formatter.py 83-83 quote '            return f\"{dt.hour}\"'. start_line 83 end_line 83. suggested_doc_fix: change H row to 0, 1, 2 ... 22, 23. Actually should it be ... 22, 23? Doc uses \"0, 1, 2 ... 23, 24\". Fix to \"0, 1, 2 ... 22, 23\" or \"0, 1, 2 ... 23\". Use \"0, 1, 2 ... 22, 23\".\n\nAD-1: HH row doc line 416. code line 81 quote '            return f\"{dt.hour:02d}\"'. fix end 23.\n\nLet me produce."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 11642,
+      "completion_tokens": 1583,
+      "total_tokens": 13225,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-26T23:01:19.518046+00:00"
+}

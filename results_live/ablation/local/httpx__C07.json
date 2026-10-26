@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 26560,
+  "completion_tokens": 2289,
+  "finish_reason": "stop",
+  "latency_seconds": 11.623659767996287,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "false",
+      "reason": "The snippet on line 56 is demonstrating the requests library API (requests.Session), where Session.send accepts allow_redirects; it is not an HTTPX client call.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 879,
+        "end_line": 886,
+        "quote": "    def send(\n        self,\n        request: Request,\n        *,\n        stream: bool = False,\n        auth: AuthTypes | UseClientDefault | None = USE_CLIENT_DEFAULT,\n        follow_redirects: bool | UseClientDefault = USE_CLIENT_DEFAULT,\n    ) -> Response:"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S7"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S7",
+    "doc_path": "docs/compatibility.md",
+    "doc_line": 56,
+    "doc_end": 56,
+    "doc_text": "response = session.send(request, allow_redirects=False)",
+    "claim": "method-call-signature: `session.send(...)`: no parameter named 'allow_redirects'; no package method 'send' accepts it (e.g. Client.send at httpx/_client.py:879)",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "local_files": [
+    "httpx/_client.py",
+    "docs/compatibility.md"
+  ],
+  "prompt_chars": 88214
+}

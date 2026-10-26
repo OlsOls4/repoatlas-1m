@@ -1,0 +1,44 @@
+{
+  "prompt_tokens": 8200,
+  "completion_tokens": 1723,
+  "finish_reason": "stop",
+  "latency_seconds": 13.128248780005379,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The option documented as `nox.options.reuse_venvs` does not match the code option name, which is `reuse_venv`.",
+      "code_citation": {
+        "path": "docs/usage.rst",
+        "start_line": 219,
+        "end_line": 219,
+        "quote": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``."
+      },
+      "suggested_doc_fix": "Change the Noxfile option name from `nox.options.reuse_venvs` to `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S21"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S21",
+    "doc_path": "docs/usage.rst",
+    "doc_line": 219,
+    "doc_end": 219,
+    "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+    "claim": "dotted:name-not-in-code: `nox.options.reuse_venvs`: 'reuse_venvs' appears nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "local_files": [
+    "docs/usage.rst"
+  ],
+  "prompt_chars": 26317
+}

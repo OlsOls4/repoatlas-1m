@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 1716,
+  "completion_tokens": 1092,
+  "finish_reason": "stop",
+  "latency_seconds": 11.688153511000564,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "In this example, `obj` is the serialized input object (expected to be a dict), so `obj.get(key, default)` uses `dict.get`, which accepts two positional arguments. The report incorrectly compares it to `Context.get`.",
+      "code_citation": {
+        "path": "docs/extending/overriding_attribute_access.rst",
+        "start_line": 16,
+        "end_line": 17,
+        "quote": "        def get_attribute(self, obj, key, default):\n            return obj.get(key, default)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S32"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S32",
+    "doc_path": "docs/extending/overriding_attribute_access.rst",
+    "doc_line": 17,
+    "doc_end": 17,
+    "doc_text": "return obj.get(key, default)",
+    "claim": "method-call-signature: `obj.get(...)`: 2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "local_files": [
+    "src/marshmallow/experimental/context.py",
+    "docs/extending/overriding_attribute_access.rst"
+  ],
+  "prompt_chars": 5965
+}

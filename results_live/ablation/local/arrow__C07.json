@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 11642,
+  "completion_tokens": 1583,
+  "finish_reason": "stop",
+  "latency_seconds": 10.349845698015997,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "Python datetime hours are 0-23, so token H can never produce 24; the documented endpoint is impossible.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 83,
+        "end_line": 83,
+        "quote": "            return f\"{dt.hour}\""
+      },
+      "suggested_doc_fix": "Change the H row output to \"0, 1, 2 ... 22, 23\" (remove 24).",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-4"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-4",
+    "doc_path": "docs/guide.rst",
+    "doc_line": 418,
+    "doc_end": 418,
+    "doc_text": "||                                |H             |0, 1, 2 ... 23, 24                         |",
+    "claim": "The supported-token table lists H as producing hours through 24, while the formatter renders the datetime hour field without zero padding.",
+    "code_hint": "arrow/formatter.py:83-83 '            return f\"{dt.hour}\"'",
+    "candidate_id": "C07"
+  },
+  "local_files": [
+    "arrow/formatter.py",
+    "docs/guide.rst"
+  ],
+  "prompt_chars": 30589
+}

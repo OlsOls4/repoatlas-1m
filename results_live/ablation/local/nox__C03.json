@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 15485,
+  "completion_tokens": 1561,
+  "finish_reason": "stop",
+  "latency_seconds": 14.617450812016614,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The documentation refers to `nox.options.reuse_venvs`, but Noxfile options define the setting as `reuse_venv`.",
+      "code_citation": {
+        "path": "nox/_options.py",
+        "start_line": 333,
+        "end_line": 333,
+        "quote": "reuse_venv: ReuseVenvType = attrs.field("
+      },
+      "suggested_doc_fix": "Change `nox.options.reuse_venvs` to `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "nox-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "nox-400000:DD-1",
+    "doc_path": "docs/usage.rst",
+    "doc_line": 219,
+    "doc_end": 219,
+    "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+    "claim": "The usage documentation refers to a misspelled Noxfile option, `nox.options.reuse_venvs`, while the code defines the option as `reuse_venv`.",
+    "code_hint": "nox/_options.py:333-333 'reuse_venv: ReuseVenvType = attrs.field('",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "nox/_options.py",
+    "docs/usage.rst"
+  ],
+  "prompt_chars": 50801
+}

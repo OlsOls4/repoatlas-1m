@@ -1,0 +1,32 @@
+{
+  "label": "starlette:C02:starlette-400000:DD-1",
+  "payload_sha256": "4f78d46b751f826361cb9e1ed9ccc167610de0eb70a86ead4cdf6d2bbf74bbe4",
+  "latency_seconds": 11.301776000997052,
+  "body": {
+    "id": "chatcmpl-183",
+    "object": "chat.completion",
+    "created": 1793055365,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C02\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The documentation shows `receive_json(data, mode=\\\"binary\\\")`, but the implementation's `receive_json` has no `data` parameter and only accepts `mode`.\",\n      \"code_citation\": {\n        \"path\": \"starlette/websockets.py\",\n        \"start_line\": 136,\n        \"end_line\": 136,\n        \"quote\": \"async def receive_json(self, mode: str = \\\"text\\\") -> Any:\"\n      },\n      \"suggested_doc_fix\": \"Change `websocket.receive_json(data, mode=\\\"binary\\\")` to `websocket.receive_json(mode=\\\"binary\\\")`.\"\n    }\n  ],\n  \"additional_findings\": []\n}",
+          "reasoning": "We need answer JSON only. Need analyze candidate C02. Need determine verdict true_drift? Docs line 74: `Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.` Code: receive_json(self, mode=\"text\") no data param. Candidate says doc calls receive_json with positional data, impl only accepts mode. That's clearly true drift. User following would error TypeError. Suggested fix remove data. Need code citation. Could be one location. Need additional findings? Need inspect repo whole for other doc drifts cross-file etc. We have only two files. We need maybe compare docs websockets.md with code signatures. Let's inspect. Docs:\n\nsend_json signature code: send_json(self, data, mode=\"text\"), docs line 60 `await websocket.send_json(data)` lists, line 63 `websocket.send_json(data, mode=\"binary\")` correct.\n\nreceive_json code only mode, no data. Doc line 69 `await websocket.receive_json()` lists no args (correct maybe) but line 74 says `receive_json(data, mode=\"binary\")` wrong. That's C02.\n\nAdditional drifts? Let's systematically compare:\n\n- accept: code accept(subprotocol=None, headers=None); doc line 54 `await websocket.accept(subprotocol=None, headers=None)` correct.\n- receive_text no params; doc no params.\n- send_text no mode? code send_text(data) no mode yes.\n- iter_json: code async def iter_json no mode; docs no mode.\n- close code/reason defaults correct.\n- receive_json mode validation correct.\n- send_json mode validation correct.\n- docs line 169? Hmm.\n\nMaybe additional: docs line 110 `await websocket.send(message)` and receive() correct.\n\nAny drift about WebSocketClose? Not documented. No.\n\nPotential doc says \"JSON messages default to being received over text data frames, from version 0.10.0 onwards.\" no issue.\n\nPotential doc line 62 \"JSON messages default to being sent over text data frames, from version 0.10.0 onwards.\" correct.\n\nCould candidate C02 true_drift. Need suggested_doc_fix. \"Change `websocket.receive_json(data, mode=\"binary\")` to `websocket.receive_json(mode=\"binary\")`.\" Maybe mention no data argument. Use empty unless true_drift; here true_drift so fix.\n\nAdditional findings: Should we include other mismatches? Let's search mentally: docs line 74 is candidate. Maybe docs line 60 `send_json(data)` and code signature `send_json(self, data, mode=\"text\")`, okay. Docs line 63 correct. Candidate only one. But task asks list any OTHER documentation drifts missed, especially cross-file. Need maybe inspect docs for receive_json method usage elsewhere? Only these files. Additional maybe `receive_json` returns Any and no data. Could docs line 69 `await websocket.receive_json()` okay. No other.\n\nCould there be docs line 71 `May raise starlette.websockets.WebSocketDisconnect().` code raises? receive_* call _raise_on_disconnect, yes. Fine.\n\nCould docs line 80 `websocket.iter_text()` etc not await; code methods async? Code: async def iter_text -> AsyncIterator; docs shows `websocket.iter_text()` no await, correct as async iterator? In example uses async for websocket.iter_text(), so yes.\n\nCould docs line 58 `await websocket.send_text(data)` code send_text(data) correct.\n\nPotential mismatch: `send_json(data)` defaults mode text; doc says JSON default text from 0.10.0, correct.\n\nPotential mismatch: `receive_json(mode=\"binary\")` gets message bytes but code does message[\"bytes\"].decode. okay.\n\nMaybe additional finding: Docs line 148 `await websocket.accept(\"Authorization\")` code accept(subprotocol=..., headers=...). Passing positional \"Authorization\" sets subprotocol, okay.\n\nMaybe docs line 152 accept subprotocol authorization, okay.\n\nNo more.\n\nNeed output strict JSON. Ensure quote verbatim with lines. Code citation path starlette/websockets.py start 136 end 136 quote `async def receive_json(self, mode: str = \"text\") -> Any:`. Note candidate code cited exactly. Suggested doc fix string.\n\nFor additional_findings empty array likely.\n\nNeed perhaps include verdict reason one line. candidate_id C02. verdict true_drift. reason \"Documentation passes a nonexistent `data` positional argument; receive_json only accepts `mode`.\" Code citation.\n\nLet's craft JSON. Ensure no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 4848,
+      "completion_tokens": 1146,
+      "total_tokens": 5994,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  },
+  "at": "2026-10-26T22:56:05.279766+00:00"
+}

@@ -1,0 +1,45 @@
+{
+  "prompt_tokens": 8476,
+  "completion_tokens": 2233,
+  "finish_reason": "stop",
+  "latency_seconds": 12.576584112015553,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The published top-level `httpx.get()` signature has no `extensions` parameter, so the documented call cannot be used as written.",
+      "code_citation": {
+        "path": "httpx/_api.py",
+        "start_line": 174,
+        "end_line": 186,
+        "quote": "def get(\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    trust_env: bool = True,\n) -> Response:"
+      },
+      "suggested_doc_fix": "Use a Client instance for extension support, e.g. `client = httpx.Client(); response = client.get(\"https://www.example.com\", extensions=extensions)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S4"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S4",
+    "doc_path": "docs/advanced/extensions.md",
+    "doc_line": 169,
+    "doc_end": 169,
+    "doc_text": "response = httpx.get(\"https://www.example.com\", extensions=extensions)",
+    "claim": "call-signature: `httpx.get(...)`: no parameter named 'extensions' (def httpx/_api.py:174)",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "local_files": [
+    "httpx/_api.py",
+    "docs/advanced/extensions.md"
+  ],
+  "prompt_chars": 26452
+}

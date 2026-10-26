@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C03:S26",
+  "payload_sha256": "15b503aea48732e4155c70d65b44d85d6abd7eefede98250d16b339808378ca6",
+  "latency_seconds": 11.164247470995178,
+  "body": {
+    "id": "chatcmpl-483",
+    "object": "chat.completion",
+    "created": 1793055720,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C03\", \"verdict\": \"false\", \"reason\": \"MyInterestingException is an illustrative user-defined exception placeholder in an example custom formatter, not a name promised by cattrs.\", \"code_citation\": {\"path\": \"docs/validation.md\", \"start_line\": 107, \"end_line\": 107, \"quote\": \"...     if isinstance(exc, MyInterestingException):\"}, \"suggested_doc_fix\": \"\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need analyze docs. Candidate C03 says exception-name undefined MyInterestingException in example. This is clearly user-defined custom exception placeholder? Need decide documentation drift? The task says examples using user-defined names are false positives. Candidate likely false. Need provide code citation. Since says MyInterestingException defined nowhere. But it's illustrative; docs often use hypothetical exception. Should it be true_drift? Need use criteria: true_drift = doc as written wrong; a user following it would hit error or wrong behaviour, or reference/name/parameter/default it states does not match code. Here MyInterestingException is undefined in snippet. A user copying code as-is would NameError. But it's an example showing custom formatter; user expected to replace. Is that considered drift? The candidate reports undefined exception-like name. Many docs examples use user-defined names; those are false positives per instructions. So false. Code citation? Need single code location relied on. Could cite docs line 107? The task asks code location for every candidate, likely actual code? It says \"single code location you relied on (path, start_line, end_line and verbatim quote from those lines)\" but report is docs. We can cite package code maybe cattrs.v? Let's inspect repository only one file provided. We know function format_exception exists? Need maybe hidden? Only docs/validation.md in pack. Could cite docs line? They specifically likely expect code citation from repo. But no source files included. Need perhaps use docs? The prompt includes only docs/validation.md. So code location maybe docs/validation.md lines 103-115? But it's docs. Additional findings maybe none. Need output strict JSON.\n\nLet's reason deeply: Could there be an actual API location in repo not included? Pack filtered to files? FILTER_SIGNATURE. Only docs/validation.md shown. But maybe package code omitted due relevance. Candidate mentions MyInterestingException undefined. We can say code citation is docs file itself showing placeholder pattern? The requested code_citation path maybe docs/validation.md. Quote line 107. That's odd but only available.\n\nNeed possibly additional drifts candidates missed: cross-file. We can inspect docs. Let's find issues:\n- docs references `cattrs.v.format_exception`, `cattrs.transform_error`, `cattrs.BaseValidationError`, etc. Could verify? No source. But maybe know cattrs API. `cattrs.transform_error`, `cattrs.v.format_exception`. Docs line 104 imports from cattrs.v, yes likely.\n- Example `structure(..., Class)` with ellipsis maybe placeholder.\n- `cattrs.transform_error` signature? Unknown. But docs says function can take format_exception. likely correct.\n- Exception name undefined is intended example. false.\n\nCould there be actual drift: `@define` not imported? Docs example probably in a tested doctest? It has testsetup class. transform_error example not tested maybe. But not issue.\n\nOutput:\nverdicts C03 false reason \"MyInterestingException is an illustrative placeholder for a user-defined exception; example shows how to branch on a custom exception before delegating, not a library API.\" code_citation docs/validation.md 107 quote \"    if isinstance(exc, MyInterestingException):\" suggested_doc_fix \"\".\n\nAdditional findings [].\n\nNeed ensure JSON only."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 2548,
+      "completion_tokens": 805,
+      "total_tokens": 3353,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  },
+  "at": "2026-10-26T23:02:01.018882+00:00"
+}
