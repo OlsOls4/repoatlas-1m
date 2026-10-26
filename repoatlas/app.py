@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import csv
 from datetime import UTC, datetime
 import json
 import os
 from pathlib import Path
+import re
 import threading
 import time
 from typing import Mapping, TypedDict
@@ -23,6 +25,13 @@ RESULTS_LIVE_INDEX_PATH: Path = RESULTS_LIVE_DIRECTORY / "index.json"
 RESULTS_LIVE_REPROS_DIRECTORY: Path = RESULTS_LIVE_DIRECTORY / "repros"
 RESULTS_LIVE_REPROS_INDEX_PATH: Path = RESULTS_LIVE_REPROS_DIRECTORY / "repros.json"
 RESULTS_LIVE_REPROS_SUMMARY_PATH: Path = RESULTS_LIVE_REPROS_DIRECTORY / "summary.json"
+RESULTS_LIVE_RECALL_DIRECTORY: Path = RESULTS_LIVE_DIRECTORY / "recall"
+RESULTS_LIVE_RECALL_RUN_SUMMARY_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "run_summary.json"
+RESULTS_LIVE_RECALL_BUCKETS_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "recall_by_bucket.csv"
+RESULTS_LIVE_RECALL_CONTEXT_PROBE_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "context_probe.json"
+RESULTS_LIVE_RECALL_USAGE_LEDGER_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "usage_ledger.json"
+RESULTS_LIVE_RECALL_NOTE_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "recall.md"
+RESULTS_LIVE_RECALL_CHART_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "recall_vs_distance.png"
 FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
 LIVE_MAX_TOKEN_LIMIT: int = 150_000
 LIVE_DEFAULT_TOKEN_LIMIT: int = 150_000
@@ -179,9 +188,31 @@ class FindingPanelState(TypedDict):
     issue_draft_text: str
 
 
+class RecallPanelData(TypedDict):
+    """
+    @brief Data bundle for the benchmark tab planted-drift recall section.
+    @param available True when recall artifacts are present and parseable.
+    @param summary_markdown Honest summary text derived from recall artifacts.
+    @param probe_rows Probe table rows (target, observed prompt tokens, status, latency).
+    @param bucket_headers Headers from recall_by_bucket.csv.
+    @param bucket_rows Rows from recall_by_bucket.csv.
+    @param run_rows Rows from run_summary.json.
+    @param chart_path Path to recall_vs_distance.png when present.
+    """
+
+    available: bool
+    summary_markdown: str
+    probe_rows: list[list[object]]
+    bucket_headers: list[str]
+    bucket_rows: list[list[object]]
+    run_rows: list[list[object]]
+    chart_path: str
+
+
 # Private function prototypes:
 # - _load_live_index() -> LiveIndex
 # - _load_repro_results() -> tuple[dict[str, dict[str, object]], dict[str, object]]
+# - _load_recall_panel_data() -> RecallPanelData
 # - _attach_repro_records(findings: list[dict[str, object]], repros_map: dict[str, dict[str, object]]) -> list[dict[str, object]]
 # - _finding_case_id(finding: dict[str, object]) -> str
 # - _render_hero_html(summary: dict[str, object]) -> str
@@ -225,6 +256,7 @@ def build_app() -> gr.Blocks:
 
     live_index: LiveIndex = _load_live_index()
     repros_map, repro_summary = _load_repro_results()
+    recall_panel_data: RecallPanelData = _load_recall_panel_data()
     findings: list[dict[str, object]] = _attach_repro_records(live_index["findings"], repros_map=repros_map)
     runs: list[dict[str, object]] = live_index["runs"]
     summary: dict[str, object] = live_index["summary"]
@@ -432,6 +464,49 @@ def build_app() -> gr.Blocks:
                 interactive=False,
                 wrap=True,
             )
+            if recall_panel_data["available"]:
+                gr.Markdown("### Where long context helps (planted-drift test)")
+                gr.Markdown(recall_panel_data["summary_markdown"])
+                if recall_panel_data["probe_rows"]:
+                    with gr.Accordion("Context probe table (Beam prompt-size acceptance)", open=False):
+                        gr.Dataframe(
+                            headers=["Target prompt tokens", "Observed prompt tokens", "HTTP", "Latency (s)"],
+                            value=recall_panel_data["probe_rows"],
+                            interactive=False,
+                            wrap=True,
+                        )
+                if recall_panel_data["chart_path"]:
+                    gr.Image(
+                        value=recall_panel_data["chart_path"],
+                        label="Planted-drift strict recall by distance bucket",
+                        interactive=False,
+                        show_download_button=False,
+                        show_fullscreen_button=True,
+                    )
+                with gr.Accordion("Bucket recall table (strict and loose)", open=False):
+                    gr.Dataframe(
+                        headers=recall_panel_data["bucket_headers"],
+                        value=recall_panel_data["bucket_rows"],
+                        interactive=False,
+                        wrap=True,
+                    )
+                with gr.Accordion("Run-level token and finding summary", open=False):
+                    gr.Dataframe(
+                        headers=[
+                            "Run",
+                            "Calls",
+                            "Tokens used",
+                            "Findings",
+                            "Verifier pass",
+                            "Matched plants",
+                            "Unplanted findings",
+                        ],
+                        value=recall_panel_data["run_rows"],
+                        interactive=False,
+                        wrap=True,
+                    )
+            else:
+                gr.Markdown("### Where long context helps (planted-drift test)\nRecall artifacts are not available in this checkout.")
             if has_baselines:
                 baseline_files: list[list[str]] = [[item.name] for item in sorted(baselines_directory.iterdir())]
                 with gr.Accordion("Baselines", open=False):
@@ -758,6 +833,192 @@ def _load_repro_results() -> tuple[dict[str, dict[str, object]], dict[str, objec
             if isinstance(summary_payload, dict):
                 repro_summary = summary_payload
     return repros_map, repro_summary
+
+
+def _load_recall_panel_data() -> RecallPanelData:
+    """
+    @brief Load planted-drift recall artifacts for benchmark rendering.
+    """
+
+    required_paths: list[Path] = [
+        RESULTS_LIVE_RECALL_RUN_SUMMARY_PATH,
+        RESULTS_LIVE_RECALL_BUCKETS_PATH,
+        RESULTS_LIVE_RECALL_CONTEXT_PROBE_PATH,
+    ]
+    if not all(path.exists() for path in required_paths):
+        return RecallPanelData(
+            available=False,
+            summary_markdown="",
+            probe_rows=[],
+            bucket_headers=[],
+            bucket_rows=[],
+            run_rows=[],
+            chart_path="",
+        )
+
+    run_summary_payload: object = json.loads(RESULTS_LIVE_RECALL_RUN_SUMMARY_PATH.read_text(encoding="utf-8"))
+    context_probe_payload: object = json.loads(RESULTS_LIVE_RECALL_CONTEXT_PROBE_PATH.read_text(encoding="utf-8"))
+    usage_ledger_payload: object = {}
+    if RESULTS_LIVE_RECALL_USAGE_LEDGER_PATH.exists():
+        usage_ledger_payload = json.loads(RESULTS_LIVE_RECALL_USAGE_LEDGER_PATH.read_text(encoding="utf-8"))
+
+    with RESULTS_LIVE_RECALL_BUCKETS_PATH.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        bucket_headers: list[str] = list(reader.fieldnames or [])
+        bucket_records: list[dict[str, str]] = [dict(record) for record in reader]
+
+    run_summary_rows: list[dict[str, object]] = [row for row in run_summary_payload if isinstance(row, dict)] if isinstance(run_summary_payload, list) else []
+    context_probe_rows: list[dict[str, object]] = [row for row in context_probe_payload if isinstance(row, dict)] if isinstance(context_probe_payload, list) else []
+    usage_calls: list[dict[str, object]] = []
+    if isinstance(usage_ledger_payload, dict):
+        raw_calls: object = usage_ledger_payload.get("calls", [])
+        if isinstance(raw_calls, list):
+            usage_calls = [entry for entry in raw_calls if isinstance(entry, dict)]
+
+    bucket_by_run: dict[str, dict[str, str]] = {
+        str(row.get("run", "")).strip(): row for row in bucket_records if str(row.get("run", "")).strip()
+    }
+    run_by_name: dict[str, dict[str, object]] = {
+        str(row.get("run", "")).strip(): row for row in run_summary_rows if str(row.get("run", "")).strip()
+    }
+
+    focused_later_cached_tokens: list[int] = []
+    for call in usage_calls:
+        label: str = str(call.get("label", ""))
+        if not label.startswith("focused-seed1-u"):
+            continue
+        if label.endswith("-u0"):
+            continue
+        usage: dict[str, object] = _as_dict(call.get("usage"))
+        prompt_details: dict[str, object] = _as_dict(usage.get("prompt_tokens_details"))
+        cached_tokens: int = _coerce_int(prompt_details.get("cached_tokens"), 0)
+        if cached_tokens > 0:
+            focused_later_cached_tokens.append(cached_tokens)
+    cached_tokens_average: int = (
+        int(sum(focused_later_cached_tokens) / len(focused_later_cached_tokens))
+        if focused_later_cached_tokens
+        else 0
+    )
+
+    probe_rows: list[list[object]] = []
+    max_probe_prompt_tokens: int = 0
+    for row in context_probe_rows:
+        usage: dict[str, object] = _as_dict(row.get("usage"))
+        prompt_tokens: int = _coerce_int(usage.get("prompt_tokens"), 0)
+        max_probe_prompt_tokens = max(max_probe_prompt_tokens, prompt_tokens)
+        target_tokens: int = _coerce_int(row.get("target_real_tokens"), 0)
+        probe_rows.append(
+            [
+                f"{target_tokens:,}",
+                f"{prompt_tokens:,}",
+                _coerce_int(row.get("status"), 0),
+                f"{_coerce_float(row.get('latency_s'), 0.0):.1f}",
+            ]
+        )
+
+    whole_seed1_strict = _parse_fraction(str(bucket_by_run.get("whole_seed1", {}).get("all strict", "")))
+    whole_seed2_strict = _parse_fraction(str(bucket_by_run.get("whole_seed2", {}).get("all strict", "")))
+    chunk128_seed1_strict = _parse_fraction(str(bucket_by_run.get("chunk128k_seed1", {}).get("all strict", "")))
+    chunk32_seed1_strict = _parse_fraction(str(bucket_by_run.get("chunk32k_seed1", {}).get("all strict", "")))
+    focused_seed1_strict = _parse_fraction(str(bucket_by_run.get("focused_seed1", {}).get("all strict", "")))
+    focusdocs_seed2_strict = _parse_fraction(str(bucket_by_run.get("focusdocs_seed2", {}).get("all strict", "")))
+    focused_seed1_far = _parse_fraction(str(bucket_by_run.get("focused_seed1", {}).get("700k+ strict", "")))
+    chunk128_seed1_far = _parse_fraction(str(bucket_by_run.get("chunk128k_seed1", {}).get("700k+ strict", "")))
+    chunk32_seed1_far = _parse_fraction(str(bucket_by_run.get("chunk32k_seed1", {}).get("700k+ strict", "")))
+
+    focused_usage: int = _coerce_int(run_by_name.get("focused_seed1", {}).get("usage"), 0)
+    chunk_token_baseline_values: list[int] = [
+        _coerce_int(run_by_name.get("chunk128k_seed1", {}).get("usage"), 0),
+        _coerce_int(run_by_name.get("chunk32k_seed1", {}).get("usage"), 0),
+    ]
+    chunk_token_baseline_values = [value for value in chunk_token_baseline_values if value > 0]
+    chunk_token_baseline: float = float(sum(chunk_token_baseline_values) / len(chunk_token_baseline_values)) if chunk_token_baseline_values else 0.0
+    focused_cost_multiplier: float = (focused_usage / chunk_token_baseline) if chunk_token_baseline > 0 else 0.0
+
+    docstring_ratio: tuple[int, int] | None = None
+    if RESULTS_LIVE_RECALL_NOTE_PATH.exists():
+        docstring_ratio = _extract_docstring_single_call_docstring_ratio(
+            RESULTS_LIVE_RECALL_NOTE_PATH.read_text(encoding="utf-8")
+        )
+    docstring_ratio_text: str = (
+        f"{docstring_ratio[0]}/{docstring_ratio[1]}" if docstring_ratio else "0–1/32 (see recall.md)"
+    )
+
+    summary_markdown: str = (
+        f"- **Probe:** Beam accepted prompts up to **~{max_probe_prompt_tokens:,}** prompt tokens (see context probe table below).\n"
+        f"- **700k+ separation bucket:** focused whole-context passes caught **{focused_seed1_far[0]}/{focused_seed1_far[1]}** "
+        f"(seed 1), while chunked 128k and 32k runs caught **{chunk128_seed1_far[0]}/{chunk128_seed1_far[1]}** and "
+        f"**{chunk32_seed1_far[0]}/{chunk32_seed1_far[1]}**.\n"
+        f"- **Overall:** a single whole-prompt call is not better than chunking on seed 1 "
+        f"(**{whole_seed1_strict[0]}/{whole_seed1_strict[1]}** vs **{chunk128_seed1_strict[0]}/{chunk128_seed1_strict[1]}** "
+        f"for chunk128k and **{chunk32_seed1_strict[0]}/{chunk32_seed1_strict[1]}** for chunk32k).\n"
+        f"- **Focused variant:** **{focused_seed1_strict[0]}/{focused_seed1_strict[1]}** strict hits on seed 1 at "
+        f"about **{focused_cost_multiplier:.1f}×** token cost versus ~1M-token chunked baselines "
+        f"(focused={focused_usage:,}; chunked mean≈{int(chunk_token_baseline):,}). "
+        f"Later focused passes still reported about **{cached_tokens_average:,} cached prompt tokens** each.\n"
+        f"- **Seed-2 signal:** docs-focused pass reached **{focusdocs_seed2_strict[0]}/{focusdocs_seed2_strict[1]}** "
+        f"vs **{whole_seed2_strict[0]}/{whole_seed2_strict[1]}** for whole seed 2 (partial hold).\n"
+        f"- **Docstring caveat:** single-call whole-context variants mostly miss Python docstring drifts "
+        f"(best observed **{docstring_ratio_text}**).\n"
+        "- **Caveats:** one run per configuration, only 4-6 plants per distance bucket, and small samples.\n"
+        "- **Practical recipe:** use whole-repo context for a docs-focused audit (to catch long-range drift chunking "
+        "cannot see), plus cheap chunked passes for docstrings."
+    )
+
+    bucket_rows: list[list[object]] = [[record.get(header, "") for header in bucket_headers] for record in bucket_records]
+    run_rows: list[list[object]] = [
+        [
+            row.get("run", ""),
+            row.get("units", ""),
+            f"{_coerce_int(row.get('usage'), 0):,}",
+            row.get("findings", ""),
+            row.get("fully_verified", ""),
+            row.get("matched_findings", ""),
+            row.get("unplanted", ""),
+        ]
+        for row in run_summary_rows
+    ]
+    chart_path: str = str(RESULTS_LIVE_RECALL_CHART_PATH) if RESULTS_LIVE_RECALL_CHART_PATH.exists() else ""
+    return RecallPanelData(
+        available=True,
+        summary_markdown=summary_markdown,
+        probe_rows=probe_rows,
+        bucket_headers=bucket_headers,
+        bucket_rows=bucket_rows,
+        run_rows=run_rows,
+        chart_path=chart_path,
+    )
+
+
+def _parse_fraction(value: str) -> tuple[int, int]:
+    """
+    @brief Parse a fraction string like "5/30" into integer numerator/denominator.
+    @param value Fraction text.
+    """
+
+    match = re.fullmatch(r"\s*(\d+)\s*/\s*(\d+)\s*", value)
+    if not match:
+        return (0, 0)
+    return int(match.group(1)), int(match.group(2))
+
+
+def _extract_docstring_single_call_docstring_ratio(recall_markdown: str) -> tuple[int, int] | None:
+    """
+    @brief Parse docs-last docstring hit ratio from recall.md ("0/18, 1/14" -> 1/32).
+    @param recall_markdown Full recall markdown text.
+    """
+
+    match = re.search(
+        r"\| A docs-last s1 / s2 \|[^|]*\|\s*(\d+)\s*/\s*(\d+)\s*,\s*(\d+)\s*/\s*(\d+)\s*\|",
+        recall_markdown,
+    )
+    if not match:
+        return None
+    hits: int = int(match.group(1)) + int(match.group(3))
+    total: int = int(match.group(2)) + int(match.group(4))
+    if total <= 0:
+        return None
+    return hits, total
 
 
 def _finding_case_id(finding: dict[str, object]) -> str:

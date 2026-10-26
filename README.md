@@ -94,6 +94,22 @@ All values below are from `results_live/index.json`, generated from:
 | marshmallow-400000 | 294,559 | 4,916 | 19.71 | 2 | 2 | 1 | 1 | 0 |
 | werkzeug-400000 | 386,415 | 3,446 | 17.93 | 1 | 0 | 0 | 1 | 0 |
 
+## Where long context helps (planted-drift test)
+
+This section is sourced from `results_live/recall/` (`context_probe.json`, `recall_by_bucket.csv`, `run_summary.json`, `usage_ledger.json`, `recall.md`).
+
+- **Prompt-size probe:** Beam accepted prompts up to **947,446** prompt tokens in this setup.
+- **700k+ separation bucket:** focused whole-context passes hit **5/6** plants on seed 1; chunked 128k and 32k both hit **0/6**.
+- **Overall strict recall:** single whole-prompt calls were not better than chunking on seed 1 (**5/30** whole vs **5/30** chunk128k and **5/30** chunk32k).
+- **Focused-pass variant:** **11/30** strict on seed 1, at higher cost (4,755,853 tokens total vs 970,653 and 1,029,696 for the chunked runs; roughly 4.6-4.9x). Beam still reported about **934k-940k cached prompt tokens** on focused passes 2-5.
+- **Seed-2 check:** the docs-focused pass reached **5/28** vs **4/28** for single whole-prompt seed 2 (partial hold).
+- **Docstring limitation:** single-call whole-context variants mostly miss planted Python docstring drifts (best observed **1/32** in docs-last single-call runs).
+- **Caveats:** one run per configuration, 4-6 plants per bucket, and small samples.
+
+Practical recipe supported by this data: **use whole-repo context for a docs-focused audit (to catch long-range drift chunking cannot see), plus cheap chunked passes for docstrings.**
+
+![Planted-drift recall by distance](results_live/recall/recall_vs_distance.png)
+
 ## Space behaviour
 
 - Default view is recorded data from `results_live/index.json` (no inference cost).
