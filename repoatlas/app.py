@@ -32,6 +32,10 @@ RESULTS_LIVE_RECALL_CONTEXT_PROBE_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "
 RESULTS_LIVE_RECALL_USAGE_LEDGER_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "usage_ledger.json"
 RESULTS_LIVE_RECALL_NOTE_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "recall.md"
 RESULTS_LIVE_RECALL_CHART_PATH: Path = RESULTS_LIVE_RECALL_DIRECTORY / "recall_vs_distance.png"
+RESULTS_LIVE_BASELINES_DIRECTORY: Path = RESULTS_LIVE_DIRECTORY / "baselines"
+RESULTS_LIVE_BASELINES_CSV_PATH: Path = RESULTS_LIVE_BASELINES_DIRECTORY / "baselines.csv"
+RESULTS_LIVE_BASELINES_JSON_PATH: Path = RESULTS_LIVE_BASELINES_DIRECTORY / "baselines.json"
+RESULTS_LIVE_BASELINES_COLOCATION_PATH: Path = RESULTS_LIVE_BASELINES_DIRECTORY / "colocation.json"
 FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
 LIVE_MAX_TOKEN_LIMIT: int = 150_000
 LIVE_DEFAULT_TOKEN_LIMIT: int = 150_000
@@ -209,10 +213,28 @@ class RecallPanelData(TypedDict):
     chart_path: str
 
 
+class BaselinePanelData(TypedDict):
+    """
+    @brief Data bundle for benchmark baseline comparison rendering.
+    @param available True when baseline artifacts are present and parseable.
+    @param takeaway_markdown One-line takeaway shown at top of section.
+    @param notes_markdown Honest caveats and interpretation notes.
+    @param headers Baseline comparison table headers.
+    @param rows Baseline comparison rows.
+    """
+
+    available: bool
+    takeaway_markdown: str
+    notes_markdown: str
+    headers: list[str]
+    rows: list[list[object]]
+
+
 # Private function prototypes:
 # - _load_live_index() -> LiveIndex
 # - _load_repro_results() -> tuple[dict[str, dict[str, object]], dict[str, object]]
 # - _load_recall_panel_data() -> RecallPanelData
+# - _load_baseline_panel_data() -> BaselinePanelData
 # - _attach_repro_records(findings: list[dict[str, object]], repros_map: dict[str, dict[str, object]]) -> list[dict[str, object]]
 # - _finding_case_id(finding: dict[str, object]) -> str
 # - _render_hero_html(summary: dict[str, object]) -> str
@@ -257,6 +279,7 @@ def build_app() -> gr.Blocks:
     live_index: LiveIndex = _load_live_index()
     repros_map, repro_summary = _load_repro_results()
     recall_panel_data: RecallPanelData = _load_recall_panel_data()
+    baseline_panel_data: BaselinePanelData = _load_baseline_panel_data()
     findings: list[dict[str, object]] = _attach_repro_records(live_index["findings"], repros_map=repros_map)
     runs: list[dict[str, object]] = live_index["runs"]
     summary: dict[str, object] = live_index["summary"]
@@ -314,8 +337,7 @@ def build_app() -> gr.Blocks:
             for run in runs
         ]
     )
-    baselines_directory: Path = RESULTS_LIVE_DIRECTORY / "baselines"
-    has_baselines: bool = baselines_directory.exists() and any(baselines_directory.iterdir())
+    has_baselines: bool = baseline_panel_data["available"]
     example_repo_rows: list[list[str]] = _build_example_repo_rows()
     example_flask_button: gr.Button | None = None
     example_fastapi_button: gr.Button | None = None
@@ -508,14 +530,15 @@ def build_app() -> gr.Blocks:
             else:
                 gr.Markdown("### Where long context helps (planted-drift test)\nRecall artifacts are not available in this checkout.")
             if has_baselines:
-                baseline_files: list[list[str]] = [[item.name] for item in sorted(baselines_directory.iterdir())]
                 with gr.Accordion("Baselines", open=False):
+                    gr.Markdown("**Takeaway:** " + baseline_panel_data["takeaway_markdown"])
                     gr.Dataframe(
-                        headers=["Available baseline files"],
-                        value=baseline_files,
+                        headers=baseline_panel_data["headers"],
+                        value=baseline_panel_data["rows"],
                         interactive=False,
                         wrap=True,
                     )
+                    gr.Markdown(baseline_panel_data["notes_markdown"])
 
         with gr.Tab("Live try it"):
             gr.Markdown(
@@ -988,6 +1011,194 @@ def _load_recall_panel_data() -> RecallPanelData:
         run_rows=run_rows,
         chart_path=chart_path,
     )
+
+
+def _load_baseline_panel_data() -> BaselinePanelData:
+    """
+    @brief Load baseline comparison data for benchmark rendering.
+    """
+
+    if not RESULTS_LIVE_BASELINES_CSV_PATH.exists() or not RESULTS_LIVE_BASELINES_JSON_PATH.exists():
+        return BaselinePanelData(
+            available=False,
+            takeaway_markdown="",
+            notes_markdown="",
+            headers=[],
+            rows=[],
+        )
+
+    with RESULTS_LIVE_BASELINES_CSV_PATH.open("r", encoding="utf-8", newline="") as handle:
+        csv_reader = csv.DictReader(handle)
+        csv_rows: list[dict[str, str]] = [dict(row) for row in csv_reader]
+
+    baselines_json_payload: object = json.loads(RESULTS_LIVE_BASELINES_JSON_PATH.read_text(encoding="utf-8"))
+    baseline_json_rows: list[dict[str, object]] = []
+    if isinstance(baselines_json_payload, dict):
+        raw_rows: object = baselines_json_payload.get("rows", [])
+        if isinstance(raw_rows, list):
+            baseline_json_rows = [row for row in raw_rows if isinstance(row, dict)]
+
+    colocation_payload: object = {}
+    if RESULTS_LIVE_BASELINES_COLOCATION_PATH.exists():
+        colocation_payload = json.loads(RESULTS_LIVE_BASELINES_COLOCATION_PATH.read_text(encoding="utf-8"))
+    colocation_map: dict[str, object] = colocation_payload if isinstance(colocation_payload, dict) else {}
+
+    headers: list[str] = [
+        "Method",
+        "Calls",
+        "Tokens",
+        "Known true drifts recovered (of 11)",
+        "Findings",
+        "Precision",
+    ]
+    rendered_rows: list[list[object]] = []
+    for row in csv_rows:
+        method: str = str(row.get("method", "")).strip()
+        calls: int = _coerce_int(row.get("calls"), 0)
+        prompt_tokens: int = _coerce_int(row.get("prompt_tokens"), 0)
+        completion_tokens: int = _coerce_int(row.get("completion_tokens"), 0)
+        recovered_count: int = _coerce_int(row.get("true_recovered_of_11"), 0)
+        findings_total: int = _coerce_int(row.get("total_findings"), 0)
+        precision_value: float = _coerce_float(row.get("precision"), 0.0)
+        precision_text: str = f"{precision_value * 100.0:.1f}%" if precision_value <= 1.0 else f"{precision_value:.1f}%"
+        tokens_text: str = (
+            "0 (rule-based)"
+            if prompt_tokens == 0 and completion_tokens == 0
+            else f"{prompt_tokens:,} prompt + {completion_tokens:,} completion"
+        )
+        rendered_rows.append(
+            [
+                method,
+                calls,
+                tokens_text,
+                f"{recovered_count}/11",
+                findings_total,
+                precision_text,
+            ]
+        )
+
+    whole_csv_row: dict[str, str] | None = _find_csv_baseline_row(csv_rows, "whole-repo beam")
+    symbol_csv_row: dict[str, str] | None = _find_csv_baseline_row(csv_rows, "symbol check")
+    chunk32_csv_row: dict[str, str] | None = _find_csv_baseline_row(csv_rows, "~32k")
+    chunk128_csv_row: dict[str, str] | None = _find_csv_baseline_row(csv_rows, "~128k")
+    whole_json_row: dict[str, object] | None = _find_json_baseline_row(baseline_json_rows, "whole-repo beam")
+    symbol_json_row: dict[str, object] | None = _find_json_baseline_row(baseline_json_rows, "symbol check")
+    chunk32_json_row: dict[str, object] | None = _find_json_baseline_row(baseline_json_rows, "~32k")
+    chunk128_json_row: dict[str, object] | None = _find_json_baseline_row(baseline_json_rows, "~128k")
+
+    whole_recovered: int = _coerce_int(whole_csv_row.get("true_recovered_of_11") if whole_csv_row else 0, 0)
+    chunk32_recovered: int = _coerce_int(chunk32_csv_row.get("true_recovered_of_11") if chunk32_csv_row else 0, 0)
+    chunk128_recovered: int = _coerce_int(chunk128_csv_row.get("true_recovered_of_11") if chunk128_csv_row else 0, 0)
+    symbol_recovered: int = _coerce_int(symbol_csv_row.get("true_recovered_of_11") if symbol_csv_row else 0, 0)
+
+    whole_prompt_tokens: int = _coerce_int(whole_csv_row.get("prompt_tokens") if whole_csv_row else 0, 0)
+    chunk32_prompt_tokens: int = _coerce_int(chunk32_csv_row.get("prompt_tokens") if chunk32_csv_row else 0, 0)
+    chunk128_prompt_tokens: int = _coerce_int(chunk128_csv_row.get("prompt_tokens") if chunk128_csv_row else 0, 0)
+
+    symbol_findings_all: int = _coerce_int(symbol_json_row.get("total_findings") if symbol_json_row else 0, 0)
+    whole_findings: int = _coerce_int(whole_csv_row.get("total_findings") if whole_csv_row else 0, 0)
+
+    chunk32_same_chunk_hits: int = _count_chunk_colocated_recovered(
+        method_suffix="32k",
+        recovered_true_ids=_string_list(chunk32_json_row.get("true_recovered") if chunk32_json_row else []),
+        colocation_map=colocation_map,
+    )
+    chunk128_same_chunk_hits: int = _count_chunk_colocated_recovered(
+        method_suffix="128k",
+        recovered_true_ids=_string_list(chunk128_json_row.get("true_recovered") if chunk128_json_row else []),
+        colocation_map=colocation_map,
+    )
+    chunk32_same_chunk_denom: int = chunk32_recovered if chunk32_recovered > 0 else 0
+    chunk128_same_chunk_denom: int = chunk128_recovered if chunk128_recovered > 0 else 0
+
+    takeaway_markdown: str = (
+        f"At similar prompt spend (~{whole_prompt_tokens / 1_000_000:.2f}M to {chunk32_prompt_tokens / 1_000_000:.2f}M), "
+        f"whole-repo Beam recovered {whole_recovered}/11 known drifts vs {chunk32_recovered}/11 (32k chunks) and "
+        f"{chunk128_recovered}/11 (128k chunks), while the no-AI symbol check recovered {symbol_recovered}/11 at zero token cost."
+    )
+
+    notes_markdown: str = (
+        f"- The **11-of-11** whole-repo score is circular: the 11 known drifts were defined from that whole-repo sweep itself.\n"
+        f"- Chunked baselines recovered **{chunk32_recovered}/11** (32k) and **{chunk128_recovered}/11** (128k) at similar prompt spend "
+        f"({chunk32_prompt_tokens:,} and {chunk128_prompt_tokens:,} prompt tokens vs {whole_prompt_tokens:,} for whole-repo), "
+        f"and mostly where doc and code co-located in one chunk "
+        f"({chunk32_same_chunk_hits}/{chunk32_same_chunk_denom} at 32k; {chunk128_same_chunk_hits}/{chunk128_same_chunk_denom} at 128k).\n"
+        f"- The no-AI symbol check recovered **{symbol_recovered}/11** and surfaced more drifts overall in this snapshot "
+        f"({symbol_findings_all} findings vs {whole_findings} whole-repo findings), so DocDrift's value is cross-file/prose drift handling "
+        f"plus triage workflow, not raw detection count alone.\n"
+        "- The table is data-driven from `results_live/baselines/baselines.csv` and automatically appends new methods; "
+        "the upcoming hybrid row (symbol check + whole-repo Beam triage + executable repro) will appear here when added."
+    )
+
+    return BaselinePanelData(
+        available=True,
+        takeaway_markdown=takeaway_markdown,
+        notes_markdown=notes_markdown,
+        headers=headers,
+        rows=rendered_rows,
+    )
+
+
+def _find_csv_baseline_row(rows: list[dict[str, str]], method_substring: str) -> dict[str, str] | None:
+    """
+    @brief Find a baseline CSV row by case-insensitive method-name substring.
+    @param rows Parsed baselines CSV rows.
+    @param method_substring Substring to match in method name.
+    """
+
+    target: str = method_substring.strip().lower()
+    for row in rows:
+        method: str = str(row.get("method", "")).lower()
+        if target in method:
+            return row
+    return None
+
+
+def _find_json_baseline_row(rows: list[dict[str, object]], method_substring: str) -> dict[str, object] | None:
+    """
+    @brief Find a baseline JSON row by case-insensitive method-name substring.
+    @param rows Parsed baselines JSON rows.
+    @param method_substring Substring to match in method name.
+    """
+
+    target: str = method_substring.strip().lower()
+    for row in rows:
+        method: str = str(row.get("method", "")).lower()
+        if target in method:
+            return row
+    return None
+
+
+def _count_chunk_colocated_recovered(
+    method_suffix: str,
+    recovered_true_ids: list[str],
+    colocation_map: dict[str, object],
+) -> int:
+    """
+    @brief Count recovered known drifts that were in the same chunk for a chunk size.
+    @param method_suffix Chunk label suffix (`32k` or `128k`).
+    @param recovered_true_ids Known recovered true IDs.
+    @param colocation_map Colocation payload map.
+    """
+
+    hits: int = 0
+    for true_id in recovered_true_ids:
+        key: str = f"{true_id}@{method_suffix}"
+        payload: dict[str, object] = _as_dict(colocation_map.get(key))
+        if bool(payload.get("same_chunk", False)):
+            hits += 1
+    return hits
+
+
+def _string_list(value: object) -> list[str]:
+    """
+    @brief Coerce unknown list payload to list[str].
+    @param value Candidate list object.
+    """
+
+    if not isinstance(value, list):
+        return []
+    return [str(item) for item in value if isinstance(item, (str, int, float))]
 
 
 def _parse_fraction(value: str) -> tuple[int, int]:
