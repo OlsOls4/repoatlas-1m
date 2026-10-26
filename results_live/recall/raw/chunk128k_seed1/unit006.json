@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 6,
+ "status": 200,
+ "latency_s": 23.6,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:20:25.180349+00:00",
+ "usage": {
+  "prompt_tokens": 125267,
+  "completion_tokens": 4986,
+  "total_tokens": 130253,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [\n{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The structlog documentation's rendering example references a non-existent processor named `add_journal_name`; the implemented processor is `add_logger_name`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 193, \"end_line\": 193, \"quote\": \"structlog.stdlib.add_journal_name,\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 871, \"end_line\": 871, \"quote\": \"def add_logger_name(\"}, \"proposed_fix\": \"Replace `structlog.stdlib.add_journal_name` with `structlog.stdlib.add_logger_name` in the example processor list.\"},\n{\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The structlog documentation tells users to set `wrapper_class` to `AsyncBoundRecorder`, but the implemented class is `AsyncBoundLogger`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 67, \"end_line\": 67, \"quote\": \"To use it, {doc}`configure <configuration>` *structlog* to use `AsyncBoundRecorder` as `wrapper_class`.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 664, \"end_line\": 664, \"quote\": \"class AsyncBoundLogger:\"}, \"proposed_fix\": \"Replace `AsyncBoundRecorder` with `AsyncBoundLogger` in the documentation sentence.\"},\n{\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The structlog documentation says the level-number mapping is at `structlog.stdlib._NAME_TO_LEVEL`, but the implementation stores it in the `stdlib._log_levels` submodule as `_NAME_TO_LEVEL`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 117, \"end_line\": 117, \"quote\": \"The mapping of names to numbers is in `structlog.stdlib._NAME_TO_LEVEL`.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 862, \"end_line\": 862, \"quote\": \"    ``structlog.stdlib._log_levels._NAME_TO_LEVEL``.\"}, \"proposed_fix\": \"Replace `structlog.stdlib._NAME_TO_LEVEL` with `structlog.stdlib._log_levels._NAME_TO_LEVEL`.\"},\n{\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The structlog documentation short name `ProcessorFormatter.remove_processors_meta` does not match the implemented static method `remove_transforms_meta`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 424, \"end_line\": 424, \"quote\": \"However, you probably don't want to have them in your log files, thus we've added the `ProcessorFormatter.remove_processors_meta` processor to do so conveniently.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 1247, \"end_line\": 1247, \"quote\": \"    def remove_transforms_meta(\"}, \"proposed_fix\": \"Replace `ProcessorFormatter.remove_processors_meta` with `ProcessorFormatter.remove_transforms_meta`.\"},\n{\"finding_id\": \"DD-5\", \"drift_kind\": \"name\", \"explanation\": \"The Werkzeug tutorial imports `SharedPayloadMiddleware`, but the subsequently used middleware class is `SharedDataMiddleware`.\", \"doc_citation\": {\"path\": \"werkzeug/docs/tutorial.rst\", \"start_line\": 130, \"end_line\": 130, \"quote\": \"from werkzeug.middleware.shared_data import SharedPayloadMiddleware\"}, \"code_citation\": {\"path\": \"werkzeug/docs/tutorial.rst\", \"start_line\": 163, \"end_line\": 163, \"quote\": \"app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {\"}, \"proposed_fix\": \"Change the import to `from werkzeug.middleware.shared_data import SharedDataMiddleware`.\"}\n], \"atlas_claims\": []}",
+ "reasoning_chars": 15460
+}

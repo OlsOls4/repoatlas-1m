@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 12,
+ "status": 200,
+ "latency_s": 12.8,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:26:13.185150+00:00",
+ "usage": {
+  "prompt_tokens": 28486,
+  "completion_tokens": 2200,
+  "total_tokens": 30686,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The Map docstring says every argument except rules must be passed as a keyword argument, but the implementation allows several arguments, including default_subdomain, strict_slashes, and host_matching, to be passed positionally.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/routing/map.py\", \"start_line\": 43, \"end_line\": 43, \"quote\": \"    arguments besides the `rules` as keyword arguments!\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/routing/map.py\", \"start_line\": 111, \"end_line\": 114, \"quote\": \"    def __init__(\\n        self,\\n        rules: t.Iterable[RuleFactory] | None = None,\\n        default_subdomain: str = \\\"\\\",\"}, \"proposed_fix\": \"Change the note to state that subdomain_matching is keyword-only, rather than saying all arguments besides rules must be keyword arguments.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 8610
+}

@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 28,
+ "status": 200,
+ "latency_s": 17.8,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:31:15.839327+00:00",
+ "usage": {
+  "prompt_tokens": 24080,
+  "completion_tokens": 257,
+  "total_tokens": 24337,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [], \"atlas_claims\": []}",
+ "reasoning_chars": 1124
+}

@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 1,
+ "status": 200,
+ "latency_s": 15.9,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:21:34.015829+00:00",
+ "usage": {
+  "prompt_tokens": 26542,
+  "completion_tokens": 2808,
+  "total_tokens": 29350,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"default\", \"explanation\": \"The CLI help text states a default of info, but the click option default is None.\", \"doc_citation\": {\"path\": \"uvicorn/uvicorn/main.py\", \"start_line\": 226, \"end_line\": 226, \"quote\": \"help=\\\"Log level. [default: info]\\\",\"}, \"code_citation\": {\"path\": \"uvicorn/uvicorn/main.py\", \"start_line\": 225, \"end_line\": 225, \"quote\": \"default=None,\"}, \"proposed_fix\": \"Change the help text to not assert a default that differs from the declared option default, e.g. help=\\\"Log level.\\\"\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"other\", \"explanation\": \"The documentation refers to CallEntityTooLarge, but the code raises RequestEntityTooLarge.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wsgi.py\", \"start_line\": 477, \"end_line\": 477, \"quote\": \"Raises ``CallEntityTooLarge`` if the limit is a maximum.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/wsgi.py\", \"start_line\": 487, \"end_line\": 487, \"quote\": \"raise RequestEntityTooLarge()\"}, \"proposed_fix\": \"Update the versionchanged note to read ``RequestEntityTooLarge`` instead of ``CallEntityTooLarge``.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The documentation names PlainFileObserver, but the implemented class is named PlainFileLogObserver.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/twisted.py\", \"start_line\": 235, \"end_line\": 235, \"quote\": \":class:`PlainFileObserver` or Twisted's stock `FileLogObserver\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/twisted.py\", \"start_line\": 202, \"end_line\": 202, \"quote\": \"class PlainFileLogObserver:\"}, \"proposed_fix\": \"Replace ``PlainFileObserver`` with ``PlainFileLogObserver`` in the JSONLogObserverWrapper documentation.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 9348
+}

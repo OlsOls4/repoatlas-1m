@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 31,
+ "status": 200,
+ "latency_s": 19.2,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:32:11.221903+00:00",
+ "usage": {
+  "prompt_tokens": 29206,
+  "completion_tokens": 2303,
+  "total_tokens": 31509,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The standard-library configuration example uses `structlog.stdlib.add_journal_name`, but the processor documented and named elsewhere is `structlog.stdlib.add_logger_name`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 194, \"end_line\": 194, \"quote\": \"        structlog.stdlib.add_journal_name,\"}, \"code_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 96, \"end_line\": 96, \"quote\": \"{func}`~structlog.stdlib.add_logger_name`:\"}, \"proposed_fix\": \"Change `structlog.stdlib.add_journal_name` to `structlog.stdlib.add_logger_name` in the configuration example.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The tutorial imports a nonexistent middleware name, `SharedPayloadMiddleware`, while later using `SharedDataMiddleware`.\", \"doc_citation\": {\"path\": \"werkzeug/docs/tutorial.rst\", \"start_line\": 130, \"end_line\": 130, \"quote\": \"from werkzeug.middleware.shared_data import SharedPayloadMiddleware\"}, \"code_citation\": {\"path\": \"werkzeug/docs/tutorial.rst\", \"start_line\": 163, \"end_line\": 163, \"quote\": \"app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {\"}, \"proposed_fix\": \"Change the import to `from werkzeug.middleware.shared_data import SharedDataMiddleware`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 8311
+}

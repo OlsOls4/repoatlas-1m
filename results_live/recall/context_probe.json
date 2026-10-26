@@ -1,0 +1,107 @@
+[
+  {
+    "target_real_tokens": 200000,
+    "pack_cl100k_tokens": 165266,
+    "status": 200,
+    "latency_s": 4.9,
+    "rate_headers": {},
+    "expected_first": "jinja/src/jinja2/__init__.py",
+    "expected_last": "jinja/docs/license.rst",
+    "at": "2026-10-26T21:07:06.419341+00:00",
+    "usage": {
+      "prompt_tokens": 196337,
+      "completion_tokens": 157,
+      "total_tokens": 196494,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "content": "{\"first_file\": \"jinja/src/jinja2/__init__.py\", \"last_file\": \"jinja/docs/license.rst\"}",
+    "finish_reason": "stop",
+    "ratio_real_over_cl100k": 1.188
+  },
+  {
+    "target_real_tokens": 400000,
+    "pack_cl100k_tokens": 336106,
+    "status": 200,
+    "latency_s": 14.2,
+    "rate_headers": {},
+    "expected_first": "jinja/src/jinja2/__init__.py",
+    "expected_last": "werkzeug/src/werkzeug/datastructures/file_storage.py",
+    "at": "2026-10-26T21:07:27.087151+00:00",
+    "usage": {
+      "prompt_tokens": 399135,
+      "completion_tokens": 208,
+      "total_tokens": 399343,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "content": "{\"first_file\": \"jinja/src/jinja2/__init__.py\", \"last_file\": \"werkzeug/src/werkzeug/datastructures/file_storage.py\"}",
+    "finish_reason": "stop",
+    "ratio_real_over_cl100k": 1.1875
+  },
+  {
+    "target_real_tokens": 600000,
+    "pack_cl100k_tokens": 504195,
+    "status": 200,
+    "latency_s": 14.2,
+    "rate_headers": {},
+    "expected_first": "jinja/src/jinja2/__init__.py",
+    "expected_last": "uvicorn/uvicorn/protocols/http/auto.py",
+    "at": "2026-10-26T21:07:41.793781+00:00",
+    "usage": {
+      "prompt_tokens": 599153,
+      "completion_tokens": 250,
+      "total_tokens": 599403,
+      "prompt_tokens_details": {
+        "cached_tokens": 393216
+      }
+    },
+    "content": "{\"first_file\": \"jinja/src/jinja2/__init__.py\", \"last_file\": \"uvicorn/uvicorn/protocols/http/auto.py\"}",
+    "finish_reason": "stop",
+    "ratio_real_over_cl100k": 1.1883
+  },
+  {
+    "target_real_tokens": 800000,
+    "pack_cl100k_tokens": 672245,
+    "status": 200,
+    "latency_s": 12.5,
+    "rate_headers": {},
+    "expected_first": "jinja/src/jinja2/__init__.py",
+    "expected_last": "jinja/docs/license.rst",
+    "at": "2026-10-26T21:07:54.880201+00:00",
+    "usage": {
+      "prompt_tokens": 797256,
+      "completion_tokens": 155,
+      "total_tokens": 797411,
+      "prompt_tokens_details": {
+        "cached_tokens": 589824
+      }
+    },
+    "content": "{\"first_file\": \"jinja/src/jinja2/__init__.py\", \"last_file\": \"werkzeug/src/werkzeug/user_agent.py\"}",
+    "finish_reason": "stop",
+    "ratio_real_over_cl100k": 1.186
+  },
+  {
+    "target_real_tokens": 950000,
+    "pack_cl100k_tokens": 798314,
+    "status": 200,
+    "latency_s": 27.6,
+    "rate_headers": {},
+    "expected_first": "jinja/src/jinja2/__init__.py",
+    "expected_last": "uvicorn/uvicorn/loops/zuvloop.py",
+    "at": "2026-10-26T21:08:23.152005+00:00",
+    "usage": {
+      "prompt_tokens": 947446,
+      "completion_tokens": 198,
+      "total_tokens": 947644,
+      "prompt_tokens_details": {
+        "cached_tokens": 180224
+      }
+    },
+    "content": "{\"first_file\": \"jinja/src/jinja2/__init__.py\", \"last_file\": \"uvicorn/uvicorn/loops/zuvloop.py\"}",
+    "finish_reason": "stop",
+    "ratio_real_over_cl100k": 1.1868
+  }
+]

@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 4,
+ "status": 200,
+ "latency_s": 18.6,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:23:07.049220+00:00",
+ "usage": {
+  "prompt_tokens": 26523,
+  "completion_tokens": 2831,
+  "total_tokens": 29354,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"CombinedMultiDict.items(..., multi=True) is annotated as yielding (key, list[V]) pairs, but its implementation yields one (key, scalar V) pair per value, matching the base MultiDict.items(multi=True) behavior.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/structures.py\", \"start_line\": 683, \"end_line\": 683, \"quote\": \"    def items(self, multi: t.Literal[True]) -> cabc.Iterable[tuple[K, list[V]]]: ...\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/structures.py\", \"start_line\": 687, \"end_line\": 691, \"quote\": \"        found = set()\\n        for d in self.dicts:\\n            for key, value in d.items(multi):\\n                if multi:\\n                    yield key, value\"}, \"proposed_fix\": \"Change the overload annotation to `def items(self, multi: t.Literal[True]) -> cabc.Iterable[tuple[K, V]]: ...` so the documented signature matches the implementation.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 10716
+}

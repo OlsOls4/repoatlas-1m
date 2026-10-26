@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 4,
+ "status": 200,
+ "latency_s": 33.7,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:19:04.279075+00:00",
+ "usage": {
+  "prompt_tokens": 126703,
+  "completion_tokens": 2603,
+  "total_tokens": 129306,
+  "prompt_tokens_details": {
+   "cached_tokens": 64
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"default\", \"explanation\": \"The documented default scrypt/PBKDF2 detail claims pbkdf2 defaults to 600,000 iterations, but DEFAULT_PBKDF2_ITERATIONS is 1,000,000.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/security.py\", \"start_line\": 89, \"end_line\": 90, \"quote\": \"the default\\n        is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/security.py\", \"start_line\": 9, \"end_line\": 9, \"quote\": \"DEFAULT_PBKDF2_ITERATIONS = 1_000_000\"}, \"proposed_fix\": \"Update the docstring default from ``pbkdf2:sha256:600000`` to ``pbkdf2:sha256:1000000``.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 7964
+}

@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 25,
+ "status": 200,
+ "latency_s": 17.4,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:30:26.814397+00:00",
+ "usage": {
+  "prompt_tokens": 31127,
+  "completion_tokens": 2741,
+  "total_tokens": 33868,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"default\", \"explanation\": \"The documentation says conditional caching is used by default when cache_timeout is not set, but the implementation only enables conditional requests when the deprecated cache attribute is truthy.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/middleware/shared_data.py\", \"start_line\": 49, \"end_line\": 50, \"quote\": \"    :param cache_timeout: Set the ``Cache-Control`` ``max-age`` directive. If\\n        not set, conditional caching is used, which is typically what you want.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/middleware/shared_data.py\", \"start_line\": 239, \"end_line\": 239, \"quote\": \"            conditional=bool(self.cache),\"}, \"proposed_fix\": \"Update the cache_timeout documentation to state that conditional requests are not enabled by default because conditional is derived from the deprecated cache parameter.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"signature\", \"explanation\": \"BytesLoggerFactory documents that positional arguments are silently ignored, but __call__ uses the first positional argument as the BytesLogger name.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/_output.py\", \"start_line\": 368, \"end_line\": 368, \"quote\": \"    Positional arguments are silently ignored.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/_output.py\", \"start_line\": 379, \"end_line\": 379, \"quote\": \"        return BytesLogger(self._file, name=args[0] if args else None)\"}, \"proposed_fix\": \"Change the BytesLoggerFactory documentation to state that its first positional argument is used as the logger name.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 9172
+}

@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 23,
+ "status": 200,
+ "latency_s": 21.5,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:29:56.905484+00:00",
+ "usage": {
+  "prompt_tokens": 30786,
+  "completion_tokens": 2009,
+  "total_tokens": 32795,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The documentation refers to a parameter named stream_maker, but the corresponding function signature uses stream_factory.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 78, \"end_line\": 80, \"quote\": \":param stream_maker: A callable that returns a file in ``rb+`` mode.\\n        Defaults to creating a :class:`tempfile.SpooledTemporaryFile` with\\n        ``max_form_memory_size``.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 59, \"end_line\": 61, \"quote\": \"    stream_factory: TStreamFactory | None = None,\\n    max_form_memory_size: int | None = None,\\n    max_content_length: int | None = None,\"}, \"proposed_fix\": \"Replace 'stream_maker' with 'stream_factory' in the docstring.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"default\", \"explanation\": \"The documentation says the default dict class is MultiDict when cls is unspecified or None, but the code uses ImmutableMultiDict in that case.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 94, \"end_line\": 95, \"quote\": \":param cls: an optional dict class to use.  If this is not specified\\n                       or `None` the default :class:`MultiDict` is used.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 267, \"end_line\": 270, \"quote\": \"        if self.cls is not None:\\n            return stream, self.cls(), self.cls()\\n\\n        return stream, ImmutableMultiDict(), ImmutableMultiDict()\"}, \"proposed_fix\": \"Change the docstring default from MultiDict to ImmutableMultiDict.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 6404
+}

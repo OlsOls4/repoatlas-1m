@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 33,
+ "status": 200,
+ "latency_s": 12.4,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:32:36.988901+00:00",
+ "usage": {
+  "prompt_tokens": 29518,
+  "completion_tokens": 1944,
+  "total_tokens": 31462,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The WSGI transport example instantiates a class named `WSGICarrier`, but the documented and expected class name is `WSGITransport`.\", \"doc_citation\": {\"path\": \"httpx/docs/advanced/transports.md\", \"start_line\": 81, \"end_line\": 81, \"quote\": \"transport = httpx.WSGICarrier(app=app, remote_addr=\\\"1.2.3.4\\\")\"}, \"code_citation\": {\"path\": \"httpx/docs/advanced/transports.md\", \"start_line\": 62, \"end_line\": 62, \"quote\": \"transport = httpx.WSGITransport(app=app)\"}, \"proposed_fix\": \"transport = httpx.WSGITransport(app=app, remote_addr=\\\"1.2.3.4\\\")\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 6907
+}

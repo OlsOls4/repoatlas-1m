@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 16,
+ "status": 200,
+ "latency_s": 15.8,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:27:22.943843+00:00",
+ "usage": {
+  "prompt_tokens": 31240,
+  "completion_tokens": 2244,
+  "total_tokens": 33484,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\n  \"findings\": [\n    {\n      \"finding_id\": \"DD-1\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"The parse_tuple docstring refers to a `no_condexpr` parameter, but the method declares and forwards `with_condexpr`.\",\n      \"doc_citation\": {\n        \"path\": \"jinja/src/jinja2/parser.py\",\n        \"start_line\": 694,\n        \"end_line\": 697,\n        \"quote\": \"        The default parsing mode is a full tuple.  If `simplified` is `True`\\n        only names and literals are parsed; ``with_namespace`` allows namespace\\n        attr refs as well. The `no_condexpr` parameter is forwarded to\\n        :meth:`parse_expression`.\"\n      },\n      \"code_citation\": {\n        \"path\": \"jinja/src/jinja2/parser.py\",\n        \"start_line\": 684,\n        \"end_line\": 684,\n        \"quote\": \"        with_condexpr: bool = True,\"\n      },\n      \"proposed_fix\": \"Replace `no_condexpr` with `with_condexpr` in the parse_tuple docstring.\"\n    },\n    {\n      \"finding_id\": \"DD-2\",\n      \"drift_kind\": \"other\",\n      \"explanation\": \"The Cookie.value field is documented as describing the cookie key, contradicting its field name.\",\n      \"doc_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/test.py\",\n        \"start_line\": 1384,\n        \"end_line\": 1384,\n        \"quote\": \"    \\\"\\\"\\\"The cookie key, encoded as a client would see it.\\\"\\\"\\\"\"\n      },\n      \"code_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/test.py\",\n        \"start_line\": 1383,\n        \"end_line\": 1383,\n        \"quote\": \"    value: str\"\n      },\n      \"proposed_fix\": \"Change the docstring for Cookie.value to describe the cookie value rather than the key.\"\n    }\n  ],\n  \"atlas_claims\": []\n}",
+ "reasoning_chars": 7058
+}

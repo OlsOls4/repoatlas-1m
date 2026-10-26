@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 2,
+ "status": 200,
+ "latency_s": 23.1,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:17:37.899379+00:00",
+ "usage": {
+  "prompt_tokens": 124290,
+  "completion_tokens": 3015,
+  "total_tokens": 127305,
+  "prompt_tokens_details": {
+   "cached_tokens": 64
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\n  \"findings\": [\n    {\n      \"finding_id\": \"DD-1\",\n      \"drift_kind\": \"name\",\n      \"explanation\": \"The documentation for access_control_expose_headers describes the wrong header name: it says Access-Control-Allow-Origin instead of Access-Control-Expose-Headers.\",\n      \"doc_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/sansio/response.py\",\n        \"start_line\": 825,\n        \"end_line\": 826,\n        \"quote\": \"The ``Access-Control-Allow-Origin`` header. Which response\"\n      },\n      \"code_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/sansio/response.py\",\n        \"start_line\": 823,\n        \"end_line\": 823,\n        \"quote\": \"\\\"Access-Control-Expose-Headers\\\",\"\n      },\n      \"proposed_fix\": \"Change the docstring to begin: The ``Access-Control-Expose-Headers`` header. Which response\"\n    },\n    {\n      \"finding_id\": \"DD-2\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"The WWWAuthenticate.token property is documented as a dict of parameters, but its code return type is str | None.\",\n      \"doc_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\",\n        \"start_line\": 260,\n        \"end_line\": 261,\n        \"quote\": \"A dict of parameters for the header. Only one of this or :attr:`token` should\"\n      },\n      \"code_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\",\n        \"start_line\": 259,\n        \"end_line\": 259,\n        \"quote\": \"def token(self) -> str | None:\"\n      },\n      \"proposed_fix\": \"Change the docstring to: A token for the header. Only one of this or :attr:`parameters` should have a value for a given scheme.\"\n    }\n  ],\n  \"atlas_claims\": []\n}",
+ "reasoning_chars": 10687
+}

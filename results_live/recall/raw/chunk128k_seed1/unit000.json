@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 0,
+ "status": 200,
+ "latency_s": 18.2,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:16:34.797421+00:00",
+ "usage": {
+  "prompt_tokens": 122067,
+  "completion_tokens": 3797,
+  "total_tokens": 125864,
+  "prompt_tokens_details": {
+   "cached_tokens": 114688
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The WSGICarrier docstring lists constructor arguments but omits the implemented `wsgi_errors` parameter.\", \"doc_citation\": {\"path\": \"httpx/httpx/_transports/wsgi.py\", \"start_line\": 68, \"end_line\": 73, \"quote\": \"    * `app` - The WSGI application.\\n    * `raise_app_exceptions` - Boolean indicating if exceptions in the application\\n       should be raised. Default to `True`. Can be set to `False` for use cases\\n       such as testing the content of a client 500 response.\\n    * `script_name` - The root path on which the WSGI application should be mounted.\\n    * `remote_addr` - A string indicating the client IP of incoming requests.\"}, \"code_citation\": {\"path\": \"httpx/httpx/_transports/wsgi.py\", \"start_line\": 77, \"end_line\": 84, \"quote\": \"    def __init__(\\n        self,\\n        app: WSGIApplication,\\n        raise_app_exceptions: bool = True,\\n        script_name: str = \\\"\\\",\\n        remote_addr: str = \\\"127.0.0.1\\\",\\n        wsgi_errors: typing.TextIO | None = None,\\n    ) -> None:\"}, \"proposed_fix\": \"Add to the Arguments list: `* `wsgi_errors` - A TextIO object used as the WSGI error stream. Defaults to `sys.stderr` when not provided.`\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The documentation misspells the removed parameter name as `reqeust_key` instead of `request_key`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 254, \"end_line\": 255, \"quote\": \"    .. versionchanged:: 3.2\\n        The ``reqeust_key`` parameter was removed.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 264, \"end_line\": 273, \"quote\": \"        self,\\n        app: wt.WSGIApplication,\\n        evalex: bool = False,\\n        console_path: str = \\\"/console\\\",\\n        console_init_func: t.Callable[[], dict[str, t.Any]] | None = None,\\n        show_hidden_frames: bool = False,\\n        pin_security: bool = True,\\n        pin_logging: bool = True,\\n    ) -> None:\"}, \"proposed_fix\": \"Correct the parameter name in the versionchanged note to `request_key`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 12968
+}

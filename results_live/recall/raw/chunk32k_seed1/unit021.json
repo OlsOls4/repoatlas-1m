@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 21,
+ "status": 200,
+ "latency_s": 23.1,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:29:22.079331+00:00",
+ "usage": {
+  "prompt_tokens": 26761,
+  "completion_tokens": 3293,
+  "total_tokens": 30054,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The docstring says LogLevelColumnFormatter accepts level_styles=None and then formats a plain [level], but its constructor requires level_styles to be a dict.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/dev.py\", \"start_line\": 331, \"end_line\": 333, \"quote\": \"        level_styles:\\n            A dictionary of level names to styles that are applied to it. If\\n            None, the level is formatted as a plain ``[level]``.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/dev.py\", \"start_line\": 350, \"end_line\": 354, \"quote\": \"    def __init__(\\n        self,\\n        level_styles: dict[str, str],\\n        reset_style: str,\\n        width: int | None = None,\\n    ) -> None:\"}, \"proposed_fix\": \"Change the docstring to state that level_styles is required and that None handling applies only to the runtime formatting path, or relax the constructor type to dict[str, str] | None.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"signature\", \"explanation\": \"The docstring describes width as the exact padding width, but the constructor ignores any nonzero width and instead derives the width from the longest level name unless width is 0.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/dev.py\", \"start_line\": 339, \"end_line\": 341, \"quote\": \"        width:\\n            The width to pad the level to. If 0, no padding is done.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/dev.py\", \"start_line\": 357, \"end_line\": 362, \"quote\": \"        if level_styles:\\n            self.width = (\\n                0\\n                if width == 0\\n                else len(max(self.level_styles.keys(), key=len))\\n            )\"}, \"proposed_fix\": \"Reword the docstring to clarify that a nonzero width is ignored and padding uses the longest level name, while 0 disables padding.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 11819
+}

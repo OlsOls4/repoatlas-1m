@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 5,
+ "status": 200,
+ "latency_s": 24.2,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:19:41.470076+00:00",
+ "usage": {
+  "prompt_tokens": 122517,
+  "completion_tokens": 2836,
+  "total_tokens": 125353,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The docstring refers to the parameter as 'stream_maker', but the function signature names it 'stream_factory'.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 78, \"end_line\": 80, \"quote\": \":param stream_maker: A callable that returns a file in ``rb+`` mode.\\n        Defaults to creating a :class:`tempfile.SpooledTemporaryFile` with\\n        ``max_form_memory_size``.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/formparser.py\", \"start_line\": 59, \"end_line\": 59, \"quote\": \"    stream_factory: TStreamFactory | None = None,\"}, \"proposed_fix\": \"Change ':param stream_maker:' to ':param stream_factory:' in the _parse_form_data docstring.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 10931
+}

@@ -1,0 +1,1818 @@
+diff -ru clean/click/docs/options.md seed1/click/docs/options.md
+--- clean/click/docs/options.md	2026-10-26 19:56:31.025822670 +0000
++++ seed1/click/docs/options.md	2026-10-26 21:12:28.961822670 +0000
+@@ -721,7 +721,7 @@
+ environment variables (which are strings) is a bit more complex. Click handles
+ this by deferring customization of the behavior to the `type`. For both
+ `multiple` and `nargs` with values other than
+-`1`, Click will invoke the {meth}`ParamType.split_envvar_value` method to
++`1`, Click will invoke the {meth}`OptionType.split_envvar_value` method to
+ perform the splitting.
+ 
+ The default implementation for all types is to split on whitespace. The
+diff -ru clean/click/src/click/testing.py seed1/click/src/click/testing.py
+--- clean/click/src/click/testing.py	2026-10-26 19:56:31.029822670 +0000
++++ seed1/click/src/click/testing.py	2026-10-26 21:12:28.933822670 +0000
+@@ -740,7 +740,7 @@
+ 
+     @contextlib.contextmanager
+     def isolated_filesystem(
+-        self, temp_dir: str | os.PathLike[str] | None = None
++        self, temp_directory: str | os.PathLike[str] | None = None
+     ) -> cabc.Generator[str]:
+         """A context manager that creates a temporary directory and
+         changes the current working directory to it. This isolates tests
+@@ -768,7 +768,7 @@
+             ``tmp_path`` fixture with absolute paths instead.
+ 
+         .. versionchanged:: 8.0
+-            Added the ``temp_dir`` parameter.
++            Added the ``temp_directory`` parameter.
+         """
+         import warnings
+ 
+@@ -781,7 +781,7 @@
+         )
+ 
+         cwd = os.getcwd()
+-        dt = tempfile.mkdtemp(dir=temp_dir)
++        dt = tempfile.mkdtemp(dir=temp_directory)
+         os.chdir(dt)
+ 
+         try:
+@@ -789,7 +789,7 @@
+         finally:
+             os.chdir(cwd)
+ 
+-            if temp_dir is None:
++            if temp_directory is None:
+                 import shutil
+ 
+                 try:
+diff -ru clean/httpcore/docs/connection-pools.md seed1/httpcore/docs/connection-pools.md
+--- clean/httpcore/docs/connection-pools.md	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/docs/connection-pools.md	2026-10-26 21:12:28.961822670 +0000
+@@ -52,7 +52,7 @@
+ ### SSL configuration
+ 
+ * `ssl_context`: An SSL context to use for verifying connections.
+-                 If not specified, the default `httpcore.default_ssl_context()`
++                 If not specified, the default `httpcore.initial_ssl_context()`
+                  will be used.
+ 
+ ### Pooling configuration
+diff -ru clean/httpcore/docs/extensions.md seed1/httpcore/docs/extensions.md
+--- clean/httpcore/docs/extensions.md	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/docs/extensions.md	2026-10-26 21:12:28.961822670 +0000
+@@ -243,7 +243,7 @@
+ 
+     # Upgrade to an SSL stream...
+     network_stream = network_stream.start_tls(
+-        ssl_context=httpcore.default_ssl_context(),
++        ssl_context=httpcore.initial_ssl_context(),
+         hostname=b"www.example.com",
+     )
+ 
+diff -ru clean/httpcore/docs/logging.md seed1/httpcore/docs/logging.md
+--- clean/httpcore/docs/logging.md	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/docs/logging.md	2026-10-26 21:12:28.961822670 +0000
+@@ -38,4 +38,4 @@
+ DEBUG [2023-01-09 14:44:00] httpcore.connection - close.complete
+ ```
+ 
+-The exact formatting of the debug logging may be subject to change across different versions of `httpcore`. If you need to rely on a particular format it is recommended that you pin installation of the package to a fixed version.
+\ No newline at end of file
++The exact formatting of the debug logging may be subject to change across different versions of `httpcore`. If you need to rely on a particular format it is recommended that you pin installation of the package to a fixed version.
+diff -ru clean/httpcore/docs/network-backends.md seed1/httpcore/docs/network-backends.md
+--- clean/httpcore/docs/network-backends.md	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/docs/network-backends.md	2026-10-26 21:12:28.961822670 +0000
+@@ -37,7 +37,7 @@
+ import httpcore
+ 
+ # Create an SSL context using 'certifi' for the certificates.
+-ssl_context = httpcore.default_ssl_context()
++ssl_context = httpcore.initial_ssl_context()
+ 
+ # A basic HTTP/1.1 request as a plain bytestring.
+ request = b'\r\n'.join([
+diff -ru clean/httpcore/httpcore/__init__.py seed1/httpcore/httpcore/__init__.py
+--- clean/httpcore/httpcore/__init__.py	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/httpcore/__init__.py	2026-10-26 21:12:28.933822670 +0000
+@@ -35,7 +35,7 @@
+     WriteTimeout,
+ )
+ from ._models import URL, Origin, Proxy, Request, Response
+-from ._ssl import default_ssl_context
++from ._ssl import initial_ssl_context
+ from ._sync import (
+     ConnectionInterface,
+     ConnectionPool,
+@@ -111,7 +111,7 @@
+     "NetworkStream",
+     "NetworkBackend",
+     # util
+-    "default_ssl_context",
++    "initial_ssl_context",
+     "SOCKET_OPTION",
+     # exceptions
+     "ConnectionNotAvailable",
+diff -ru clean/httpcore/httpcore/_async/connection.py seed1/httpcore/httpcore/_async/connection.py
+--- clean/httpcore/httpcore/_async/connection.py	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/httpcore/_async/connection.py	2026-10-26 21:12:28.933822670 +0000
+@@ -10,7 +10,7 @@
+ from .._backends.base import SOCKET_OPTION, AsyncNetworkBackend, AsyncNetworkStream
+ from .._exceptions import ConnectError, ConnectTimeout
+ from .._models import Origin, Request, Response
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import AsyncLock
+ from .._trace import Trace
+ from .http11 import AsyncHTTP11Connection
+@@ -139,7 +139,7 @@
+ 
+                 if self._origin.scheme in (b"https", b"wss"):
+                     ssl_context = (
+-                        default_ssl_context()
++                        initial_ssl_context()
+                         if self._ssl_context is None
+                         else self._ssl_context
+                     )
+diff -ru clean/httpcore/httpcore/_async/connection_pool.py seed1/httpcore/httpcore/_async/connection_pool.py
+--- clean/httpcore/httpcore/_async/connection_pool.py	2026-10-26 19:56:30.909822670 +0000
++++ seed1/httpcore/httpcore/_async/connection_pool.py	2026-10-26 21:12:28.933822670 +0000
+@@ -65,7 +65,7 @@
+ 
+         Parameters:
+             ssl_context: An SSL context to use for verifying connections.
+-                If not specified, the default `httpcore.default_ssl_context()`
++                If not specified, the default `httpcore.initial_ssl_context()`
+                 will be used.
+             max_connections: The maximum number of concurrent HTTP connections that
+                 the pool should allow. Any attempt to send a request on a pool that
+diff -ru clean/httpcore/httpcore/_async/http_proxy.py seed1/httpcore/httpcore/_async/http_proxy.py
+--- clean/httpcore/httpcore/_async/http_proxy.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_async/http_proxy.py	2026-10-26 21:12:28.933822670 +0000
+@@ -16,7 +16,7 @@
+     enforce_headers,
+     enforce_url,
+ )
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import AsyncLock
+ from .._trace import Trace
+ from .connection import AsyncHTTPConnection
+@@ -300,7 +300,7 @@
+ 
+                 # Upgrade the stream to SSL
+                 ssl_context = (
+-                    default_ssl_context()
++                    initial_ssl_context()
+                     if self._ssl_context is None
+                     else self._ssl_context
+                 )
+diff -ru clean/httpcore/httpcore/_async/socks_proxy.py seed1/httpcore/httpcore/_async/socks_proxy.py
+--- clean/httpcore/httpcore/_async/socks_proxy.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_async/socks_proxy.py	2026-10-26 21:12:28.933822670 +0000
+@@ -9,7 +9,7 @@
+ from .._backends.base import AsyncNetworkBackend, AsyncNetworkStream
+ from .._exceptions import ConnectionNotAvailable, ProxyError
+ from .._models import URL, Origin, Request, Response, enforce_bytes, enforce_url
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import AsyncLock
+ from .._trace import Trace
+ from .connection_pool import AsyncConnectionPool
+@@ -127,7 +127,7 @@
+             proxy_url: The URL to use when connecting to the proxy server.
+                 For example `"http://127.0.0.1:8080/"`.
+             ssl_context: An SSL context to use for verifying connections.
+-                If not specified, the default `httpcore.default_ssl_context()`
++                If not specified, the default `httpcore.initial_ssl_context()`
+                 will be used.
+             max_connections: The maximum number of concurrent HTTP connections that
+                 the pool should allow. Any attempt to send a request on a pool that
+@@ -247,7 +247,7 @@
+                     # Upgrade the stream to SSL
+                     if self._remote_origin.scheme == b"https":
+                         ssl_context = (
+-                            default_ssl_context()
++                            initial_ssl_context()
+                             if self._ssl_context is None
+                             else self._ssl_context
+                         )
+diff -ru clean/httpcore/httpcore/_backends/__init__.py seed1/httpcore/httpcore/_backends/__init__.py
+--- clean/httpcore/httpcore/_backends/__init__.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_backends/__init__.py	2026-10-26 21:12:28.945822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/httpcore/httpcore/_ssl.py seed1/httpcore/httpcore/_ssl.py
+--- clean/httpcore/httpcore/_ssl.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_ssl.py	2026-10-26 21:12:28.945822670 +0000
+@@ -3,7 +3,7 @@
+ import certifi
+ 
+ 
+-def default_ssl_context() -> ssl.SSLContext:
++def initial_ssl_context() -> ssl.SSLContext:
+     context = ssl.create_default_context()
+     context.load_verify_locations(certifi.where())
+     return context
+diff -ru clean/httpcore/httpcore/_sync/connection.py seed1/httpcore/httpcore/_sync/connection.py
+--- clean/httpcore/httpcore/_sync/connection.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_sync/connection.py	2026-10-26 21:12:28.945822670 +0000
+@@ -10,7 +10,7 @@
+ from .._backends.base import SOCKET_OPTION, NetworkBackend, NetworkStream
+ from .._exceptions import ConnectError, ConnectTimeout
+ from .._models import Origin, Request, Response
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import Lock
+ from .._trace import Trace
+ from .http11 import HTTP11Connection
+@@ -139,7 +139,7 @@
+ 
+                 if self._origin.scheme in (b"https", b"wss"):
+                     ssl_context = (
+-                        default_ssl_context()
++                        initial_ssl_context()
+                         if self._ssl_context is None
+                         else self._ssl_context
+                     )
+diff -ru clean/httpcore/httpcore/_sync/connection_pool.py seed1/httpcore/httpcore/_sync/connection_pool.py
+--- clean/httpcore/httpcore/_sync/connection_pool.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_sync/connection_pool.py	2026-10-26 21:12:28.945822670 +0000
+@@ -65,7 +65,7 @@
+ 
+         Parameters:
+             ssl_context: An SSL context to use for verifying connections.
+-                If not specified, the default `httpcore.default_ssl_context()`
++                If not specified, the default `httpcore.initial_ssl_context()`
+                 will be used.
+             max_connections: The maximum number of concurrent HTTP connections that
+                 the pool should allow. Any attempt to send a request on a pool that
+diff -ru clean/httpcore/httpcore/_sync/http_proxy.py seed1/httpcore/httpcore/_sync/http_proxy.py
+--- clean/httpcore/httpcore/_sync/http_proxy.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_sync/http_proxy.py	2026-10-26 21:12:28.945822670 +0000
+@@ -16,7 +16,7 @@
+     enforce_headers,
+     enforce_url,
+ )
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import Lock
+ from .._trace import Trace
+ from .connection import HTTPConnection
+@@ -85,7 +85,7 @@
+             proxy_headers: Any HTTP headers to use for the proxy requests.
+                 For example `{"Proxy-Authorization": "Basic <username>:<password>"}`.
+             ssl_context: An SSL context to use for verifying connections.
+-                If not specified, the default `httpcore.default_ssl_context()`
++                If not specified, the default `httpcore.initial_ssl_context()`
+                 will be used.
+             proxy_ssl_context: The same as `ssl_context`, but for a proxy server rather than a remote origin.
+             max_connections: The maximum number of concurrent HTTP connections that
+@@ -300,7 +300,7 @@
+ 
+                 # Upgrade the stream to SSL
+                 ssl_context = (
+-                    default_ssl_context()
++                    initial_ssl_context()
+                     if self._ssl_context is None
+                     else self._ssl_context
+                 )
+diff -ru clean/httpcore/httpcore/_sync/socks_proxy.py seed1/httpcore/httpcore/_sync/socks_proxy.py
+--- clean/httpcore/httpcore/_sync/socks_proxy.py	2026-10-26 19:56:30.913822670 +0000
++++ seed1/httpcore/httpcore/_sync/socks_proxy.py	2026-10-26 21:12:28.945822670 +0000
+@@ -9,7 +9,7 @@
+ from .._backends.base import NetworkBackend, NetworkStream
+ from .._exceptions import ConnectionNotAvailable, ProxyError
+ from .._models import URL, Origin, Request, Response, enforce_bytes, enforce_url
+-from .._ssl import default_ssl_context
++from .._ssl import initial_ssl_context
+ from .._synchronization import Lock
+ from .._trace import Trace
+ from .connection_pool import ConnectionPool
+@@ -127,7 +127,7 @@
+             proxy_url: The URL to use when connecting to the proxy server.
+                 For example `"http://127.0.0.1:8080/"`.
+             ssl_context: An SSL context to use for verifying connections.
+-                If not specified, the default `httpcore.default_ssl_context()`
++                If not specified, the default `httpcore.initial_ssl_context()`
+                 will be used.
+             max_connections: The maximum number of concurrent HTTP connections that
+                 the pool should allow. Any attempt to send a request on a pool that
+@@ -247,7 +247,7 @@
+                     # Upgrade the stream to SSL
+                     if self._remote_origin.scheme == b"https":
+                         ssl_context = (
+-                            default_ssl_context()
++                            initial_ssl_context()
+                             if self._ssl_context is None
+                             else self._ssl_context
+                         )
+diff -ru clean/httpx/docs/advanced/authentication.md seed1/httpx/docs/advanced/authentication.md
+--- clean/httpx/docs/advanced/authentication.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/advanced/authentication.md	2026-10-26 21:12:28.961822670 +0000
+@@ -229,4 +229,4 @@
+ 
+     async def async_auth_flow(self, request):
+         raise RuntimeError("Cannot use a sync authentication class with httpx.AsyncClient")
+-```
+\ No newline at end of file
++```
+diff -ru clean/httpx/docs/advanced/event-hooks.md seed1/httpx/docs/advanced/event-hooks.md
+--- clean/httpx/docs/advanced/event-hooks.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/advanced/event-hooks.md	2026-10-26 21:12:28.961822670 +0000
+@@ -25,7 +25,7 @@
+ 
+ ```python
+ def raise_on_4xx_5xx(response):
+-    response.raise_for_status()
++    response.raise_for_state()
+ 
+ client = httpx.Client(event_hooks={'response': [raise_on_4xx_5xx]})
+ ```
+diff -ru clean/httpx/docs/advanced/resource-limits.md seed1/httpx/docs/advanced/resource-limits.md
+--- clean/httpx/docs/advanced/resource-limits.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/advanced/resource-limits.md	2026-10-26 21:12:28.961822670 +0000
+@@ -10,4 +10,4 @@
+ ```python
+ limits = httpx.Limits(max_keepalive_connections=5, max_connections=10)
+ client = httpx.Client(limits=limits)
+-```
+\ No newline at end of file
++```
+diff -ru clean/httpx/docs/advanced/timeouts.md seed1/httpx/docs/advanced/timeouts.md
+--- clean/httpx/docs/advanced/timeouts.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/advanced/timeouts.md	2026-10-26 21:12:28.961822670 +0000
+@@ -68,4 +68,4 @@
+ client = httpx.Client(timeout=timeout)
+ 
+ response = client.get('http://example.com/')
+-```
+\ No newline at end of file
++```
+diff -ru clean/httpx/docs/advanced/transports.md seed1/httpx/docs/advanced/transports.md
+--- clean/httpx/docs/advanced/transports.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/advanced/transports.md	2026-10-26 21:12:28.961822670 +0000
+@@ -78,7 +78,7 @@
+ 
+ ```python
+ # Instantiate a client that makes WSGI requests with a client IP of "1.2.3.4".
+-transport = httpx.WSGITransport(app=app, remote_addr="1.2.3.4")
++transport = httpx.WSGICarrier(app=app, remote_addr="1.2.3.4")
+ with httpx.Client(transport=transport, base_url="http://testserver") as client:
+     ...
+ ```
+diff -ru clean/httpx/docs/api.md seed1/httpx/docs/api.md
+--- clean/httpx/docs/api.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/api.md	2026-10-26 21:12:28.961822670 +0000
+@@ -70,7 +70,7 @@
+   * The amount of time elapsed between sending the request and calling `close()` on the corresponding response received for that request.
+   [total_seconds()](https://docs.python.org/3/library/datetime.html#datetime.timedelta.total_seconds) to correctly get
+   the total elapsed seconds.
+-* `def .raise_for_status()` - **Response**
++* `def .raise_for_state()` - **Response**
+ * `def .json()` - **Any**
+ * `def .read()` - **bytes**
+ * `def .iter_raw([chunk_size])` - **bytes iterator**
+diff -ru clean/httpx/docs/async.md seed1/httpx/docs/async.md
+--- clean/httpx/docs/async.md	2026-10-26 19:56:31.321822670 +0000
++++ seed1/httpx/docs/async.md	2026-10-26 21:12:28.961822670 +0000
+@@ -191,4 +191,4 @@
+ 
+ ## Calling into Python Web Apps
+ 
+-For details on calling directly into ASGI applications, see [the `ASGITransport` docs](../advanced/transports#asgitransport).
+\ No newline at end of file
++For details on calling directly into ASGI applications, see [the `ASGITransport` docs](../advanced/transports#asgitransport).
+diff -ru clean/httpx/docs/quickstart.md seed1/httpx/docs/quickstart.md
+--- clean/httpx/docs/quickstart.md	2026-10-26 19:56:31.333822670 +0000
++++ seed1/httpx/docs/quickstart.md	2026-10-26 21:12:28.961822670 +0000
+@@ -284,9 +284,9 @@
+ >>> not_found = httpx.get('https://httpbin.org/status/404')
+ >>> not_found.status_code
+ 404
+->>> not_found.raise_for_status()
++>>> not_found.raise_for_state()
+ Traceback (most recent call last):
+-  File "/Users/tomchristie/GitHub/encode/httpcore/httpx/models.py", line 837, in raise_for_status
++  File "/Users/tomchristie/GitHub/encode/httpcore/httpx/models.py", line 837, in raise_for_state
+     raise HTTPStatusError(message, response=self)
+ httpx._exceptions.HTTPStatusError: 404 Client Error: Not Found for url: https://httpbin.org/status/404
+ For more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404
+@@ -295,14 +295,14 @@
+ Any successful response codes will return the `Response` instance rather than raising an exception.
+ 
+ ```pycon
+->>> r.raise_for_status()
++>>> r.raise_for_state()
+ ```
+ 
+ The method returns the response instance, allowing you to use it inline. For example:
+ 
+ ```pycon
+->>> r = httpx.get('...').raise_for_status()
+->>> data = httpx.get('...').raise_for_status().json()
++>>> r = httpx.get('...').raise_for_state()
++>>> data = httpx.get('...').raise_for_state().json()
+ ```
+ 
+ ## Response Headers
+@@ -508,13 +508,13 @@
+     print(f"An error occurred while requesting {exc.request.url!r}.")
+ ```
+ 
+-The `HTTPStatusError` class is raised by `response.raise_for_status()` on responses which are not a 2xx success code.
++The `HTTPStatusError` class is raised by `response.raise_for_state()` on responses which are not a 2xx success code.
+ These exceptions include both a `.request` and a `.response` attribute.
+ 
+ ```python
+ response = httpx.get("https://www.example.com/")
+ try:
+-    response.raise_for_status()
++    response.raise_for_state()
+ except httpx.HTTPStatusError as exc:
+     print(f"Error response {exc.response.status_code} while requesting {exc.request.url!r}.")
+ ```
+@@ -527,7 +527,7 @@
+ ```python
+ try:
+     response = httpx.get("https://www.example.com/")
+-    response.raise_for_status()
++    response.raise_for_state()
+ except httpx.HTTPError as exc:
+     print(f"Error while requesting {exc.request.url!r}.")
+ ```
+diff -ru clean/httpx/httpx/__init__.py seed1/httpx/httpx/__init__.py
+--- clean/httpx/httpx/__init__.py	2026-10-26 19:56:31.333822670 +0000
++++ seed1/httpx/httpx/__init__.py	2026-10-26 21:12:28.945822670 +0000
+@@ -96,7 +96,7 @@
+     "USE_CLIENT_DEFAULT",
+     "WriteError",
+     "WriteTimeout",
+-    "WSGITransport",
++    "WSGICarrier",
+ ]
+ 
+ 
+diff -ru clean/httpx/httpx/_client.py seed1/httpx/httpx/_client.py
+--- clean/httpx/httpx/_client.py	2026-10-26 19:56:31.333822670 +0000
++++ seed1/httpx/httpx/_client.py	2026-10-26 21:12:28.949822670 +0000
+@@ -791,7 +791,7 @@
+         Equivalent to:
+ 
+         ```python
+-        request = client.build_request(...)
++        request = client.build_req(...)
+         response = client.send(request, ...)
+         ```
+ 
+diff -ru clean/httpx/httpx/_exceptions.py seed1/httpx/httpx/_exceptions.py
+--- clean/httpx/httpx/_exceptions.py	2026-10-26 19:56:31.333822670 +0000
++++ seed1/httpx/httpx/_exceptions.py	2026-10-26 21:12:28.949822670 +0000
+@@ -76,14 +76,14 @@
+     Base class for `RequestError` and `HTTPStatusError`.
+ 
+     Useful for `try...except` blocks when issuing a request,
+-    and then calling `.raise_for_status()`.
++    and then calling `.raise_for_state()`.
+ 
+     For example:
+ 
+     ```
+     try:
+         response = httpx.get("https://www.example.com")
+-        response.raise_for_status()
++        response.raise_for_state()
+     except httpx.HTTPError as exc:
+         print(f"HTTP Exception for {exc.request.url} - {exc}")
+     ```
+@@ -259,7 +259,7 @@
+     """
+     The response had an error HTTP status of 4xx or 5xx.
+ 
+-    May be raised when calling `response.raise_for_status()`
++    May be raised when calling `response.raise_for_state()`
+     """
+ 
+     def __init__(self, message: str, *, request: Request, response: Response) -> None:
+diff -ru clean/httpx/httpx/_models.py seed1/httpx/httpx/_models.py
+--- clean/httpx/httpx/_models.py	2026-10-26 19:56:31.333822670 +0000
++++ seed1/httpx/httpx/_models.py	2026-10-26 21:12:28.949822670 +0000
+@@ -791,14 +791,14 @@
+             and "Location" in self.headers
+         )
+ 
+-    def raise_for_status(self) -> Response:
++    def raise_for_state(self) -> Response:
+         """
+         Raise the `HTTPStatusError` if one occurred.
+         """
+         request = self._request
+         if request is None:
+             raise RuntimeError(
+-                "Cannot call `raise_for_status` as the request "
++                "Cannot call `raise_for_state` as the request "
+                 "instance has not been set on this response."
+             )
+ 
+diff -ru clean/httpx/httpx/_transports/__init__.py seed1/httpx/httpx/_transports/__init__.py
+--- clean/httpx/httpx/_transports/__init__.py	2026-10-26 19:56:31.337822670 +0000
++++ seed1/httpx/httpx/_transports/__init__.py	2026-10-26 21:12:28.949822670 +0000
+@@ -11,5 +11,5 @@
+     "AsyncHTTPTransport",
+     "HTTPTransport",
+     "MockTransport",
+-    "WSGITransport",
++    "WSGICarrier",
+ ]
+diff -ru clean/httpx/httpx/_transports/wsgi.py seed1/httpx/httpx/_transports/wsgi.py
+--- clean/httpx/httpx/_transports/wsgi.py	2026-10-26 19:56:31.337822670 +0000
++++ seed1/httpx/httpx/_transports/wsgi.py	2026-10-26 21:12:28.949822670 +0000
+@@ -16,7 +16,7 @@
+ _T = typing.TypeVar("_T")
+ 
+ 
+-__all__ = ["WSGITransport"]
++__all__ = ["WSGICarrier"]
+ 
+ 
+ def _skip_leading_empty_chunks(body: typing.Iterable[_T]) -> typing.Iterable[_T]:
+@@ -41,7 +41,7 @@
+             self._close()
+ 
+ 
+-class WSGITransport(BaseTransport):
++class WSGICarrier(BaseTransport):
+     """
+     A custom transport that handles sending requests directly to an WSGI app.
+     The simplest way to use this functionality is to use the `app` argument.
+@@ -52,10 +52,10 @@
+ 
+     Alternatively, you can setup the transport instance explicitly.
+     This allows you to include any additional configuration arguments specific
+-    to the WSGITransport class:
++    to the WSGICarrier class:
+ 
+     ```
+-    transport = httpx.WSGITransport(
++    transport = httpx.WSGICarrier(
+         app=app,
+         script_name="/submount",
+         remote_addr="1.2.3.4"
+diff -ru clean/httpx/httpx/_urls.py seed1/httpx/httpx/_urls.py
+--- clean/httpx/httpx/_urls.py	2026-10-26 19:56:31.337822670 +0000
++++ seed1/httpx/httpx/_urls.py	2026-10-26 21:12:28.929822670 +0000
+@@ -566,7 +566,7 @@
+ 
+     def remove(self, key: str) -> QueryParams:
+         """
+-        Return a new QueryParams instance, removing the value of a key.
++        Return a new QueryArgs instance, removing the value of a key.
+ 
+         Usage:
+ 
+diff -ru clean/jinja/docs/api.rst seed1/jinja/docs/api.rst
+--- clean/jinja/docs/api.rst	2026-10-26 19:56:31.121822670 +0000
++++ seed1/jinja/docs/api.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -52,7 +52,7 @@
+ 
+ .. code-block:: python
+ 
+-    template = env.get_template("mytemplate.html")
++    template = env.get_tmpl("mytemplate.html")
+ 
+ To render it with some variables, call the :meth:`render` method.
+ 
+@@ -150,7 +150,7 @@
+         message will be generated from `obj` and `name` automatically.  The exception
+         provided as `exc` is raised if something with the generated undefined
+         object is done that the undefined object does not allow.  The default
+-        exception is :exc:`UndefinedError`.  If a `hint` is provided the
++        exception is :exc:`MissingError`.  If a `hint` is provided the
+         `name` may be omitted.
+ 
+         The most common way to create an undefined object is by providing
+@@ -216,7 +216,7 @@
+     .. automethod:: generate_async([context])
+ 
+ 
+-.. autoclass:: jinja2.environment.TemplateStream()
++.. autoclass:: jinja2.environment.TemplateFlow()
+     :members: disable_buffering, enable_buffering, dump
+ 
+ 
+@@ -309,7 +309,7 @@
+     .. attribute:: _undefined_exception
+ 
+         The exception that the undefined object wants to raise.  This
+-        is usually one of :exc:`UndefinedError` or :exc:`SecurityError`.
++        is usually one of :exc:`MissingError` or :exc:`SecurityError`.
+ 
+     .. method:: _fail_with_undefined_error(\*args, \**kwargs)
+ 
+@@ -607,7 +607,7 @@
+ 
+ .. autoexception:: jinja2.TemplateError
+ 
+-.. autoexception:: jinja2.UndefinedError
++.. autoexception:: jinja2.MissingError
+ 
+ .. autoexception:: jinja2.TemplateNotFound
+ 
+diff -ru clean/jinja/src/jinja2/__init__.py seed1/jinja/src/jinja2/__init__.py
+--- clean/jinja/src/jinja2/__init__.py	2026-10-26 19:56:31.121822670 +0000
++++ seed1/jinja/src/jinja2/__init__.py	2026-10-26 21:12:28.949822670 +0000
+@@ -18,7 +18,7 @@
+ from .exceptions import TemplateRuntimeError as TemplateRuntimeError
+ from .exceptions import TemplatesNotFound as TemplatesNotFound
+ from .exceptions import TemplateSyntaxError as TemplateSyntaxError
+-from .exceptions import UndefinedError as UndefinedError
++from .exceptions import MissingError as MissingError
+ from .loaders import BaseLoader as BaseLoader
+ from .loaders import ChoiceLoader as ChoiceLoader
+ from .loaders import DictLoader as DictLoader
+diff -ru clean/jinja/src/jinja2/environment.py seed1/jinja/src/jinja2/environment.py
+--- clean/jinja/src/jinja2/environment.py	2026-10-26 19:56:31.125822670 +0000
++++ seed1/jinja/src/jinja2/environment.py	2026-10-26 21:12:28.949822670 +0000
+@@ -38,7 +38,7 @@
+ from .exceptions import TemplateRuntimeError
+ from .exceptions import TemplatesNotFound
+ from .exceptions import TemplateSyntaxError
+-from .exceptions import UndefinedError
++from .exceptions import MissingError
+ from .lexer import get_lexer
+ from .lexer import Lexer
+ from .lexer import TokenStream
+@@ -962,7 +962,7 @@
+         if self.cache is not None:
+             template = self.cache.get(cache_key)
+             if template is not None and (
+-                not self.auto_reload or template.is_up_to_date
++                not self.auto_reload or template.is_up_to_datestamp
+             ):
+                 # template.globals is a ChainMap, modifying it will only
+                 # affect the template, not the environment globals.
+@@ -1039,7 +1039,7 @@
+             the template's globals instead of ignoring the new values.
+ 
+         .. versionchanged:: 2.11
+-            If ``names`` is :class:`Undefined`, an :exc:`UndefinedError`
++            If ``names`` is :class:`Undefined`, an :exc:`MissingError`
+             is raised instead. If no templates were found and ``names``
+             contains :class:`Undefined`, the message is more helpful.
+ 
+@@ -1064,7 +1064,7 @@
+                 name = self.join_path(name, parent)
+             try:
+                 return self._load_template(name, globals)
+-            except (TemplateNotFound, UndefinedError):
++            except (TemplateNotFound, MissingError):
+                 pass
+         raise TemplatesNotFound(names)  # type: ignore
+ 
+@@ -1483,7 +1483,7 @@
+         return 1
+ 
+     @property
+-    def is_up_to_date(self) -> bool:
++    def is_up_to_datestamp(self) -> bool:
+         """If this variable is `False` there is a newer version available."""
+         if self._uptodate is None:
+             return True
+diff -ru clean/jinja/src/jinja2/exceptions.py seed1/jinja/src/jinja2/exceptions.py
+--- clean/jinja/src/jinja2/exceptions.py	2026-10-26 19:56:31.125822670 +0000
++++ seed1/jinja/src/jinja2/exceptions.py	2026-10-26 21:12:28.949822670 +0000
+@@ -20,7 +20,7 @@
+ 
+     .. versionchanged:: 2.11
+         If the given name is :class:`Undefined` and no message was
+-        provided, an :exc:`UndefinedError` is raised.
++        provided, an :exc:`MissingError` is raised.
+     """
+ 
+     # Silence the Python warning about message being deprecated since
+@@ -150,7 +150,7 @@
+     """
+ 
+ 
+-class UndefinedError(TemplateRuntimeError):
++class MissingError(TemplateRuntimeError):
+     """Raised if a template tries to operate on :class:`Undefined`."""
+ 
+ 
+diff -ru clean/jinja/src/jinja2/filters.py seed1/jinja/src/jinja2/filters.py
+--- clean/jinja/src/jinja2/filters.py	2026-10-26 19:56:31.125822670 +0000
++++ seed1/jinja/src/jinja2/filters.py	2026-10-26 21:12:28.949822670 +0000
+@@ -568,7 +568,7 @@
+        It's now possible to configure the :class:`~jinja2.Environment` with
+        :class:`~jinja2.ChainableUndefined` to make the `default` filter work
+        on nested elements and attributes that may contain undefined values
+-       in the chain without getting an :exc:`~jinja2.UndefinedError`.
++       in the chain without getting an :exc:`~jinja2.MissingError`.
+     """
+     if isinstance(value, Undefined) or (boolean and not value):
+         return default_value
+@@ -1631,7 +1631,7 @@
+     .. code-block:: python
+ 
+         (user for user in users if user.is_active)
+-        (user for user in users if test_none(user.email))
++        (user for user in users if probe_none(user.email))
+ 
+     .. versionadded:: 2.7
+     """
+diff -ru clean/jinja/src/jinja2/runtime.py seed1/jinja/src/jinja2/runtime.py
+--- clean/jinja/src/jinja2/runtime.py	2026-10-26 19:56:31.125822670 +0000
++++ seed1/jinja/src/jinja2/runtime.py	2026-10-26 21:12:28.949822670 +0000
+@@ -14,7 +14,7 @@
+ from .async_utils import auto_await  # noqa: F401
+ from .exceptions import TemplateNotFound  # noqa: F401
+ from .exceptions import TemplateRuntimeError  # noqa: F401
+-from .exceptions import UndefinedError
++from .exceptions import MissingError
+ from .nodes import EvalContext
+ from .utils import _PassArg
+ from .utils import concat
+@@ -795,7 +795,7 @@
+ 
+ class Undefined:
+     """The default undefined type. This can be printed, iterated, and treated as
+-    a boolean. Any other operation will raise an :exc:`UndefinedError`.
++    a boolean. Any other operation will raise an :exc:`MissingError`.
+ 
+     >>> foo = Undefined(name='foo')
+     >>> str(foo)
+@@ -805,7 +805,7 @@
+     >>> foo + 42
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+     """
+ 
+     __slots__ = (
+@@ -820,7 +820,7 @@
+         hint: str | None = None,
+         obj: t.Any = missing,
+         name: str | None = None,
+-        exc: type[TemplateRuntimeError] = UndefinedError,
++        exc: type[TemplateRuntimeError] = MissingError,
+     ) -> None:
+         self._undefined_hint = hint
+         self._undefined_obj = obj
+@@ -853,7 +853,7 @@
+     def _fail_with_undefined_error(
+         self, *args: t.Any, **kwargs: t.Any
+     ) -> "te.NoReturn":
+-        """Raise an :exc:`UndefinedError` when operations are performed
++        """Raise an :exc:`MissingError` when operations are performed
+         on the undefined value.
+         """
+         raise self._undefined_exception(self._undefined_message)
+@@ -978,7 +978,7 @@
+     >>> foo.bar['baz'] + 42
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+ 
+     .. versionadded:: 2.11.0
+     """
+@@ -1015,7 +1015,7 @@
+     >>> foo + 42
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+     """
+ 
+     __slots__ = ()
+@@ -1045,15 +1045,15 @@
+     >>> str(foo)
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+     >>> not foo
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+     >>> foo + 42
+     Traceback (most recent call last):
+       ...
+-    jinja2.exceptions.UndefinedError: 'foo' is undefined
++    jinja2.exceptions.MissingError: 'foo' is undefined
+     """
+ 
+     __slots__ = ()
+diff -ru clean/structlog/docs/api.rst seed1/structlog/docs/api.rst
+--- clean/structlog/docs/api.rst	2026-10-26 19:56:31.253822670 +0000
++++ seed1/structlog/docs/api.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -227,7 +227,7 @@
+       >>> LogfmtRenderer(key_order=["b", "a"], bool_as_flag=False)(None, "", event_dict)
+       'b="[1, 2, 3]" a=42 flag=true'
+ 
+-.. autoclass:: EventRenamer
++.. autoclass:: OccurrenceRenamer
+ 
+ .. autofunction:: add_log_level
+ 
+@@ -313,7 +313,7 @@
+ 
+ .. autofunction:: render_to_log_kwargs
+ 
+-.. autofunction:: filter_by_level
++.. autofunction:: filter_by_severity
+ 
+ .. autofunction:: add_log_level
+ 
+@@ -326,7 +326,7 @@
+ .. autoclass:: PositionalArgumentsFormatter
+ 
+ .. autoclass:: ProcessorFormatter
+-   :members: wrap_for_formatter, remove_processors_meta
++   :members: wrap_for_formatter, remove_transforms_meta
+ 
+ 
+ `structlog.tracebacks` Module
+diff -ru clean/structlog/docs/bound-loggers.md seed1/structlog/docs/bound-loggers.md
+--- clean/structlog/docs/bound-loggers.md	2026-10-26 19:56:31.253822670 +0000
++++ seed1/structlog/docs/bound-loggers.md	2026-10-26 21:12:28.957822670 +0000
+@@ -146,7 +146,7 @@
+ Passing `20` instead of `logging.INFO` would have worked too.
+ :::
+ 
+-[^stdlib]: And it's in fact supported for standard library logging with the {func}`structlog.stdlib.filter_by_level` processor.
++[^stdlib]: And it's in fact supported for standard library logging with the {func}`structlog.stdlib.filter_by_severity` processor.
+ 
+ 
+ ## Wrapping loggers manually
+diff -ru clean/structlog/docs/recipes.md seed1/structlog/docs/recipes.md
+--- clean/structlog/docs/recipes.md	2026-10-26 19:56:31.253822670 +0000
++++ seed1/structlog/docs/recipes.md	2026-10-26 21:12:28.961822670 +0000
+@@ -12,12 +12,12 @@
+ The name of the event is hard-coded in *structlog* to `event`.
+ But that doesn't mean it has to be called that in your logs.
+ 
+-With the {class}`structlog.processors.EventRenamer` processor, you can, for instance, rename  the log message to `msg` and use `event` for something custom, that you bind to `_event` in your code:
++With the {class}`structlog.processors.OccurrenceRenamer` processor, you can, for instance, rename  the log message to `msg` and use `event` for something custom, that you bind to `_event` in your code:
+ 
+ ```pycon
+->>> from structlog.processors import EventRenamer
++>>> from structlog.processors import OccurrenceRenamer
+ >>> event_dict = {"event": "something happened", "_event": "our event!"}
+->>> EventRenamer("msg", "_event")(None, "", event_dict)
++>>> OccurrenceRenamer("msg", "_event")(None, "", event_dict)
+ {'msg': 'something happened', 'event': 'our event!'}
+ ```
+ 
+diff -ru clean/structlog/docs/standard-library.md seed1/structlog/docs/standard-library.md
+--- clean/structlog/docs/standard-library.md	2026-10-26 19:56:31.253822670 +0000
++++ seed1/structlog/docs/standard-library.md	2026-10-26 21:12:28.961822670 +0000
+@@ -65,7 +65,7 @@
+ 
+ *structlog* also comes with {class}`structlog.stdlib.AsyncBoundLogger` that blankly makes all logging methods asynchronous (in other words, you have to use `await log.info()` instead of just `log.info()`).
+ 
+-To use it, {doc}`configure <configuration>` *structlog* to use `AsyncBoundLogger` as `wrapper_class`.
++To use it, {doc}`configure <configuration>` *structlog* to use `AsyncBoundRecorder` as `wrapper_class`.
+ 
+ ```{versionadded} 20.2.0
+ ```
+@@ -87,7 +87,7 @@
+ : Same as above, but does not support passing positional arguments from *structlog* loggers to `logging.Logger` logging methods as positional arguments.
+   *structlog* positional arguments are still passed to `logging` under `positional_args` key of `extra` keyword argument.
+ 
+-{func}`~structlog.stdlib.filter_by_level`:
++{func}`~structlog.stdlib.filter_by_severity`:
+ 
+ : Checks the log entry's log level against the configuration of standard library's logging.
+   Log entries below the threshold get silently dropped.
+@@ -189,9 +189,9 @@
+ structlog.configure(
+     processors=[
+         # If log level is too low, abort pipeline and throw away log entry.
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         # Add the name of the logger to event dict.
+-        structlog.stdlib.add_logger_name,
++        structlog.stdlib.add_journal_name,
+         # Add log level to event dict.
+         structlog.stdlib.add_log_level,
+         # Perform %-style formatting.
+@@ -281,7 +281,7 @@
+ 
+ structlog.configure(
+     processors=[
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+         structlog.stdlib.PositionalArgumentsFormatter(),
+@@ -448,7 +448,7 @@
+     # These run on ALL entries after the pre_chain is done.
+     processors=[
+         # Remove _record & _from_structlog.
+-        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
++        structlog.stdlib.ProcessorFormatter.remove_transforms_meta,
+         structlog.dev.ConsoleRenderer(),
+     ],
+ )
+@@ -501,7 +501,7 @@
+             "plain": {
+                 "()": structlog.stdlib.ProcessorFormatter,
+                 "processors": [
+-                    structlog.stdlib.ProcessorFormatter.remove_processors_meta,
++                    structlog.stdlib.ProcessorFormatter.remove_transforms_meta,
+                     structlog.dev.ConsoleRenderer(colors=False),
+                 ],
+                 "foreign_pre_chain": pre_chain,
+@@ -510,7 +510,7 @@
+                 "()": structlog.stdlib.ProcessorFormatter,
+                 "processors": [
+                     extract_from_record,
+-                    structlog.stdlib.ProcessorFormatter.remove_processors_meta,
++                    structlog.stdlib.ProcessorFormatter.remove_transforms_meta,
+                     structlog.dev.ConsoleRenderer(colors=True),
+                 ],
+                 "foreign_pre_chain": pre_chain,
+diff -ru clean/structlog/src/structlog/dev.py seed1/structlog/src/structlog/dev.py
+--- clean/structlog/src/structlog/dev.py	2026-10-26 19:56:31.257822670 +0000
++++ seed1/structlog/src/structlog/dev.py	2026-10-26 21:12:28.949822670 +0000
+@@ -615,7 +615,7 @@
+ 
+         timestamp_key:
+             The key to look for timestamp of the log message. Needed when you
+-            rename it e.g. using `structlog.processors.EventRenamer`. Ignored
++            rename it e.g. using `structlog.processors.OccurrenceRenamer`. Ignored
+             if *columns* are passed.
+ 
+         pad_level:
+diff -ru clean/structlog/src/structlog/processors.py seed1/structlog/src/structlog/processors.py
+--- clean/structlog/src/structlog/processors.py	2026-10-26 19:56:31.257822670 +0000
++++ seed1/structlog/src/structlog/processors.py	2026-10-26 21:12:28.949822670 +0000
+@@ -54,7 +54,7 @@
+     "NAME_TO_LEVEL",  # some people rely on it being here
+     "CallsiteParameter",
+     "CallsiteParameterAdder",
+-    "EventRenamer",
++    "OccurrenceRenamer",
+     "ExceptionPrettyPrinter",
+     "JSONRenderer",
+     "KeyValueRenderer",
+@@ -865,7 +865,7 @@
+         configuration is to either use this processor in ``foreign_pre_chain``
+         of `structlog.stdlib.ProcessorFormatter` and in ``processors`` of
+         `structlog.configure`, or to use it in ``processors`` of
+-        `structlog.stdlib.ProcessorFormatter` without using it in
++        `structlog.stdlib.StageFormatter` without using it in
+         ``processors`` of `structlog.configure` and ``foreign_pre_chain`` of
+         `structlog.stdlib.ProcessorFormatter`.
+ 
+@@ -962,7 +962,7 @@
+         return event_dict
+ 
+ 
+-class EventRenamer:
++class OccurrenceRenamer:
+     r"""
+     Rename the ``event`` key in event dicts.
+ 
+diff -ru clean/structlog/src/structlog/stdlib.py seed1/structlog/src/structlog/stdlib.py
+--- clean/structlog/src/structlog/stdlib.py	2026-10-26 19:56:31.257822670 +0000
++++ seed1/structlog/src/structlog/stdlib.py	2026-10-26 21:12:28.949822670 +0000
+@@ -63,7 +63,7 @@
+     "add_log_level",
+     "add_log_level_number",
+     "add_logger_name",
+-    "filter_by_level",
++    "filter_by_severity",
+     "get_logger",
+     "recreate_defaults",
+     "render_to_log_args_and_kwargs",
+@@ -813,7 +813,7 @@
+         return event_dict
+ 
+ 
+-def filter_by_level(
++def filter_by_severity(
+     logger: logging.Logger, method_name: str, event_dict: EventDict
+ ) -> EventDict:
+     """
+@@ -824,12 +824,12 @@
+     first place.
+ 
+     >>> import logging
+-    >>> from structlog.stdlib import filter_by_level
++    >>> from structlog.stdlib import filter_by_severity
+     >>> logging.basicConfig(level=logging.WARN)
+     >>> logger = logging.getLogger()
+-    >>> filter_by_level(logger, 'warn', {})
++    >>> filter_by_severity(logger, 'warn', {})
+     {}
+-    >>> filter_by_level(logger, 'debug', {})
++    >>> filter_by_severity(logger, 'debug', {})
+     Traceback (most recent call last):
+     ...
+     DropEvent
+@@ -1049,7 +1049,7 @@
+ 
+               Since you most likely don't want ``_record`` and
+               ``_from_structlog`` in your log files,  we've added the static
+-              method `remove_processors_meta` to ``ProcessorFormatter`` that
++              method `remove_transforms_meta` to ``ProcessorFormatter`` that
+               you can add just before your renderer.
+ 
+             - Since this is a `logging` *formatter*, raising
+@@ -1066,7 +1066,7 @@
+         logger:
+             Logger which we want to push through the *structlog* processor
+             chain. This parameter is necessary for some of the processors like
+-            `filter_by_level`. (default: None)
++            `filter_by_severity`. (default: None)
+ 
+         pass_foreign_args:
+             If True, pass a foreign log record's ``args`` attribute to the
+@@ -1131,7 +1131,7 @@
+             raise TypeError(msg)
+ 
+         if processor is not None:
+-            self.processors = (self.remove_processors_meta, processor)
++            self.processors = (self.remove_transforms_meta, processor)
+         elif processors:
+             self.processors = processors
+         else:
+@@ -1244,7 +1244,7 @@
+         return (event_dict,), {"extra": {"_logger": logger, "_name": name}}
+ 
+     @staticmethod
+-    def remove_processors_meta(
++    def remove_transforms_meta(
+         _: WrappedLogger, __: str, event_dict: EventDict
+     ) -> EventDict:
+         """
+diff -ru clean/structlog/typing_tests/api.py seed1/structlog/typing_tests/api.py
+--- clean/structlog/typing_tests/api.py	2026-10-26 19:56:31.257822670 +0000
++++ seed1/structlog/typing_tests/api.py	2026-10-26 21:12:28.949822670 +0000
+@@ -49,7 +49,7 @@
+ structlog.configure(
+     processors=[
+         structlog.stdlib.render_to_log_args_and_kwargs,
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+         structlog.stdlib.PositionalArgumentsFormatter(),
+@@ -211,7 +211,7 @@
+ 
+ structlog.configure(
+     processors=[
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+         structlog.stdlib.PositionalArgumentsFormatter(),
+@@ -229,7 +229,7 @@
+ 
+ structlog.configure(
+     processors=[
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+         structlog.stdlib.PositionalArgumentsFormatter(),
+@@ -247,7 +247,7 @@
+ 
+ structlog.configure(
+     processors=[
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+         structlog.stdlib.PositionalArgumentsFormatter(),
+@@ -267,7 +267,7 @@
+ # https://github.com/wemake-services/wemake-django-template/
+ structlog.configure(
+     processors=[
+-        structlog.stdlib.filter_by_level,
++        structlog.stdlib.filter_by_severity,
+         structlog.processors.TimeStamper(fmt="iso"),
+         structlog.stdlib.add_logger_name,
+         structlog.stdlib.add_log_level,
+diff -ru clean/uvicorn/uvicorn/lifespan/__init__.py seed1/uvicorn/uvicorn/lifespan/__init__.py
+--- clean/uvicorn/uvicorn/lifespan/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/lifespan/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/loops/__init__.py seed1/uvicorn/uvicorn/loops/__init__.py
+--- clean/uvicorn/uvicorn/loops/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/loops/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/middleware/__init__.py seed1/uvicorn/uvicorn/middleware/__init__.py
+--- clean/uvicorn/uvicorn/middleware/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/middleware/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/__init__.py seed1/uvicorn/uvicorn/protocols/__init__.py
+--- clean/uvicorn/uvicorn/protocols/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/protocols/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/http/__init__.py seed1/uvicorn/uvicorn/protocols/http/__init__.py
+--- clean/uvicorn/uvicorn/protocols/http/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/protocols/http/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/websockets/__init__.py seed1/uvicorn/uvicorn/protocols/websockets/__init__.py
+--- clean/uvicorn/uvicorn/protocols/websockets/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed1/uvicorn/uvicorn/protocols/websockets/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/docs/datastructures.rst seed1/werkzeug/docs/datastructures.rst
+--- clean/werkzeug/docs/datastructures.rst	2026-10-26 19:56:31.301822670 +0000
++++ seed1/werkzeug/docs/datastructures.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -91,7 +91,7 @@
+ .. autoclass:: FileStorage
+     :members:
+ 
+-.. autoclass:: FileMultiDict
++.. autoclass:: StreamMultiDict
+     :members:
+ 
+ 
+diff -ru clean/werkzeug/docs/local.rst seed1/werkzeug/docs/local.rst
+--- clean/werkzeug/docs/local.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed1/werkzeug/docs/local.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -27,7 +27,7 @@
+ Proxy Objects
+ =============
+ 
+-:class:`LocalProxy` allows treating a context var as an object directly
++:class:`LocalGateway` allows treating a context var as an object directly
+ instead of needing to use and check
+ :meth:`ContextVar.get() <contextvars.ContextVar.get>`. If the context
+ var is set, the local proxy will look and behave like the object the var
+@@ -37,10 +37,10 @@
+ .. code-block:: python
+ 
+     from contextvars import ContextVar
+-    from werkzeug.local import LocalProxy
++    from werkzeug.local import LocalGateway
+ 
+     _request_var = ContextVar("request")
+-    request = LocalProxy(_request_var)
++    request = LocalGateway(_request_var)
+ 
+     from werkzeug.wrappers import Request
+ 
+@@ -62,9 +62,9 @@
+ 
+ ``bool(proxy)`` will always return ``False`` if the var is not set. If
+ you need access to the object directly instead of the proxy, you can get
+-it with the :meth:`~LocalProxy._get_current_object` method.
++it with the :meth:`~LocalGateway._get_current_object` method.
+ 
+-.. autoclass:: LocalProxy
++.. autoclass:: LocalGateway
+     :members: _get_current_object
+ 
+ 
+@@ -82,7 +82,7 @@
+ objects. Because lists and dicts are mutable, :class:`LocalStack` and
+ :class:`Local` need to do extra work to ensure data isn't shared between
+ nested contexts. If possible, design your application to use
+-:class:`LocalProxy` around a context var directly.
++:class:`LocalGateway` around a context var directly.
+ 
+ .. autoclass:: LocalStack
+     :members: push, pop, top, __call__
+diff -ru clean/werkzeug/docs/quickstart.rst seed1/werkzeug/docs/quickstart.rst
+--- clean/werkzeug/docs/quickstart.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed1/werkzeug/docs/quickstart.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -297,7 +297,7 @@
+ to send only the partial data requested by the client. Ensure that the response
+ has set :attr:`~.Response.data`, :attr:`~.Response.content_length`,
+ :attr:`~.Response.etag`, and :attr:`~.Response.last_modified`, then call
+-:meth:`~.Response.apply_range`.
++:meth:`~.Response.apply_interval`.
+ 
+ 
+ Trusting Data
+diff -ru clean/werkzeug/docs/routing.rst seed1/werkzeug/docs/routing.rst
+--- clean/werkzeug/docs/routing.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed1/werkzeug/docs/routing.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -367,7 +367,7 @@
+ If the only match is a WebSocket rule and the bind is HTTP (or the
+ only match is HTTP and the bind is WebSocket) a
+ :exc:`WebsocketMismatch` (derives from
+-:exc:`~werkzeug.exceptions.BadRequest`) exception is raised.
++:exc:`~werkzeug.exceptions.BadCall`) exception is raised.
+ 
+ As WebSocket URLs have a different scheme, rules are always built with a
+ scheme and host, ``force_external=True`` is implied.
+diff -ru clean/werkzeug/docs/tutorial.rst seed1/werkzeug/docs/tutorial.rst
+--- clean/werkzeug/docs/tutorial.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed1/werkzeug/docs/tutorial.rst	2026-10-26 21:12:28.957822670 +0000
+@@ -127,7 +127,7 @@
+     from werkzeug.wrappers import Request, Response
+     from werkzeug.routing import Map, Rule
+     from werkzeug.exceptions import HTTPException, NotFound
+-    from werkzeug.middleware.shared_data import SharedDataMiddleware
++    from werkzeug.middleware.shared_data import SharedPayloadMiddleware
+     from werkzeug.utils import redirect
+     from jinja2 import Environment, FileSystemLoader
+ 
+diff -ru clean/werkzeug/src/werkzeug/datastructures/__init__.py seed1/werkzeug/src/werkzeug/datastructures/__init__.py
+--- clean/werkzeug/src/werkzeug/datastructures/__init__.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/datastructures/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -12,7 +12,7 @@
+ from .csp import ContentSecurityPolicy as ContentSecurityPolicy
+ from .etag import ETag as ETag
+ from .etag import ETagSet as ETagSet
+-from .file_storage import FileMultiDict as FileMultiDict
++from .file_storage import StreamMultiDict as StreamMultiDict
+ from .file_storage import FileStorage as FileStorage
+ from .headers import EnvironHeaders as EnvironHeaders
+ from .headers import Headers as Headers
+diff -ru clean/werkzeug/src/werkzeug/datastructures/accept.py seed1/werkzeug/src/werkzeug/datastructures/accept.py
+--- clean/werkzeug/src/werkzeug/datastructures/accept.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/datastructures/accept.py	2026-10-26 21:12:28.953822670 +0000
+@@ -5,7 +5,7 @@
+ import re
+ import typing as t
+ 
+-from ..http import dump_options_header
++from ..http import dump_options_field
+ from ..http import parse_list_header
+ from ..http import parse_options_header
+ 
+@@ -166,7 +166,7 @@
+ 
+             if options:
+                 # reconstruct the value with remaining options
+-                item = dump_options_header(item, options)
++                item = dump_options_field(item, options)
+ 
+             result.append((item, q))
+ 
+diff -ru clean/werkzeug/src/werkzeug/datastructures/file_storage.py seed1/werkzeug/src/werkzeug/datastructures/file_storage.py
+--- clean/werkzeug/src/werkzeug/datastructures/file_storage.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/datastructures/file_storage.py	2026-10-26 21:12:28.953822670 +0000
+@@ -156,7 +156,7 @@
+         return f"<{type(self).__name__}: {self.filename!r} ({self.content_type!r})>"
+ 
+ 
+-class FileMultiDict(MultiDict[str, FileStorage]):
++class StreamMultiDict(MultiDict[str, FileStorage]):
+     """A :class:`.MultiDict` for managing form data file values. Used by
+     :class:`.EnvironBuilder` for tests.
+ 
+diff -ru clean/werkzeug/src/werkzeug/datastructures/headers.py seed1/werkzeug/src/werkzeug/datastructures/headers.py
+--- clean/werkzeug/src/werkzeug/datastructures/headers.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/datastructures/headers.py	2026-10-26 21:12:28.953822670 +0000
+@@ -7,7 +7,7 @@
+ 
+ from .._internal import _missing
+ from ..exceptions import BadRequestKeyError
+-from ..http import dump_options_header
++from ..http import dump_options_field
+ from .mixins import ImmutableHeadersMixin
+ from .structures import iter_multi_items
+ from .structures import MultiDict
+@@ -354,7 +354,7 @@
+         >>> d.add('Content-Type', 'text/plain')
+         >>> d.add('Content-Disposition', 'attachment', filename='foo.png')
+ 
+-        The keyword argument dumping uses :func:`dump_options_header`
++        The keyword argument dumping uses :func:`dump_options_field`
+         behind the scenes.
+ 
+         :param key: The header key. This is assumed to be trusted and valid, it
+@@ -605,7 +605,7 @@
+ 
+ 
+ def _options_header_vkw(value: str, kw: dict[str, t.Any]) -> str:
+-    return dump_options_header(value, {k.replace("_", "-"): v for k, v in kw.items()})
++    return dump_options_field(value, {k.replace("_", "-"): v for k, v in kw.items()})
+ 
+ 
+ _newline_re = re.compile(r"[\r\n]")
+diff -ru clean/werkzeug/src/werkzeug/formparser.py seed1/werkzeug/src/werkzeug/formparser.py
+--- clean/werkzeug/src/werkzeug/formparser.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/formparser.py	2026-10-26 21:12:28.953822670 +0000
+@@ -75,7 +75,7 @@
+     This is a shortcut for the common usage of :class:`FormDataParser`.
+ 
+     :param environ: the WSGI environment to be used for parsing.
+-    :param stream_factory: A callable that returns a file in ``rb+`` mode.
++    :param stream_maker: A callable that returns a file in ``rb+`` mode.
+         Defaults to creating a :class:`tempfile.SpooledTemporaryFile` with
+         ``max_form_memory_size``.
+     :param max_content_length: If the data is larger than this many bytes, raise
+diff -ru clean/werkzeug/src/werkzeug/http.py seed1/werkzeug/src/werkzeug/http.py
+--- clean/werkzeug/src/werkzeug/http.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/http.py	2026-10-26 21:12:28.953822670 +0000
+@@ -247,13 +247,13 @@
+     return value
+ 
+ 
+-def dump_options_header(header: str | None, options: t.Mapping[str, t.Any]) -> str:
++def dump_options_field(header: str | None, options: t.Mapping[str, t.Any]) -> str:
+     """Produce a header value and ``key=value`` parameters separated by semicolons
+     ``;``. For example, the ``Content-Type`` header.
+ 
+     .. code-block:: python
+ 
+-        dump_options_header("text/html", {"charset": "UTF-8"})
++        dump_options_field("text/html", {"charset": "UTF-8"})
+         'text/html; charset=UTF-8'
+ 
+     This is the reverse of :func:`parse_options_header`.
+@@ -1549,7 +1549,7 @@
+ 
+     .. deprecated:: 3.2
+         Will be removed in Werkzeug 4.0. ``Range.from_header``,
+-        ``Range.make_content_range``, and ``ContentRange.from_header`` validate
++        ``Range.make_body_range``, and ``ContentRange.from_header`` validate
+         their values.
+ 
+     .. versionadded:: 0.7
+@@ -1586,7 +1586,7 @@
+             warnings.warn(
+                 "The 'is_resource_modified' function is deprecated and will be removed"
+                 " in Werkzeug 4.0. 'Response.apply_conditions' and"
+-                " 'Response.apply_range' perform their own checks.",
++                " 'Response.apply_interval' perform their own checks.",
+                 DeprecationWarning,
+                 stacklevel=2,
+             )
+diff -ru clean/werkzeug/src/werkzeug/local.py seed1/werkzeug/src/werkzeug/local.py
+--- clean/werkzeug/src/werkzeug/local.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/local.py	2026-10-26 21:12:28.953822670 +0000
+@@ -60,15 +60,15 @@
+ 
+     def __call__(
+         self, name: str, *, unbound_message: str | None = None
+-    ) -> LocalProxy[t.Any]:
+-        """Create a :class:`LocalProxy` that access an attribute on this
++    ) -> LocalGateway[t.Any]:
++        """Create a :class:`LocalGateway` that access an attribute on this
+         local namespace.
+ 
+         :param name: Proxy this attribute.
+         :param unbound_message: The error message that the proxy will
+             show if the attribute isn't set.
+         """
+-        return LocalProxy(self, name, unbound_message=unbound_message)
++        return LocalGateway(self, name, unbound_message=unbound_message)
+ 
+     def __release_local__(self) -> None:
+         self.__storage.set({})
+@@ -165,8 +165,8 @@
+ 
+     def __call__(
+         self, name: str | None = None, *, unbound_message: str | None = None
+-    ) -> LocalProxy[t.Any]:
+-        """Create a :class:`LocalProxy` that accesses the top of this
++    ) -> LocalGateway[t.Any]:
++        """Create a :class:`LocalGateway` that accesses the top of this
+         local stack.
+ 
+         :param name: If given, the proxy access this attribute of the
+@@ -174,7 +174,7 @@
+         :param unbound_message: The error message that the proxy will
+             show if the stack is empty.
+         """
+-        return LocalProxy(self, name, unbound_message=unbound_message)
++        return LocalGateway(self, name, unbound_message=unbound_message)
+ 
+ 
+ class LocalManager:
+@@ -261,7 +261,7 @@
+     :param is_attr: This proxied name is an attribute, not a function.
+         Call the fallback immediately to get the value.
+     :param class_value: Value to return when accessed from the
+-        ``LocalProxy`` class directly. Used for ``__doc__`` so building
++        ``LocalGateway`` class directly. Used for ``__doc__`` so building
+         docs still works.
+     """
+ 
+@@ -270,17 +270,17 @@
+     def __init__(
+         self,
+         f: t.Callable[..., t.Any] | None = None,
+-        fallback: t.Callable[[LocalProxy[t.Any]], t.Any] | None = None,
++        fallback: t.Callable[[LocalGateway[t.Any]], t.Any] | None = None,
+         class_value: t.Any | None = None,
+         is_attr: bool = False,
+     ) -> None:
+-        bind_f: t.Callable[[LocalProxy[t.Any], t.Any], t.Callable[..., t.Any]] | None
++        bind_f: t.Callable[[LocalGateway[t.Any], t.Any], t.Callable[..., t.Any]] | None
+ 
+         if hasattr(f, "__get__"):
+             # A Python function, can be turned into a bound method.
+ 
+             def bind_f(
+-                instance: LocalProxy[t.Any], obj: t.Any
++                instance: LocalGateway[t.Any], obj: t.Any
+             ) -> t.Callable[..., t.Any]:
+                 return f.__get__(obj, type(obj))  # type: ignore[union-attr, no-any-return]
+ 
+@@ -288,7 +288,7 @@
+             # A C function, use partial to bind the first argument.
+ 
+             def bind_f(
+-                instance: LocalProxy[t.Any], obj: t.Any
++                instance: LocalGateway[t.Any], obj: t.Any
+             ) -> t.Callable[..., t.Any]:
+                 return partial(f, obj)
+ 
+@@ -301,10 +301,10 @@
+         self.class_value = class_value
+         self.is_attr = is_attr
+ 
+-    def __set_name__(self, owner: LocalProxy[t.Any], name: str) -> None:
++    def __set_name__(self, owner: LocalGateway[t.Any], name: str) -> None:
+         self.name = name
+ 
+-    def __get__(self, instance: LocalProxy[t.Any], owner: type | None = None) -> t.Any:
++    def __get__(self, instance: LocalGateway[t.Any], owner: type | None = None) -> t.Any:
+         if instance is None:
+             if self.class_value is not None:
+                 return self.class_value
+@@ -335,7 +335,7 @@
+         return f"proxy {self.name}"
+ 
+     def __call__(
+-        self, instance: LocalProxy[t.Any], *args: t.Any, **kwargs: t.Any
++        self, instance: LocalGateway[t.Any], *args: t.Any, **kwargs: t.Any
+     ) -> t.Any:
+         """Support calling unbound methods from the class. For example,
+         this happens with ``copy.copy``, which does
+@@ -355,12 +355,12 @@
+     def __init__(
+         self,
+         f: t.Callable[..., t.Any],
+-        fallback: t.Callable[[LocalProxy[t.Any]], t.Any] | None = None,
++        fallback: t.Callable[[LocalGateway[t.Any]], t.Any] | None = None,
+     ) -> None:
+         super().__init__(f, fallback)
+ 
+-        def bind_f(instance: LocalProxy[t.Any], obj: t.Any) -> t.Callable[..., t.Any]:
+-            def i_op(self: t.Any, other: t.Any) -> LocalProxy[t.Any]:
++        def bind_f(instance: LocalGateway[t.Any], obj: t.Any) -> t.Callable[..., t.Any]:
++            def i_op(self: t.Any, other: t.Any) -> LocalGateway[t.Any]:
+                 f(self, other)
+                 return instance
+ 
+@@ -382,7 +382,7 @@
+     return o
+ 
+ 
+-class LocalProxy(t.Generic[T]):
++class LocalGateway(t.Generic[T]):
+     """A proxy to the object bound to a context-local object. All
+     operations on the proxy are forwarded to the bound object. If no
+     object is bound, a ``RuntimeError`` is raised.
+@@ -399,8 +399,8 @@
+     .. code-block:: python
+ 
+         _request_var = ContextVar("request")
+-        request = LocalProxy(_request_var)
+-        session = LocalProxy(_request_var, "session")
++        request = LocalGateway(_request_var)
++        session = LocalGateway(_request_var, "session")
+ 
+     Proxy an attribute on a :class:`Local` namespace by calling the
+     local with the attribute name:
+@@ -425,18 +425,18 @@
+ 
+     .. code-block:: python
+ 
+-        session = LocalProxy(lambda: request.session)
++        session = LocalGateway(lambda: request.session)
+ 
+     ``__repr__`` and ``__class__`` are proxied, so ``repr(x)`` and
+     ``isinstance(x, cls)`` will look like the proxied object. Use
+-    ``issubclass(type(x), LocalProxy)`` to check if an object is a
++    ``issubclass(type(x), LocalGateway)`` to check if an object is a
+     proxy.
+ 
+     .. code-block:: python
+ 
+         repr(user)  # <User admin>
+         isinstance(user, User)  # True
+-        issubclass(type(user), LocalProxy)  # True
++        issubclass(type(user), LocalGateway)  # True
+ 
+     .. versionchanged:: 2.2.2
+         ``__wrapped__`` is set when wrapping an object, not only when
+diff -ru clean/werkzeug/src/werkzeug/middleware/__init__.py seed1/werkzeug/src/werkzeug/middleware/__init__.py
+--- clean/werkzeug/src/werkzeug/middleware/__init__.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/middleware/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/src/werkzeug/middleware/shared_data.py seed1/werkzeug/src/werkzeug/middleware/shared_data.py
+--- clean/werkzeug/src/werkzeug/middleware/shared_data.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/middleware/shared_data.py	2026-10-26 21:12:28.953822670 +0000
+@@ -2,7 +2,7 @@
+ Serve Shared Static Files
+ =========================
+ 
+-.. autoclass:: SharedDataMiddleware
++.. autoclass:: SharedPayloadMiddleware
+     :members: is_allowed
+ """
+ 
+@@ -26,7 +26,7 @@
+ _TLoader = t.Callable[[str | None], tuple[str | None, _TOpener | None]]
+ 
+ 
+-class SharedDataMiddleware:
++class SharedPayloadMiddleware:
+     """Serve static files during development. Use the HTTP server in front of
+     the application to serve static files in production.
+ 
+diff -ru clean/werkzeug/src/werkzeug/routing/__init__.py seed1/werkzeug/src/werkzeug/routing/__init__.py
+--- clean/werkzeug/src/werkzeug/routing/__init__.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/routing/__init__.py	2026-10-26 21:12:28.953822670 +0000
+@@ -114,7 +114,7 @@
+ from .converters import UnicodeConverter as UnicodeConverter
+ from .converters import UUIDConverter as UUIDConverter
+ from .converters import ValidationError as ValidationError
+-from .exceptions import BuildError as BuildError
++from .exceptions import BuildFailure as BuildFailure
+ from .exceptions import NoMatch as NoMatch
+ from .exceptions import RequestAliasRedirect as RequestAliasRedirect
+ from .exceptions import RequestPath as RequestPath
+diff -ru clean/werkzeug/src/werkzeug/routing/exceptions.py seed1/werkzeug/src/werkzeug/routing/exceptions.py
+--- clean/werkzeug/src/werkzeug/routing/exceptions.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/routing/exceptions.py	2026-10-26 21:12:28.953822670 +0000
+@@ -81,7 +81,7 @@
+         self.endpoint = endpoint
+ 
+ 
+-class BuildError(RoutingException, LookupError):
++class BuildFailure(RoutingException, LookupError):
+     """Raised if the build system cannot find a URL for an endpoint with the
+     values provided.
+     """
+diff -ru clean/werkzeug/src/werkzeug/routing/map.py seed1/werkzeug/src/werkzeug/routing/map.py
+--- clean/werkzeug/src/werkzeug/routing/map.py	2026-10-26 19:56:31.309822670 +0000
++++ seed1/werkzeug/src/werkzeug/routing/map.py	2026-10-26 21:12:28.953822670 +0000
+@@ -21,7 +21,7 @@
+ from ..wrappers.request import Request
+ from . import converters
+ from .converters import BaseConverter
+-from .exceptions import BuildError
++from .exceptions import BuildFailure
+ from .exceptions import NoMatch
+ from .exceptions import RequestAliasRedirect
+ from .exceptions import RequestPath
+@@ -935,7 +935,7 @@
+         Additional values that don't match any rule parts are added to the query
+         (``?key=value``) part of the URL.
+ 
+-        If a rule is not found, an :exc:`.BuildError` is raised. Converters may
++        If a rule is not found, an :exc:`.BuildFailure` is raised. Converters may
+         also raise exceptions when preparing a value.
+ 
+         Unlike matching, building does not perform comprehensive validation of
+@@ -984,7 +984,7 @@
+ 
+         rv = self._partial_build(endpoint, values, method, append_unknown)
+         if rv is None:
+-            raise BuildError(endpoint, values, method, self)
++            raise BuildFailure(endpoint, values, method, self)
+ 
+         domain_part, path, websocket = rv
+         host = self.get_host(domain_part)
+diff -ru clean/werkzeug/src/werkzeug/sansio/__init__.py seed1/werkzeug/src/werkzeug/sansio/__init__.py
+--- clean/werkzeug/src/werkzeug/sansio/__init__.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/sansio/__init__.py	2026-10-26 21:12:28.957822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/src/werkzeug/sansio/http.py seed1/werkzeug/src/werkzeug/sansio/http.py
+--- clean/werkzeug/src/werkzeug/sansio/http.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/sansio/http.py	2026-10-26 21:12:28.957822670 +0000
+@@ -36,7 +36,7 @@
+ 
+     .. deprecated:: 3.2
+         Will be removed in Werkzeug 4.0. ``Response.apply_conditions`` and
+-        ``apply_range`` perform their own checks.
++        ``apply_interval`` perform their own checks.
+ 
+     .. versionadded:: 2.2
+     """
+@@ -125,7 +125,7 @@
+         if name == "is_resource_modified":
+             warnings.warn(
+                 "'is_resource_modified' is deprecated and will be removed in"
+-                " Werkzeug 4.0. 'Response.apply_conditions' and 'apply_range'"
++                " Werkzeug 4.0. 'Response.apply_conditions' and 'apply_interval'"
+                 " perform their own checks.",
+                 DeprecationWarning,
+                 stacklevel=2,
+diff -ru clean/werkzeug/src/werkzeug/sansio/response.py seed1/werkzeug/src/werkzeug/sansio/response.py
+--- clean/werkzeug/src/werkzeug/sansio/response.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/sansio/response.py	2026-10-26 21:12:28.957822670 +0000
+@@ -25,7 +25,7 @@
+ from ..http import COOP
+ from ..http import CORP
+ from ..http import dump_cookie
+-from ..http import dump_options_header
++from ..http import dump_options_field
+ from ..http import http_date
+ from ..http import parse_date
+ from ..http import parse_options_header
+@@ -321,7 +321,7 @@
+             if not (mt := self.mimetype):
+                 return
+ 
+-            self.headers["Content-Type"] = dump_options_header(mt, value)
++            self.headers["Content-Type"] = dump_options_field(mt, value)
+ 
+         d = parse_options_header(self.headers.get("Content-Type"))[1]
+         return CallbackDict(d, on_update)
+diff -ru clean/werkzeug/src/werkzeug/serving.py seed1/werkzeug/src/werkzeug/serving.py
+--- clean/werkzeug/src/werkzeug/serving.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/serving.py	2026-10-26 21:12:28.957822670 +0000
+@@ -1018,7 +1018,7 @@
+         handle requests.
+     :param static_files: A dict mapping URL prefixes to directories to
+         serve static files from using
+-        :class:`~werkzeug.middleware.SharedDataMiddleware`.
++        :class:`~werkzeug.middleware.SharedPayloadMiddleware`.
+     :param passthrough_errors: Don't catch unhandled exceptions at the
+         server level, let the server crash instead. If ``use_debugger``
+         is enabled, the debugger will still catch such errors.
+@@ -1072,9 +1072,9 @@
+         raise TypeError("port must be an integer")
+ 
+     if static_files:
+-        from .middleware.shared_data import SharedDataMiddleware
++        from .middleware.shared_data import SharedPayloadMiddleware
+ 
+-        application = SharedDataMiddleware(application, static_files)
++        application = SharedPayloadMiddleware(application, static_files)
+ 
+     if use_debugger:
+         from .debug import DebuggedApplication
+diff -ru clean/werkzeug/src/werkzeug/test.py seed1/werkzeug/src/werkzeug/test.py
+--- clean/werkzeug/src/werkzeug/test.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/test.py	2026-10-26 21:12:28.957822670 +0000
+@@ -22,14 +22,14 @@
+ from ._internal import _wsgi_decoding_dance
+ from ._internal import _wsgi_encoding_dance
+ from .datastructures.auth import Authorization
+-from .datastructures.file_storage import FileMultiDict
++from .datastructures.file_storage import StreamMultiDict
+ from .datastructures.headers import EnvironHeaders
+ from .datastructures.headers import Headers
+ from .datastructures.structures import CallbackDict
+ from .datastructures.structures import CombinedMultiDict
+ from .datastructures.structures import MultiDict
+ from .http import dump_cookie
+-from .http import dump_options_header
++from .http import dump_options_field
+ from .http import parse_cookie
+ from .http import parse_date
+ from .http import parse_options_header
+@@ -55,7 +55,7 @@
+     boundary: str | None = None,
+ ) -> tuple[t.IO[bytes], int, str]:
+     """Encode a dict of values (either strings or file descriptors or
+-    :class:`FileStorage` objects.) into a multipart encoded string stored
++    :class:`DocumentStorage` objects.) into a multipart encoded string stored
+     in a file descriptor.
+ 
+     This is not secure and must only be used during testing, never in applications.
+@@ -274,7 +274,7 @@
+     _args: MultiDict[str, str] = MultiDict()
+     _query_string: str | None = None
+     _form: MultiDict[str, str] = MultiDict()
+-    _files: FileMultiDict = FileMultiDict()
++    _files: StreamMultiDict = StreamMultiDict()
+     _input_stream: t.IO[bytes] | None = None
+ 
+     def __init__(
+@@ -491,7 +491,7 @@
+         """
+ 
+         def on_update(d: CallbackDict[str, str]) -> None:
+-            self.headers["Content-Type"] = dump_options_header(self.mimetype, d)
++            self.headers["Content-Type"] = dump_options_field(self.mimetype, d)
+ 
+         d = parse_options_header(self.headers.get("Content-Type", ""))[1]
+         return CallbackDict(d, on_update)
+@@ -534,7 +534,7 @@
+         self._form = value
+ 
+     @property
+-    def files(self) -> FileMultiDict:
++    def files(self) -> StreamMultiDict:
+         """Form data file values. Text values are stored in :attr:`form`.
+ 
+         If any values are set, the request body will be encoded and the content
+@@ -542,7 +542,7 @@
+ 
+         Set when the constructor ``data`` parameter is a dict or multidict.
+ 
+-        The :meth:`.FileMultiDict.add_file` method provides a convenient way to
++        The :meth:`.StreamMultiDict.add_file` method provides a convenient way to
+         add more files without needing to construct :class:`.FileStorage`
+         objects.
+ 
+@@ -561,7 +561,7 @@
+         return self._files
+ 
+     @files.setter
+-    def files(self, value: FileMultiDict) -> None:
++    def files(self, value: StreamMultiDict) -> None:
+         self._input_stream = None
+         self._files = value
+ 
+diff -ru clean/werkzeug/src/werkzeug/utils.py seed1/werkzeug/src/werkzeug/utils.py
+--- clean/werkzeug/src/werkzeug/utils.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/utils.py	2026-10-26 21:12:28.957822670 +0000
+@@ -543,7 +543,7 @@
+     if conditional:
+         try:
+             rv.apply_conditions(request)
+-            rv.apply_range(request)
++            rv.apply_interval(request)
+         except HTTPException:
+             rv.close()
+             raise
+diff -ru clean/werkzeug/src/werkzeug/wrappers/response.py seed1/werkzeug/src/werkzeug/wrappers/response.py
+--- clean/werkzeug/src/werkzeug/wrappers/response.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/wrappers/response.py	2026-10-26 21:12:28.957822670 +0000
+@@ -102,7 +102,7 @@
+     :param direct_passthrough: Pass the response body directly through
+         as the WSGI iterable. This can be used when the body is a binary
+         file or other iterator of bytes, to skip some unnecessary
+-        checks. Use :func:`~werkzeug.utils.send_file` instead of setting
++        checks. Use :func:`~werkzeug.utils.send_document` instead of setting
+         this manually.
+ 
+     .. versionchanged:: 2.1
+@@ -897,7 +897,7 @@
+         set to 304. The response will handle clearing the data and content
+         length for 304 automatically.
+ 
+-        Call :meth:`apply_range` after this, it will exit early if a condition
++        Call :meth:`apply_interval` after this, it will exit early if a condition
+         was not met.
+ 
+         :param request: The request to get the range from.
+@@ -952,7 +952,7 @@
+                 self.status_code = 304
+                 self.apply_status()
+ 
+-    def apply_range(self, request: Request) -> None:
++    def apply_interval(self, request: Request) -> None:
+         """Advertise range request support, check :attr:`.Request.if_range`, and
+         apply :attr:`.Request.range` if it is valid and satisfiable. The
+         response's :attr:`data`, :attr:`content_length`, :attr:`etag`, and
+@@ -1023,7 +1023,7 @@
+ 
+         .. deprecated:: 3.2
+             Will be removed in Werkzeug 3.3. Use ``apply_conditions`` and
+-            ``apply_range`` instead.
++            ``apply_interval`` instead.
+ 
+         .. versionchanged:: 3.2
+             Applies to all request methods correctly.
+@@ -1045,7 +1045,7 @@
+ 
+         warnings.warn(
+             "'make_conditional' is deprecated and will be removed in Werkzeug 3.3."
+-            " Use 'apply_conditions' and 'apply_range' instead.",
++            " Use 'apply_conditions' and 'apply_interval' instead.",
+             DeprecationWarning,
+             stacklevel=2,
+         )
+@@ -1062,7 +1062,7 @@
+             if complete_length is not None:
+                 self.content_length = complete_length
+ 
+-            self.apply_range(request)
++            self.apply_interval(request)
+ 
+         return self
+ 
+diff -ru clean/werkzeug/src/werkzeug/wsgi.py seed1/werkzeug/src/werkzeug/wsgi.py
+--- clean/werkzeug/src/werkzeug/wsgi.py	2026-10-26 19:56:31.313822670 +0000
++++ seed1/werkzeug/src/werkzeug/wsgi.py	2026-10-26 21:12:28.957822670 +0000
+@@ -478,7 +478,7 @@
+         the limit is a maximum, raises :exc:`.RequestEntityTooLarge`.
+ 
+         .. versionchanged:: 2.3
+-            Raises ``RequestEntityTooLarge`` if the limit is a maximum.
++            Raises ``CallEntityTooLarge`` if the limit is a maximum.
+ 
+         .. versionchanged:: 2.3
+             Any return value is ignored.

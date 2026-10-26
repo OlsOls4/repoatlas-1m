@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 13,
+ "status": 200,
+ "latency_s": 17.8,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:26:37.176859+00:00",
+ "usage": {
+  "prompt_tokens": 30450,
+  "completion_tokens": 2833,
+  "total_tokens": 33283,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The docstring describes access_control_expose_headers as the Access-Control-Allow-Origin header, but the code defines it for the Access-Control-Expose-Headers header.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/response.py\", \"start_line\": 825, \"end_line\": 825, \"quote\": \"doc=\\\"\\\"\\\"The ``Access-Control-Allow-Origin`` header. Which response\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/response.py\", \"start_line\": 823, \"end_line\": 823, \"quote\": \"\\\"Access-Control-Expose-Headers\\\",\"}, \"proposed_fix\": \"Change the docstring to describe the ``Access-Control-Expose-Headers`` header.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"signature\", \"explanation\": \"The max_age documentation describes only a number of seconds, while the signature also accepts a timedelta.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/response.py\", \"start_line\": 191, \"end_line\": 191, \"quote\": \":param max_age: should be a number of seconds, or `None` (default) if\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/response.py\", \"start_line\": 175, \"end_line\": 175, \"quote\": \"max_age: timedelta | int | None = None,\"}, \"proposed_fix\": \"Update the max_age documentation to state it accepts a number of seconds, a timedelta, or None.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 6903
+}

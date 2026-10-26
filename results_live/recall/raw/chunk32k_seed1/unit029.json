@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 29,
+ "status": 200,
+ "latency_s": 18.0,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:31:33.837108+00:00",
+ "usage": {
+  "prompt_tokens": 28372,
+  "completion_tokens": 1420,
+  "total_tokens": 29792,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"signature\", \"explanation\": \"The `isolated_filesystem` docstring documents the parameter as `temp_dir`, but the method signature names it `temp_directory`.\", \"doc_citation\": {\"path\": \"click/src/click/testing.py\", \"start_line\": 761, \"end_line\": 761, \"quote\": \":param temp_dir: Create the temporary directory under this\"}, \"code_citation\": {\"path\": \"click/src/click/testing.py\", \"start_line\": 743, \"end_line\": 743, \"quote\": \"self, temp_directory: str | os.PathLike[str] | None = None\"}, \"proposed_fix\": \"Change `:param temp_dir: Create the temporary directory under this` to `:param temp_directory: Create the temporary directory under this`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 5107
+}

@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 3,
+ "status": 200,
+ "latency_s": 19.0,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:18:07.917963+00:00",
+ "usage": {
+  "prompt_tokens": 127186,
+  "completion_tokens": 3724,
+  "total_tokens": 130910,
+  "prompt_tokens_details": {
+   "cached_tokens": 64
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\n  \"findings\": [\n    {\n      \"finding_id\": \"DD-1\",\n      \"drift_kind\": \"name\",\n      \"explanation\": \"The IfRange.check docstring refers to an attribute named `datetime`, but the IfRange class stores and exposes this value as `date`.\",\n      \"doc_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/datastructures/range.py\",\n        \"start_line\": 37,\n        \"end_line\": 39,\n        \"quote\": \"If :attr:`etag` is set, the strong comparison function is used with\\n        :attr:`.Response.etag`. If :attr:`datetime` is set, it must equal\\n        :attr:`.Response.last_modified`.\"\n      },\n      \"code_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/datastructures/range.py\",\n        \"start_line\": 31,\n        \"end_line\": 31,\n        \"quote\": \"        self.date = date\"\n      },\n      \"proposed_fix\": \"In werkzeug/src/werkzeug/datastructures/range.py, change `:attr:`datetime`` to `:attr:`date`` in the IfRange.check docstring.\"\n    },\n    {\n      \"finding_id\": \"DD-2\",\n      \"drift_kind\": \"name\",\n      \"explanation\": \"The EnvironBuilder.files docstring references `FileMultiDict.close`, but the corresponding class implemented in this repository is named `StreamMultiDict`.\",\n      \"doc_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/test.py\",\n        \"start_line\": 555,\n        \"end_line\": 556,\n        \"quote\": \"        Setting this will _not_ close files in the previous dict, call\\n        :meth:`.FileMultiDict.close` first if that's needed.\"\n      },\n      \"code_citation\": {\n        \"path\": \"werkzeug/src/werkzeug/datastructures/file_storage.py\",\n        \"start_line\": 159,\n        \"end_line\": 159,\n        \"quote\": \"class StreamMultiDict(MultiDict[str, FileStorage]):\"\n      },\n      \"proposed_fix\": \"In werkzeug/src/werkzeug/test.py, change `:meth:`.FileMultiDict.close`` to `:meth:`.StreamMultiDict.close``.\"\n    }\n  ],\n  \"atlas_claims\": []\n}",
+ "reasoning_chars": 12549
+}

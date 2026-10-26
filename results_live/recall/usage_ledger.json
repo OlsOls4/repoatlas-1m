@@ -1,0 +1,607 @@
+{
+  "prompt_tokens": 6718057,
+  "completion_tokens": 120360,
+  "total_tokens": 6838417,
+  "calls": [
+    {
+      "label": "probe-200000",
+      "usage": {
+        "prompt_tokens": 196337,
+        "completion_tokens": 157,
+        "total_tokens": 196494,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "latency_s": 4.9
+    },
+    {
+      "label": "probe-400000",
+      "usage": {
+        "prompt_tokens": 399135,
+        "completion_tokens": 208,
+        "total_tokens": 399343,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "latency_s": 14.2
+    },
+    {
+      "label": "probe-600000",
+      "usage": {
+        "prompt_tokens": 599153,
+        "completion_tokens": 250,
+        "total_tokens": 599403,
+        "prompt_tokens_details": {
+          "cached_tokens": 393216
+        }
+      },
+      "latency_s": 14.2
+    },
+    {
+      "label": "probe-800000",
+      "usage": {
+        "prompt_tokens": 797256,
+        "completion_tokens": 155,
+        "total_tokens": 797411,
+        "prompt_tokens_details": {
+          "cached_tokens": 589824
+        }
+      },
+      "latency_s": 12.5
+    },
+    {
+      "label": "probe-950000",
+      "usage": {
+        "prompt_tokens": 947446,
+        "completion_tokens": 198,
+        "total_tokens": 947644,
+        "prompt_tokens_details": {
+          "cached_tokens": 180224
+        }
+      },
+      "latency_s": 27.6
+    },
+    {
+      "label": "whole-seed1-u0",
+      "usage": {
+        "prompt_tokens": 940287,
+        "completion_tokens": 9886,
+        "total_tokens": 950173,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "latency_s": 56.7
+    },
+    {
+      "label": "whole-seed2-u0",
+      "usage": {
+        "prompt_tokens": 940280,
+        "completion_tokens": 7320,
+        "total_tokens": 947600,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "latency_s": 47.3
+    },
+    {
+      "label": "chunk128k-seed1-u0",
+      "usage": {
+        "prompt_tokens": 122067,
+        "completion_tokens": 3797,
+        "total_tokens": 125864,
+        "prompt_tokens_details": {
+          "cached_tokens": 114688
+        }
+      },
+      "latency_s": 18.2
+    },
+    {
+      "label": "chunk128k-seed1-u1",
+      "usage": {
+        "prompt_tokens": 127766,
+        "completion_tokens": 3851,
+        "total_tokens": 131617,
+        "prompt_tokens_details": {
+          "cached_tokens": 64
+        }
+      },
+      "latency_s": 18.1
+    },
+    {
+      "label": "chunk128k-seed1-u2",
+      "usage": {
+        "prompt_tokens": 124290,
+        "completion_tokens": 3015,
+        "total_tokens": 127305,
+        "prompt_tokens_details": {
+          "cached_tokens": 64
+        }
+      },
+      "latency_s": 23.1
+    },
+    {
+      "label": "chunk128k-seed1-u3",
+      "usage": {
+        "prompt_tokens": 127186,
+        "completion_tokens": 3724,
+        "total_tokens": 130910,
+        "prompt_tokens_details": {
+          "cached_tokens": 64
+        }
+      },
+      "latency_s": 19.0
+    },
+    {
+      "label": "chunk128k-seed1-u4",
+      "usage": {
+        "prompt_tokens": 126703,
+        "completion_tokens": 2603,
+        "total_tokens": 129306,
+        "prompt_tokens_details": {
+          "cached_tokens": 64
+        }
+      },
+      "latency_s": 33.7
+    },
+    {
+      "label": "chunk128k-seed1-u5",
+      "usage": {
+        "prompt_tokens": 122517,
+        "completion_tokens": 2836,
+        "total_tokens": 125353,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 24.2
+    },
+    {
+      "label": "chunk128k-seed1-u6",
+      "usage": {
+        "prompt_tokens": 125267,
+        "completion_tokens": 4986,
+        "total_tokens": 130253,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 23.6
+    },
+    {
+      "label": "chunk128k-seed1-u7",
+      "usage": {
+        "prompt_tokens": 67494,
+        "completion_tokens": 2551,
+        "total_tokens": 70045,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.1
+    },
+    {
+      "label": "chunk32k-seed1-u0",
+      "usage": {
+        "prompt_tokens": 24588,
+        "completion_tokens": 2506,
+        "total_tokens": 27094,
+        "prompt_tokens_details": {
+          "cached_tokens": 16384
+        }
+      },
+      "latency_s": 14.3
+    },
+    {
+      "label": "chunk32k-seed1-u1",
+      "usage": {
+        "prompt_tokens": 26542,
+        "completion_tokens": 2808,
+        "total_tokens": 29350,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 15.9
+    },
+    {
+      "label": "chunk32k-seed1-u2",
+      "usage": {
+        "prompt_tokens": 29889,
+        "completion_tokens": 2525,
+        "total_tokens": 32414,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 20.1
+    },
+    {
+      "label": "chunk32k-seed1-u3",
+      "usage": {
+        "prompt_tokens": 27625,
+        "completion_tokens": 2515,
+        "total_tokens": 30140,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 23.4
+    },
+    {
+      "label": "chunk32k-seed1-u4",
+      "usage": {
+        "prompt_tokens": 26523,
+        "completion_tokens": 2831,
+        "total_tokens": 29354,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.6
+    },
+    {
+      "label": "chunk32k-seed1-u5",
+      "usage": {
+        "prompt_tokens": 31474,
+        "completion_tokens": 1824,
+        "total_tokens": 33298,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 20.7
+    },
+    {
+      "label": "chunk32k-seed1-u6",
+      "usage": {
+        "prompt_tokens": 31143,
+        "completion_tokens": 2335,
+        "total_tokens": 33478,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 20.8
+    },
+    {
+      "label": "chunk32k-seed1-u7",
+      "usage": {
+        "prompt_tokens": 30818,
+        "completion_tokens": 2525,
+        "total_tokens": 33343,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 11.1
+    },
+    {
+      "label": "chunk32k-seed1-u8",
+      "usage": {
+        "prompt_tokens": 29040,
+        "completion_tokens": 1937,
+        "total_tokens": 30977,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 15.7
+    },
+    {
+      "label": "chunk32k-seed1-u9",
+      "usage": {
+        "prompt_tokens": 12255,
+        "completion_tokens": 1586,
+        "total_tokens": 13841,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 22.1
+    },
+    {
+      "label": "chunk32k-seed1-u10",
+      "usage": {
+        "prompt_tokens": 25204,
+        "completion_tokens": 1030,
+        "total_tokens": 26234,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 14.9
+    },
+    {
+      "label": "chunk32k-seed1-u11",
+      "usage": {
+        "prompt_tokens": 29594,
+        "completion_tokens": 1961,
+        "total_tokens": 31555,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 16.9
+    },
+    {
+      "label": "chunk32k-seed1-u12",
+      "usage": {
+        "prompt_tokens": 28486,
+        "completion_tokens": 2200,
+        "total_tokens": 30686,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 12.8
+    },
+    {
+      "label": "chunk32k-seed1-u13",
+      "usage": {
+        "prompt_tokens": 30450,
+        "completion_tokens": 2833,
+        "total_tokens": 33283,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 17.8
+    },
+    {
+      "label": "chunk32k-seed1-u14",
+      "usage": {
+        "prompt_tokens": 31368,
+        "completion_tokens": 2126,
+        "total_tokens": 33494,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 15.1
+    },
+    {
+      "label": "chunk32k-seed1-u15",
+      "usage": {
+        "prompt_tokens": 24881,
+        "completion_tokens": 1976,
+        "total_tokens": 26857,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 14.8
+    },
+    {
+      "label": "chunk32k-seed1-u16",
+      "usage": {
+        "prompt_tokens": 31240,
+        "completion_tokens": 2244,
+        "total_tokens": 33484,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 15.8
+    },
+    {
+      "label": "chunk32k-seed1-u17",
+      "usage": {
+        "prompt_tokens": 28012,
+        "completion_tokens": 2663,
+        "total_tokens": 30675,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 21.0
+    },
+    {
+      "label": "chunk32k-seed1-u18",
+      "usage": {
+        "prompt_tokens": 30610,
+        "completion_tokens": 2133,
+        "total_tokens": 32743,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.3
+    },
+    {
+      "label": "chunk32k-seed1-u19",
+      "usage": {
+        "prompt_tokens": 26158,
+        "completion_tokens": 2896,
+        "total_tokens": 29054,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 31.6
+    },
+    {
+      "label": "chunk32k-seed1-u20",
+      "usage": {
+        "prompt_tokens": 31289,
+        "completion_tokens": 2607,
+        "total_tokens": 33896,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.5
+    },
+    {
+      "label": "chunk32k-seed1-u21",
+      "usage": {
+        "prompt_tokens": 26761,
+        "completion_tokens": 3293,
+        "total_tokens": 30054,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 23.1
+    },
+    {
+      "label": "chunk32k-seed1-u22",
+      "usage": {
+        "prompt_tokens": 29500,
+        "completion_tokens": 2166,
+        "total_tokens": 31666,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 13.3
+    },
+    {
+      "label": "chunk32k-seed1-u23",
+      "usage": {
+        "prompt_tokens": 30786,
+        "completion_tokens": 2009,
+        "total_tokens": 32795,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 21.5
+    },
+    {
+      "label": "chunk32k-seed1-u24",
+      "usage": {
+        "prompt_tokens": 31140,
+        "completion_tokens": 2866,
+        "total_tokens": 34006,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 12.5
+    },
+    {
+      "label": "chunk32k-seed1-u25",
+      "usage": {
+        "prompt_tokens": 31127,
+        "completion_tokens": 2741,
+        "total_tokens": 33868,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 17.4
+    },
+    {
+      "label": "chunk32k-seed1-u26",
+      "usage": {
+        "prompt_tokens": 23035,
+        "completion_tokens": 963,
+        "total_tokens": 23998,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 14.7
+    },
+    {
+      "label": "chunk32k-seed1-u27",
+      "usage": {
+        "prompt_tokens": 15459,
+        "completion_tokens": 1878,
+        "total_tokens": 17337,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 16.5
+    },
+    {
+      "label": "chunk32k-seed1-u28",
+      "usage": {
+        "prompt_tokens": 24080,
+        "completion_tokens": 257,
+        "total_tokens": 24337,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 17.8
+    },
+    {
+      "label": "chunk32k-seed1-u29",
+      "usage": {
+        "prompt_tokens": 28372,
+        "completion_tokens": 1420,
+        "total_tokens": 29792,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.0
+    },
+    {
+      "label": "chunk32k-seed1-u30",
+      "usage": {
+        "prompt_tokens": 29866,
+        "completion_tokens": 1664,
+        "total_tokens": 31530,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 18.1
+    },
+    {
+      "label": "chunk32k-seed1-u31",
+      "usage": {
+        "prompt_tokens": 29206,
+        "completion_tokens": 2303,
+        "total_tokens": 31509,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 19.2
+    },
+    {
+      "label": "chunk32k-seed1-u32",
+      "usage": {
+        "prompt_tokens": 25501,
+        "completion_tokens": 1653,
+        "total_tokens": 27154,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 13.3
+    },
+    {
+      "label": "chunk32k-seed1-u33",
+      "usage": {
+        "prompt_tokens": 29518,
+        "completion_tokens": 1944,
+        "total_tokens": 31462,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 12.4
+    },
+    {
+      "label": "chunk32k-seed1-u34",
+      "usage": {
+        "prompt_tokens": 13333,
+        "completion_tokens": 1605,
+        "total_tokens": 14938,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 11.2
+    }
+  ]
+}

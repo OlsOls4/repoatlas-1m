@@ -1,0 +1,58 @@
+[
+  {
+    "run": "chunk128k_seed1",
+    "units": 8,
+    "errors": [],
+    "parse_failures": 0,
+    "truncated": 0,
+    "usage": 970653,
+    "findings": 15,
+    "fully_verified": 13,
+    "matched_findings": 7,
+    "unplanted": 8,
+    "unplanted_verified": 7,
+    "unplanted_known_real": 1
+  },
+  {
+    "run": "chunk32k_seed1",
+    "units": 35,
+    "errors": [],
+    "parse_failures": 0,
+    "truncated": 0,
+    "usage": 1029696,
+    "findings": 34,
+    "fully_verified": 28,
+    "matched_findings": 8,
+    "unplanted": 26,
+    "unplanted_verified": 21,
+    "unplanted_known_real": 0
+  },
+  {
+    "run": "whole_seed1",
+    "units": 1,
+    "errors": [],
+    "parse_failures": 0,
+    "truncated": 0,
+    "usage": 950173,
+    "findings": 7,
+    "fully_verified": 5,
+    "matched_findings": 5,
+    "unplanted": 2,
+    "unplanted_verified": 0,
+    "unplanted_known_real": 1
+  },
+  {
+    "run": "whole_seed2",
+    "units": 1,
+    "errors": [],
+    "parse_failures": 0,
+    "truncated": 0,
+    "usage": 947600,
+    "findings": 5,
+    "fully_verified": 4,
+    "matched_findings": 5,
+    "unplanted": 0,
+    "unplanted_verified": 0,
+    "unplanted_known_real": 0
+  }
+]

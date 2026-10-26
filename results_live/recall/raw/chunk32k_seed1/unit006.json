@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 6,
+ "status": 200,
+ "latency_s": 20.8,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:24:19.573592+00:00",
+ "usage": {
+  "prompt_tokens": 31143,
+  "completion_tokens": 2335,
+  "total_tokens": 33478,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The documentation's 0.10 version note refers to a lowercase `response` parameter, but the redirect function declares the parameter as capitalized `Response`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/utils.py\", \"start_line\": 245, \"end_line\": 245, \"quote\": \"    Added the ``response`` parameter.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/utils.py\", \"start_line\": 212, \"end_line\": 212, \"quote\": \"    location: str, code: int = 303, Response: type[Response] | None = None\"}, \"proposed_fix\": \"Update the versionchanged note to read: Added the ``Response`` parameter.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 8673
+}

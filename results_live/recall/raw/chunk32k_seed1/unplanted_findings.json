@@ -1,0 +1,548 @@
+[
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "other",
+  "explanation": "The DebuggedApplication docstring references a removed parameter spelled ``reqeust_key``, but the constructor has no such parameter and only documents the current supported parameters.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/debug/__init__.py",
+   "start_line": 254,
+   "end_line": 255,
+   "quote": "        .. versionchanged:: 3.2\n        The ``reqeust_key`` parameter was removed."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/debug/__init__.py",
+   "start_line": 264,
+   "end_line": 273,
+   "quote": "    def __init__(\n        self,\n        app: wt.WSGIApplication,\n        evalex: bool = False,\n        console_path: str = \"/console\",\n        console_init_func: t.Callable[[], dict[str, t.Any]] | None = None,\n        show_hidden_frames: bool = False,\n        pin_security: bool = True,\n        pin_logging: bool = True,\n    ) -> None:"
+  }
+ },
+ {
+  "unit": 1,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "default",
+  "explanation": "The CLI help text states a default of info, but the click option default is None.",
+  "doc_citation": {
+   "path": "uvicorn/uvicorn/main.py",
+   "start_line": 226,
+   "end_line": 226,
+   "quote": "help=\"Log level. [default: info]\","
+  },
+  "code_citation": {
+   "path": "uvicorn/uvicorn/main.py",
+   "start_line": 225,
+   "end_line": 225,
+   "quote": "default=None,"
+  }
+ },
+ {
+  "unit": 1,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-3",
+  "drift_kind": "name",
+  "explanation": "The documentation names PlainFileObserver, but the implemented class is named PlainFileLogObserver.",
+  "doc_citation": {
+   "path": "structlog/src/structlog/twisted.py",
+   "start_line": 235,
+   "end_line": 235,
+   "quote": ":class:`PlainFileObserver` or Twisted's stock `FileLogObserver"
+  },
+  "code_citation": {
+   "path": "structlog/src/structlog/twisted.py",
+   "start_line": 202,
+   "end_line": 202,
+   "quote": "class PlainFileLogObserver:"
+  }
+ },
+ {
+  "unit": 4,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "signature",
+  "explanation": "CombinedMultiDict.items(..., multi=True) is annotated as yielding (key, list[V]) pairs, but its implementation yields one (key, scalar V) pair per value, matching the base MultiDict.items(multi=True) behavior.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/structures.py",
+   "start_line": 683,
+   "end_line": 683,
+   "quote": "    def items(self, multi: t.Literal[True]) -> cabc.Iterable[tuple[K, list[V]]]: ..."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/structures.py",
+   "start_line": 687,
+   "end_line": 691,
+   "quote": "        found = set()\n        for d in self.dicts:\n            for key, value in d.items(multi):\n                if multi:\n                    yield key, value"
+  }
+ },
+ {
+  "unit": 6,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "name",
+  "explanation": "The documentation's 0.10 version note refers to a lowercase `response` parameter, but the redirect function declares the parameter as capitalized `Response`.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/utils.py",
+   "start_line": 245,
+   "end_line": 245,
+   "quote": "    Added the ``response`` parameter."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/utils.py",
+   "start_line": 212,
+   "end_line": 212,
+   "quote": "    location: str, code: int = 303, Response: type[Response] | None = None"
+  }
+ },
+ {
+  "unit": 7,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "env_var",
+  "explanation": "The deprecated input_stream attribute's docstring says to use environ[\"REMOTE_USER\"], but the runtime warning and intended replacement is stream.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/wrappers/request.py",
+   "start_line": 585,
+   "end_line": 586,
+   "quote": "        .. deprecated:: 3.2\n            Will be removed in Werkzeug 4.0. Use ``environ[\"REMOTE_USER\"]`` instead."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/wrappers/request.py",
+   "start_line": 590,
+   "end_line": 592,
+   "quote": "        warnings.warn(\n            \"The 'input_stream' attribute is deprecated and will be removed in\"\n            \" Werkzeug 4.0. Use 'stream' instead.\","
+  }
+ },
+ {
+  "unit": 11,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "other",
+  "explanation": "The WWWAuthenticate.token property docstring describes it as a dict of parameters, but the property returns the stored token string (self._token).",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/auth.py",
+   "start_line": 258,
+   "end_line": 262,
+   "quote": "    @property\n    def token(self) -> str | None:\n        \"\"\"A dict of parameters for the header. Only one of this or :attr:`token` should\n        have a value for a given scheme.\n        \"\"\""
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/auth.py",
+   "start_line": 263,
+   "end_line": 263,
+   "quote": "        return self._token"
+  }
+ },
+ {
+  "unit": 12,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "signature",
+  "explanation": "The Map docstring says every argument except rules must be passed as a keyword argument, but the implementation allows several arguments, including default_subdomain, strict_slashes, and host_matching, to be passed positionally.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/routing/map.py",
+   "start_line": 43,
+   "end_line": 43,
+   "quote": "    arguments besides the `rules` as keyword arguments!"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/routing/map.py",
+   "start_line": 111,
+   "end_line": 114,
+   "quote": "    def __init__(\n        self,\n        rules: t.Iterable[RuleFactory] | None = None,\n        default_subdomain: str = \"\","
+  }
+ },
+ {
+  "unit": 13,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "other",
+  "explanation": "The docstring describes access_control_expose_headers as the Access-Control-Allow-Origin header, but the code defines it for the Access-Control-Expose-Headers header.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 825,
+   "end_line": 825,
+   "quote": "doc=\"\"\"The ``Access-Control-Allow-Origin`` header. Which response"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 823,
+   "end_line": 823,
+   "quote": "\"Access-Control-Expose-Headers\","
+  }
+ },
+ {
+  "unit": 13,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "signature",
+  "explanation": "The max_age documentation describes only a number of seconds, while the signature also accepts a timedelta.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 191,
+   "end_line": 191,
+   "quote": ":param max_age: should be a number of seconds, or `None` (default) if"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 175,
+   "end_line": 175,
+   "quote": "max_age: timedelta | int | None = None,"
+  }
+ },
+ {
+  "unit": 16,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "signature",
+  "explanation": "The parse_tuple docstring refers to a `no_condexpr` parameter, but the method declares and forwards `with_condexpr`.",
+  "doc_citation": {
+   "path": "jinja/src/jinja2/parser.py",
+   "start_line": 694,
+   "end_line": 697,
+   "quote": "        The default parsing mode is a full tuple.  If `simplified` is `True`\n        only names and literals are parsed; ``with_namespace`` allows namespace\n        attr refs as well. The `no_condexpr` parameter is forwarded to\n        :meth:`parse_expression`."
+  },
+  "code_citation": {
+   "path": "jinja/src/jinja2/parser.py",
+   "start_line": 684,
+   "end_line": 684,
+   "quote": "        with_condexpr: bool = True,"
+  }
+ },
+ {
+  "unit": 16,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "other",
+  "explanation": "The Cookie.value field is documented as describing the cookie key, contradicting its field name.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/test.py",
+   "start_line": 1384,
+   "end_line": 1384,
+   "quote": "    \"\"\"The cookie key, encoded as a client would see it.\"\"\""
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/test.py",
+   "start_line": 1383,
+   "end_line": 1383,
+   "quote": "    value: str"
+  }
+ },
+ {
+  "unit": 18,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "default",
+  "explanation": "The documented default PBKDF2 iteration count is stale: the docstring says 600000, while DEFAULT_PBKDF2_ITERATIONS is 1,000,000.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/security.py",
+   "start_line": 90,
+   "end_line": 90,
+   "quote": "        the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/security.py",
+   "start_line": 9,
+   "end_line": 9,
+   "quote": "DEFAULT_PBKDF2_ITERATIONS = 1_000_000"
+  }
+ },
+ {
+  "unit": 19,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": false,
+  "finding_id": "DD-1",
+  "drift_kind": "other",
+  "explanation": "The docstring says do_unique returns a list, but the implementation yields items as an iterator.",
+  "doc_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 448,
+   "end_line": 448,
+   "quote": "\"\"\"Returns a list of unique items from the given iterable.\"\"\""
+  },
+  "code_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 447,
+   "end_line": 447,
+   "quote": ") -> \"t.Iterator[V]\":\""
+  }
+ },
+ {
+  "unit": 19,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": false,
+  "finding_id": "DD-2",
+  "drift_kind": "other",
+  "explanation": "The docstring says do_batch returns a list of lists, but the implementation yields batches as an iterator.",
+  "doc_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 1112,
+   "end_line": 1112,
+   "quote": "    just the other way round. It returns a list of lists with the"
+  },
+  "code_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 1109,
+   "end_line": 1109,
+   "quote": ") -> \"t.Iterator[list[V]]\":\""
+  }
+ },
+ {
+  "unit": 19,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": false,
+  "finding_id": "DD-3",
+  "drift_kind": "other",
+  "explanation": "The docstring says do_slice returns a list of lists, but the implementation yields lists as an iterator.",
+  "doc_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 1059,
+   "end_line": 1059,
+   "quote": "    \"\"\"Slice an iterator and return a list of lists containing"
+  },
+  "code_citation": {
+   "path": "jinja/src/jinja2/filters.py",
+   "start_line": 1056,
+   "end_line": 1056,
+   "quote": ") -> \"t.Iterator[list[V]]\":\""
+  }
+ },
+ {
+  "unit": 20,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "other",
+  "explanation": "The `select_address_family` docstring names `AF_INET4`, but the implementation returns `socket.AF_INET` (there is no `AF_INET4` in the returned code paths).",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/serving.py",
+   "start_line": 655,
+   "end_line": 655,
+   "quote": "\"\"\"Return ``AF_INET4``, ``AF_INET6``, or ``AF_UNIX`` depending on"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/serving.py",
+   "start_line": 657,
+   "end_line": 661,
+   "quote": "if host.startswith(\"unix://\"):\n        return socket.AF_UNIX\n    elif \":\" in host and hasattr(socket, \"AF_INET6\"):\n        return socket.AF_INET6\n    return socket.AF_INET"
+  }
+ },
+ {
+  "unit": 21,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": false,
+  "finding_id": "DD-1",
+  "drift_kind": "signature",
+  "explanation": "The docstring says LogLevelColumnFormatter accepts level_styles=None and then formats a plain [level], but its constructor requires level_styles to be a dict.",
+  "doc_citation": {
+   "path": "structlog/src/structlog/dev.py",
+   "start_line": 331,
+   "end_line": 333,
+   "quote": "        level_styles:\n            A dictionary of level names to styles that are applied to it. If\n            None, the level is formatted as a plain ``[level]``."
+  },
+  "code_citation": {
+   "path": "structlog/src/structlog/dev.py",
+   "start_line": 350,
+   "end_line": 354,
+   "quote": "    def __init__(\n        self,\n        level_styles: dict[str, str],\n        reset_style: str,\n        width: int | None = None,\n    ) -> None:"
+  }
+ },
+ {
+  "unit": 21,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "signature",
+  "explanation": "The docstring describes width as the exact padding width, but the constructor ignores any nonzero width and instead derives the width from the longest level name unless width is 0.",
+  "doc_citation": {
+   "path": "structlog/src/structlog/dev.py",
+   "start_line": 339,
+   "end_line": 341,
+   "quote": "        width:\n            The width to pad the level to. If 0, no padding is done."
+  },
+  "code_citation": {
+   "path": "structlog/src/structlog/dev.py",
+   "start_line": 357,
+   "end_line": 362,
+   "quote": "        if level_styles:\n            self.width = (\n                0\n                if width == 0\n                else len(max(self.level_styles.keys(), key=len))\n            )"
+  }
+ },
+ {
+  "unit": 23,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "default",
+  "explanation": "The documentation says the default dict class is MultiDict when cls is unspecified or None, but the code uses ImmutableMultiDict in that case.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/formparser.py",
+   "start_line": 94,
+   "end_line": 95,
+   "quote": ":param cls: an optional dict class to use.  If this is not specified\n                       or `None` the default :class:`MultiDict` is used."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/formparser.py",
+   "start_line": 267,
+   "end_line": 270,
+   "quote": "        if self.cls is not None:\n            return stream, self.cls(), self.cls()\n\n        return stream, ImmutableMultiDict(), ImmutableMultiDict()"
+  }
+ },
+ {
+  "unit": 24,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "name",
+  "explanation": "AsyncSOCKSProxy is documented as an HTTP proxy, but it implements SOCKS proxy behavior.",
+  "doc_citation": {
+   "path": "httpcore/httpcore/_async/socks_proxy.py",
+   "start_line": 107,
+   "end_line": 107,
+   "quote": "A connection pool that sends requests via an HTTP proxy."
+  },
+  "code_citation": {
+   "path": "httpcore/httpcore/_async/socks_proxy.py",
+   "start_line": 105,
+   "end_line": 105,
+   "quote": "class AsyncSOCKSProxy(AsyncConnectionPool):  # pragma: nocover"
+  }
+ },
+ {
+  "unit": 24,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-3",
+  "drift_kind": "name",
+  "explanation": "SOCKSProxy is documented as an HTTP proxy, but it implements SOCKS proxy behavior.",
+  "doc_citation": {
+   "path": "httpcore/httpcore/_sync/socks_proxy.py",
+   "start_line": 107,
+   "end_line": 107,
+   "quote": "A connection pool that sends requests via an HTTP proxy."
+  },
+  "code_citation": {
+   "path": "httpcore/httpcore/_sync/socks_proxy.py",
+   "start_line": 105,
+   "end_line": 105,
+   "quote": "class SOCKSProxy(ConnectionPool):  # pragma: nocover"
+  }
+ },
+ {
+  "unit": 24,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-4",
+  "drift_kind": "other",
+  "explanation": "The httpx transport documentation lists only uds, local_address, and retries as advanced httpcore options, but the transport also accepts socket_options.",
+  "doc_citation": {
+   "path": "httpx/httpx/_transports/default.py",
+   "start_line": 6,
+   "end_line": 8,
+   "quote": "* uds: str\n* local_address: str\n* retries: int"
+  },
+  "code_citation": {
+   "path": "httpx/httpx/_transports/default.py",
+   "start_line": 148,
+   "end_line": 148,
+   "quote": "socket_options: typing.Iterable[SOCKET_OPTION] | None = None,"
+  }
+ },
+ {
+  "unit": 24,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": true,
+  "finding_id": "DD-5",
+  "drift_kind": "name",
+  "explanation": "Werkzeug's Accept class is documented as parsing Accept-Encoding, but it is the generic Accept header parser.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/accept.py",
+   "start_line": 16,
+   "end_line": 16,
+   "quote": "\"\"\"A parsed ``Accept-Encoding`` header.\"\"\""
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/accept.py",
+   "start_line": 15,
+   "end_line": 15,
+   "quote": "class Accept(cabc.Sequence[tuple[str, float]]):"
+  }
+ },
+ {
+  "unit": 25,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "default",
+  "explanation": "The documentation says conditional caching is used by default when cache_timeout is not set, but the implementation only enables conditional requests when the deprecated cache attribute is truthy.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/middleware/shared_data.py",
+   "start_line": 49,
+   "end_line": 50,
+   "quote": "    :param cache_timeout: Set the ``Cache-Control`` ``max-age`` directive. If\n        not set, conditional caching is used, which is typically what you want."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/middleware/shared_data.py",
+   "start_line": 239,
+   "end_line": 239,
+   "quote": "            conditional=bool(self.cache),"
+  }
+ },
+ {
+  "unit": 25,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "signature",
+  "explanation": "BytesLoggerFactory documents that positional arguments are silently ignored, but __call__ uses the first positional argument as the BytesLogger name.",
+  "doc_citation": {
+   "path": "structlog/src/structlog/_output.py",
+   "start_line": 368,
+   "end_line": 368,
+   "quote": "    Positional arguments are silently ignored."
+  },
+  "code_citation": {
+   "path": "structlog/src/structlog/_output.py",
+   "start_line": 379,
+   "end_line": 379,
+   "quote": "        return BytesLogger(self._file, name=args[0] if args else None)"
+  }
+ }
+]

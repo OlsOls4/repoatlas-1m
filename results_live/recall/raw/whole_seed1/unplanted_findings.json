@@ -1,0 +1,44 @@
+[
+ {
+  "unit": 0,
+  "known_real": true,
+  "doc_verified": true,
+  "code_verified": false,
+  "finding_id": "DD-6",
+  "drift_kind": "other",
+  "explanation": "The transports documentation uses `httpx.Mounts`, but the code does not define that class and accepts a mappings dictionary for mounts.",
+  "doc_citation": {
+   "path": "httpx/docs/advanced/transports.md",
+   "start_line": 189,
+   "end_line": 189,
+   "quote": "transport = httpx.Mounts({"
+  },
+  "code_citation": {
+   "path": "httpx/httpx/_client.py",
+   "start_line": 199,
+   "end_line": 199,
+   "quote": "        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,"
+  }
+ },
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": true,
+  "finding_id": "DD-7",
+  "drift_kind": "signature",
+  "explanation": "The transports documentation declares a custom transport `handle_request` method with the legacy positional parameters, while the code defines `handle_request(self, request: Request) -> Response`.",
+  "doc_citation": {
+   "path": "httpx/docs/advanced/transports.md",
+   "start_line": 291,
+   "end_line": 291,
+   "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+  },
+  "code_citation": {
+   "path": "httpx/httpx/_transports/base.py",
+   "start_line": 26,
+   "end_line": 26,
+   "quote": "    def handle_request(self, request: Request) -> Response:"
+  }
+ }
+]

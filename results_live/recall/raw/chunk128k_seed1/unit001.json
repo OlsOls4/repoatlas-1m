@@ -1,0 +1,22 @@
+{
+ "method": "chunk128k",
+ "seed": 1,
+ "unit": 1,
+ "status": 200,
+ "latency_s": 18.1,
+ "rate_headers": {},
+ "max_tokens": 24000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:16:58.840334+00:00",
+ "usage": {
+  "prompt_tokens": 127766,
+  "completion_tokens": 3851,
+  "total_tokens": 131617,
+  "prompt_tokens_details": {
+   "cached_tokens": 64
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The Response.direct_passthrough docstring tells users to use a nonexistent werkzeug.utils.send_document helper, but the implemented helper is send_file.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/response.py\", \"start_line\": 105, \"end_line\": 105, \"quote\": \"        checks. Use :func:`~werkzeug.utils.send_document` instead of setting\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/utils.py\", \"start_line\": 309, \"end_line\": 309, \"quote\": \"def send_file(\"}, \"proposed_fix\": \"Change the docstring to refer to werkzeug.utils.send_file instead of werkzeug.utils.send_document.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"env_var\", \"explanation\": \"The Request.input_stream deprecation docstring says to use environ[\\\"REMOTE_USER\\\"], while the implementation's own deprecation warning says to use stream.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 586, \"end_line\": 586, \"quote\": \"            Will be removed in Werkzeug 4.0. Use ``environ[\\\"REMOTE_USER\\\"]`` instead.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 592, \"end_line\": 592, \"quote\": \"            \\\" Werkzeug 4.0. Use 'stream' instead.\\\",\"}, \"proposed_fix\": \"Change the deprecated input_stream docstring to say to use stream instead of environ[\\\"REMOTE_USER\\\"].\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 13909
+}

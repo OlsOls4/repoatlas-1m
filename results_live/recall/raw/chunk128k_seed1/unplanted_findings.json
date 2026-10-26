@@ -1,0 +1,170 @@
+[
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "signature",
+  "explanation": "The WSGICarrier docstring lists constructor arguments but omits the implemented `wsgi_errors` parameter.",
+  "doc_citation": {
+   "path": "httpx/httpx/_transports/wsgi.py",
+   "start_line": 68,
+   "end_line": 73,
+   "quote": "    * `app` - The WSGI application.\n    * `raise_app_exceptions` - Boolean indicating if exceptions in the application\n       should be raised. Default to `True`. Can be set to `False` for use cases\n       such as testing the content of a client 500 response.\n    * `script_name` - The root path on which the WSGI application should be mounted.\n    * `remote_addr` - A string indicating the client IP of incoming requests."
+  },
+  "code_citation": {
+   "path": "httpx/httpx/_transports/wsgi.py",
+   "start_line": 77,
+   "end_line": 84,
+   "quote": "    def __init__(\n        self,\n        app: WSGIApplication,\n        raise_app_exceptions: bool = True,\n        script_name: str = \"\",\n        remote_addr: str = \"127.0.0.1\",\n        wsgi_errors: typing.TextIO | None = None,\n    ) -> None:"
+  }
+ },
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "name",
+  "explanation": "The documentation misspells the removed parameter name as `reqeust_key` instead of `request_key`.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/debug/__init__.py",
+   "start_line": 254,
+   "end_line": 255,
+   "quote": "    .. versionchanged:: 3.2\n        The ``reqeust_key`` parameter was removed."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/debug/__init__.py",
+   "start_line": 264,
+   "end_line": 273,
+   "quote": "        self,\n        app: wt.WSGIApplication,\n        evalex: bool = False,\n        console_path: str = \"/console\",\n        console_init_func: t.Callable[[], dict[str, t.Any]] | None = None,\n        show_hidden_frames: bool = False,\n        pin_security: bool = True,\n        pin_logging: bool = True,\n    ) -> None:"
+  }
+ },
+ {
+  "unit": 1,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "env_var",
+  "explanation": "The Request.input_stream deprecation docstring says to use environ[\"REMOTE_USER\"], while the implementation's own deprecation warning says to use stream.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/wrappers/request.py",
+   "start_line": 586,
+   "end_line": 586,
+   "quote": "            Will be removed in Werkzeug 4.0. Use ``environ[\"REMOTE_USER\"]`` instead."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/wrappers/request.py",
+   "start_line": 592,
+   "end_line": 592,
+   "quote": "            \" Werkzeug 4.0. Use 'stream' instead.\","
+  }
+ },
+ {
+  "unit": 2,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "name",
+  "explanation": "The documentation for access_control_expose_headers describes the wrong header name: it says Access-Control-Allow-Origin instead of Access-Control-Expose-Headers.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 825,
+   "end_line": 826,
+   "quote": "The ``Access-Control-Allow-Origin`` header. Which response"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/sansio/response.py",
+   "start_line": 823,
+   "end_line": 823,
+   "quote": "\"Access-Control-Expose-Headers\","
+  }
+ },
+ {
+  "unit": 2,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-2",
+  "drift_kind": "signature",
+  "explanation": "The WWWAuthenticate.token property is documented as a dict of parameters, but its code return type is str | None.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/auth.py",
+   "start_line": 260,
+   "end_line": 261,
+   "quote": "A dict of parameters for the header. Only one of this or :attr:`token` should"
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/auth.py",
+   "start_line": 259,
+   "end_line": 259,
+   "quote": "def token(self) -> str | None:"
+  }
+ },
+ {
+  "unit": 3,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "name",
+  "explanation": "The IfRange.check docstring refers to an attribute named `datetime`, but the IfRange class stores and exposes this value as `date`.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/range.py",
+   "start_line": 37,
+   "end_line": 39,
+   "quote": "If :attr:`etag` is set, the strong comparison function is used with\n        :attr:`.Response.etag`. If :attr:`datetime` is set, it must equal\n        :attr:`.Response.last_modified`."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/datastructures/range.py",
+   "start_line": 31,
+   "end_line": 31,
+   "quote": "        self.date = date"
+  }
+ },
+ {
+  "unit": 4,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": true,
+  "finding_id": "DD-1",
+  "drift_kind": "default",
+  "explanation": "The documented default scrypt/PBKDF2 detail claims pbkdf2 defaults to 600,000 iterations, but DEFAULT_PBKDF2_ITERATIONS is 1,000,000.",
+  "doc_citation": {
+   "path": "werkzeug/src/werkzeug/security.py",
+   "start_line": 89,
+   "end_line": 90,
+   "quote": "the default\n        is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`."
+  },
+  "code_citation": {
+   "path": "werkzeug/src/werkzeug/security.py",
+   "start_line": 9,
+   "end_line": 9,
+   "quote": "DEFAULT_PBKDF2_ITERATIONS = 1_000_000"
+  }
+ },
+ {
+  "unit": 6,
+  "known_real": true,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-3",
+  "drift_kind": "name",
+  "explanation": "The structlog documentation says the level-number mapping is at `structlog.stdlib._NAME_TO_LEVEL`, but the implementation stores it in the `stdlib._log_levels` submodule as `_NAME_TO_LEVEL`.",
+  "doc_citation": {
+   "path": "structlog/docs/standard-library.md",
+   "start_line": 117,
+   "end_line": 117,
+   "quote": "The mapping of names to numbers is in `structlog.stdlib._NAME_TO_LEVEL`."
+  },
+  "code_citation": {
+   "path": "structlog/src/structlog/stdlib.py",
+   "start_line": 862,
+   "end_line": 862,
+   "quote": "    ``structlog.stdlib._log_levels._NAME_TO_LEVEL``."
+  }
+ }
+]

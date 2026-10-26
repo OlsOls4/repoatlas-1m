@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 19,
+ "status": 200,
+ "latency_s": 31.6,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:28:40.529182+00:00",
+ "usage": {
+  "prompt_tokens": 26158,
+  "completion_tokens": 2896,
+  "total_tokens": 29054,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The docstring says do_unique returns a list, but the implementation yields items as an iterator.\", \"doc_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 448, \"end_line\": 448, \"quote\": \"\\\"\\\"\\\"Returns a list of unique items from the given iterable.\\\"\\\"\\\"\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 447, \"end_line\": 447, \"quote\": \") -> \\\"t.Iterator[V]\\\":\\\"\"}, \"proposed_fix\": \"Change the docstring from \\\"Returns a list of unique items\\\" to \\\"Returns an iterator of unique items\\\".\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"other\", \"explanation\": \"The docstring says do_batch returns a list of lists, but the implementation yields batches as an iterator.\", \"doc_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 1112, \"end_line\": 1112, \"quote\": \"    just the other way round. It returns a list of lists with the\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 1109, \"end_line\": 1109, \"quote\": \") -> \\\"t.Iterator[list[V]]\\\":\\\"\"}, \"proposed_fix\": \"Change the documentation wording to state that the filter yields a list of lists rather than returns a list of lists.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"other\", \"explanation\": \"The docstring says do_slice returns a list of lists, but the implementation yields lists as an iterator.\", \"doc_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 1059, \"end_line\": 1059, \"quote\": \"    \\\"\\\"\\\"Slice an iterator and return a list of lists containing\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/filters.py\", \"start_line\": 1056, \"end_line\": 1056, \"quote\": \") -> \\\"t.Iterator[list[V]]\\\":\\\"\"}, \"proposed_fix\": \"Change the docstring from \\\"return a list of lists\\\" to \\\"yield a list of lists\\\".\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 9813
+}

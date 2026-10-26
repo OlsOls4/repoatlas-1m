@@ -1,0 +1,22 @@
+{
+ "method": "whole",
+ "seed": 2,
+ "unit": 0,
+ "status": 200,
+ "latency_s": 47.3,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:16:01.025594+00:00",
+ "usage": {
+  "prompt_tokens": 940280,
+  "completion_tokens": 7320,
+  "total_tokens": 947600,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The documentation refers to a structlog processor named `add_log_severity_number`, but the code defines and exports `add_log_level_number`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 122, \"end_line\": 122, \"quote\": \"{func}`~structlog.stdlib.add_log_severity_number`:\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 842, \"end_line\": 842, \"quote\": \"def add_log_level_number(\"}, \"proposed_fix\": \"Change `add_log_severity_number` to `add_log_level_number` in `structlog/docs/standard-library.md`.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The quickstart documentation tells users to stream binary content with `Response.iter_octets()`, but the Response implementation exposes `iter_bytes()`.\", \"doc_citation\": {\"path\": \"httpx/docs/quickstart.md\", \"start_line\": 347, \"end_line\": 347, \"quote\": \"...     for data in r.iter_octets():\"}, \"code_citation\": {\"path\": \"httpx/httpx/_models.py\", \"start_line\": 884, \"end_line\": 884, \"quote\": \"    def iter_bytes(self, chunk_size: int | None = None) -> typing.Iterator[bytes]:\"}, \"proposed_fix\": \"Replace `r.iter_octets()` with `r.iter_bytes()` in `httpx/docs/quickstart.md`.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The API documentation imports and constructs `PackageReader`, but Jinja's public class is `PackageLoader`.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 241, \"end_line\": 241, \"quote\": \"    from jinja2 import Environment, PackageReader, select_autoescape\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/loaders.py\", \"start_line\": 269, \"end_line\": 269, \"quote\": \"class PackageLoader(RootLoader):\"}, \"proposed_fix\": \"Replace `PackageReader` with `PackageLoader` in `jinja/docs/api.rst`.\"}, {\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The API documentation autoclasses `MemcachedBytecodeMemo`, but the implemented cache class is `MemcachedBytecodeCache`.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 499, \"end_line\": 499, \"quote\": \".. autoclass:: jinja2.MemcachedBytecodeMemo\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/bccache.py\", \"start_line\": 327, \"end_line\": 327, \"quote\": \"class MemcachedBytecodeCache(BytecodeCache):\"}, \"proposed_fix\": \"Replace `MemcachedBytecodeMemo` with `MemcachedBytecodeCache` in `jinja/docs/api.rst`.\"}, {\"finding_id\": \"DD-5\", \"drift_kind\": \"signature\", \"explanation\": \"The API documentation documents a `Template.draw_async()` method, but Jinja only implements `render_async()` for async rendering.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 213, \"end_line\": 213, \"quote\": \"    .. automethod:: draw_async([context])\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/environment.py\", \"start_line\": 1294, \"end_line\": 1294, \"quote\": \"    async def render_async(self, *args: t.Any, **kwargs: t.Any) -> str:\"}, \"proposed_fix\": \"Replace `draw_async([context])` with `render_async([context])` in `jinja/docs/api.rst`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 22922
+}

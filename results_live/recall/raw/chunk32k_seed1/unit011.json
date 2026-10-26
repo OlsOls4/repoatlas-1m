@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 11,
+ "status": 200,
+ "latency_s": 16.9,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:25:56.619732+00:00",
+ "usage": {
+  "prompt_tokens": 29594,
+  "completion_tokens": 1961,
+  "total_tokens": 31555,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The WWWAuthenticate.token property docstring describes it as a dict of parameters, but the property returns the stored token string (self._token).\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\", \"start_line\": 258, \"end_line\": 262, \"quote\": \"    @property\\n    def token(self) -> str | None:\\n        \\\"\\\"\\\"A dict of parameters for the header. Only one of this or :attr:`token` should\\n        have a value for a given scheme.\\n        \\\"\\\"\\\"\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\", \"start_line\": 263, \"end_line\": 263, \"quote\": \"        return self._token\"}, \"proposed_fix\": \"Change the docstring at lines 260-261 to: \\\"A token for the header. Only one of this or :attr:`parameters` should have a value for a given scheme.\\\"\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 7215
+}

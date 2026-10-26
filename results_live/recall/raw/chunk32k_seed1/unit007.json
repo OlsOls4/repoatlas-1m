@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 7,
+ "status": 200,
+ "latency_s": 11.1,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:24:46.978071+00:00",
+ "usage": {
+  "prompt_tokens": 30818,
+  "completion_tokens": 2525,
+  "total_tokens": 33343,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"env_var\", \"explanation\": \"The deprecated input_stream attribute's docstring says to use environ[\\\"REMOTE_USER\\\"], but the runtime warning and intended replacement is stream.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 585, \"end_line\": 586, \"quote\": \"        .. deprecated:: 3.2\\n            Will be removed in Werkzeug 4.0. Use ``environ[\\\"REMOTE_USER\\\"]`` instead.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 590, \"end_line\": 592, \"quote\": \"        warnings.warn(\\n            \\\"The 'input_stream' attribute is deprecated and will be removed in\\\"\\n            \\\" Werkzeug 4.0. Use 'stream' instead.\\\",\"}, \"proposed_fix\": \"Change the docstring deprecation note from environ[\\\"REMOTE_USER\\\"] to stream.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"QueryParams.remove returns QueryParams, but its docstring refers to QueryArgs.\", \"doc_citation\": {\"path\": \"httpx/httpx/_urls.py\", \"start_line\": 569, \"end_line\": 569, \"quote\": \"        Return a new QueryArgs instance, removing the value of a key.\"}, \"code_citation\": {\"path\": \"httpx/httpx/_urls.py\", \"start_line\": 567, \"end_line\": 567, \"quote\": \"    def remove(self, key: str) -> QueryParams:\"}, \"proposed_fix\": \"Replace QueryArgs with QueryParams in the remove() docstring.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 8230
+}

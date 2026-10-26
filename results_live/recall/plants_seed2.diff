@@ -1,0 +1,1377 @@
+diff -ru clean/click/docs/advanced.md seed2/click/docs/advanced.md
+--- clean/click/docs/advanced.md	2026-10-26 19:56:31.021822670 +0000
++++ seed2/click/docs/advanced.md	2026-10-26 21:12:30.465822670 +0000
+@@ -132,13 +132,13 @@
+ 
+     import urllib.request
+ 
+-    def open_url(ctx, param, value):
++    def open_address(ctx, param, value):
+         if value is not None:
+             ctx.params['fp'] = urllib.request.urlopen(value)
+             return value
+ 
+     @click.command()
+-    @click.option('--url', callback=open_url)
++    @click.option('--url', callback=open_address)
+     def cli(url, fp=None):
+         if fp is not None:
+             click.echo(f"{url}: {fp.code}")
+@@ -171,7 +171,7 @@
+             return URL(value, urllib.request.urlopen(value))
+ 
+     @click.command()
+-    @click.option('--url', callback=open_url)
++    @click.option('--url', callback=open_address)
+     def cli(url):
+         if url is not None:
+             click.echo(f"{url.url}: {url.fp.code}")
+diff -ru clean/click/docs/api.md seed2/click/docs/api.md
+--- clean/click/docs/api.md	2026-10-26 19:56:31.021822670 +0000
++++ seed2/click/docs/api.md	2026-10-26 21:12:30.465822670 +0000
+@@ -38,7 +38,7 @@
+ ```
+ 
+ ```{eval-rst}
+-.. autofunction:: version_option
++.. autofunction:: version_flag
+ ```
+ 
+ ```{eval-rst}
+@@ -284,7 +284,7 @@
+ ```
+ 
+ ```{eval-rst}
+-.. autoexception:: FileError
++.. autoexception:: DocumentError
+ ```
+ 
+ ```{eval-rst}
+diff -ru clean/click/docs/commands.md seed2/click/docs/commands.md
+--- clean/click/docs/commands.md	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/docs/commands.md	2026-10-26 21:12:30.465822670 +0000
+@@ -179,7 +179,7 @@
+ When using chaining, a common pattern is to have each command process the
+ result of the previous command.
+ 
+-A straightforward way to do this is to use {func}`make_pass_decorator` to pass
++A straightforward way to do this is to use {func}`build_pass_decorator` to pass
+ a context object to each command, and store and read the data on that object.
+ 
+ ```{eval-rst}
+diff -ru clean/click/docs/exceptions.md seed2/click/docs/exceptions.md
+--- clean/click/docs/exceptions.md	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/docs/exceptions.md	2026-10-26 21:12:30.465822670 +0000
+@@ -106,7 +106,7 @@
+   augmented with extra information if possible. For instance if those
+   are raised from a callback Click will automatically augment it with
+   the parameter name if possible.
+-- {exc}`FileError` this is an error that is raised by the
++- {exc}`DocumentError` this is an error that is raised by the
+   {class}`FileType` if Click encounters issues opening the file.
+ 
+ (help-page-exit-codes)=
+diff -ru clean/click/docs/handling-files.md seed2/click/docs/handling-files.md
+--- clean/click/docs/handling-files.md	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/docs/handling-files.md	2026-10-26 21:12:30.465822670 +0000
+@@ -87,7 +87,7 @@
+ 
+ File open behavior can be controlled by the boolean kwarg `lazy`. If a file is opened lazily:
+ 
+-- A failure at first IO operation will happen by raising an {exc}`FileError`.
++- A failure at first IO operation will happen by raising an {exc}`DocumentError`.
+ - It can help minimize resource handling confusion by lazily closing it. This is not needed for
+   parameters, but is necessary for manually prompting. For manual prompts with the {func}`prompt` function you do not
+   know if a stream like stdout was opened (which was already open before) or a real file was opened (that needs
+diff -ru clean/click/docs/option-decorators.md seed2/click/docs/option-decorators.md
+--- clean/click/docs/option-decorators.md	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/docs/option-decorators.md	2026-10-26 21:12:30.465822670 +0000
+@@ -83,6 +83,6 @@
+ 
+ ## Version Option
+ 
+-{func}`version_option` adds a `--version` option which immediately prints the version number and exits the program.
++{func}`version_flag` adds a `--version` option which immediately prints the version number and exits the program.
+ 
+ The message and values it can show are intentionally limited, and its feature set is frozen. If you need values it does not expose, such as the Python version or git metadata, use {func}`custom_version_option` and produce the output yourself in a callback.
+diff -ru clean/click/src/click/__init__.py seed2/click/src/click/__init__.py
+--- clean/click/src/click/__init__.py	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/src/click/__init__.py	2026-10-26 21:12:30.453822670 +0000
+@@ -26,13 +26,13 @@
+ from .decorators import pass_context as pass_context
+ from .decorators import pass_obj as pass_obj
+ from .decorators import password_option as password_option
+-from .decorators import version_option as version_option
++from .decorators import version_flag as version_flag
+ from .exceptions import Abort as Abort
+ from .exceptions import BadArgumentUsage as BadArgumentUsage
+ from .exceptions import BadOptionUsage as BadOptionUsage
+ from .exceptions import BadParameter as BadParameter
+ from .exceptions import ClickException as ClickException
+-from .exceptions import FileError as FileError
++from .exceptions import DocumentError as DocumentError
+ from .exceptions import MissingParameter as MissingParameter
+ from .exceptions import NoSuchCommand as NoSuchCommand
+ from .exceptions import NoSuchOption as NoSuchOption
+diff -ru clean/click/src/click/_termui_impl.py seed2/click/src/click/_termui_impl.py
+--- clean/click/src/click/_termui_impl.py	2026-10-26 19:56:31.025822670 +0000
++++ seed2/click/src/click/_termui_impl.py	2026-10-26 21:12:30.453822670 +0000
+@@ -796,7 +796,7 @@
+             os.unlink(name)
+ 
+ 
+-def open_url(url: str, wait: bool = False, locate: bool = False) -> int:
++def open_address(url: str, wait: bool = False, locate: bool = False) -> int:
+     import subprocess
+ 
+     def _unquote_file(url: str) -> str:
+diff -ru clean/click/src/click/decorators.py seed2/click/src/click/decorators.py
+--- clean/click/src/click/decorators.py	2026-10-26 19:56:31.029822670 +0000
++++ seed2/click/src/click/decorators.py	2026-10-26 21:12:30.453822670 +0000
+@@ -418,7 +418,7 @@
+     return option(*param_decls, **kwargs)
+ 
+ 
+-def version_option(
++def version_flag(
+     version: str | None = None,
+     *param_decls: str,
+     package_name: str | None = None,
+@@ -565,11 +565,11 @@
+ ) -> t.Callable[[FC], FC]:
+     """Add a ``--version`` option whose output is produced by ``callback``.
+ 
+-    This is the customizable companion to :func:`version_option`. Where
+-    :func:`version_option` is intentionally limited to a fixed message and
++    This is the customizable companion to :func:`version_flag`. Where
++    :func:`version_flag` is intentionally limited to a fixed message and
+     a small set of values, this option calls ``callback`` to build the
+     whole string to print. Use it when you need values that
+-    :func:`version_option` does not expose, such as a file path, the
++    :func:`version_flag` does not expose, such as a file path, the
+     Python version, or git metadata.
+ 
+     :param callback: Called with the current :class:`Context` when the
+diff -ru clean/click/src/click/exceptions.py seed2/click/src/click/exceptions.py
+--- clean/click/src/click/exceptions.py	2026-10-26 19:56:31.029822670 +0000
++++ seed2/click/src/click/exceptions.py	2026-10-26 21:12:30.453822670 +0000
+@@ -339,7 +339,7 @@
+         echo(self.format_message(), file=file, err=True, color=self.ctx.color)
+ 
+ 
+-class FileError(ClickException):
++class DocumentError(ClickException):
+     """Raised if a file cannot be opened."""
+ 
+     ui_filename: t.Final[str]
+diff -ru clean/click/src/click/termui.py seed2/click/src/click/termui.py
+--- clean/click/src/click/termui.py	2026-10-26 19:56:31.029822670 +0000
++++ seed2/click/src/click/termui.py	2026-10-26 21:12:30.453822670 +0000
+@@ -944,9 +944,9 @@
+                    might have weird effects if the URL does not point to
+                    the filesystem.
+     """
+-    from ._termui_impl import open_url
++    from ._termui_impl import open_address
+ 
+-    return open_url(url, wait=wait, locate=locate)
++    return open_address(url, wait=wait, locate=locate)
+ 
+ 
+ # If this is provided, getchar() calls into this instead.  This is used
+diff -ru clean/click/src/click/utils.py seed2/click/src/click/utils.py
+--- clean/click/src/click/utils.py	2026-10-26 19:56:31.029822670 +0000
++++ seed2/click/src/click/utils.py	2026-10-26 21:12:30.453822670 +0000
+@@ -162,9 +162,9 @@
+                 self.name, self.mode, self.encoding, self.errors, atomic=self.atomic
+             )
+         except OSError as e:
+-            from .exceptions import FileError
++            from .exceptions import DocumentError
+ 
+-            raise FileError(self.name, hint=e.strerror) from e
++            raise DocumentError(self.name, hint=e.strerror) from e
+         self._f = rv
+         return rv
+ 
+diff -ru clean/httpcore/httpcore/_async/connection_pool.py seed2/httpcore/httpcore/_async/connection_pool.py
+--- clean/httpcore/httpcore/_async/connection_pool.py	2026-10-26 19:56:30.909822670 +0000
++++ seed2/httpcore/httpcore/_async/connection_pool.py	2026-10-26 21:12:30.453822670 +0000
+@@ -188,7 +188,7 @@
+         ```python
+         >>> pool.connections
+         [
+-            <AsyncHTTPConnection ['https://example.com:443', HTTP/1.1, ACTIVE, Request Count: 6]>,
++            <AsyncHTTPConn ['https://example.com:443', HTTP/1.1, ACTIVE, Request Count: 6]>,
+             <AsyncHTTPConnection ['https://example.com:443', HTTP/1.1, IDLE, Request Count: 9]> ,
+             <AsyncHTTPConnection ['http://example.com:80', HTTP/1.1, IDLE, Request Count: 1]>,
+         ]
+diff -ru clean/httpcore/httpcore/_backends/__init__.py seed2/httpcore/httpcore/_backends/__init__.py
+--- clean/httpcore/httpcore/_backends/__init__.py	2026-10-26 19:56:30.913822670 +0000
++++ seed2/httpcore/httpcore/_backends/__init__.py	2026-10-26 21:12:30.453822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/httpx/docs/advanced/authentication.md seed2/httpx/docs/advanced/authentication.md
+--- clean/httpx/docs/advanced/authentication.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/advanced/authentication.md	2026-10-26 21:12:30.461822670 +0000
+@@ -182,7 +182,7 @@
+         ...
+ ```
+ 
+-If you _do_ need to perform I/O other than HTTP requests, such as accessing a disk-based cache, or you need to use concurrency primitives, such as locks, then you should override `.sync_auth_flow()` and `.async_auth_flow()` (instead of `.auth_flow()`). The former will be used by `httpx.Client`, while the latter will be used by `httpx.AsyncClient`.
++If you _do_ need to perform I/O other than HTTP requests, such as accessing a disk-based cache, or you need to use concurrency primitives, such as locks, then you should override `.sync_auth_flow()` and `.async_auth_flow()` (instead of `.auth_flow()`). The former will be used by `httpx.Client`, while the latter will be used by `httpx.AsyncSession`.
+ 
+ ```python
+ import asyncio
+@@ -228,5 +228,5 @@
+         yield request
+ 
+     async def async_auth_flow(self, request):
+-        raise RuntimeError("Cannot use a sync authentication class with httpx.AsyncClient")
+-```
+\ No newline at end of file
++        raise RuntimeError("Cannot use a sync authentication class with httpx.AsyncSession")
++```
+diff -ru clean/httpx/docs/advanced/event-hooks.md seed2/httpx/docs/advanced/event-hooks.md
+--- clean/httpx/docs/advanced/event-hooks.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/advanced/event-hooks.md	2026-10-26 21:12:30.461822670 +0000
+@@ -61,5 +61,5 @@
+ 
+ !!! note
+     If you are using HTTPX's async support, then you need to be aware that
+-    hooks registered with `httpx.AsyncClient` MUST be async functions,
++    hooks registered with `httpx.AsyncSession` MUST be async functions,
+     rather than plain functions.
+diff -ru clean/httpx/docs/advanced/resource-limits.md seed2/httpx/docs/advanced/resource-limits.md
+--- clean/httpx/docs/advanced/resource-limits.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/advanced/resource-limits.md	2026-10-26 21:12:30.461822670 +0000
+@@ -10,4 +10,4 @@
+ ```python
+ limits = httpx.Limits(max_keepalive_connections=5, max_connections=10)
+ client = httpx.Client(limits=limits)
+-```
+\ No newline at end of file
++```
+diff -ru clean/httpx/docs/advanced/timeouts.md seed2/httpx/docs/advanced/timeouts.md
+--- clean/httpx/docs/advanced/timeouts.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/advanced/timeouts.md	2026-10-26 21:12:30.461822670 +0000
+@@ -68,4 +68,4 @@
+ client = httpx.Client(timeout=timeout)
+ 
+ response = client.get('http://example.com/')
+-```
+\ No newline at end of file
++```
+diff -ru clean/httpx/docs/advanced/transports.md seed2/httpx/docs/advanced/transports.md
+--- clean/httpx/docs/advanced/transports.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/advanced/transports.md	2026-10-26 21:12:30.461822670 +0000
+@@ -114,7 +114,7 @@
+ ```python
+ transport = httpx.ASGITransport(app=app)
+ 
+-async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
++async with httpx.AsyncSession(transport=transport, base_url="http://testserver") as client:
+     r = await client.get("/")
+     assert r.status_code == 200
+     assert r.text == "Hello World!"
+@@ -134,7 +134,7 @@
+ # Instantiate a client that makes ASGI requests with a client IP of "1.2.3.4",
+ # on port 123.
+ transport = httpx.ASGITransport(app=app, client=("1.2.3.4", 123))
+-async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
++async with httpx.AsyncSession(transport=transport, base_url="http://testserver") as client:
+     ...
+ ```
+ 
+@@ -144,7 +144,7 @@
+ 
+ It is not in the scope of HTTPX to trigger ASGI lifespan events of your app.
+ 
+-However it is suggested to use `LifespanManager` from [asgi-lifespan](https://github.com/florimondmanca/asgi-lifespan#usage) in pair with `AsyncClient`.
++However it is suggested to use `LifespanManager` from [asgi-lifespan](https://github.com/florimondmanca/asgi-lifespan#usage) in pair with `AsyncSession`.
+ 
+ ## Custom transports
+ 
+@@ -152,7 +152,7 @@
+ with sending a single request, and returning a response. You should either
+ subclass `httpx.BaseTransport` to implement a transport to use with `Client`,
+ or subclass `httpx.AsyncBaseTransport` to implement a transport to
+-use with `AsyncClient`.
++use with `AsyncSession`.
+ 
+ At the layer of the transport API we're using the familiar `Request` and
+ `Response` models.
+diff -ru clean/httpx/docs/api.md seed2/httpx/docs/api.md
+--- clean/httpx/docs/api.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/api.md	2026-10-26 21:12:30.461822670 +0000
+@@ -41,9 +41,9 @@
+     :docstring:
+     :members: headers cookies params auth request get head options post put patch delete stream build_request send close
+ 
+-## `AsyncClient`
++## `AsyncSession`
+ 
+-::: httpx.AsyncClient
++::: httpx.AsyncSession
+     :docstring:
+     :members: headers cookies params auth request get head options post put patch delete stream build_request send aclose
+ 
+diff -ru clean/httpx/docs/async.md seed2/httpx/docs/async.md
+--- clean/httpx/docs/async.md	2026-10-26 19:56:31.321822670 +0000
++++ seed2/httpx/docs/async.md	2026-10-26 21:12:30.461822670 +0000
+@@ -12,10 +12,10 @@
+ 
+ ## Making Async requests
+ 
+-To make asynchronous requests, you'll need an `AsyncClient`.
++To make asynchronous requests, you'll need an `AsyncSession`.
+ 
+ ```pycon
+->>> async with httpx.AsyncClient() as client:
++>>> async with httpx.AsyncSession() as client:
+ ...     r = await client.get('https://www.example.com/')
+ ...
+ >>> r
+@@ -34,22 +34,22 @@
+ 
+ The request methods are all async, so you should use `response = await client.get(...)` style for all of the following:
+ 
+-* `AsyncClient.get(url, ...)`
+-* `AsyncClient.options(url, ...)`
+-* `AsyncClient.head(url, ...)`
+-* `AsyncClient.post(url, ...)`
+-* `AsyncClient.put(url, ...)`
+-* `AsyncClient.patch(url, ...)`
+-* `AsyncClient.delete(url, ...)`
+-* `AsyncClient.request(method, url, ...)`
+-* `AsyncClient.send(request, ...)`
++* `AsyncSession.get(url, ...)`
++* `AsyncSession.options(url, ...)`
++* `AsyncSession.head(url, ...)`
++* `AsyncSession.post(url, ...)`
++* `AsyncSession.put(url, ...)`
++* `AsyncSession.patch(url, ...)`
++* `AsyncSession.delete(url, ...)`
++* `AsyncSession.request(method, url, ...)`
++* `AsyncSession.send(request, ...)`
+ 
+ ### Opening and closing clients
+ 
+-Use `async with httpx.AsyncClient()` if you want a context-managed client...
++Use `async with httpx.AsyncSession()` if you want a context-managed client...
+ 
+ ```python
+-async with httpx.AsyncClient() as client:
++async with httpx.AsyncSession() as client:
+     ...
+ ```
+ 
+@@ -59,17 +59,17 @@
+ Alternatively, use `await client.aclose()` if you want to close a client explicitly:
+ 
+ ```python
+-client = httpx.AsyncClient()
++client = httpx.AsyncSession()
+ ...
+ await client.aclose()
+ ```
+ 
+ ### Streaming responses
+ 
+-The `AsyncClient.stream(method, url, ...)` method is an async context block.
++The `AsyncSession.stream(method, url, ...)` method is an async context block.
+ 
+ ```pycon
+->>> client = httpx.AsyncClient()
++>>> client = httpx.AsyncSession()
+ >>> async with client.stream('GET', 'https://www.example.com/') as response:
+ ...     async for chunk in response.aiter_bytes():
+ ...         ...
+@@ -93,7 +93,7 @@
+ from starlette.background import BackgroundTask
+ from starlette.responses import StreamingResponse
+ 
+-client = httpx.AsyncClient()
++client = httpx.AsyncSession()
+ 
+ async def home(request):
+     req = client.build_request("GET", "https://www.example.com/")
+@@ -106,7 +106,7 @@
+ 
+ ### Streaming requests
+ 
+-When sending a streaming request body with an `AsyncClient` instance, you should use an async bytes generator instead of a bytes generator:
++When sending a streaming request body with an `AsyncSession` instance, you should use an async bytes generator instead of a bytes generator:
+ 
+ ```python
+ async def upload_bytes():
+@@ -124,7 +124,7 @@
+ ```pycon
+ >>> import httpx
+ >>> transport = httpx.AsyncHTTPTransport(retries=1)
+->>> async with httpx.AsyncClient(transport=transport) as client:
++>>> async with httpx.AsyncSession(transport=transport) as client:
+ >>>     ...
+ ```
+ 
+@@ -145,7 +145,7 @@
+ import httpx
+ 
+ async def main():
+-    async with httpx.AsyncClient() as client:
++    async with httpx.AsyncSession() as client:
+         response = await client.get('https://www.example.com/')
+         print(response)
+ 
+@@ -162,7 +162,7 @@
+ import trio
+ 
+ async def main():
+-    async with httpx.AsyncClient() as client:
++    async with httpx.AsyncSession() as client:
+         response = await client.get('https://www.example.com/')
+         print(response)
+ 
+@@ -182,7 +182,7 @@
+ import anyio
+ 
+ async def main():
+-    async with httpx.AsyncClient() as client:
++    async with httpx.AsyncSession() as client:
+         response = await client.get('https://www.example.com/')
+         print(response)
+ 
+@@ -191,4 +191,4 @@
+ 
+ ## Calling into Python Web Apps
+ 
+-For details on calling directly into ASGI applications, see [the `ASGITransport` docs](../advanced/transports#asgitransport).
+\ No newline at end of file
++For details on calling directly into ASGI applications, see [the `ASGITransport` docs](../advanced/transports#asgitransport).
+diff -ru clean/httpx/docs/contributing.md seed2/httpx/docs/contributing.md
+--- clean/httpx/docs/contributing.md	2026-10-26 19:56:31.325822670 +0000
++++ seed2/httpx/docs/contributing.md	2026-10-26 21:12:30.465822670 +0000
+@@ -34,8 +34,8 @@
+ Some possibly useful tips for narrowing down potential issues...
+ 
+ - Does the issue exist on HTTP/1.1, or HTTP/2, or both?
+-- Does the issue exist with `Client`, `AsyncClient`, or both?
+-- When using `AsyncClient` does the issue exist when using `asyncio` or `trio`, or both?
++- Does the issue exist with `Client`, `AsyncSession`, or both?
++- When using `AsyncSession` does the issue exist when using `asyncio` or `trio`, or both?
+ 
+ ## Development
+ 
+diff -ru clean/httpx/docs/exceptions.md seed2/httpx/docs/exceptions.md
+--- clean/httpx/docs/exceptions.md	2026-10-26 19:56:31.325822670 +0000
++++ seed2/httpx/docs/exceptions.md	2026-10-26 21:12:30.465822670 +0000
+@@ -18,7 +18,7 @@
+                 * ConnectError
+                 * ReadError
+                 * WriteError
+-                * CloseError
++                * ShutdownError
+             * ProtocolError
+                 * LocalProtocolError
+                 * RemoteProtocolError
+@@ -75,7 +75,7 @@
+ ::: httpx.WriteError
+     :docstring:
+ 
+-::: httpx.CloseError
++::: httpx.ShutdownError
+     :docstring:
+ 
+ ::: httpx.ProtocolError
+diff -ru clean/httpx/docs/http2.md seed2/httpx/docs/http2.md
+--- clean/httpx/docs/http2.md	2026-10-26 19:56:31.325822670 +0000
++++ seed2/httpx/docs/http2.md	2026-10-26 21:12:30.465822670 +0000
+@@ -34,7 +34,7 @@
+ And then instantiating a client with HTTP/2 support enabled:
+ 
+ ```python
+-client = httpx.AsyncClient(http2=True)
++client = httpx.AsyncSession(http2=True)
+ ...
+ ```
+ 
+@@ -43,11 +43,11 @@
+ is exited.
+ 
+ ```python
+-async with httpx.AsyncClient(http2=True) as client:
++async with httpx.AsyncSession(http2=True) as client:
+     ...
+ ```
+ 
+-HTTP/2 support is available on both `Client` and `AsyncClient`, although it's
++HTTP/2 support is available on both `Client` and `AsyncSession`, although it's
+ typically more useful in async contexts if you're issuing lots of concurrent
+ requests.
+ 
+@@ -62,7 +62,7 @@
+ the `.http_version` property on the response.
+ 
+ ```python
+-client = httpx.AsyncClient(http2=True)
++client = httpx.AsyncSession(http2=True)
+ response = await client.get(...)
+ print(response.http_version)  # "HTTP/1.0", "HTTP/1.1", or "HTTP/2".
+ ```
+diff -ru clean/httpx/docs/quickstart.md seed2/httpx/docs/quickstart.md
+--- clean/httpx/docs/quickstart.md	2026-10-26 19:56:31.333822670 +0000
++++ seed2/httpx/docs/quickstart.md	2026-10-26 21:12:30.465822670 +0000
+@@ -344,7 +344,7 @@
+ 
+ ```pycon
+ >>> with httpx.stream("GET", "https://www.example.com") as r:
+-...     for data in r.iter_bytes():
++...     for data in r.iter_octets():
+ ...         print(data)
+ ```
+ 
+diff -ru clean/httpx/httpx/__init__.py seed2/httpx/httpx/__init__.py
+--- clean/httpx/httpx/__init__.py	2026-10-26 19:56:31.333822670 +0000
++++ seed2/httpx/httpx/__init__.py	2026-10-26 21:12:30.453822670 +0000
+@@ -33,14 +33,14 @@
+     "ASGITransport",
+     "AsyncBaseTransport",
+     "AsyncByteStream",
+-    "AsyncClient",
++    "AsyncSession",
+     "AsyncHTTPTransport",
+     "Auth",
+     "BaseTransport",
+     "BasicAuth",
+     "ByteStream",
+     "Client",
+-    "CloseError",
++    "ShutdownError",
+     "codes",
+     "ConnectError",
+     "ConnectTimeout",
+diff -ru clean/httpx/httpx/_auth.py seed2/httpx/httpx/_auth.py
+--- clean/httpx/httpx/_auth.py	2026-10-26 19:56:31.333822670 +0000
++++ seed2/httpx/httpx/_auth.py	2026-10-26 21:12:30.453822670 +0000
+@@ -29,7 +29,7 @@
+     If the authentication scheme does I/O such as disk access or network calls, or uses
+     synchronization primitives such as locks, you should override `.sync_auth_flow()`
+     and/or `.async_auth_flow()` instead of `.auth_flow()` to provide specialized
+-    implementations that will be used by `Client` and `AsyncClient` respectively.
++    implementations that will be used by `Client` and `AsyncSession` respectively.
+     """
+ 
+     requires_request_body = False
+diff -ru clean/httpx/httpx/_client.py seed2/httpx/httpx/_client.py
+--- clean/httpx/httpx/_client.py	2026-10-26 19:56:31.333822670 +0000
++++ seed2/httpx/httpx/_client.py	2026-10-26 21:12:30.453822670 +0000
+@@ -51,12 +51,12 @@
+ if typing.TYPE_CHECKING:
+     import ssl  # pragma: no cover
+ 
+-__all__ = ["USE_CLIENT_DEFAULT", "AsyncClient", "Client"]
++__all__ = ["USE_CLIENT_DEFAULT", "AsyncSession", "Client"]
+ 
+ # The type annotation for @classmethod and context managers here follows PEP 484
+ # https://www.python.org/dev/peps/pep-0484/#annotating-instance-and-class-methods
+ T = typing.TypeVar("T", bound="Client")
+-U = typing.TypeVar("U", bound="AsyncClient")
++U = typing.TypeVar("U", bound="AsyncSession")
+ 
+ 
+ def _is_https_redirect(url: URL, location: URL) -> bool:
+@@ -1304,7 +1304,7 @@
+                 transport.__exit__(exc_type, exc_value, traceback)
+ 
+ 
+-class AsyncClient(BaseClient):
++class AsyncSession(BaseClient):
+     """
+     An asynchronous HTTP client, with connection pooling, HTTP/2, redirects,
+     cookie persistence, etc.
+@@ -1314,7 +1314,7 @@
+     Usage:
+ 
+     ```python
+-    >>> async with httpx.AsyncClient() as client:
++    >>> async with httpx.AsyncSession() as client:
+     >>>     response = await client.get('https://example.org')
+     ```
+ 
+@@ -1509,7 +1509,7 @@
+         response = await client.send(request, ...)
+         ```
+ 
+-        See `AsyncClient.build_request()`, `AsyncClient.send()`
++        See `AsyncSession.build_request()`, `AsyncSession.send()`
+         and [Merging of configuration][0] for how the various parameters
+         are merged with client-level configuration.
+ 
+@@ -1723,7 +1723,7 @@
+ 
+         if not isinstance(request.stream, AsyncByteStream):
+             raise RuntimeError(
+-                "Attempted to send a sync request with an AsyncClient instance."
++                "Attempted to send a sync request with an AsyncSession instance."
+             )
+ 
+         with request_context(request=request):
+diff -ru clean/httpx/httpx/_exceptions.py seed2/httpx/httpx/_exceptions.py
+--- clean/httpx/httpx/_exceptions.py	2026-10-26 19:56:31.333822670 +0000
++++ seed2/httpx/httpx/_exceptions.py	2026-10-26 21:12:30.453822670 +0000
+@@ -40,7 +40,7 @@
+     from ._models import Request, Response  # pragma: no cover
+ 
+ __all__ = [
+-    "CloseError",
++    "ShutdownError",
+     "ConnectError",
+     "ConnectTimeout",
+     "CookieConflict",
+@@ -190,7 +190,7 @@
+     """
+ 
+ 
+-class CloseError(NetworkError):
++class ShutdownError(NetworkError):
+     """
+     Failed to close a connection.
+     """
+diff -ru clean/httpx/httpx/_transports/asgi.py seed2/httpx/httpx/_transports/asgi.py
+--- clean/httpx/httpx/_transports/asgi.py	2026-10-26 19:56:31.337822670 +0000
++++ seed2/httpx/httpx/_transports/asgi.py	2026-10-26 21:12:30.457822670 +0000
+@@ -70,7 +70,7 @@
+         root_path="/submount",
+         client=("1.2.3.4", 123)
+     )
+-    client = httpx.AsyncClient(transport=transport)
++    client = httpx.AsyncSession(transport=transport)
+     ```
+ 
+     Arguments:
+diff -ru clean/jinja/docs/api.rst seed2/jinja/docs/api.rst
+--- clean/jinja/docs/api.rst	2026-10-26 19:56:31.121822670 +0000
++++ seed2/jinja/docs/api.rst	2026-10-26 21:12:30.469822670 +0000
+@@ -61,7 +61,7 @@
+     print(template.render(the="variables", go="here"))
+ 
+ Using a template loader rather than passing strings to :class:`Template`
+-or :meth:`Environment.from_string` has multiple advantages.  Besides being
++or :meth:`Environment.from_str` has multiple advantages.  Besides being
+ a lot easier to use it also enables template inheritance.
+ 
+ .. admonition:: Notes on Autoescaping
+@@ -211,7 +211,7 @@
+ 
+     .. automethod:: stream([context])
+ 
+-    .. automethod:: render_async([context])
++    .. automethod:: draw_async([context])
+ 
+     .. automethod:: generate_async([context])
+ 
+@@ -239,7 +239,7 @@
+ for all other extensions.  You can use the :func:`~jinja2.select_autoescape`
+ function for this::
+ 
+-    from jinja2 import Environment, PackageLoader, select_autoescape
++    from jinja2 import Environment, PackageReader, select_autoescape
+     env = Environment(autoescape=select_autoescape(['html', 'htm', 'xml']),
+                       loader=PackageLoader('mypackage'))
+ 
+@@ -435,9 +435,9 @@
+ Python's `sys.modules`.  Unlike `sys.modules` however this cache is limited in
+ size by default and templates are automatically reloaded.
+ All loaders are subclasses of :class:`BaseLoader`.  If you want to create your
+-own loader, subclass :class:`BaseLoader` and override `get_source`.
++own loader, subclass :class:`RootLoader` and override `get_source`.
+ 
+-.. autoclass:: jinja2.BaseLoader
++.. autoclass:: jinja2.RootLoader
+     :members: get_source, load
+ 
+ Here a list of the builtin loaders Jinja provides:
+@@ -496,7 +496,7 @@
+ 
+ .. autoclass:: jinja2.FileSystemBytecodeCache
+ 
+-.. autoclass:: jinja2.MemcachedBytecodeCache
++.. autoclass:: jinja2.MemcachedBytecodeMemo
+ 
+ 
+ Async Support
+diff -ru clean/jinja/src/jinja2/__init__.py seed2/jinja/src/jinja2/__init__.py
+--- clean/jinja/src/jinja2/__init__.py	2026-10-26 19:56:31.121822670 +0000
++++ seed2/jinja/src/jinja2/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -19,7 +19,7 @@
+ from .exceptions import TemplatesNotFound as TemplatesNotFound
+ from .exceptions import TemplateSyntaxError as TemplateSyntaxError
+ from .exceptions import UndefinedError as UndefinedError
+-from .loaders import BaseLoader as BaseLoader
++from .loaders import RootLoader as RootLoader
+ from .loaders import ChoiceLoader as ChoiceLoader
+ from .loaders import DictLoader as DictLoader
+ from .loaders import FileSystemLoader as FileSystemLoader
+diff -ru clean/jinja/src/jinja2/compiler.py seed2/jinja/src/jinja2/compiler.py
+--- clean/jinja/src/jinja2/compiler.py	2026-10-26 19:56:31.125822670 +0000
++++ seed2/jinja/src/jinja2/compiler.py	2026-10-26 21:12:30.457822670 +0000
+@@ -1099,7 +1099,7 @@
+         self.write(f", {self.name!r}).")
+ 
+         if node.with_context:
+-            f_name = f"make_module{self.choose_async('_async')}"
++            f_name = f"create_module{self.choose_async('_async')}"
+             self.write(
+                 f"{f_name}(context.get_all(), True, {self.dump_local_context(frame)})"
+             )
+diff -ru clean/jinja/src/jinja2/environment.py seed2/jinja/src/jinja2/environment.py
+--- clean/jinja/src/jinja2/environment.py	2026-10-26 19:56:31.125822670 +0000
++++ seed2/jinja/src/jinja2/environment.py	2026-10-26 21:12:30.457822670 +0000
+@@ -60,7 +60,7 @@
+ 
+     from .bccache import BytecodeCache
+     from .ext import Extension
+-    from .loaders import BaseLoader
++    from .loaders import RootLoader
+ 
+ _env_bound = t.TypeVar("_env_bound", bound="Environment")
+ 
+@@ -82,7 +82,7 @@
+ 
+ def create_cache(
+     size: int,
+-) -> t.MutableMapping[tuple["weakref.ref[BaseLoader]", str], "Template"] | None:
++) -> t.MutableMapping[tuple["weakref.ref[RootLoader]", str], "Template"] | None:
+     """Return the cache class for the given size."""
+     if size == 0:
+         return None
+@@ -94,8 +94,8 @@
+ 
+ 
+ def copy_cache(
+-    cache: t.MutableMapping[tuple["weakref.ref[BaseLoader]", str], "Template"] | None,
+-) -> t.MutableMapping[tuple["weakref.ref[BaseLoader]", str], "Template"] | None:
++    cache: t.MutableMapping[tuple["weakref.ref[RootLoader]", str], "Template"] | None,
++) -> t.MutableMapping[tuple["weakref.ref[RootLoader]", str], "Template"] | None:
+     """Create an empty copy of the given cache."""
+     if cache is None:
+         return None
+@@ -311,7 +311,7 @@
+         undefined: type[Undefined] = Undefined,
+         finalize: t.Callable[..., t.Any] | None = None,
+         autoescape: bool | t.Callable[[str | None], bool] = False,
+-        loader: t.Optional["BaseLoader"] = None,
++        loader: t.Optional["RootLoader"] = None,
+         cache_size: int = 400,
+         auto_reload: bool = True,
+         bytecode_cache: t.Optional["BytecodeCache"] = None,
+@@ -403,7 +403,7 @@
+         undefined: type[Undefined] = missing,
+         finalize: t.Callable[..., t.Any] | None = missing,
+         autoescape: bool | t.Callable[[str | None], bool] = missing,
+-        loader: t.Optional["BaseLoader"] = missing,
++        loader: t.Optional["RootLoader"] = missing,
+         cache_size: int = missing,
+         auto_reload: bool = missing,
+         bytecode_cache: t.Optional["BytecodeCache"] = missing,
+@@ -902,7 +902,7 @@
+     ) -> list[str]:
+         """Returns a list of templates for this environment.  This requires
+         that the loader supports the loader's
+-        :meth:`~BaseLoader.list_templates` method.
++        :meth:`~RootLoader.list_templates` method.
+ 
+         If there are other files in the template folder besides the
+         actual templates, the returned list can be filtered.  There are two
+@@ -1383,7 +1383,7 @@
+             self.environment, self.name, self.blocks, vars, shared, self.globals, locals
+         )
+ 
+-    def make_module(
++    def create_module(
+         self,
+         vars: dict[str, t.Any] | None = None,
+         shared: bool = False,
+@@ -1406,7 +1406,7 @@
+     ) -> "TemplateModule":
+         """As template module creation can invoke template code for
+         asynchronous executions this method must be used instead of the
+-        normal :meth:`make_module` one.  Likewise the module attribute
++        normal :meth:`create_module` one.  Likewise the module attribute
+         becomes unavailable in async mode.
+         """
+         ctx = self.new_context(vars, shared, locals)
+@@ -1436,10 +1436,10 @@
+             keys = ctx.globals_keys - self.globals.keys()
+ 
+             if keys:
+-                return self.make_module({k: ctx.parent[k] for k in keys})
++                return self.create_module({k: ctx.parent[k] for k in keys})
+ 
+         if self._module is None:
+-            self._module = self.make_module()
++            self._module = self.create_module()
+ 
+         return self._module
+ 
+diff -ru clean/jinja/src/jinja2/filters.py seed2/jinja/src/jinja2/filters.py
+--- clean/jinja/src/jinja2/filters.py	2026-10-26 19:56:31.125822670 +0000
++++ seed2/jinja/src/jinja2/filters.py	2026-10-26 21:12:30.457822670 +0000
+@@ -1591,7 +1591,7 @@
+ 
+     .. code-block:: python
+ 
+-        (n for n in numbers if not test_odd(n))
++        (n for n in numbers if not check_odd(n))
+ 
+     .. versionadded:: 2.7
+     """
+diff -ru clean/jinja/src/jinja2/loaders.py seed2/jinja/src/jinja2/loaders.py
+--- clean/jinja/src/jinja2/loaders.py	2026-10-26 19:56:31.125822670 +0000
++++ seed2/jinja/src/jinja2/loaders.py	2026-10-26 21:12:30.457822670 +0000
+@@ -39,7 +39,7 @@
+     return pieces
+ 
+ 
+-class BaseLoader:
++class RootLoader:
+     """Baseclass for all loaders.  Subclass this and override `get_source` to
+     implement a custom loading mechanism.  The environment provides a
+     `get_template` method that calls the loader's `load` method to get the
+@@ -48,10 +48,10 @@
+     A very basic example for a loader that looks up templates on the file
+     system could look like this::
+ 
+-        from jinja2 import BaseLoader, TemplateNotFound
++        from jinja2 import RootLoader, TemplateNotFound
+         from os.path import join, exists, getmtime
+ 
+-        class MyLoader(BaseLoader):
++        class MyLoader(RootLoader):
+ 
+             def __init__(self, path):
+                 self.path = path
+@@ -149,7 +149,7 @@
+         )
+ 
+ 
+-class FileSystemLoader(BaseLoader):
++class FileSystemLoader(RootLoader):
+     """Load templates from a directory in the file system.
+ 
+     The path can be relative or absolute. Relative paths are relative to
+@@ -266,7 +266,7 @@
+         return files  # type: ignore[no-any-return]
+ 
+ 
+-class PackageLoader(BaseLoader):
++class PackageLoader(RootLoader):
+     """Load templates from a directory in a Python package.
+ 
+     :param package_name: Import name of the package that contains the
+@@ -429,7 +429,7 @@
+         return results
+ 
+ 
+-class DictLoader(BaseLoader):
++class DictLoader(RootLoader):
+     """Loads a template from a Python dict mapping template names to
+     template source.  This loader is useful for unittesting:
+ 
+@@ -453,7 +453,7 @@
+         return sorted(self.mapping)
+ 
+ 
+-class FunctionLoader(BaseLoader):
++class FunctionLoader(RootLoader):
+     """A loader that is passed a function which does the loading.  The
+     function receives the name of the template and has to return either
+     a string with the template source, a tuple in the form ``(source,
+@@ -467,7 +467,7 @@
+ 
+     The `uptodatefunc` is a function that is called if autoreload is enabled
+     and has to return `True` if the template is still up to date.  For more
+-    details have a look at :meth:`BaseLoader.get_source` which has the same
++    details have a look at :meth:`RootLoader.get_source` which has the same
+     return value.
+     """
+ 
+@@ -494,7 +494,7 @@
+         return rv
+ 
+ 
+-class PrefixLoader(BaseLoader):
++class PrefixLoader(RootLoader):
+     """A loader that is passed a dict of loaders where each loader is bound
+     to a prefix.  The prefix is delimited from the template by a slash per
+     default, which can be changed by setting the `delimiter` argument to
+@@ -510,12 +510,12 @@
+     """
+ 
+     def __init__(
+-        self, mapping: t.Mapping[str, BaseLoader], delimiter: str = "/"
++        self, mapping: t.Mapping[str, RootLoader], delimiter: str = "/"
+     ) -> None:
+         self.mapping = mapping
+         self.delimiter = delimiter
+ 
+-    def get_loader(self, template: str) -> tuple[BaseLoader, str]:
++    def get_loader(self, template: str) -> tuple[RootLoader, str]:
+         try:
+             prefix, name = template.split(self.delimiter, 1)
+             loader = self.mapping[prefix]
+@@ -557,7 +557,7 @@
+         return result
+ 
+ 
+-class ChoiceLoader(BaseLoader):
++class ChoiceLoader(RootLoader):
+     """This loader works like the `PrefixLoader` just that no prefix is
+     specified.  If a template could not be found by one loader the next one
+     is tried.
+@@ -571,7 +571,7 @@
+     from a different location.
+     """
+ 
+-    def __init__(self, loaders: t.Sequence[BaseLoader]) -> None:
++    def __init__(self, loaders: t.Sequence[RootLoader]) -> None:
+         self.loaders = loaders
+ 
+     def get_source(
+@@ -609,7 +609,7 @@
+     """Like a normal module but with support for weak references"""
+ 
+ 
+-class ModuleLoader(BaseLoader):
++class ModuleLoader(RootLoader):
+     """This loader loads templates from precompiled templates.
+ 
+     Example usage:
+diff -ru clean/structlog/docs/api.rst seed2/structlog/docs/api.rst
+--- clean/structlog/docs/api.rst	2026-10-26 19:56:31.253822670 +0000
++++ seed2/structlog/docs/api.rst	2026-10-26 21:12:30.465822670 +0000
+@@ -54,7 +54,7 @@
+ 
+ .. autoclass:: PrintLoggerFactory
+ 
+-.. autoclass:: WriteLogger
++.. autoclass:: WriteRecorder
+    :members: msg, err, debug, info, warning, error, critical, log, failure, fatal
+ 
+ .. autoclass:: WriteLoggerFactory
+diff -ru clean/structlog/docs/standard-library.md seed2/structlog/docs/standard-library.md
+--- clean/structlog/docs/standard-library.md	2026-10-26 19:56:31.253822670 +0000
++++ seed2/structlog/docs/standard-library.md	2026-10-26 21:12:30.465822670 +0000
+@@ -101,7 +101,7 @@
+ 
+ : Adds the log level to the event dictionary under the key `level`.
+ 
+-{func}`~structlog.stdlib.add_log_level_number`:
++{func}`~structlog.stdlib.add_log_severity_number`:
+ 
+ : Adds the log level number to the event dictionary under the key `level_number`.
+   Log level numbers map to the log level names.
+@@ -152,7 +152,7 @@
+ You can also use {class}`~structlog.stdlib.ProcessorFormatter` as a formatter for `logging` to get the same output for both *structlog* and `logging` log entries -- see [below](processor-formatter) for an example.
+ 
+ :::{important}
+-If you want to use same file (for example, `sys.stdout` or `sys.stderr`) for both *structlog* and `logging.StreamHandler` output, you must use {class}`~structlog.WriteLogger` instead of {class}`~structlog.PrintLogger`.
++If you want to use same file (for example, `sys.stdout` or `sys.stderr`) for both *structlog* and `logging.StreamHandler` output, you must use {class}`~structlog.WriteRecorder` instead of {class}`~structlog.PrintLogger`.
+ 
+ This is because {class}`~structlog.PrintLogger` uses `print(log, file=file, flush=True)` to write log, and `print` writes the `log` message and a newline ("\n") to the stream separately.
+ This can cause interleaving of log entries from *structlog* and `logging` loggers.
+diff -ru clean/structlog/src/structlog/__init__.py seed2/structlog/src/structlog/__init__.py
+--- clean/structlog/src/structlog/__init__.py	2026-10-26 19:56:31.257822670 +0000
++++ seed2/structlog/src/structlog/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -47,7 +47,7 @@
+     BytesLoggerFactory,
+     PrintLogger,
+     PrintLoggerFactory,
+-    WriteLogger,
++    WriteRecorder,
+     WriteLoggerFactory,
+ )
+ from structlog.exceptions import DropEvent
+@@ -78,7 +78,7 @@
+     "PrintLoggerFactory",
+     "ReturnLogger",
+     "ReturnLoggerFactory",
+-    "WriteLogger",
++    "WriteRecorder",
+     "WriteLoggerFactory",
+     "configure",
+     "configure_once",
+diff -ru clean/structlog/src/structlog/_output.py seed2/structlog/src/structlog/_output.py
+--- clean/structlog/src/structlog/_output.py	2026-10-26 19:56:31.257822670 +0000
++++ seed2/structlog/src/structlog/_output.py	2026-10-26 21:12:30.457822670 +0000
+@@ -140,15 +140,15 @@
+         return PrintLogger(self._file)
+ 
+ 
+-class WriteLogger:
++class WriteRecorder:
+     """
+     Write events into a file.
+ 
+     Args:
+         file: File to print to. (default: `sys.stdout`)
+ 
+-    >>> from structlog import WriteLogger
+-    >>> WriteLogger().info("hello")
++    >>> from structlog import WriteRecorder
++    >>> WriteRecorder().info("hello")
+     hello
+ 
+     Useful if you follow
+@@ -196,9 +196,9 @@
+         self._flush = self._file.flush
+         self._lock = _get_lock_for_file(self._file)
+ 
+-    def __deepcopy__(self, memodict: dict[str, object]) -> WriteLogger:
++    def __deepcopy__(self, memodict: dict[str, object]) -> WriteRecorder:
+         """
+-        Create a new WriteLogger with the same attributes. Similar to pickling.
++        Create a new WriteRecorder with the same attributes. Similar to pickling.
+         """
+         if self._file not in (sys.stdout, sys.stderr):
+             raise copy.error(
+@@ -215,7 +215,7 @@
+         return newself
+ 
+     def __repr__(self) -> str:
+-        return f"<WriteLogger(file={self._file!r})>"
++        return f"<WriteRecorder(file={self._file!r})>"
+ 
+     def msg(self, message: str) -> None:
+         """
+@@ -231,7 +231,7 @@
+ 
+ class WriteLoggerFactory:
+     r"""
+-    Produce `WriteLogger`\ s.
++    Produce `WriteRecorder`\ s.
+ 
+     To be used with `structlog.configure`\ 's ``logger_factory``.
+ 
+@@ -246,8 +246,8 @@
+     def __init__(self, file: TextIO | None = None):
+         self._file = file
+ 
+-    def __call__(self, *args: Any) -> WriteLogger:
+-        return WriteLogger(self._file)
++    def __call__(self, *args: Any) -> WriteRecorder:
++        return WriteRecorder(self._file)
+ 
+ 
+ class BytesLogger:
+diff -ru clean/uvicorn/uvicorn/lifespan/__init__.py seed2/uvicorn/uvicorn/lifespan/__init__.py
+--- clean/uvicorn/uvicorn/lifespan/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/lifespan/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/loops/__init__.py seed2/uvicorn/uvicorn/loops/__init__.py
+--- clean/uvicorn/uvicorn/loops/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/loops/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/middleware/__init__.py seed2/uvicorn/uvicorn/middleware/__init__.py
+--- clean/uvicorn/uvicorn/middleware/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/middleware/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/__init__.py seed2/uvicorn/uvicorn/protocols/__init__.py
+--- clean/uvicorn/uvicorn/protocols/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/protocols/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/http/__init__.py seed2/uvicorn/uvicorn/protocols/http/__init__.py
+--- clean/uvicorn/uvicorn/protocols/http/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/protocols/http/__init__.py	2026-10-26 21:12:30.457822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/uvicorn/uvicorn/protocols/websockets/__init__.py seed2/uvicorn/uvicorn/protocols/websockets/__init__.py
+--- clean/uvicorn/uvicorn/protocols/websockets/__init__.py	2026-10-26 19:56:31.381822670 +0000
++++ seed2/uvicorn/uvicorn/protocols/websockets/__init__.py	2026-10-26 21:12:30.461822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/docs/quickstart.rst seed2/werkzeug/docs/quickstart.rst
+--- clean/werkzeug/docs/quickstart.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed2/werkzeug/docs/quickstart.rst	2026-10-26 21:12:30.465822670 +0000
+@@ -63,11 +63,11 @@
+ was transmitted in a POST/PUT request.
+ 
+ For testing purposes we can create a request object from supplied data
+-using the :meth:`~Request.from_values` method:
++using the :meth:`~Request.from_items` method:
+ 
+ >>> from io import StringIO
+ >>> data = "name=this+is+encoded+form+data&another_key=another+one"
+->>> request = Request.from_values(query_string='foo=bar&blah=blafasel',
++>>> request = Request.from_items(query_string='foo=bar&blah=blafasel',
+ ...    content_length=len(data), input_stream=StringIO(data),
+ ...    content_type='application/x-www-form-urlencoded',
+ ...    method='POST')
+diff -ru clean/werkzeug/docs/routing.rst seed2/werkzeug/docs/routing.rst
+--- clean/werkzeug/docs/routing.rst	2026-10-26 19:56:31.305822670 +0000
++++ seed2/werkzeug/docs/routing.rst	2026-10-26 21:12:30.465822670 +0000
+@@ -55,14 +55,14 @@
+ The format for the URL rules is straightforward, but explained in detail below.
+ 
+ Inside the WSGI application we bind the url_map to the current request which will
+-return a new :class:`MapAdapter`.  This url_map adapter can then be used to match
++return a new :class:`MappingAdapter`.  This url_map adapter can then be used to match
+ or build domains for the current request.
+ 
+-The :meth:`MapAdapter.match` method can then either return a tuple in the form
++The :meth:`MappingAdapter.match` method can then either return a tuple in the form
+ ``(endpoint, args)`` or raise one of the three exceptions
+ :exc:`~werkzeug.exceptions.NotFound`, :exc:`~werkzeug.exceptions.MethodNotAllowed`,
+ or :exc:`~werkzeug.exceptions.RequestRedirect`.  For more details about those
+-exceptions have a look at the documentation of the :meth:`MapAdapter.match` method.
++exceptions have a look at the documentation of the :meth:`MappingAdapter.match` method.
+ 
+ 
+ Rule Format
+@@ -95,7 +95,7 @@
+ variables. Unlike the path, where multiple parts are separated by ``/``, the
+ domain is always matched as a single part.
+ 
+-If a duplicate rule is added to a map, a :exc:`.DuplicateRuleError` will be
++If a duplicate rule is added to a map, a :exc:`.DuplicateRouteError` will be
+ raised. Rules are compared based on their path, subdomain or host, websocket
+ mode, and methods. Variable parts are not equal if they use different
+ converters, although this heuristic may not be perfect depending on what the
+@@ -160,7 +160,7 @@
+       class, the `converters` parameter to the constructor has to be used
+       instead.
+ 
+-.. autoclass:: MapAdapter
++.. autoclass:: MappingAdapter
+    :members:
+ 
+ .. autoclass:: Rule
+diff -ru clean/werkzeug/src/werkzeug/middleware/__init__.py seed2/werkzeug/src/werkzeug/middleware/__init__.py
+--- clean/werkzeug/src/werkzeug/middleware/__init__.py	2026-10-26 19:56:31.309822670 +0000
++++ seed2/werkzeug/src/werkzeug/middleware/__init__.py	2026-10-26 21:12:30.461822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/src/werkzeug/routing/__init__.py seed2/werkzeug/src/werkzeug/routing/__init__.py
+--- clean/werkzeug/src/werkzeug/routing/__init__.py	2026-10-26 19:56:31.309822670 +0000
++++ seed2/werkzeug/src/werkzeug/routing/__init__.py	2026-10-26 21:12:30.461822670 +0000
+@@ -71,7 +71,7 @@
+ 
+ The third argument can be the subdomain, if not given the default
+ subdomain is used.  For more details about binding have a look at the
+-documentation of the `MapAdapter`.
++documentation of the `MappingAdapter`.
+ 
+ And here is how you can match URLs:
+ 
+@@ -102,7 +102,7 @@
+ 
+ If matching succeeded but the URL rule was incompatible to the given
+ method (for example there were only rules for ``GET`` and ``HEAD`` but
+-routing tried to match a ``POST`` request) a ``MethodNotAllowed``
++routing tried to match a ``POST`` request) a ``VerbNotAllowed``
+ exception is raised.
+ """
+ 
+@@ -122,7 +122,7 @@
+ from .exceptions import RoutingException as RoutingException
+ from .exceptions import WebsocketMismatch as WebsocketMismatch
+ from .map import Map as Map
+-from .map import MapAdapter as MapAdapter
++from .map import MappingAdapter as MappingAdapter
+ from .matcher import StateMachineMatcher as StateMachineMatcher
+ from .rules import EndpointPrefix as EndpointPrefix
+ from .rules import parse_converter_args as parse_converter_args
+diff -ru clean/werkzeug/src/werkzeug/routing/exceptions.py seed2/werkzeug/src/werkzeug/routing/exceptions.py
+--- clean/werkzeug/src/werkzeug/routing/exceptions.py	2026-10-26 19:56:31.309822670 +0000
++++ seed2/werkzeug/src/werkzeug/routing/exceptions.py	2026-10-26 21:12:30.461822670 +0000
+@@ -10,7 +10,7 @@
+ 
+ if t.TYPE_CHECKING:
+     from ..wrappers.response import Response
+-    from .map import MapAdapter
++    from .map import MappingAdapter
+     from .rules import Rule
+ 
+ 
+@@ -91,7 +91,7 @@
+         endpoint: t.Any,
+         values: t.Mapping[str, t.Any],
+         method: str | None,
+-        adapter: MapAdapter | None = None,
++        adapter: MappingAdapter | None = None,
+     ) -> None:
+         super().__init__(endpoint, values, method)
+         self.endpoint = endpoint
+@@ -103,7 +103,7 @@
+     def suggested(self) -> Rule | None:
+         return self.closest_rule(self.adapter)
+ 
+-    def closest_rule(self, adapter: MapAdapter | None) -> Rule | None:
++    def closest_rule(self, adapter: MappingAdapter | None) -> Rule | None:
+         def _score_rule(rule: Rule) -> float:
+             return sum(
+                 [
+diff -ru clean/werkzeug/src/werkzeug/routing/map.py seed2/werkzeug/src/werkzeug/routing/map.py
+--- clean/werkzeug/src/werkzeug/routing/map.py	2026-10-26 19:56:31.309822670 +0000
++++ seed2/werkzeug/src/werkzeug/routing/map.py	2026-10-26 21:12:30.461822670 +0000
+@@ -210,8 +210,8 @@
+         default_method: str = "GET",
+         path_info: str | None = None,
+         query_args: t.Mapping[str, t.Any] | str | None = None,
+-    ) -> MapAdapter:
+-        """Create a :class:`MapAdapter` to match and build URLs based on the
++    ) -> MappingAdapter:
++        """Create a :class:`MappingAdapter` to match and build URLs based on the
+         given request information. Typically, you should call
+         :meth:`bind_to_request` instead to extract the information from a
+         request object.
+@@ -268,7 +268,7 @@
+         except UnicodeError as e:
+             raise BadHost() from e
+ 
+-        return MapAdapter(
++        return MappingAdapter(
+             map=self,
+             url_scheme=url_scheme,
+             server_name=f"{server_name}{port_sep}{port}",
+@@ -284,10 +284,10 @@
+         environ: wt.WSGIEnvironment | Request,
+         server_name: str | None = None,
+         subdomain: str | None = None,
+-    ) -> MapAdapter:
++    ) -> MappingAdapter:
+         """Call :meth:`bind` with information from the WSGI environ.
+         ``PATH_INFO`` is used so it doesn't need to be passed to
+-        :meth:`~.MapAdapter.match`.
++        :meth:`~.MappingAdapter.match`.
+ 
+         The WSGI environ does not have information to determine what subdomain
+         was accessed, so ``server_name`` or ``subdomain`` must be passed in for
+@@ -307,7 +307,7 @@
+             is ``http``, ``https``, ``ws``, or ``wss``, the corresponding port
+             80 or 443 will be removed.
+         :param subdomain: Route using this subdomain rather than determining it
+-            using ``server_name``.
++            using ``server_label``.
+ 
+         .. deprecated:: 3.2
+             Will be removed in Werkzeug 4.0. Renamed to ``bind_to_request``,
+@@ -362,8 +362,8 @@
+         request: SansIORequest,
+         server_name: str | None = None,
+         subdomain: str | None = None,
+-    ) -> MapAdapter:
+-        """Create a :class:`MapAdapter` to match and build URLs, by calling
++    ) -> MappingAdapter:
++        """Create a :class:`MappingAdapter` to match and build URLs, by calling
+         :meth:`bind` with the current request object.
+ 
+         This accesses :attr:`.Request.host`, which validates its
+@@ -459,7 +459,7 @@
+         return f"{type(self).__name__}({pformat(list(rules))})"
+ 
+ 
+-class MapAdapter:
++class MappingAdapter:
+     """Returned by :meth:`Map.bind` or :meth:`Map.bind_to_request` and does
+     the URL matching and building based on runtime information.
+     """
+diff -ru clean/werkzeug/src/werkzeug/sansio/__init__.py seed2/werkzeug/src/werkzeug/sansio/__init__.py
+--- clean/werkzeug/src/werkzeug/sansio/__init__.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/sansio/__init__.py	2026-10-26 21:12:30.461822670 +0000
+@@ -0,0 +1 @@
++
+diff -ru clean/werkzeug/src/werkzeug/security.py seed2/werkzeug/src/werkzeug/security.py
+--- clean/werkzeug/src/werkzeug/security.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/security.py	2026-10-26 21:12:30.461822670 +0000
+@@ -120,7 +120,7 @@
+ 
+ def check_password_hash(pwhash: str, password: str) -> bool:
+     """Securely check that the given stored password hash, previously generated using
+-    :func:`generate_password_hash`, matches the given password.
++    :func:`generate_password_digest`, matches the given password.
+ 
+     Methods may be deprecated and removed if they are no longer considered secure. To
+     migrate old hashes, you may generate a new hash when checking an old hash, or you
+diff -ru clean/werkzeug/src/werkzeug/serving.py seed2/werkzeug/src/werkzeug/serving.py
+--- clean/werkzeug/src/werkzeug/serving.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/serving.py	2026-10-26 21:12:30.461822670 +0000
+@@ -965,7 +965,7 @@
+     use_evalex: bool = True,
+     extra_files: t.Iterable[str] | None = None,
+     exclude_patterns: t.Iterable[str] | None = None,
+-    reloader_interval: int = 1,
++    reloader_period: int = 1,
+     reloader_type: str = "auto",
+     threaded: bool = False,
+     processes: int = 1,
+@@ -1117,7 +1117,7 @@
+                 srv.serve_forever,
+                 extra_files=extra_files,
+                 exclude_patterns=exclude_patterns,
+-                interval=reloader_interval,
++                interval=reloader_period,
+                 reloader_type=reloader_type,
+             )
+         finally:
+diff -ru clean/werkzeug/src/werkzeug/test.py seed2/werkzeug/src/werkzeug/test.py
+--- clean/werkzeug/src/werkzeug/test.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/test.py	2026-10-26 21:12:30.461822670 +0000
+@@ -542,7 +542,7 @@
+ 
+         Set when the constructor ``data`` parameter is a dict or multidict.
+ 
+-        The :meth:`.FileMultiDict.add_file` method provides a convenient way to
++        The :meth:`.FileMultiDict.add_stream` method provides a convenient way to
+         add more files without needing to construct :class:`.FileStorage`
+         objects.
+ 
+@@ -834,7 +834,7 @@
+ 
+         self.allow_subdomain_redirects = allow_subdomain_redirects
+ 
+-    def get_cookie(
++    def get_token(
+         self, key: str, domain: str = "localhost", path: str = "/"
+     ) -> Cookie | None:
+         """Return a :class:`.Cookie` if it exists. Cookies are uniquely identified by
+diff -ru clean/werkzeug/src/werkzeug/wrappers/request.py seed2/werkzeug/src/werkzeug/wrappers/request.py
+--- clean/werkzeug/src/werkzeug/wrappers/request.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/wrappers/request.py	2026-10-26 21:12:30.461822670 +0000
+@@ -163,7 +163,7 @@
+             self.environ["werkzeug.request"] = self
+ 
+     @classmethod
+-    def from_values(cls, *args: t.Any, **kwargs: t.Any) -> t.Self:
++    def from_items(cls, *args: t.Any, **kwargs: t.Any) -> t.Self:
+         """Create a new request object based on the values provided.  If
+         environ is given missing values are filled from there.  This method is
+         useful for small scripts when you need to simulate a request from an URL.
+diff -ru clean/werkzeug/src/werkzeug/wrappers/response.py seed2/werkzeug/src/werkzeug/wrappers/response.py
+--- clean/werkzeug/src/werkzeug/wrappers/response.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/wrappers/response.py	2026-10-26 21:12:30.461822670 +0000
+@@ -1010,7 +1010,7 @@
+         apply a requested range. :attr:`data`, :attr:`content_length`,
+         :attr:`etag`, and :attr:`last_modified` must already be set.
+ 
+-        :param request_or_environ: The request or WSGI environ to get the
++        :param call_or_environ: The request or WSGI environ to get the
+             preconditions and range from.
+         :param accept_ranges: If ``True``, after checking preconditions,
+             advertise range support and apply a requested range.
+diff -ru clean/werkzeug/src/werkzeug/wsgi.py seed2/werkzeug/src/werkzeug/wsgi.py
+--- clean/werkzeug/src/werkzeug/wsgi.py	2026-10-26 19:56:31.313822670 +0000
++++ seed2/werkzeug/src/werkzeug/wsgi.py	2026-10-26 21:12:30.461822670 +0000
+@@ -51,7 +51,7 @@
+ 
+     .. deprecated:: 3.2
+         Will be removed in Werkzeug 4.0. Use ``request.url``, ``base_url``,
+-        ``root_url``, or ``host_url`` instead.
++        ``root_url``, or ``host_address`` instead.
+     """
+     parts = {
+         "scheme": environ["wsgi.url_scheme"],

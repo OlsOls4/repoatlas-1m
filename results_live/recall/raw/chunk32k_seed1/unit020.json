@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 20,
+ "status": 200,
+ "latency_s": 18.5,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:28:58.989867+00:00",
+ "usage": {
+  "prompt_tokens": 31289,
+  "completion_tokens": 2607,
+  "total_tokens": 33896,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The `select_address_family` docstring names `AF_INET4`, but the implementation returns `socket.AF_INET` (there is no `AF_INET4` in the returned code paths).\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/serving.py\", \"start_line\": 655, \"end_line\": 655, \"quote\": \"\\\"\\\"\\\"Return ``AF_INET4``, ``AF_INET6``, or ``AF_UNIX`` depending on\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/serving.py\", \"start_line\": 657, \"end_line\": 661, \"quote\": \"if host.startswith(\\\"unix://\\\"):\\n        return socket.AF_UNIX\\n    elif \\\":\\\" in host and hasattr(socket, \\\"AF_INET6\\\"):\\n        return socket.AF_INET6\\n    return socket.AF_INET\"}, \"proposed_fix\": \"Change the docstring text `AF_INET4` to `AF_INET` in `select_address_family`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 9812
+}

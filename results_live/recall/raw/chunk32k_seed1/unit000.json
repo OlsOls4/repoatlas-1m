@@ -1,0 +1,22 @@
+{
+ "method": "chunk32k",
+ "seed": 1,
+ "unit": 0,
+ "status": 200,
+ "latency_s": 14.3,
+ "rate_headers": {},
+ "max_tokens": 12000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:21:18.083305+00:00",
+ "usage": {
+  "prompt_tokens": 24588,
+  "completion_tokens": 2506,
+  "total_tokens": 27094,
+  "prompt_tokens_details": {
+   "cached_tokens": 16384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The DebuggedApplication docstring references a removed parameter spelled ``reqeust_key``, but the constructor has no such parameter and only documents the current supported parameters.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 254, \"end_line\": 255, \"quote\": \"        .. versionchanged:: 3.2\\n        The ``reqeust_key`` parameter was removed.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 264, \"end_line\": 273, \"quote\": \"    def __init__(\\n        self,\\n        app: wt.WSGIApplication,\\n        evalex: bool = False,\\n        console_path: str = \\\"/console\\\",\\n        console_init_func: t.Callable[[], dict[str, t.Any]] | None = None,\\n        show_hidden_frames: bool = False,\\n        pin_security: bool = True,\\n        pin_logging: bool = True,\\n    ) -> None:\"}, \"proposed_fix\": \"Remove the stale and misspelled ``.. versionchanged:: 3.2`` note from the ``DebuggedApplication`` docstring.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 9226
+}
