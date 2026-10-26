@@ -1,0 +1,75 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.16,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "09, in __enter__\n    with contextlib.ExitStack() as stack:\n         ~~~~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 619, in __exit__\n    raise exc\n  File \"/usr/lib/python3.13/contextlib.py\", line 604, in __exit__\n    if cb(*exc_details):\n       ~~^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 482, in _exit_wrapper\n    callback(*args, **kwds)\n    ~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 449, in result\n    return self.__get_result()\n           ~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/anyio/from_thread.py\", line 265, in _call_func\n    retval = await retval_or_awaitable\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/testclient.py\", line 136, in _run\n    await self.app(self.scope, receive_rx.receive, send_tx.send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/applications.py\", line 96, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 151, in __call__\n    await self.app(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/middleware/exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 683, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 704, in app\n    await route.handle(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 363, in handle\n    await self.app(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 84, in app\n    await wrap_app_handling_exceptions(app, session)(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 82, in app\n    await func(session)\n  File \"/tmp/repro-starlette-400000_DD-1-is5pj_6u/repro.py\", line 8, in endpoint\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\nTypeError: WebSocket.receive_json() got multiple values for argument 'mode'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "WebSocket.receive_json() got multiple values for argument 'mode'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py",
+          "line": 683,
+          "name": "__call__",
+          "source": "await self.middleware_stack(scope, receive, send)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py",
+          "line": 704,
+          "name": "app",
+          "source": "await route.handle(scope, receive, send)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py",
+          "line": 363,
+          "name": "handle",
+          "source": "await self.app(scope, receive, send)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py",
+          "line": 84,
+          "name": "app",
+          "source": "await wrap_app_handling_exceptions(app, session)(scope, receive, send)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py",
+          "line": 53,
+          "name": "wrapped_app",
+          "source": "raise exc"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py",
+          "line": 42,
+          "name": "wrapped_app",
+          "source": "await app(scope, receive, sender)"
+        },
+        {
+          "file": "/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py",
+          "line": 82,
+          "name": "app",
+          "source": "await func(session)"
+        },
+        {
+          "file": "/tmp/repro-starlette-400000_DD-1-is5pj_6u/repro.py",
+          "line": 8,
+          "name": "endpoint",
+          "source": "await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "09, in __enter__\n    with contextlib.ExitStack() as stack:\n         ~~~~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 619, in __exit__\n    raise exc\n  File \"/usr/lib/python3.13/contextlib.py\", line 604, in __exit__\n    if cb(*exc_details):\n       ~~^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/contextlib.py\", line 482, in _exit_wrapper\n    callback(*args, **kwds)\n    ~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 449, in result\n    return self.__get_result()\n           ~~~~~~~~~~~~~~~~~^^\n  File \"/usr/lib/python3.13/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/anyio/from_thread.py\", line 265, in _call_func\n    retval = await retval_or_awaitable\n             ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/testclient.py\", line 136, in _run\n    await self.app(self.scope, receive_rx.receive, send_tx.send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/applications.py\", line 96, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/middleware/errors.py\", line 151, in __call__\n    await self.app(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/middleware/exceptions.py\", line 63, in __call__\n    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 683, in __call__\n    await self.middleware_stack(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 704, in app\n    await route.handle(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 363, in handle\n    await self.app(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 84, in app\n    await wrap_app_handling_exceptions(app, session)(scope, receive, send)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 53, in wrapped_app\n    raise exc\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/_exception_handler.py\", line 42, in wrapped_app\n    await app(scope, receive, sender)\n  File \"/workspace/repoatlas-1m/.cache/repoatlas/repro_venvs/starlette-8aa828ceaff7-0c34f48b/lib/python3.13/site-packages/starlette/routing.py\", line 82, in app\n    await func(session)\n  File \"/tmp/repro-starlette-400000_DD-1-is5pj_6u/repro.py\", line 8, in endpoint\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n          ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\nTypeError: WebSocket.receive_json() got multiple values for argument 'mode'\n"
+    }
+  }
+}

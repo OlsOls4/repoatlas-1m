@@ -1,0 +1,57 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.06,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py\", line 3, in <module>\n    class S(Schema):\n        x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py\", line 4, in S\n    x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")\nTypeError: Field.__init__() got an unexpected keyword argument 'default'\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "TypeError",
+      "qualified_type": "builtins.TypeError",
+      "mro": [
+        "builtins.TypeError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "Field.__init__() got an unexpected keyword argument 'default'",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "class S(Schema):"
+        },
+        {
+          "file": "/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py",
+          "line": 4,
+          "name": "S",
+          "source": "x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py\", line 3, in <module>\n    class S(Schema):\n        x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")\n  File \"/tmp/repro-marshmallow-400000_DD-2-m1fum2b5/repro.py\", line 4, in S\n    x = fields.String(default=\"DEFAULT\", load_default=\"LOAD_DEFAULT\")\nTypeError: Field.__init__() got an unexpected keyword argument 'default'\n"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1602,
+      "output_tokens": 1888,
+      "cached_input_tokens": 0,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "TypeError because receive_json() receives multiple values for mode when data is passed positionally",
+      "doc_literal_usage": "await websocket.receive_json(data, mode=\"binary\")",
+      "argument_finding_is_false": "The documentation is unambiguous: it shows `receive_json(data, mode=\"binary\")` as the public call shape for receiving JSON over binary frames. There is no alias, kwargs passthrough, or alternate implementation path in `starlette.websockets.WebSocket` that accepts a leading positional `data` argument; `receive_json` takes only `mode`. The plausible counterargument that `data` is just an example payload does not rescue the example, because the documented call still supplies it positionally to a parameter that does not exist.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "failed_outside_doc_literal",
+      "exception_type": "RuntimeError",
+      "error_excerpt": "[script line 3, not a DOC-LITERAL line] RuntimeError: The starlette.testclient module requires the httpx2 package to be installed.\nYou can install this with:\n    $ pip install httpx2\n",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2348,
+      "output_tokens": 412,
+      "cached_input_tokens": 64
+    },
+    "plan": {
+      "expected_exception_type": "TypeError",
+      "expected_failure": "TypeError because receive_json() receives multiple values for mode when data is passed positionally",
+      "doc_literal_usage": "await websocket.receive_json(data, mode=\"binary\")",
+      "argument_finding_is_false": "The documentation is unambiguous: it shows `receive_json(data, mode=\"binary\")` as the public call shape for receiving JSON over binary frames. There is no alias, kwargs passthrough, or alternate implementation path in `starlette.websockets.WebSocket` that accepts a leading positional `data` argument; `receive_json` takes only `mode`. The plausible counterargument that `data` is just an example payload does not rescue the example, because the documented call still supplies it positionally to a parameter that does not exist.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [
+        "httpx2"
+      ],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "TypeError",
+      "error_excerpt": "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'",
+      "evidence": "interface_error",
+      "retryable": false
+    }
+  }
+]

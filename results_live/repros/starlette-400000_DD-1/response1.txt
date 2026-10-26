@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The documentation is unambiguous: it shows `receive_json(data, mode=\"binary\")` as the public call shape for receiving JSON over binary frames. There is no alias, kwargs passthrough, or alternate implementation path in `starlette.websockets.WebSocket` that accepts a leading positional `data` argument; `receive_json` takes only `mode`. The plausible counterargument that `data` is just an example payload does not rescue the example, because the documented call still supplies it positionally to a parameter that does not exist.",
+  "model_verdict": "finding is real",
+  "doc_literal_usage": "await websocket.receive_json(data, mode=\"binary\")",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "TypeError because receive_json() receives multiple values for mode when data is passed positionally",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from starlette.applications import Starlette\nfrom starlette.routing import WebSocketRoute\nfrom starlette.testclient import TestClient\n\nasync def endpoint(websocket):\n    await websocket.accept()\n    data = b'{\"ok\": true}'\n    await websocket.receive_json(data, mode=\"binary\")  # DOC-LITERAL\n    await websocket.close()\n\napp = Starlette(routes=[WebSocketRoute(\"/ws\", endpoint)])\nclient = TestClient(app)\nwith client.websocket_connect(\"/ws\") as websocket:\n    websocket.send_bytes(b'{\"ok\": true}')\nprint(\"DOCS_OK\")\n"
+}

@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The documented subclass forwards an empty **kwargs to SchemaOpts.__init__. Since SchemaOpts only accepts meta and no caller in SchemaMeta passes extra keyword arguments, **kwargs is always empty in practice, so the documented code runs without error. The signature mismatch does not change behavior; removing **kwargs is cosmetic.",
+  "model_verdict": "false positive",
+  "doc_literal_usage": "Define NamespaceOpts subclass per docs, use it as OPTIONS_CLASS, instantiate schema, assert opts.name.",
+  "expected_exception_type": "none",
+  "expected_failure": false,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from marshmallow import Schema, SchemaOpts, fields\n\n\nclass NamespaceOpts(SchemaOpts):\n    def __init__(self, meta, **kwargs):\n        SchemaOpts.__init__(self, meta, **kwargs)\n        self.name = getattr(meta, \"name\", None)\n        self.plural_name = getattr(meta, \"plural_name\", self.name)\n\n\nclass NamespacedSchema(Schema):\n    OPTIONS_CLASS = NamespaceOpts\n\n    class Meta:\n        name = \"user\"\n        plural_name = \"users\"\n\n\nclass UserSchema(NamespacedSchema):\n    name = fields.String()\n\n\nschema = UserSchema()\nassert schema.opts.name == \"user\", \"docs: options name forwarded\"  # DOC-LITERAL\nassert schema.opts.plural_name == \"users\", \"docs: plural name forwarded\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

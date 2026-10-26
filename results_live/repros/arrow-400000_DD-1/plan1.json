@@ -1,0 +1,10 @@
+{
+  "repro_script": "import arrow\n\narw = arrow.utcnow()\narw.dehumanize(timestring=\"2 days ago\")  # DOC-LITERAL\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "TypeError",
+  "expected_failure": "True",
+  "doc_literal_usage": "arw.dehumanize(timestring=\"2 days ago\")",
+  "argument_finding_is_false": "The mismatch is arguably cosmetic: docstrings are descriptive metadata, Arrow's documented examples call dehumanize positionally with a string, and no runtime behavior is affected by a doc-only parameter name. A reader need not use `timestring=` as a keyword, so the finding could be considered non-behavioral drift rather than an actionable API documentation error.",
+  "model_verdict": "likely_true",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

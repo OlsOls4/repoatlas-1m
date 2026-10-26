@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The documentation could be read as describing the supported 24-hour clock notation, where midnight is often written as 24:00 in some conventions; however, Arrow wraps Python datetime objects, whose hour field is strictly 0-23, and the formatter simply emits dt.hour. There is no separate formatting path that produces 24.",
+  "model_verdict": "finding_is_true",
+  "doc_literal_usage": "Construct an Arrow with hour=24 and format it with the HH token; per the table, HH should be able to render 24.",
+  "expected_exception_type": "ValueError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import arrow\n\na = arrow.Arrow(2020, 1, 1, 24)  # DOC-LITERAL\nassert a.format(\"HH\") == \"24\", \"docs say HH can output 24\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

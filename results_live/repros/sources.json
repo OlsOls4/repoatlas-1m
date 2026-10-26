@@ -1,0 +1,67 @@
+{
+  "arrow": {
+    "repo_url": "https://github.com/arrow-py/arrow",
+    "ref": "2224255c4acc594d734cef0bbc83360452a67983",
+    "path": "/workspace/sweep/arrow"
+  },
+  "cattrs": {
+    "repo_url": "https://github.com/python-attrs/cattrs",
+    "ref": "7a24f770fd6f4d946dd0512d912b2a96556095cd",
+    "path": "/workspace/sweep/cattrs"
+  },
+  "click": {
+    "repo_url": "https://github.com/pallets/click",
+    "ref": "2247b35ea1c47c727d7a06e51fa280e12a863ff6",
+    "path": "/workspace/sweep/click"
+  },
+  "hatch": {
+    "repo_url": "https://github.com/pypa/hatch",
+    "ref": "e7495de2cac0710df2698b650427c7593f012037",
+    "path": "/workspace/repro_src/hatch"
+  },
+  "httpx": {
+    "repo_url": "https://github.com/encode/httpx",
+    "ref": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+    "path": "/workspace/sweep/httpx"
+  },
+  "jinja": {
+    "repo_url": "https://github.com/pallets/jinja",
+    "ref": "5ef70112a1ff19c05324ff889dd30405b1002044",
+    "path": "/workspace/sweep/jinja"
+  },
+  "marshmallow": {
+    "repo_url": "https://github.com/marshmallow-code/marshmallow",
+    "ref": "b762ea2d59ca52fe5df76b90de14bed7e5ec5607",
+    "path": "/workspace/sweep/marshmallow"
+  },
+  "nox": {
+    "repo_url": "https://github.com/wntrblm/nox",
+    "ref": "afa3983bbac3143bab5c8406244327581f76a3d7",
+    "path": "/workspace/sweep/nox"
+  },
+  "poetry": {
+    "repo_url": "https://github.com/python-poetry/poetry",
+    "ref": "1fe5e0a57928572eb1d08f83b0cf0179043280dd",
+    "path": "/workspace/repro_src/poetry"
+  },
+  "pydantic-settings": {
+    "repo_url": "https://github.com/pydantic/pydantic-settings",
+    "ref": "7e2dacb6db07b41abb0c80d0608e46e197265554",
+    "path": "/workspace/sweep/pydantic-settings"
+  },
+  "starlette": {
+    "repo_url": "https://github.com/encode/starlette",
+    "ref": "8aa828ceaff764a2e57932fb42fdf105a47c4c83",
+    "path": "/workspace/repro_src/starlette"
+  },
+  "structlog": {
+    "repo_url": "https://github.com/hynek/structlog",
+    "ref": "19c4f21059e853114efa7a93b6e675d93bf7934e",
+    "path": "/workspace/sweep/structlog"
+  },
+  "werkzeug": {
+    "repo_url": "https://github.com/pallets/werkzeug",
+    "ref": "b73dce5a2ce14f7c7fd645699d1d878de48d2948",
+    "path": "/workspace/sweep/werkzeug"
+  }
+}

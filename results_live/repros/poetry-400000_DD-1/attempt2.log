@@ -1,0 +1,9 @@
+{
+  "returncode": null,
+  "timed_out": true,
+  "duration_seconds": 60.09,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "",
+  "harness": null
+}

@@ -1,0 +1,51 @@
+{
+  "returncode": 1,
+  "timed_out": false,
+  "duration_seconds": 0.15,
+  "network_isolation": "unshare-netns",
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"/tmp/repro-pydantic-settings-400000_DD-1-afdch3xg/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-pydantic-settings-400000_DD-1-afdch3xg/repro.py\", line 3, in <module>\n    assert BaseSettings.model_config.get(\"cli_kebab_case\") is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say cli_kebab_case defaults to True\n",
+  "harness": {
+    "completed": false,
+    "exception": {
+      "type": "AssertionError",
+      "qualified_type": "builtins.AssertionError",
+      "mro": [
+        "builtins.AssertionError",
+        "builtins.Exception",
+        "builtins.BaseException",
+        "builtins.object"
+      ],
+      "message": "docs say cli_kebab_case defaults to True",
+      "missing_module": null,
+      "frames": [
+        {
+          "file": "<frozen runpy>",
+          "line": 287,
+          "name": "run_path",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 98,
+          "name": "_run_module_code",
+          "source": ""
+        },
+        {
+          "file": "<frozen runpy>",
+          "line": 88,
+          "name": "_run_code",
+          "source": ""
+        },
+        {
+          "file": "/tmp/repro-pydantic-settings-400000_DD-1-afdch3xg/repro.py",
+          "line": 3,
+          "name": "<module>",
+          "source": "assert BaseSettings.model_config.get(\"cli_kebab_case\") is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL"
+        }
+      ],
+      "exit_code": null,
+      "traceback": "Traceback (most recent call last):\n  File \"/tmp/repro-pydantic-settings-400000_DD-1-afdch3xg/_harness.py\", line 9, in <module>\n    runpy.run_path(script_path, run_name=\"__main__\")\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<frozen runpy>\", line 287, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"/tmp/repro-pydantic-settings-400000_DD-1-afdch3xg/repro.py\", line 3, in <module>\n    assert BaseSettings.model_config.get(\"cli_kebab_case\") is True, \"docs say cli_kebab_case defaults to True\"  # DOC-LITERAL\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: docs say cli_kebab_case defaults to True\n"
+    }
+  }
+}

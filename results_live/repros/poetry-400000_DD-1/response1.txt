@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The quoted line is only an illustrative pyproject.toml snippet, not necessarily a behavioral guarantee that every generated project will emit exactly >=3.9.",
+  "model_verdict": "true",
+  "doc_literal_usage": "requires-python = \">=3.9\"",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "poetry new derives requires-python from the active Python interpreter, so in this Python 3.13 environment it will not equal >=3.9",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "import subprocess\nimport tempfile\nimport tomllib\nfrom pathlib import Path\n\ntmp = tempfile.mkdtemp()\nresult = subprocess.run([\"poetry\", \"new\", \"poetry-demo\"], cwd=tmp, capture_output=True, text=True)\nassert result.returncode == 0, result.stderr\npyproject = Path(tmp) / \"poetry-demo\" / \"pyproject.toml\"\ndata = tomllib.loads(pyproject.read_text())\nassert data[\"project\"][\"requires-python\"] == \">=3.9\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

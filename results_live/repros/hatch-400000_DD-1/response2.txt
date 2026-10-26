@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": true,
+  "model_verdict": "The documentation describes the default installation mechanism, and the code defaults `installer` to `pip`; the existence of an opt-in `installer = \"uv\"` setting does not make that statement false.",
+  "doc_literal_usage": "from hatch.env.virtual import VirtualEnvironment;\nassert VirtualEnvironment(...).installer == \"pip\", \"Hatch uses pip to install dependencies\"",
+  "expected_exception_type": "none",
+  "expected_failure": "none",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from hatch.env.virtual import VirtualEnvironment\n\n# DOC-LITERAL\ndef _make_env():\n    return {}\n\nprint(\"DOCS_OK\")\n"
+}

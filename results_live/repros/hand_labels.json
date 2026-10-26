@@ -1,0 +1,26 @@
+{
+  "_source": "results_live/handcheck.md (hand verdicts, 2026-10-26); 'unclear' counts as not-true for precision",
+  "labels": {
+    "starlette-400000:DD-1": "true",
+    "hatch-400000:DD-1": "unclear",
+    "poetry-400000:DD-1": "false",
+    "httpx-400000:DD-1": "true",
+    "httpx-400000:DD-2": "true",
+    "click-400000:DD-1": "true",
+    "pydantic-settings-400000:DD-1": "false",
+    "structlog-400000:DD-1": "false",
+    "structlog-400000:DD-2": "true",
+    "jinja-400000:DD-1": "unclear",
+    "nox-400000:DD-1": "true",
+    "arrow-400000:DD-1": "true",
+    "arrow-400000:DD-2": "false",
+    "arrow-400000:DD-3": "false",
+    "arrow-400000:DD-4": "false",
+    "cattrs-400000:DD-1": "true",
+    "cattrs-400000:DD-2": "true",
+    "cattrs-400000:DD-3": "true",
+    "marshmallow-400000:DD-1": "false",
+    "marshmallow-400000:DD-2": "true",
+    "werkzeug-400000:DD-1": "false"
+  }
+}

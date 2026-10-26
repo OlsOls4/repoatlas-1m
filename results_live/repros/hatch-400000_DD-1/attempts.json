@@ -1,0 +1,53 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1747,
+      "output_tokens": 789,
+      "cached_input_tokens": 64,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "none",
+      "expected_failure": "none",
+      "doc_literal_usage": "import hatch\nprint('DOCS_OK')",
+      "argument_finding_is_false": "True",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "lint",
+      "exception_type": null,
+      "error_excerpt": "no `# DOC-LITERAL` marker on a code line: mark the statement(s) that perform the documented usage",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1988,
+      "output_tokens": 245,
+      "cached_input_tokens": 1728
+    },
+    "plan": {
+      "expected_exception_type": "none",
+      "expected_failure": "none",
+      "doc_literal_usage": "from hatch.env.virtual import VirtualEnvironment;\nassert VirtualEnvironment(...).installer == \"pip\", \"Hatch uses pip to install dependencies\"",
+      "argument_finding_is_false": "True",
+      "model_verdict": "unclear",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "lint",
+      "exception_type": null,
+      "error_excerpt": "no `# DOC-LITERAL` marker on a code line: mark the statement(s) that perform the documented usage",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

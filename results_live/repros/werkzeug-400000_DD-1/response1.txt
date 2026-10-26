@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "A possible false-positive argument is that the versionchanged note could be describing a different code path or an older transitional API, and a '/' path might be normalized or omitted by some cookie serializer behavior. However, the installed function clearly has path='/' as its concrete default and emits Path=/, so the note is stale rather than describing implemented behavior.",
+  "model_verdict": "true",
+  "doc_literal_usage": "Call dump_cookie without path and assert the documented default (None) means no Path directive is emitted.",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": "AssertionError because the actual default path is '/' and the generated cookie contains Path=/.",
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from werkzeug.http import dump_cookie\n\ncookie = dump_cookie(\"key\")  # DOC-LITERAL\nassert \"Path=\" not in cookie, \"docs say path defaults to None\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+}

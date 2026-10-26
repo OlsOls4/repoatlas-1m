@@ -1,0 +1,10 @@
+{
+  "argument_finding_is_false": "The method signatures documented in extensions.rst describe positional default values for readers' convenience; the actual parameter is intentionally None so the existing environment.newstyle_gettext setting is preserved. One could argue default-value documentation is merely illustrative of the common case, but the behavioral discrepancy is real: docs imply calling with default forces newstyle=False, code preserves setting. No passthrough or alias makes newstyle=False the effective default. Weak false-positive argument.",
+  "model_verdict": "finding is real",
+  "doc_literal_usage": "env = Environment(extensions=['jinja2.ext.i18n'])\nenv.newstyle_gettext = True\nenv.install_null_translations()  # DOC-LITERAL\nassert env.newstyle_gettext is False, \"docs say default newstyle=False forces false\"  # DOC-LITERAL",
+  "expected_exception_type": "AssertionError",
+  "expected_failure": true,
+  "extra_requirements": [],
+  "needs_network_or_server": false,
+  "repro_script": "from jinja2 import Environment\nenv = Environment(extensions=['jinja2.ext.i18n'])\nenv.newstyle_gettext = True\nenv.install_null_translations()  # DOC-LITERAL\nassert env.newstyle_gettext is False, \"docs say default newstyle=False forces false\"  # DOC-LITERAL\nprint('DOCS_OK')"
+}

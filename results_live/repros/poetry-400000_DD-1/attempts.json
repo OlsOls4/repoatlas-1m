@@ -1,0 +1,54 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1840,
+      "output_tokens": 1649,
+      "cached_input_tokens": 64,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "poetry new derives requires-python from the active Python interpreter, so in this Python 3.13 environment it will not equal >=3.9",
+      "doc_literal_usage": "requires-python = \">=3.9\"",
+      "argument_finding_is_false": "The quoted line is only an illustrative pyproject.toml snippet, not necessarily a behavioral guarantee that every generated project will emit exactly >=3.9.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "lint",
+      "exception_type": null,
+      "error_excerpt": "line 7: call to subprocess.run is not allowed",
+      "evidence": null,
+      "retryable": true
+    }
+  },
+  {
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 2203,
+      "output_tokens": 2248,
+      "cached_input_tokens": 1792,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "poetry init derives requires-python from the preferred Python interpreter, not the hard-coded >=3.9 value",
+      "doc_literal_usage": "requires-python = \">=3.9\"",
+      "argument_finding_is_false": "The cited line is an example pyproject.toml rather than a direct callable API, so one could argue it is illustrative, but it is presented as the output of creating a project with Poetry.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "could_not_run",
+      "reason": "timeout",
+      "exception_type": null,
+      "error_excerpt": "",
+      "evidence": null,
+      "retryable": true
+    }
+  }
+]

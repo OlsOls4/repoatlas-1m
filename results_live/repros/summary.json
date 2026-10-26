@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "findings": 21,
+    "hand_true": 11,
+    "hand_false_or_unclear": 10,
+    "true_by_status": {
+      "reproduced": 10,
+      "not_reproduced": 0,
+      "could_not_run": 1
+    },
+    "false_or_unclear_by_status": {
+      "reproduced": 7,
+      "not_reproduced": 1,
+      "could_not_run": 2
+    },
+    "precision_without_filter": 0.5238,
+    "kept_with_filter": 17,
+    "kept_true_with_filter": 10,
+    "precision_with_filter": 0.5882,
+    "recall_of_true_with_filter": 0.9091,
+    "reproduced_via_assertion": 6,
+    "strict_filter": "reproduced with an interface error (TypeError/AttributeError/ImportError/NameError)",
+    "kept_with_strict_filter": 10,
+    "kept_true_with_strict_filter": 10,
+    "precision_with_strict_filter": 1.0,
+    "recall_of_true_with_strict_filter": 0.9091,
+    "model_says_false": {
+      "hand_true": 0,
+      "hand_false_or_unclear": 1
+    }
+  },
+  "beam_usage_this_run": {
+    "prompt_tokens": 7446,
+    "completion_tokens": 976,
+    "calls": 3,
+    "cached_calls": 23,
+    "http_429": 0,
+    "total_live_tokens": 8422,
+    "errors": []
+  }
+}

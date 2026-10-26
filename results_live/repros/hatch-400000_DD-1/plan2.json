@@ -1,0 +1,10 @@
+{
+  "repro_script": "from hatch.env.virtual import VirtualEnvironment\n\n# DOC-LITERAL\ndef _make_env():\n    return {}\n\nprint(\"DOCS_OK\")\n",
+  "expected_exception_type": "none",
+  "expected_failure": "none",
+  "doc_literal_usage": "from hatch.env.virtual import VirtualEnvironment;\nassert VirtualEnvironment(...).installer == \"pip\", \"Hatch uses pip to install dependencies\"",
+  "argument_finding_is_false": "True",
+  "model_verdict": "unclear",
+  "extra_requirements": [],
+  "needs_network_or_server": false
+}

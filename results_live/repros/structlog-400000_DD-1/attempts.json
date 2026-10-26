@@ -1,0 +1,28 @@
+[
+  {
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1879,
+      "output_tokens": 2320,
+      "cached_input_tokens": 64,
+      "cached": 1
+    },
+    "plan": {
+      "expected_exception_type": "AssertionError",
+      "expected_failure": "NAME_TO_LEVEL also contains 'warn', 'exception', and possibly 'notset', so the documented exact key set assertion fails.",
+      "doc_literal_usage": "make_filtering_bound_logger(\"info\")  # DOC-LITERAL\nassert set(structlog._log_levels.NAME_TO_LEVEL) == {\"critical\", \"error\", \"warning\", \"info\", \"debug\", \"notset\"}  # DOC-LITERAL",
+      "argument_finding_is_false": "One could argue the docstring lists canonical user-facing names, while 'warn', 'exception', and 'notset' are compatibility/alias spelling details rather than documented public choices. However, the wording 'must be one of' is exhaustive, and the code accepts those keys, so the finding is real.",
+      "model_verdict": "likely_true",
+      "extra_requirements": [],
+      "needs_network_or_server": false
+    },
+    "classification": {
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs say min_level string must be one of documented keys",
+      "evidence": "assertion",
+      "retryable": false
+    }
+  }
+]
