@@ -20,6 +20,7 @@ from repoatlas.packer import pack_repository
 DEFAULT_REPOS_FILE: Path = Path("fixtures/benchmark_repos.json")
 DEFAULT_FIXTURE_PATH: Path = Path("fixtures/analysis_fixture.json")
 DEFAULT_OUTPUT_DIRECTORY: Path = Path("results")
+DEFAULT_LIVE_OUTPUT_DIRECTORY: Path = Path("results_live")
 DEFAULT_TOKEN_LIMITS: tuple[int, ...] = (120_000, 240_000, 400_000)
 
 
@@ -59,7 +60,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--provider", choices=["ollama", "reflection", "fixture"], default=None)
     parser.add_argument("--max-repos", type=int, default=None, help="Small-budget mode, for example --max-repos 2.")
     parser.add_argument("--dry-run", action="store_true", help="Estimate context sizes without making live model calls.")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIRECTORY, help="Results directory.")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Results directory. Defaults to results/ for fixture runs and results_live/ for live runs.",
+    )
     return parser.parse_args()
 
 
@@ -79,13 +85,29 @@ def main() -> None:
     if args.dry_run:
         _run_dry_run(cases, config)
         return
+    output_directory: Path = _resolve_output_directory(args.output_dir, config.provider)
     results_df = run_benchmark(
         cases=cases,
         base_config=config,
         fixture_path=DEFAULT_FIXTURE_PATH,
-        output_directory=args.output_dir,
+        output_directory=output_directory,
     )
-    print(f"Benchmark complete: {len(results_df)} rows written to {args.output_dir / 'benchmark_results.csv'}")
+    print(f"Benchmark complete: {len(results_df)} rows written to {output_directory / 'benchmark_results.csv'}")
+
+
+def _resolve_output_directory(requested: Path | None, provider: str) -> Path:
+    """
+    @brief Pick the results directory; live runs never write into the committed fixture results.
+    @param requested Directory from --output-dir, if any.
+    @param provider Active provider name.
+    """
+
+    is_live: bool = provider != "fixture"
+    if requested is None:
+        return DEFAULT_LIVE_OUTPUT_DIRECTORY if is_live else DEFAULT_OUTPUT_DIRECTORY
+    if is_live and requested.resolve() == DEFAULT_OUTPUT_DIRECTORY.resolve():
+        raise SystemExit("Refusing to write live results into results/ (fixture results). Use results_live/ or another directory.")
+    return requested
 
 
 def _parse_token_limits(raw_limits: str) -> list[int]:

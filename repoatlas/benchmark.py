@@ -64,13 +64,18 @@ def run_benchmark(
             reasoning_effort=base_config.reasoning_effort,
             cache_dir=base_config.cache_dir,
         )
-        bundle = analyse_repository(
-            repo_url=case.repo_url,
-            ref=case.ref,
-            config=case_config,
-            fixture_path=fixture_path,
-            run_probes=False,
-        )
+        try:
+            bundle = analyse_repository(
+                repo_url=case.repo_url,
+                ref=case.ref,
+                config=case_config,
+                fixture_path=fixture_path,
+                run_probes=False,
+            )
+        except Exception as error:  # noqa: BLE001 - one failed case must not abort the sweep
+            print(f"[benchmark] case {case.case_name} failed: {type(error).__name__}: {error}")
+            records.append(_error_record(case, error))
+            continue
         verified_count: int = sum(1 for result in bundle.verification_results if result.fully_verified)
         total_count: int = max(1, len(bundle.verification_results))
         citation_precision: float = verified_count / total_count
@@ -89,6 +94,8 @@ def run_benchmark(
                 "findings_fully_verified": verified_count,
                 "citation_precision": citation_precision,
                 "fixture_run": bundle.summary.fixture_run,
+                "status": "ok",
+                "error": "",
             }
         )
         for finding, verification in zip(bundle.output.findings, bundle.verification_results):
@@ -133,6 +140,32 @@ def run_benchmark(
     return results_df
 
 
+def _error_record(case: BenchmarkCase, error: BaseException) -> dict[str, object]:
+    """
+    @brief Build a results row for a case that raised, so the sweep can continue.
+    @param case Failed benchmark case.
+    @param error Exception raised by the case.
+    """
+
+    return {
+        "case_name": case.case_name,
+        "repo_url": case.repo_url,
+        "ref": case.ref,
+        "token_limit": case.token_limit,
+        "context_tokens": None,
+        "input_tokens": None,
+        "output_tokens": None,
+        "cached_input_tokens": None,
+        "latency_seconds": None,
+        "findings_total": None,
+        "findings_fully_verified": None,
+        "citation_precision": None,
+        "fixture_run": None,
+        "status": "error",
+        "error": f"{type(error).__name__}: {error}"[:500],
+    }
+
+
 def _write_trace_file(traces_directory: Path, case_name: str, bundle_data: dict[str, object]) -> None:
     """
     @brief Write one benchmark trace payload for dataset export.
@@ -153,6 +186,10 @@ def _render_charts(results_df: pd.DataFrame, charts_directory: Path) -> None:
     @param charts_directory Output charts directory.
     """
 
+    if results_df.empty:
+        return
+    if "status" in results_df.columns:
+        results_df = results_df[results_df["status"] == "ok"]
     if results_df.empty:
         return
     sorted_df: pd.DataFrame = results_df.sort_values(by="context_tokens")
@@ -196,4 +233,5 @@ def _write_dataset_ready_jsonl(results_df: pd.DataFrame, output_directory: Path)
     dataset_path: Path = output_directory / "benchmark_results.jsonl"
     with dataset_path.open("w", encoding="utf-8") as handle:
         for row in results_df.to_dict(orient="records"):
-            handle.write(json.dumps(row) + "\n")
+            clean_row = {key: (None if isinstance(value, float) and value != value else value) for key, value in row.items()}
+            handle.write(json.dumps(clean_row) + "\n")
