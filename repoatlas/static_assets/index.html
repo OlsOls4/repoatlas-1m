@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RepoAtlas-1M · DocDrift v2</title>
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+  <header class="hero" id="hero">
+    <p class="eyebrow">RepoAtlas-1M · static recording</p>
+    <h1>DocDrift v2</h1>
+    <p class="headline" id="headline">Loading recorded results…</p>
+    <div class="tiles" id="tiles"></div>
+    <p class="note" id="hero-note"></p>
+  </header>
+
+  <nav class="tabs" aria-label="Sections">
+    <button type="button" class="tab is-active" data-tab="story">Story</button>
+    <button type="button" class="tab" data-tab="bugs">Bug wall</button>
+    <button type="button" class="tab" data-tab="benchmark">Benchmark</button>
+    <button type="button" class="tab" data-tab="repros">Repros</button>
+    <button type="button" class="tab" data-tab="replay">Recorded live run</button>
+    <button type="button" class="tab" data-tab="run">Run it yourself</button>
+    <button type="button" class="tab" data-tab="limits">Limits</button>
+  </nav>
+
+  <main>
+    <section id="story" class="panel is-active">
+      <h2>What is docs drift?</h2>
+      <p>Docs say one thing, the code does another. Worked example from starlette: docs call <code>receive_json(data, mode="binary")</code>; the implementation is <code>receive_json(self, mode: str = "text")</code>. Following the docs can raise <code>TypeError</code>.</p>
+      <h2>What Beam did</h2>
+      <ol id="how-beam"></ol>
+    </section>
+
+    <section id="bugs" class="panel">
+      <h2>Bug wall</h2>
+      <p class="lede">True drifts plus the false findings that still got a repro badge. Filter by library or badge. Permalinks point at the pinned commit.</p>
+      <div class="filters">
+        <label>Library
+          <select id="library-filter"></select>
+        </label>
+        <label>Badge
+          <select id="badge-filter">
+            <option value="real">Real (reproduced + checked)</option>
+            <option value="reproduced">Reproduced</option>
+            <option value="checked">Checked</option>
+            <option value="false">False</option>
+            <option value="all">All</option>
+          </select>
+        </label>
+      </div>
+      <div id="bug-grid" class="grid"></div>
+    </section>
+
+    <section id="benchmark" class="panel">
+      <h2>Benchmark</h2>
+      <div class="table-wrap">
+        <table id="compare-table"></table>
+      </div>
+      <h3>Hybrid funnel</h3>
+      <ol id="funnel" class="funnel"></ol>
+      <h3>Planted-drift recall</h3>
+      <p id="recall-note"></p>
+      <img id="recall-chart" alt="Planted-drift strict recall by distance" hidden>
+      <div id="benchmark-notes" class="notes"></div>
+    </section>
+
+    <section id="repros" class="panel">
+      <h2>Repros</h2>
+      <p class="lede">Each row is a Beam-written script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError.</p>
+      <div class="table-wrap">
+        <table id="repro-table"></table>
+      </div>
+    </section>
+
+    <section id="replay" class="panel">
+      <h2>Recorded live run</h2>
+      <aside class="banner" id="replay-banner"></aside>
+      <p class="replay-controls">
+        <button type="button" id="replay-prev">Previous</button>
+        <button type="button" id="replay-next">Next step</button>
+        <span id="replay-progress"></span>
+      </p>
+      <ol id="replay-steps"></ol>
+    </section>
+
+    <section id="run" class="panel">
+      <h2>Run it yourself</h2>
+      <p id="ollama-key"></p>
+      <h3>Local recorded Space</h3>
+      <pre><code id="local-cmd"></code></pre>
+      <h3>Live sweep (your key)</h3>
+      <pre><code id="cli-cmd"></code></pre>
+    </section>
+
+    <section id="limits" class="panel">
+      <h2>Limits and honesty</h2>
+      <ul id="limits-list"></ul>
+      <h3>Not shipped in this Space</h3>
+      <ul id="exclusions-list"></ul>
+      <p class="note" id="sources"></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Generated from <code>results_live/</code>. No API keys are embedded. Gradio <code>app.py</code> is unchanged if hosting becomes available.</p>
+  </footer>
+  <script src="assets/app.js"></script>
+</body>
+</html>

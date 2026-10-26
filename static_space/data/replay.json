@@ -1,0 +1,37 @@
+{
+  "is_recording": true,
+  "title": "Recorded live run: starlette",
+  "recorded_at": "2026-10-26T19:15:16.531485+00:00",
+  "repo_url": "https://github.com/Kludex/starlette",
+  "source_repo_url": "https://github.com/encode/starlette",
+  "ref": "8aa828c",
+  "pack_tokens": 327836,
+  "prompt_tokens": 394577,
+  "completion_tokens": 4733,
+  "latency_seconds": 21.363057655005832,
+  "truncated": true,
+  "token_limit": 400000,
+  "trace_path": "results_live/traces/starlette-400000.json",
+  "steps": [
+    {
+      "name": "Pack",
+      "detail": "Packed 327,836 tokens (limit 400,000, truncated=True) at 2026-10-26T19:15:16.531485+00:00."
+    },
+    {
+      "name": "Beam call",
+      "detail": "394,577 prompt tokens, 4,733 completion tokens, 21.36s."
+    },
+    {
+      "name": "Finding",
+      "detail": "DD-1: The WebSocket documentation calls `receive_json` with a positional `data` argument, but the implementation only accepts `mode`. Doc docs/websockets.md:73; code starlette/websockets.py:136."
+    },
+    {
+      "name": "Citation check",
+      "detail": "verified (line-shifted); model cited L73, verifier matched L74."
+    },
+    {
+      "name": "Later v2 steps",
+      "detail": "Symbol check: 2 candidates → Beam triage: kept 2, rejected 1, added 0 → Repro: could not run (earlier docs-runner only; not counted in the 29)."
+    }
+  ]
+}
