@@ -17,7 +17,12 @@ tags:
 
 # RepoAtlas-1M
 
-![Hero screenshot placeholder](docs/hero.png)
+## Hero media
+
+- Hero screenshot: `docs/hero.png`
+- Animated demo placeholder: add your GIF at `docs/hero.gif` and reference it here once available.
+
+![RepoAtlas hero](docs/hero.png)
 
 ## Headline result
 
@@ -25,23 +30,12 @@ tags:
 
 Signature story:
 
-- **starlette**: Beam read a 394,577-token prompt and flagged `receive_json(data, mode="binary")` in docs versus `receive_json(self, mode: str = "text")` in code.
+- Canonical repo: **https://github.com/Kludex/starlette** (GitHub redirects from encode/starlette).
+- Beam read a 394,577-token prompt and flagged the `receive_json(data, mode="binary")` doc line against the implementation signature.
 - Hand-verified true drift.
-- Fixed upstream in **PR #3746**: https://github.com/Kludex/starlette/pull/3746
-
-## Space behaviour
-
-- **Default view is fully cached** from `results_live/` (zero inference cost).
-- Findings are shown with:
-  - doc and code snippets side by side;
-  - verifier badge (citation check);
-  - hand-check badge (truth label);
-  - upstream status badge.
-- The app loads compact metadata from `results_live/index.json` at startup and does **not** load all raw traces by default.
+- **Fix submitted upstream (PR #3746, open):** https://github.com/Kludex/starlette/pull/3746
 
 ## How Beam is used
-
-Required challenge description (exactly how this project uses Beam):
 
 1. **One whole-repo call into long context**  
    RepoAtlas packs an entire repository into one prompt (line-numbered, deterministic format), then submits a single Beam call per run.
@@ -51,8 +45,8 @@ Required challenge description (exactly how this project uses Beam):
    Every finding is checked against packed source lines. Exact quote matching is required, with a controlled **±3-line shift** tolerance for off-by-one citation ranges.
 4. **Token calibration factor**  
    Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens.
-5. **Why long context instead of chunked RAG**  
-   The approach keeps local relationships (docs, code, and nearby implementation context) in one model call, reducing retrieval misses where drift depends on cross-file context.
+5. **Why long context rather than chunked RAG**  
+   Many drifts require a docs citation and a distant code citation in the same pass. One packed prompt keeps those relationships available without retrieval misses.
 
 ## Results (real live runs only)
 
@@ -60,11 +54,11 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 
 - **All live hand-checked findings:** 11 true / 8 false / 2 unclear = **11/21 (52.4%)**
 - **Verifier caveat from hand-check:** caught **4/7** false positives, but wrongly rejected **1** true drift.
-- **External validation:**  
-  - starlette fix filed and accepted upstream (PR #3746)  
-  - httpx-mounts and arrow findings independently match open upstream PRs by others
+- **Upstream status source:** `results_live/upstream_status.json`
+  - starlette: fix submitted upstream (PR #3746, open)
+  - httpx-mounts and arrow: independently confirmed by open upstream PRs
 
-### Run table (from handcheck + combined benchmark)
+### Full run table
 
 | Run | Prompt tok | Completion tok | Latency s | Findings | Verifier pass | Hand true | Hand false | Hand unclear |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -86,7 +80,16 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 | marshmallow-400000 | 294,559 | 4,916 | 19.71 | 2 | 2 | 1 | 1 | 0 |
 | werkzeug-400000 | 386,415 | 3,446 | 17.93 | 1 | 0 | 0 | 1 | 0 |
 
-> Full narrative tables and per-finding notes are included verbatim in `results_live/handcheck.md`.
+## Space behaviour
+
+- Default tab is cached, from `results_live/index.json` (no inference cost).
+- Hero banner stats are data-derived:
+  - 11 verified docs bugs,
+  - 13 repos around 300k–400k prompt tokens,
+  - 1 call per repo,
+  - 52.4% hand-checked precision.
+- Bug wall shows one card per true drift, including upstream status and token distance when derivable from pack order.
+- Findings tab supports verdict filtering (`true`, `false`, `unclear`) and defaults to starlette.
 
 ## Live tab guardrails
 
@@ -100,23 +103,23 @@ All values below come from `results_live/handcheck.md` and `results_live/benchma
 - Global daily cap: `REPOATLAS_LIVE_DAILY_CAP` (default 24).
 - Hidden progress log is emitted during live runs.
 - API keys are never echoed in UI output.
-- A dry-run token estimate is shown before/while running.
 
 ## Dataset export
 
-`dataset/` is ready for companion publication later and includes:
+`dataset/` is prepared for companion publication and includes:
 
 - `dataset/README.md` (dataset card),
 - `dataset/runs.jsonl`,
 - `dataset/findings.jsonl`,
+- `dataset/upstream_status.json`,
 - full `dataset/traces/` and `dataset/upstream_drafts/`.
 
 ## Limitations
 
-- Sample size is still small for broad generalisation.
+- Sample size remains limited.
 - Verifier pass/fail is **not** correctness; it only checks citation alignment.
-- Long-context outputs can still contain false positives and unclear cases.
-- Some true drifts can be rejected by verifier range/quote strictness.
+- Long-context outputs still include false positives and unclear calls.
+- A true drift can still be rejected by strict citation matching.
 
 ## Reproduce locally
 
@@ -127,7 +130,7 @@ python3 -m pytest -q
 python3 app.py
 ```
 
-Optional benchmark rerun (live, Ollama Cloud):
+Optional live sweep command:
 
 ```bash
 BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live

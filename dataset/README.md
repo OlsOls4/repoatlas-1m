@@ -24,6 +24,7 @@ This folder is prepared for a companion Hugging Face dataset publication.
 
 - `runs.jsonl`: one row per run from `results_live/benchmark_results_combined.csv`
 - `findings.jsonl`: one row per finding with verifier and hand verdict labels
+- `upstream_status.json`: source of truth for external status labels and links
 - `traces/`: full raw trace JSON payloads (large; include pack text)
 - `upstream_drafts/`: unfiled upstream issue/PR draft notes
 

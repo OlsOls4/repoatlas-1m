@@ -1,0 +1,23 @@
+[
+  {
+    "repo": "https://github.com/Kludex/starlette",
+    "finding": "starlette-400000/DD-1",
+    "status": "fix submitted upstream (PR #3746, open)",
+    "url": "https://github.com/Kludex/starlette/pull/3746",
+    "checked_at": "2026-10-26T20:24:00Z"
+  },
+  {
+    "repo": "https://github.com/encode/httpx",
+    "finding": "httpx-400000/DD-1",
+    "status": "independently confirmed by an open upstream PR",
+    "url": "https://github.com/encode/httpx/pull/3774",
+    "checked_at": "2026-10-26T20:24:00Z"
+  },
+  {
+    "repo": "https://github.com/arrow-py/arrow",
+    "finding": "arrow-400000/DD-1",
+    "status": "independently confirmed by an open upstream PR",
+    "url": "https://github.com/arrow-py/arrow/pull/1355",
+    "checked_at": "2026-10-26T20:24:00Z"
+  }
+]
