@@ -1,0 +1,88 @@
+{
+  "findings": [
+    {
+      "finding_id": "fixture-001",
+      "drift_kind": "cli-default-mismatch",
+      "explanation": "Fixture finding: README says the default token limit is 900000, but code defaults to 400000.",
+      "doc_citation": {
+        "path": "README.md",
+        "start_line": 42,
+        "end_line": 42,
+        "quote": "default token limit is 900000"
+      },
+      "code_citation": {
+        "path": "repoatlas/config.py",
+        "start_line": 9,
+        "end_line": 9,
+        "quote": "DEFAULT_TOKEN_LIMIT: int = 400_000"
+      },
+      "proposed_fix": "Update README to state the default token limit is 400000 and document the 900000 upper cap separately.",
+      "suggested_patch": {
+        "target_path": "README.md",
+        "patch": "--- a/README.md\n+++ b/README.md\n@@\n-- default token limit is 900000\n+- default token limit is 400000 (upper cap 900000)\n"
+      },
+      "runnable_probe": null,
+      "fixture_label": "fixture-generated"
+    },
+    {
+      "finding_id": "fixture-002",
+      "drift_kind": "environment-variable-mismatch",
+      "explanation": "Fixture finding: docs mention REFLECTION_API_KEY only, but runtime now defaults to OLLAMA_API_KEY.",
+      "doc_citation": {
+        "path": "README.md",
+        "start_line": 56,
+        "end_line": 56,
+        "quote": "set REFLECTION_API_KEY"
+      },
+      "code_citation": {
+        "path": "repoatlas/config.py",
+        "start_line": 45,
+        "end_line": 45,
+        "quote": "selected_provider: str = (provider or os.environ.get(\"BEAM_PROVIDER\", \"ollama\"))"
+      },
+      "proposed_fix": "Document BEAM_PROVIDER and OLLAMA_API_KEY as the default live path.",
+      "suggested_patch": {
+        "target_path": "README.md",
+        "patch": "--- a/README.md\n+++ b/README.md\n@@\n-- set REFLECTION_API_KEY\n+- set BEAM_PROVIDER=ollama and OLLAMA_API_KEY (optional: BEAM_PROVIDER=reflection with REFLECTION_API_KEY)\n"
+      },
+      "runnable_probe": null,
+      "fixture_label": "fixture-generated"
+    }
+  ],
+  "atlas_claims": [
+    {
+      "claim_id": "atlas-001",
+      "section": "entry_points",
+      "text": "scripts/run_benchmark.py is the benchmark entry point and supports dry-run and small-budget modes.",
+      "citations": [
+        {
+          "path": "scripts/run_benchmark.py",
+          "start_line": 40,
+          "end_line": 58,
+          "quote": "--max-repos"
+        }
+      ],
+      "fixture_label": "fixture-generated"
+    },
+    {
+      "claim_id": "atlas-002",
+      "section": "data_flow",
+      "text": "Repository packing feeds one structured analysis call, then deterministic verification validates every cited line.",
+      "citations": [
+        {
+          "path": "repoatlas/analyser.py",
+          "start_line": 45,
+          "end_line": 75,
+          "quote": "verify_findings"
+        },
+        {
+          "path": "repoatlas/verifier.py",
+          "start_line": 24,
+          "end_line": 44,
+          "quote": "quote-not-found-in-range"
+        }
+      ],
+      "fixture_label": "fixture-generated"
+    }
+  ]
+}

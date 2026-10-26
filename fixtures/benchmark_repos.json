@@ -1,0 +1,17 @@
+[
+  { "name": "flask", "repo_url": "https://github.com/pallets/flask", "ref": "main" },
+  { "name": "fastapi", "repo_url": "https://github.com/fastapi/fastapi", "ref": "master" },
+  { "name": "requests", "repo_url": "https://github.com/psf/requests", "ref": "main" },
+  { "name": "pandas", "repo_url": "https://github.com/pandas-dev/pandas", "ref": "main" },
+  { "name": "numpy", "repo_url": "https://github.com/numpy/numpy", "ref": "main" },
+  { "name": "django", "repo_url": "https://github.com/django/django", "ref": "main" },
+  { "name": "celery", "repo_url": "https://github.com/celery/celery", "ref": "main" },
+  { "name": "scikit-learn", "repo_url": "https://github.com/scikit-learn/scikit-learn", "ref": "main" },
+  { "name": "ansible", "repo_url": "https://github.com/ansible/ansible", "ref": "devel" },
+  { "name": "click", "repo_url": "https://github.com/pallets/click", "ref": "main" },
+  { "name": "poetry", "repo_url": "https://github.com/python-poetry/poetry", "ref": "main" },
+  { "name": "transformers", "repo_url": "https://github.com/huggingface/transformers", "ref": "main" },
+  { "name": "langchain", "repo_url": "https://github.com/langchain-ai/langchain", "ref": "master" },
+  { "name": "kubernetes", "repo_url": "https://github.com/kubernetes/kubernetes", "ref": "master" },
+  { "name": "linux", "repo_url": "https://github.com/torvalds/linux", "ref": "master" }
+]

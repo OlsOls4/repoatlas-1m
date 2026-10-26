@@ -1,0 +1,5 @@
+case_name,repo_url,finding_id,drift_kind,doc_path,doc_line_start,doc_line_end,code_path,code_line_start,code_line_end,verified,human_label_true_positive,human_label_notes,fixture_label
+flask-120000,https://github.com/pallets/flask,fixture-001,cli-default-mismatch,README.md,42,42,repoatlas/config.py,9,9,True,,,fixture-generated
+flask-120000,https://github.com/pallets/flask,fixture-002,environment-variable-mismatch,README.md,56,56,repoatlas/config.py,45,45,False,,,fixture-generated
+flask-240000,https://github.com/pallets/flask,fixture-001,cli-default-mismatch,README.md,42,42,repoatlas/config.py,9,9,True,,,fixture-generated
+flask-240000,https://github.com/pallets/flask,fixture-002,environment-variable-mismatch,README.md,56,56,repoatlas/config.py,45,45,True,,,fixture-generated

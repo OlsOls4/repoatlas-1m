@@ -1,0 +1,3 @@
+case_name,repo_url,ref,token_limit,context_tokens,input_tokens,output_tokens,cached_input_tokens,latency_seconds,findings_total,findings_fully_verified,citation_precision,fixture_run
+flask-120000,https://github.com/pallets/flask,main,120000,118422,118422,836,118422,0.12,2,1,0.5,True
+flask-240000,https://github.com/pallets/flask,main,240000,235901,235901,902,235901,0.12,2,2,1.0,True
