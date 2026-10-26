@@ -77,7 +77,10 @@ def test_static_upstream_and_replay_are_honest(tmp_path: Path) -> None:
     assert replay["rejected"] == 1
     assert replay["pr"]["url"].endswith("/3746")
     assert replay["tracebacks"]
-    assert "hand-checked" not in json.dumps(documents).lower()
+    dumped = json.dumps(documents)
+    assert "file only lists starlette" not in dumped
+    assert "after results_live/upstream_status.json was written" not in dumped
+    assert "hand-checked" not in dumped.lower()
     assert "hand-verified" not in json.dumps(documents).lower()
     assert "/workspace/" not in json.dumps(documents)
     false_cards = [bug for bug in documents["bugs"] if bug["badge"] == "false"]

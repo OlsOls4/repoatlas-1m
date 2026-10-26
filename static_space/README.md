@@ -52,7 +52,7 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 - Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.
 - A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug input_stream).
 - 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict repro badge.
-- Open PR #1216 was confirmed on GitHub after results_live/upstream_status.json was written (that file only lists starlette #3746, httpx #3774, and arrow #1355).
+- Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.
 - httpx #3774 and arrow #1355 were already reported upstream by others.
 - cattrs and click have drafts in the repo; they are not listed as filed.
 - This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives.

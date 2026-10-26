@@ -510,7 +510,7 @@
       "kind": "filed_open",
       "label": "Open PR #1216",
       "url": "https://github.com/wntrblm/nox/pull/1216",
-      "note": "Open PR #1216 was confirmed on GitHub after results_live/upstream_status.json was written (that file only lists starlette #3746, httpx #3774, and arrow #1355)."
+      "note": "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
     },
     "cross_file": true
   },

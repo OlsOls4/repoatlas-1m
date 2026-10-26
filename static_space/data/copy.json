@@ -11,7 +11,7 @@
     "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
     "A true drift can still fail the strict repro rule (starlette T1, marshmallow T11, structlog untriaged, werkzeug input_stream).",
     "2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict repro badge.",
-    "Open PR #1216 was confirmed on GitHub after results_live/upstream_status.json was written (that file only lists starlette #3746, httpx #3774, and arrow #1355).",
+    "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.",
     "httpx #3774 and arrow #1355 were already reported upstream by others.",
     "cattrs and click have drafts in the repo; they are not listed as filed.",
     "This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives."
@@ -26,7 +26,7 @@
   "cli_sweep": "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live",
   "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.",
   "local": "python3 -m pip install -r requirements-dev.txt && python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py",
-  "built_at": "2026-10-26T23:02:34Z",
+  "built_at": "2026-10-26T23:06:05Z",
   "sources": [
     "results_live/hybrid/hybrid.json",
     "results_live/hybrid/hybrid.csv",

@@ -58,8 +58,7 @@ HYBRID_TRIAGE_STARLETTE_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "triage
 NEVER_FILED_REPOS: frozenset[str] = frozenset({"cattrs", "click"})
 NOX_PR_URL: str = "https://github.com/wntrblm/nox/pull/1216"
 NOX_PR_NOTE: str = (
-    "Open PR #1216 was confirmed on GitHub after results_live/upstream_status.json "
-    "was written (that file only lists starlette #3746, httpx #3774, and arrow #1355)."
+    "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
 )
 
 
