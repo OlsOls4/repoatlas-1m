@@ -1,192 +1,134 @@
+---
+title: RepoAtlas-1M
+emoji: 🛰️
+colorFrom: indigo
+colorTo: emerald
+sdk: gradio
+app_file: app.py
+short_description: Beam-powered whole-repo DocDrift finder with hand-checked benchmark evidence.
+tags:
+  - beam
+  - long-context
+  - docs
+  - code
+  - verification
+  - gradio
+---
+
 # RepoAtlas-1M
 
-RepoAtlas-1M is a fixture-first implementation for Reflection's **Build with Beam** challenge.  
-It packs a full repository into a deterministic long-context prompt, runs one structured Beam analysis pass, and verifies every citation deterministically before presenting results.
+![Hero screenshot placeholder](docs/hero.png)
 
-> **Current default mode:** fixture/offline-safe.  
-> Live inference is supported for your local machine with your own key, but CI/tests remain fixture-only.
+## Headline result
 
----
+**11 hand-verified docs bugs in popular Python libraries, found by Beam reading each whole repo (~300–400k tokens) in a single call.**
 
-## What is implemented
+Signature story:
 
-### 1) Repository packer (deterministic, cache-friendly)
+- **starlette**: Beam read a 394,577-token prompt and flagged `receive_json(data, mode="binary")` in docs versus `receive_json(self, mode: str = "text")` in code.
+- Hand-verified true drift.
+- Fixed upstream in **PR #3746**: https://github.com/Kludex/starlette/pull/3746
 
-- Fetches public GitHub repositories as tarballs.
-- Filters lockfiles, binary files, and vendor/build directories.
-- Line-numbers every packed file (`<line>|<text>` format).
-- Counts tokens with `cl100k_base`.
-- Enforces configurable token cap (default `400000`, max `900000`).
-- Produces a stable packed prefix hash for cache reuse.
-- Caches packs in `.cache/repoatlas/packs/`.
+## Space behaviour
 
-### 2) DocDrift pipeline (fixture-first, strict structure)
+- **Default view is fully cached** from `results_live/` (zero inference cost).
+- Findings are shown with:
+  - doc and code snippets side by side;
+  - verifier badge (citation check);
+  - hand-check badge (truth label);
+  - upstream status badge.
+- The app loads compact metadata from `results_live/index.json` at startup and does **not** load all raw traces by default.
 
-- Uses one structured analysis response schema:
-  - `findings[]`: doc citation + code citation + drift type + explanation + proposed fix + optional local patch.
-  - `atlas_claims[]`: onboarding claims with citations.
-- Deterministic verifier checks:
-  - file exists,
-  - line ranges are valid,
-  - quoted text exists in cited lines.
-- Optional runnable probes are supported in code (disabled by default).
-- Proposed doc fixes are kept local as patch artefacts only.
+## How Beam is used
 
-### 3) Onboarding atlas tab
+Required challenge description (exactly how this project uses Beam):
 
-- Atlas claims are included in the same structured output format.
-- Citation checks are reused for atlas citation precision.
+1. **One whole-repo call into long context**  
+   RepoAtlas packs an entire repository into one prompt (line-numbered, deterministic format), then submits a single Beam call per run.
+2. **Structured JSON schema output**  
+   Beam is asked for strict structured output (`findings[]`, `atlas_claims[]`) so each claim has explicit citations.
+3. **Deterministic citation verifier**  
+   Every finding is checked against packed source lines. Exact quote matching is required, with a controlled **±3-line shift** tolerance for off-by-one citation ranges.
+4. **Token calibration factor**  
+   Prompt budgeting uses a calibration factor of **1.22x** (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`) between estimated and observed prompt tokens.
+5. **Why long context instead of chunked RAG**  
+   The approach keeps local relationships (docs, code, and nearby implementation context) in one model call, reducing retrieval misses where drift depends on cross-file context.
 
-### 4) Benchmark harness + exports
+## Results (real live runs only)
 
-- Sweep runner over repo list and context limits.
-- Live benchmark rows are merged into `results_live/benchmark_results.csv` by `(repo_url, token_limit)` so reruns update those keys without dropping other rows.
-- Exports:
-  - `results/benchmark_results.csv`
-  - `results/hand_check_sheet.csv`
-  - `results/benchmark_results.jsonl` (HF-dataset-ready rows)
-  - per-case traces in `results/traces/`
-  - charts in `results/charts/`
-- Small-budget mode via `--max-repos`.
-- `--dry-run` mode estimates packed token sizes without inference.
-- `--repos` allows selecting named repos from a repo catalogue file.
+All values below come from `results_live/handcheck.md` and `results_live/benchmark_results_combined.csv`.
 
-### 5) Gradio app (HF Space-ready pattern)
+- **All live hand-checked findings:** 11 true / 8 false / 2 unclear = **11/21 (52.4%)**
+- **Verifier caveat from hand-check:** caught **4/7** false positives, but wrongly rejected **1** true drift.
+- **External validation:**  
+  - starlette fix filed and accepted upstream (PR #3746)  
+  - httpx-mounts and arrow findings independently match open upstream PRs by others
 
-- Reads **precomputed results only** from `results/` by default.
-- Displays:
-  - DocDrift findings with verification status,
-  - onboarding atlas claims,
-  - benchmark table/charts.
-- Optional BYOK live run tab for small repos (token cap enforced in UI).
+### Run table (from handcheck + combined benchmark)
 
----
+| Run | Prompt tok | Completion tok | Latency s | Findings | Verifier pass | Hand true | Hand false | Hand unclear |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| flask-120000 | 142,664 | 3,692 | 21.13 | 0 | 0 | 0 | 0 | 0 |
+| fastapi-120000 | 146,415 | 1,834 | 12.00 | 0 | 0 | 0 | 0 | 0 |
+| starlette-400000 | 394,577 | 4,733 | 21.36 | 1 | 0 | 1 | 0 | 0 |
+| typer-400000 | 387,284 | 8,653 | 36.12 | 0 | 0 | 0 | 0 | 0 |
+| hatch-400000 | 385,297 | 5,137 | 23.39 | 1 | 0 | 0 | 0 | 1 |
+| poetry-400000 | 384,598 | 4,287 | 46.22 | 1 | 1 | 0 | 1 | 0 |
+| httpx-400000 | 392,598 | 4,053 | 21.15 | 2 | 2 | 2 | 0 | 0 |
+| click-400000 | 388,719 | 4,698 | 21.79 | 1 | 1 | 1 | 0 | 0 |
+| attrs-400000 | 400,648 | 4,102 | 22.15 | 0 | 0 | 0 | 0 | 0 |
+| pydantic-settings-400000 | 366,051 | 5,378 | 26.05 | 1 | 1 | 0 | 1 | 0 |
+| structlog-400000 | 403,833 | 6,118 | 24.90 | 2 | 1 | 1 | 1 | 0 |
+| jinja-400000 | 356,873 | 5,311 | 25.72 | 1 | 0 | 0 | 0 | 1 |
+| nox-400000 | 346,394 | 7,014 | 27.42 | 1 | 1 | 1 | 0 | 0 |
+| arrow-400000 | 329,026 | 4,457 | 15.86 | 4 | 1 | 1 | 3 | 0 |
+| cattrs-400000 | 306,549 | 4,107 | 21.17 | 3 | 3 | 3 | 0 | 0 |
+| marshmallow-400000 | 294,559 | 4,916 | 19.71 | 2 | 2 | 1 | 1 | 0 |
+| werkzeug-400000 | 386,415 | 3,446 | 17.93 | 1 | 0 | 0 | 1 | 0 |
 
-## Beam provider configuration
+> Full narrative tables and per-finding notes are included verbatim in `results_live/handcheck.md`.
 
-Live client is OpenAI-compatible and supports two providers:
+## Live tab guardrails
 
-- **Default:** Ollama Cloud
-  - `BEAM_PROVIDER=ollama` (default when unset)
-  - base URL: `https://ollama.com/v1`
-  - endpoint: `/chat/completions`
-  - model: `beam`
-  - key: `OLLAMA_API_KEY`
+- Provider from environment:
+  - `BEAM_PROVIDER=ollama` uses `OLLAMA_API_KEY` with `https://ollama.com/v1` and model `beam`.
+  - `BEAM_PROVIDER=reflection` is also supported.
+- Live execution is blocked if required secrets are missing.
+- Default and maximum pack cap in-app: **150k**.
+- Queue concurrency: **1**.
+- Per-IP session limit: **2 runs per hour**.
+- Global daily cap: `REPOATLAS_LIVE_DAILY_CAP` (default 24).
+- Hidden progress log is emitted during live runs.
+- API keys are never echoed in UI output.
+- A dry-run token estimate is shown before/while running.
 
-- **Optional alternative:** Reflection API
-  - `BEAM_PROVIDER=reflection`
-  - base URL: `https://api.reflection.ai/openai/v1`
-  - endpoint: `/chat/completions`
-  - model: `Beam-1.0-501B-A23B`
-  - key: `REFLECTION_API_KEY`
+## Dataset export
 
-### Live safety controls
+`dataset/` is ready for companion publication later and includes:
 
-- Enforces one concurrent live request via file lock.
-- Retries on `429` and `5xx` with exponential backoff.
-- Caches every live response to disk in `.cache/repoatlas/responses/`, keyed by prompt hash, to prevent re-billing identical calls.
-- Uses generous `max_tokens` (`REPOATLAS_MAX_TOKENS`, default `32000`) because reasoning tokens count towards token limits.
-- Applies token calibration (`REPOATLAS_TOKEN_CALIBRATION_FACTOR`, default `1.22`) so packer estimates target real prompt-token ceilings.
-- Parses `message.content`; if content is empty, reasoning fallback text is captured in raw traces for debugging.
+- `dataset/README.md` (dataset card),
+- `dataset/runs.jsonl`,
+- `dataset/findings.jsonl`,
+- full `dataset/traces/` and `dataset/upstream_drafts/`.
 
----
+## Limitations
 
-## Fixture vs real results (honesty policy)
+- Sample size is still small for broad generalisation.
+- Verifier pass/fail is **not** correctness; it only checks citation alignment.
+- Long-context outputs can still contain false positives and unclear cases.
+- Some true drifts can be rejected by verifier range/quote strictness.
 
-- Files under `fixtures/` and current `results/` are **fixture artefacts** for offline development and UI demonstration.
-- Fixture findings are explicitly labelled `fixture-generated`.
-- Do not report fixture artefacts as measured live benchmark outcomes.
-
----
-
-## Local setup
-
-```bash
-python3 -m pip install -e ".[dev]"
-```
-
-Or with requirements files:
+## Reproduce locally
 
 ```bash
 python3 -m pip install -r requirements-dev.txt
-```
-
-Run tests:
-
-```bash
+python3 scripts/build_results_live_index.py
 python3 -m pytest -q
+python3 app.py
 ```
 
-Run app:
+Optional benchmark rerun (live, Ollama Cloud):
 
 ```bash
-python3 scripts/run_app.py --port 43123
+BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live
 ```
-
----
-
-## Exactly how to run the live benchmark (one command)
-
-### Ollama Cloud (default, recommended)
-
-```bash
-BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --max-repos 2 --token-limits 120000,240000,400000
-```
-
-Run from the candidate catalogue (select only specific repos, do not fetch all):
-
-```bash
-BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_candidates.yaml --repos uv,poetry,pnpm --token-limits 120000,240000
-```
-
-List candidate repos and one-line reasons:
-
-```bash
-python3 scripts/run_benchmark.py --list-repos
-```
-
-### Reflection alternative
-
-```bash
-BEAM_PROVIDER=reflection REFLECTION_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --max-repos 2 --token-limits 120000,240000,400000
-```
-
-### Dry-run estimation only (no live inference call)
-
-```bash
-python3 scripts/run_benchmark.py --dry-run --max-repos 2 --token-limits 120000,240000,400000
-```
-
-Dry-run a near-900k real-token budget (with calibration-aware projected prompt tokens):
-
-```bash
-python3 scripts/run_benchmark.py --dry-run --repos-file benchmarks/repos_candidates.yaml --repos fastapi --token-limits 900000
-```
-
----
-
-## Make targets
-
-- `make install`
-- `make test`
-- `make app`
-- `make benchmark-fixture`
-- `make benchmark-dry-run`
-- `make benchmark-live`
-- `make analysis-dry-run`
-
----
-
-## Challenge usage notes for README/HF submission
-
-When preparing the final HF Space README, include:
-
-- exact provider/model used per run,
-- context token cap and observed token counts,
-- measured latency,
-- rate-limit header snapshots,
-- statement that cached prompt-prefix reuse is used to reduce billable uncached tokens,
-- limitations:
-  - very large repos are truncated at token cap,
-  - live output quality still depends on model behaviour,
-  - unverified findings must remain labelled unverified.

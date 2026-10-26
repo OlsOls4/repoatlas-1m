@@ -1,0 +1,152 @@
+[
+ {
+  "trace": "results_live/traces/fastapi-120000.json",
+  "findings": 0,
+  "old_fully_verified": 0,
+  "new_fully_verified": 0,
+  "atlas_citations_verified": 4,
+  "atlas_citations_total": 4,
+  "verification_results": []
+ },
+ {
+  "trace": "results_live/traces/flask-120000.json",
+  "findings": 0,
+  "old_fully_verified": 0,
+  "new_fully_verified": 0,
+  "atlas_citations_verified": 3,
+  "atlas_citations_total": 3,
+  "verification_results": []
+ },
+ {
+  "trace": "results_live/traces/hatch-400000.json",
+  "findings": 1,
+  "old_fully_verified": 0,
+  "new_fully_verified": 1,
+  "atlas_citations_verified": 4,
+  "atlas_citations_total": 5,
+  "verification_results": [
+   {
+    "finding_id": "DD-1",
+    "doc_check": {
+     "citation": {
+      "path": "docs/config/environment/overview.md",
+      "start_line": 86,
+      "end_line": 86,
+      "quote": "    Hatch uses [pip](https://github.com/pypa/pip) to install dependencies so any [configuration](https://pip.pypa.io/en/stable/topics/configuration/) it supports Hatch does as well. For example, if you wanted to only use a private repository you could set the `PIP_INDEX_URL` [environment variable](#environment-variables)."
+     },
+     "verified": true,
+     "reason": "line-shifted-match",
+     "corrected_start_line": 87,
+     "corrected_end_line": 87,
+     "line_offset": 1
+    },
+    "code_check": {
+     "citation": {
+      "path": "src/hatch/env/virtual.py",
+      "start_line": 92,
+      "end_line": 93,
+      "quote": "    def installer(self) -> str:\n        return self.config.get(\"installer\", \"pip\")"
+     },
+     "verified": true,
+     "reason": null,
+     "corrected_start_line": null,
+     "corrected_end_line": null,
+     "line_offset": null
+    },
+    "probe_check": null,
+    "fully_verified": true
+   }
+  ]
+ },
+ {
+  "trace": "results_live/traces/poetry-400000.json",
+  "findings": 1,
+  "old_fully_verified": 1,
+  "new_fully_verified": 1,
+  "atlas_citations_verified": 4,
+  "atlas_citations_total": 5,
+  "verification_results": [
+   {
+    "finding_id": "DD-1",
+    "doc_check": {
+     "citation": {
+      "path": "docs/basic-usage.md",
+      "start_line": 50,
+      "end_line": 50,
+      "quote": "requires-python = \">=3.9\""
+     },
+     "verified": true,
+     "reason": null,
+     "corrected_start_line": null,
+     "corrected_end_line": null,
+     "line_offset": null
+    },
+    "code_check": {
+     "citation": {
+      "path": "src/poetry/console/commands/init.py",
+      "start_line": 170,
+      "end_line": 176,
+      "quote": "python = self.option(\"python\")\n        if not python:\n            config = Config.create()\n            python = (\n                \">=\"\n                + Python.get_preferred_python(config, self.io).minor_version.to_string()\n            )"
+     },
+     "verified": true,
+     "reason": null,
+     "corrected_start_line": null,
+     "corrected_end_line": null,
+     "line_offset": null
+    },
+    "probe_check": null,
+    "fully_verified": true
+   }
+  ]
+ },
+ {
+  "trace": "results_live/traces/starlette-400000.json",
+  "findings": 1,
+  "old_fully_verified": 0,
+  "new_fully_verified": 1,
+  "atlas_citations_verified": 6,
+  "atlas_citations_total": 6,
+  "verification_results": [
+   {
+    "finding_id": "DD-1",
+    "doc_check": {
+     "citation": {
+      "path": "docs/websockets.md",
+      "start_line": 73,
+      "end_line": 73,
+      "quote": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames."
+     },
+     "verified": true,
+     "reason": "line-shifted-match",
+     "corrected_start_line": 74,
+     "corrected_end_line": 74,
+     "line_offset": 1
+    },
+    "code_check": {
+     "citation": {
+      "path": "starlette/websockets.py",
+      "start_line": 136,
+      "end_line": 136,
+      "quote": "async def receive_json(self, mode: str = \"text\") -> Any:"
+     },
+     "verified": true,
+     "reason": null,
+     "corrected_start_line": null,
+     "corrected_end_line": null,
+     "line_offset": null
+    },
+    "probe_check": null,
+    "fully_verified": true
+   }
+  ]
+ },
+ {
+  "trace": "results_live/traces/typer-400000.json",
+  "findings": 0,
+  "old_fully_verified": 0,
+  "new_fully_verified": 0,
+  "atlas_citations_verified": 7,
+  "atlas_citations_total": 7,
+  "verification_results": []
+ }
+]

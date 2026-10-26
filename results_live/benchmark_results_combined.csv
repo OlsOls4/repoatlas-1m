@@ -1,0 +1,18 @@
+case_name,repo_url,ref,token_limit,context_tokens,input_tokens,output_tokens,cached_input_tokens,latency_seconds,findings_total,findings_fully_verified,citation_precision,fixture_run,status,error,batch,hand_true,hand_false,hand_unclear,hand_precision,cumulative_true,cumulative_judged,cumulative_precision
+flask-120000,https://github.com/pallets/flask,main,120000,119977,142664,3692,0,21.128201432991773,0,0,,False,ok,,live (earlier),0,0,0,,0,0,
+fastapi-120000,https://github.com/fastapi/fastapi,master,120000,119937,146415,1834,0,12.000655327006825,0,0,,False,ok,,live (earlier),0,0,0,,0,0,
+starlette-400000,https://github.com/encode/starlette,master,400000,327836.0,394577.0,4733.0,384.0,21.363057655005832,1.0,0.0,0.0,False,ok,,live (earlier),1,0,0,1.000,1,1,1.000
+typer-400000,https://github.com/fastapi/typer,master,400000,327849.0,387284.0,8653.0,384.0,36.122225368992076,0.0,0.0,,False,ok,,live (earlier),0,0,0,,1,1,1.000
+hatch-400000,https://github.com/pypa/hatch,master,400000,327838.0,385297.0,5137.0,0.0,23.387189091998152,1.0,0.0,0.0,False,ok,,live (earlier),0,0,1,0.000,1,2,0.500
+poetry-400000,https://github.com/python-poetry/poetry,main,400000,327845.0,384598.0,4287.0,384.0,46.21661127099651,1.0,1.0,1.0,False,ok,,live (earlier),0,1,0,0.000,1,3,0.333
+httpx-400000,https://github.com/encode/httpx,b5addb64f0161ff6bfe94c124ef76f6a1fba5254,400000,327864.0,392598.0,4053.0,0.0,21.15328301799309,2.0,2.0,1.0,False,ok,,sweep 2026-10-26,2,0,0,1.000,3,5,0.600
+click-400000,https://github.com/pallets/click,2247b35ea1c47c727d7a06e51fa280e12a863ff6,400000,327831.0,388719.0,4698.0,0.0,21.787726695998572,1.0,1.0,1.0,False,ok,,sweep 2026-10-26,1,0,0,1.000,4,6,0.667
+attrs-400000,https://github.com/python-attrs/attrs,c8bb9bfaa2843e7844b5bb13bed4370b51feec4f,400000,327857.0,400648.0,4102.0,0.0,22.154312130005565,0.0,0.0,,False,ok,,sweep 2026-10-26,0,0,0,,4,6,0.667
+pydantic-settings-400000,https://github.com/pydantic/pydantic-settings,7e2dacb6db07b41abb0c80d0608e46e197265554,400000,311093.0,366051.0,5378.0,0.0,26.049843171000248,1.0,1.0,1.0,False,ok,,sweep 2026-10-26,0,1,0,0.000,4,7,0.571
+structlog-400000,https://github.com/hynek/structlog,19c4f21059e853114efa7a93b6e675d93bf7934e,400000,318657.0,403833.0,6118.0,384.0,24.898123092993046,2.0,1.0,0.5,False,ok,,sweep 2026-10-26,1,1,0,0.500,5,9,0.556
+jinja-400000,https://github.com/pallets/jinja,5ef70112a1ff19c05324ff889dd30405b1002044,400000,300733.0,356873.0,5311.0,384.0,25.724842554991483,1.0,0.0,0.0,False,ok,,sweep 2026-10-26,0,0,1,0.000,5,10,0.500
+nox-400000,https://github.com/wntrblm/nox,afa3983bbac3143bab5c8406244327581f76a3d7,400000,294382.0,346394.0,7014.0,384.0,27.421270567007014,1.0,1.0,1.0,False,ok,,sweep 2026-10-26,1,0,0,1.000,6,11,0.545
+arrow-400000,https://github.com/arrow-py/arrow,2224255c4acc594d734cef0bbc83360452a67983,400000,280937.0,329026.0,4457.0,0.0,15.857966331008356,4.0,1.0,0.25,False,ok,,sweep 2026-10-26,1,3,0,0.250,7,15,0.467
+cattrs-400000,https://github.com/python-attrs/cattrs,7a24f770fd6f4d946dd0512d912b2a96556095cd,400000,262894.0,306549.0,4107.0,384.0,21.174317780998535,3.0,3.0,1.0,False,ok,,sweep 2026-10-26,3,0,0,1.000,10,18,0.556
+marshmallow-400000,https://github.com/marshmallow-code/marshmallow,b762ea2d59ca52fe5df76b90de14bed7e5ec5607,400000,247224.0,294559.0,4916.0,384.0,19.710652290988946,2.0,2.0,1.0,False,ok,,sweep 2026-10-26,1,1,0,0.500,11,20,0.550
+werkzeug-400000,https://github.com/pallets/werkzeug,b73dce5a2ce14f7c7fd645699d1d878de48d2948,400000,327823.0,386415.0,3446.0,384.0,17.9281961129891,1.0,0.0,0.0,False,ok,,sweep 2026-10-26,0,1,0,0.000,11,21,0.524

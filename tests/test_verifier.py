@@ -111,6 +111,10 @@ def test_verify_citation_tolerates_dropped_indentation_only() -> None:
 
 
 def test_parse_structured_content_repairs_truncated_json() -> None:
+    """
+    @brief Ensure truncated JSON payloads are repaired and parsed when tail brackets are missing.
+    """
+
     from repoatlas.client import parse_structured_content
 
     truncated = (
