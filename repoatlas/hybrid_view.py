@@ -688,6 +688,8 @@ def build_v2_replay_rows(payload: HybridPayload, stats: HybridHeroStats, pack_to
             rejected = sum(1 for item in verdicts if "true" not in str(item.get("verdict", "")).lower())
             added = len(_as_dict_list(triage_payload.get("additional_findings")))
     beam_kept: int = stats["true_candidates_judged"] - stats["rejected_true"] + stats["kept_false"]
+    symbol_row: dict[str, object] = _find_row(payload["rows"], "symbol check")
+    symbol_total: int = _as_int(symbol_row.get("findings"))
     return [
         [
             "Replay note",
@@ -704,7 +706,7 @@ def build_v2_replay_rows(payload: HybridPayload, stats: HybridHeroStats, pack_to
         [
             "v2 steps (all libraries)",
             (
-                f"Symbol check: {stats['symbol_true']} true of the later union → Beam triage: judged "
+                f"Symbol check: {symbol_total} candidates → Beam triage: judged "
                 f"{stats['judged']}, kept {beam_kept}, rejected {stats['judged'] - beam_kept} "
                 f"({stats['rejected_true']} true), added {stats['additions_total']} → Repro: "
                 f"{stats['repro_findings']} badges, {stats['repro_true']} distinct true"
