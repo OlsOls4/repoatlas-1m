@@ -67,3 +67,44 @@ def test_verify_citation_fails_for_missing_file() -> None:
     result = verify_citation(citation, lookup)
     assert result.verified is False
     assert result.reason == "file-not-found"
+
+
+def test_parse_structured_content_handles_aliases_and_special_tokens() -> None:
+    """
+    @brief Beam via Ollama ignored json_schema and leaked <|im_end|>; parser must recover.
+    """
+
+    from repoatlas.client import parse_structured_content
+
+    raw = (
+        '{"doc_drift": [{"summary": "s", "doc": {"path": "a.rst", "start_line": 1, "end_line": 1, "quote": "q"}, '
+        '"code": {"path": "b.py", "start_line": 2, "end_line": 2, "quote": "r"}, "proposed_fix": "f"}], '
+        '"onboarding": [{"claim": "c", "doc": {"path": "a.rst", "start_line": 1, "end_line": 1, "quote": "q"}}]}<|im_end|>'
+    )
+    parsed, normalised = parse_structured_content(raw)
+    assert normalised is True
+    assert parsed.findings[0].doc_citation.path == "a.rst"
+    assert parsed.findings[0].finding_id == "DD-1"
+    assert parsed.atlas_claims[0].text == "c"
+    assert len(parsed.atlas_claims[0].citations) == 1
+
+
+def test_verify_citation_tolerates_dropped_indentation_only() -> None:
+    """
+    @brief A quote that only loses continuation-line indentation verifies, flagged as normalised.
+    """
+
+    from repoatlas.models import Citation
+    from repoatlas.verifier import verify_citation
+
+    lookup = {"docs/config.rst": ["    Enabling this implicitly enables X as well, as", "    it is only valid over HTTPS."]}
+    ok = verify_citation(
+        Citation(path="docs/config.rst", start_line=1, end_line=2, quote="Enabling this implicitly enables X as well, as\nit is only valid over HTTPS."),
+        lookup,
+    )
+    assert ok.verified and ok.reason == "whitespace-normalised-match"
+    bad = verify_citation(
+        Citation(path="docs/config.rst", start_line=1, end_line=2, quote="Enabling this disables X"),
+        lookup,
+    )
+    assert not bad.verified

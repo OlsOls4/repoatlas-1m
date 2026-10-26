@@ -1,0 +1,123 @@
+{
+  "usage": {
+    "prompt_tokens": 142462,
+    "completion_tokens": 4276,
+    "total_tokens": 146738,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "DD-1",
+      "drift_kind": "unspecified",
+      "explanation": "Docs say enabling SESSION_COOKIE_PARTITIONED implicitly enables SESSION_COOKIE_SECURE; code reads SESSION_COOKIE_SECURE directly without modifying it.",
+      "doc_citation": {
+        "path": "docs/config.rst",
+        "start_line": 205,
+        "end_line": 206,
+        "quote": "Enabling this implicitly enables :data:`SESSION_COOKIE_SECURE` as well, as\nit is only valid when served over HTTPS."
+      },
+      "code_citation": {
+        "path": "src/flask/sessions.py",
+        "start_line": 202,
+        "end_line": 206,
+        "quote": "def get_cookie_secure(self, app: Flask) -> bool:\n        \"\"\"Returns True if the cookie should be secure.  This currently\n        just returns the value of the ``SESSION_COOKIE_SECURE`` setting.\n        \"\"\"\n        return app.config[\"SESSION_COOKIE_SECURE\"]  # type: ignore[no-any-return]"
+      },
+      "proposed_fix": "Replace lines 205-206 with: 'Partitioned cookies are only sent over HTTPS. Enable :data:`SESSION_COOKIE_SECURE` separately for valid cross-site behavior.'",
+      "suggested_patch": null,
+      "runnable_probe": null,
+      "fixture_label": null
+    }
+  ],
+  "atlas_claims": [
+    {
+      "claim_id": "AC-1",
+      "section": "onboarding",
+      "text": "The primary command-line entry point is installed as `flask = \"flask.cli:main\"`.",
+      "citations": [
+        {
+          "path": "docs/cli.rst",
+          "start_line": 6,
+          "end_line": 8,
+          "quote": "Installing Flask installs the ``flask`` script, a `Click`_ command line\ninterface, in your virtualenv. Executed from the terminal, this script gives\naccess to built-in, extension, and application-defined commands."
+        },
+        {
+          "path": "pyproject.toml",
+          "start_line": 82,
+          "end_line": 82,
+          "quote": "flask = \"flask.cli:main\""
+        }
+      ],
+      "fixture_label": null
+    },
+    {
+      "claim_id": "AC-2",
+      "section": "onboarding",
+      "text": "Request-time activity is tracked through a context variable and exposed via LocalProxy objects such as current_app and request.",
+      "citations": [
+        {
+          "path": "docs/appcontext.rst",
+          "start_line": 1,
+          "end_line": 7,
+          "quote": "The context keeps track of data and objects during a request, CLI command, or\nother activity. Rather than passing this data around to every function, the\n:data:`.current_app`, :data:`.g`, :data:`.request`, and :data:`.session` proxies\nare accessed instead."
+        },
+        {
+          "path": "src/flask/globals.py",
+          "start_line": 40,
+          "end_line": 62,
+          "quote": "_cv_app: ContextVar[AppContext] = ContextVar(\"flask.app_ctx\")\napp_ctx: AppContextProxy = LocalProxy(  # type: ignore[assignment]\n    _cv_app, unbound_message=_no_app_msg\n)\ncurrent_app: FlaskProxy = LocalProxy(  # type: ignore[assignment]\n    _cv_app, \"app\", unbound_message=_no_app_msg\n)\ng: _AppCtxGlobalsProxy = LocalProxy(  # type: ignore[assignment]\n    _cv_app, \"g\", unbound_message=_no_app_msg\n)\nrequest: RequestProxy = LocalProxy(  # type: ignore[assignment]\n    _cv_app, \"request\", unbound_message=_no_req_msg\n)\nsession: SessionMixinProxy = LocalProxy(  # type: ignore[assignment]\n    _cv_app, \"session\", unbound_message=_no_req_msg\n)"
+        }
+      ],
+      "fixture_label": null
+    },
+    {
+      "claim_id": "AC-3",
+      "section": "onboarding",
+      "text": "A request is dispatched by pushing an AppContext, calling full_dispatch_request, and popping the context afterward.",
+      "citations": [
+        {
+          "path": "docs/appcontext.rst",
+          "start_line": 144,
+          "end_line": 159,
+          "quote": "Flask dispatches a request in multiple stages which can affect the request,\nresponse, and how errors are handled. See :doc:`/lifecycle` for a list of all\nthe steps, callbacks, and signals during each request. The following are the\nsteps directly related to the context.\n\n-   The app context is pushed, the proxies are available."
+        },
+        {
+          "path": "src/flask/app.py",
+          "start_line": 1592,
+          "end_line": 1617,
+          "quote": "ctx = self.request_context(environ)\n        error: BaseException | None = None\n        try:\n            try:\n                ctx.push()\n                response = self.full_dispatch_request(ctx)\n            except Exception as e:\n                error = e\n                response = self.handle_exception(ctx, e)\n            except:\n                error = sys.exc_info()[1]\n                raise\n            return response(environ, start_response)\n        finally:\n            if \"werkzeug.debug.preserve_context\" in environ:\n                environ[\"werkzeug.debug.preserve_context\"](ctx)\n\n            if (\n                error is not None\n                and self.should_ignore_error is not None\n                and self.should_ignore_error(error)\n            ):\n                error = None\n\n            ctx.pop(error)"
+        }
+      ],
+      "fixture_label": null
+    }
+  ],
+  "verification": [
+    {
+      "finding_id": "DD-1",
+      "doc_check": {
+        "citation": {
+          "path": "docs/config.rst",
+          "start_line": 205,
+          "end_line": 206,
+          "quote": "Enabling this implicitly enables :data:`SESSION_COOKIE_SECURE` as well, as\nit is only valid when served over HTTPS."
+        },
+        "verified": true,
+        "reason": "whitespace-normalised-match"
+      },
+      "code_check": {
+        "citation": {
+          "path": "src/flask/sessions.py",
+          "start_line": 202,
+          "end_line": 206,
+          "quote": "def get_cookie_secure(self, app: Flask) -> bool:\n        \"\"\"Returns True if the cookie should be secure.  This currently\n        just returns the value of the ``SESSION_COOKIE_SECURE`` setting.\n        \"\"\"\n        return app.config[\"SESSION_COOKIE_SECURE\"]  # type: ignore[no-any-return]"
+        },
+        "verified": true,
+        "reason": null
+      },
+      "probe_check": null,
+      "fully_verified": true
+    }
+  ],
+  "pack_total_tokens_cl100k": 119977
+}

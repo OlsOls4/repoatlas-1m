@@ -41,9 +41,22 @@ def verify_citation(citation: Citation, file_lookup: dict[str, list[str]]) -> Ci
     start_index: int = citation.start_line - 1
     end_index: int = citation.end_line
     selected_text: str = "\n".join(lines[start_index:end_index])
-    if citation.quote not in selected_text:
-        return CitationVerification(citation=citation, verified=False, reason="quote-not-found-in-range")
-    return CitationVerification(citation=citation, verified=True)
+    if citation.quote in selected_text:
+        return CitationVerification(citation=citation, verified=True)
+    # Models often drop leading indentation on continuation lines of a multi-line quote.
+    # Accept a match that differs only in per-line leading/trailing whitespace, and say so.
+    if _strip_lines(citation.quote) and _strip_lines(citation.quote) in _strip_lines(selected_text):
+        return CitationVerification(citation=citation, verified=True, reason="whitespace-normalised-match")
+    return CitationVerification(citation=citation, verified=False, reason="quote-not-found-in-range")
+
+
+def _strip_lines(text: str) -> str:
+    """
+    @brief Strip leading and trailing whitespace from each line for lenient quote matching.
+    @param text Multi-line text.
+    """
+
+    return "\n".join(line.strip() for line in text.split("\n"))
 
 
 def verify_finding(

@@ -30,6 +30,13 @@ def build_analysis_user_prompt(pack: RepoPack) -> str:
         "2) Proposed fixes must be documentation-only and local patch text.\n"
         "3) If you cannot cite line-level evidence, do not emit that finding or claim.\n"
         "4) Keep output concise and factual.\n"
+        "5) Output ONLY one JSON object, no prose, with exactly this shape:\n"
+        '{"findings": [{"finding_id": "DD-1", "drift_kind": "flag|default|signature|env_var|config_key|other", '
+        '"explanation": "...", "doc_citation": {"path": "...", "start_line": 1, "end_line": 1, "quote": "..."}, '
+        '"code_citation": {"path": "...", "start_line": 1, "end_line": 1, "quote": "..."}, "proposed_fix": "..."}], '
+        '"atlas_claims": [{"claim_id": "AC-1", "section": "architecture|entry_points|data_flow", "text": "...", '
+        '"citations": [{"path": "...", "start_line": 1, "end_line": 1, "quote": "..."}]}]}\n'
+        "Quotes must be copied verbatim from the cited lines, without the '<line>|' prefix.\n"
         "Packed repository context follows:\n\n"
         f"{pack.pack_text}"
     )

@@ -8,6 +8,7 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import time
 from typing import Iterator, Protocol
@@ -165,19 +166,22 @@ class OpenAICompatibleAnalysisClient:
         if cached_response is not None:
             response_payload = cached_response["response_payload"]
             headers_payload = cached_response.get("response_headers", {})
+            cached_latency = cached_response.get("latency_seconds", 0.0)
             return self._build_output_and_metrics(
                 response_payload=response_payload,
                 response_headers=headers_payload if isinstance(headers_payload, dict) else {},
                 repo_url=repo_url,
                 ref=ref,
-                latency_seconds=0.0,
+                latency_seconds=float(cached_latency) if isinstance(cached_latency, (int, float)) else 0.0,
             )
 
         with _exclusive_lock(self._concurrency_lock_path):
             start: float = time.perf_counter()
             response_payload, response_headers = self._post_with_retries(payload)
             latency: float = time.perf_counter() - start
-            self._write_cached_response(cache_key, response_payload=response_payload, response_headers=response_headers)
+            self._write_cached_response(
+                cache_key, response_payload=response_payload, response_headers=response_headers, latency_seconds=latency
+            )
         return self._build_output_and_metrics(
             response_payload=response_payload,
             response_headers=response_headers,
@@ -252,7 +256,7 @@ class OpenAICompatibleAnalysisClient:
         reasoning_fallback: str = _extract_reasoning_text(response_payload)
         if not content.strip():
             raise ValueError(f"Model returned no message.content; reasoning fallback: {reasoning_fallback[:400]}")
-        parsed = _StructuredModelResponse.model_validate_json(content)
+        parsed, normalised = parse_structured_content(content)
         usage = _extract_usage(response_payload)
         metrics = AnalysisCallMetrics(
             latency_seconds=latency_seconds,
@@ -264,6 +268,7 @@ class OpenAICompatibleAnalysisClient:
         enriched_payload: dict[str, object] = dict(response_payload)
         if reasoning_fallback:
             enriched_payload["repoatlas_reasoning_fallback"] = reasoning_fallback
+        enriched_payload["repoatlas_schema_normalised"] = normalised
         output = AnalysisOutput(
             repo_url=repo_url,
             ref=ref,
@@ -292,6 +297,7 @@ class OpenAICompatibleAnalysisClient:
         cache_key: str,
         response_payload: dict[str, object],
         response_headers: dict[str, str],
+        latency_seconds: float = 0.0,
     ) -> None:
         """
         @brief Persist response payload and headers for prompt-level cache reuse.
@@ -306,6 +312,7 @@ class OpenAICompatibleAnalysisClient:
                 {
                     "response_payload": response_payload,
                     "response_headers": response_headers,
+                    "latency_seconds": latency_seconds,
                 },
                 indent=2,
             ),
@@ -445,3 +452,80 @@ def _exclusive_lock(lock_path: Path) -> Iterator[None]:
             yield
         finally:
             fcntl.flock(lock_file.fileno(), fcntl.LOCK_UN)
+
+
+_SPECIAL_TOKEN_PATTERN = re.compile(r"<\|[a-zA-Z0-9_]+\|>")
+
+
+def parse_structured_content(content: str) -> tuple[_StructuredModelResponse, bool]:
+    """
+    @brief Parse model JSON, tolerating leaked special tokens, code fences and common key aliases.
+    @param content Raw message.content text.
+    @return Parsed response and whether alias normalisation was needed.
+    """
+
+    cleaned: str = _SPECIAL_TOKEN_PATTERN.sub("", content).strip()
+    if cleaned.startswith("```"):
+        cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else cleaned
+        cleaned = cleaned.rsplit("```", 1)[0]
+    start: int = cleaned.find("{")
+    end: int = cleaned.rfind("}")
+    if start == -1 or end == -1:
+        raise ValueError("Model response contains no JSON object.")
+    raw: object = json.loads(cleaned[start : end + 1])
+    try:
+        return _StructuredModelResponse.model_validate(raw), False
+    except Exception:
+        pass
+    if not isinstance(raw, dict):
+        raise ValueError("Model JSON is not an object.")
+    return _StructuredModelResponse.model_validate(_normalise_aliases(raw)), True
+
+
+def _first(item: dict[str, object], *keys: str) -> object:
+    for key in keys:
+        if key in item and item[key] is not None:
+            return item[key]
+    return None
+
+
+def _normalise_aliases(raw: dict[str, object]) -> dict[str, object]:
+    """
+    @brief Map common off-schema key names onto the RepoAtlas response schema.
+    @param raw Parsed JSON object from the model.
+    """
+
+    raw_findings = _first(raw, "findings", "doc_drift", "docdrift", "drift", "doc_drift_findings") or []
+    raw_claims = _first(raw, "atlas_claims", "onboarding", "atlas", "onboarding_atlas", "claims") or []
+    findings: list[dict[str, object]] = []
+    for index, item in enumerate(raw_findings if isinstance(raw_findings, list) else []):
+        if not isinstance(item, dict):
+            continue
+        findings.append(
+            {
+                "finding_id": str(_first(item, "finding_id", "id") or f"DD-{index + 1}"),
+                "drift_kind": str(_first(item, "drift_kind", "kind", "type", "category") or "unspecified"),
+                "explanation": str(_first(item, "explanation", "summary", "description", "issue") or ""),
+                "doc_citation": _first(item, "doc_citation", "doc", "docs", "documentation"),
+                "code_citation": _first(item, "code_citation", "code", "source"),
+                "proposed_fix": str(_first(item, "proposed_fix", "fix", "suggested_fix") or ""),
+                "suggested_patch": item.get("suggested_patch"),
+                "runnable_probe": item.get("runnable_probe"),
+            }
+        )
+    claims: list[dict[str, object]] = []
+    for index, item in enumerate(raw_claims if isinstance(raw_claims, list) else []):
+        if not isinstance(item, dict):
+            continue
+        citations = item.get("citations")
+        if not isinstance(citations, list):
+            citations = [item[key] for key in ("doc", "code", "citation") if isinstance(item.get(key), dict)]
+        claims.append(
+            {
+                "claim_id": str(_first(item, "claim_id", "id") or f"AC-{index + 1}"),
+                "section": str(_first(item, "section", "category") or "onboarding"),
+                "text": str(_first(item, "text", "claim", "summary") or ""),
+                "citations": citations,
+            }
+        )
+    return {"findings": findings, "atlas_claims": claims}
