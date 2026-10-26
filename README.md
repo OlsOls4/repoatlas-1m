@@ -4,6 +4,7 @@ emoji: 🛰️
 colorFrom: indigo
 colorTo: emerald
 sdk: gradio
+sdk_version: 6.30.0
 app_file: app.py
 short_description: DocDrift v2 — symbol check + Beam whole-repo triage + executable repro.
 tags:
