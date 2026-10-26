@@ -19,7 +19,7 @@ from repoatlas import recall as R
 
 WORK = Path("/workspace/recall_work")
 OUT = Path("results_live/recall")
-CAP = 10_000_000
+CAP = int(os.environ.get("RECALL_CAP", "10000000"))
 CALIB = float(os.environ.get("RECALL_CALIB", "1.21"))
 
 
@@ -144,13 +144,38 @@ METHODS = {  # name: (chunk budget in real tokens or None, max_tokens)
     "whole": (None, 40_000),
     "chunk128k": (128_000, 24_000),
     "chunk32k": (32_000, 12_000),
+    "docslast": (None, 40_000),
+    "focused": (None, 40_000),
+    "shuffled": (None, 40_000),
+    "focusdocs": (None, 40_000),  # focused pass 0 only (the .md/.rst slice); used where full B did not fit budget
 }
+SHUFFLE_SEED = 20261026
+
+
+def method_pack(method: str, seed: int):
+    """The full pack in the file order a whole-context method sends it."""
+    from repoatlas.models import RepoPack
+    pack = RepoPack.model_validate_json((WORK / f"pack_seed{seed}.json").read_text())
+    if method == "docslast":
+        return R.reorder_pack(pack, R.docs_last_order(pack), f"planted-seed{seed}-docslast")
+    if method == "shuffled":
+        return R.reorder_pack(pack, R.shuffled_order(pack, SHUFFLE_SEED), f"planted-seed{seed}-shuffled")
+    return pack
 
 
 def _units(method: str, seed: int):
-    from repoatlas.models import RepoPack
-    pack = RepoPack.model_validate_json((WORK / f"pack_seed{seed}.json").read_text())
+    pack = method_pack(method, seed)
     chunk_real, _ = METHODS[method]
+    spans = [(f.path, 1, len(f.lines)) for f in pack.files]
+    if method == "docslast":
+        return [{"index": 0, "spans": spans, "text": pack.pack_text, "suffix": R.DOCS_LAST_SUFFIX}]
+    if method in ("focused", "focusdocs"):
+        sl = R.focus_slices(pack)
+        if method == "focusdocs":
+            return [{"index": 0, "spans": spans, "text": pack.pack_text, "suffix": R.focused_suffix(sl[0], 0, len(sl)),
+                     "focus": sl[0]}]
+        return [{"index": i, "spans": spans, "text": pack.pack_text, "suffix": R.focused_suffix(paths, i, len(sl)),
+                 "focus": paths} for i, paths in enumerate(sl)]
     if chunk_real is None:
         return [{"index": 0, "spans": [(f.path, 1, len(f.lines)) for f in pack.files], "text": pack.pack_text}]
     overhead = R.tok(R.build_docdrift_prompt("")) + 200
@@ -168,14 +193,18 @@ def cmd_run(args) -> None:
     run_dir = OUT / "raw" / f"{args.method}_seed{args.seed}"
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "chunks.json").write_text(json.dumps([{"index": u["index"], "spans": u["spans"],
-                                                      "cl100k": R.tok(u["text"])} for u in units], indent=1))
+                                                      "cl100k": R.tok(u["text"]), "suffix": u.get("suffix", "")} for u in units], indent=1))
     todo = [u for u in units if not (run_dir / f"unit{u['index']:03d}.json").exists()]
-    est = sum(int(R.tok(R.build_docdrift_prompt(u["text"])) * CALIB) + max_tokens for u in todo)
+    est = sum(int(R.tok(R.build_docdrift_prompt(u["text"]) + u.get("suffix", "")) * CALIB) + max_tokens for u in todo)
     print(f"{args.method} seed{args.seed}: {len(units)} units ({len(todo)} todo), estimate <= {est:,} tokens; "
           f"ledger so far {ledger.total:,}", flush=True)
     ledger.check(est, f"{args.method} seed{args.seed}")
+    if args.new_cap:
+        base = args.new_base
+        if ledger.total - base + est > args.new_cap:
+            raise R.StopRun(f"v2 budget: {ledger.total - base:,} used + {est:,} estimate > {args.new_cap:,}")
     for u in todo:
-        prompt = R.build_docdrift_prompt(u["text"])
+        prompt = R.build_docdrift_prompt(u["text"]) + u.get("suffix", "")
         print(f"  unit {u['index']} cl100k={R.tok(prompt):,} ...", flush=True)
         status, body, latency, hdrs = R.call_beam(
             [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}],
@@ -252,6 +281,8 @@ def score_run(method: str, seed: int) -> tuple[list[dict], dict]:
                         "text": " ".join([fd.explanation or "", fd.doc_citation.quote, fd.code_citation.quote,
                                           getattr(fd, "proposed_fix", "") or ""]),
                         "matched": None})
+    mpack = method_pack(method, seed) if method in ("docslast", "shuffled") else pack
+    mpos = R.line_positions(mpack)
     rows = []
     for t in truth:
         strict = loose = None
@@ -278,7 +309,11 @@ def score_run(method: str, seed: int) -> tuple[list[dict], dict]:
                      "nearest_evidence_real_tokens_est": t.get("nearest_evidence_real_tokens_est"),
                      "same_unit": t.get(f"same_unit_{method}"), "strict_hit": int(strict is not None),
                      "loose_hit": int(loose is not None), "old": t["old"], "new": t["new"],
-                     "doc": f"{t['doc_path']}:{t['doc_line']}"})
+                     "doc": f"{t['doc_path']}:{t['doc_line']}",
+                     "doc_type": "docfile" if t["doc_path"].endswith((".md", ".rst")) else "docstring",
+                     "later_pos_real_est": int(max(mpos[t["doc_path"]][t["doc_line"] - 1],
+                                                   mpos[t["code_path"]][t["code_line"] - 1]) * CALIB),
+                     "doc_pos_real_est": int(mpos[t["doc_path"]][t["doc_line"] - 1] * CALIB)})
     unplanted = [c for c in checked if c["matched"] is None]
     known = []
     for c in unplanted:
@@ -286,6 +321,7 @@ def score_run(method: str, seed: int) -> tuple[list[dict], dict]:
             if (c["dpath"].startswith(path) or c["cpath"].startswith(path)) and token in c["text"]:
                 known.append(c)
                 break
+    meta["unique_findings"] = len({(c["dpath"], c["f"].doc_citation.start_line, c["cpath"]) for c in checked})
     meta.update(findings=len(checked), fully_verified=sum(c["d"].verified and c["c"].verified for c in checked),
                 matched_findings=len(checked) - len(unplanted), unplanted=len(unplanted),
                 unplanted_verified=sum(c["d"].verified and c["c"].verified for c in unplanted),
@@ -367,29 +403,35 @@ def cmd_score(args) -> None:
 
 
 def _chart(rows, labels) -> None:
+    """One line per method: strict recall pooled over the seeds that method was run on (seeds in the legend)."""
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    fig, ax = plt.subplots(figsize=(9, 5))
-    runs = sorted({(r["method"], r["seed"]) for r in rows})
-    colors = {"whole": ["#1f4e9c", "#6a8fd8"], "chunk128k": ["#c0392b"], "chunk32k": ["#27ae60"]}
-    for method, seed in runs:
-        rs = [r for r in rows if (r["method"], r["seed"]) == (method, seed)]
-        ys, yl = [], []
+    fig, ax = plt.subplots(figsize=(10, 5.5))
+    style = {"whole": ("whole prompt, original order", "#1f4e9c", "-"),
+             "docslast": ("A: whole, docs-last + finish-all", "#8e44ad", "-"),
+             "focused": ("B: whole, 5 focused passes", "#e67e22", "-"),
+             "focusdocs": ("B pass 1/5 only (docs slice)", "#d35400", ":"),
+             "shuffled": ("C: whole, shuffled order", "#7f8c8d", "-"),
+             "chunk128k": ("chunked 128k", "#c0392b", "--"),
+             "chunk32k": ("chunked 32k", "#27ae60", "--")}
+    for method in [m for m in style if any(r["method"] == m for r in rows)]:
+        rs = [r for r in rows if r["method"] == method]
+        seeds = sorted({r["seed"] for r in rs})
+        ys = []
         for b in labels:
             br = [r for r in rs if r["bucket"] == b]
             ys.append(sum(r["strict_hit"] for r in br) / len(br) if br else float("nan"))
-            yl.append(sum(r["loose_hit"] for r in br) / len(br) if br else float("nan"))
-        col = colors.get(method, ["#555"])[min(seed - 1, len(colors.get(method, ["#555"])) - 1)]
-        name = {"whole": "whole prompt (~940k)", "chunk128k": "chunked 128k", "chunk32k": "chunked 32k"}[method]
-        ax.plot(labels, ys, marker="o", color=col, label=f"{name}, seed {seed} (strict)")
-        ax.plot(labels, yl, marker="x", ls="--", color=col, alpha=0.45, label=f"{name}, seed {seed} (loose)")
+        name, col, ls = style[method]
+        tot = sum(r["strict_hit"] for r in rs)
+        ax.plot(labels, ys, marker="o", color=col, ls=ls,
+                label=f"{name} (seed {'+'.join(map(str, seeds))}; all {tot}/{len(rs)})")
     ax.set_ylim(-0.05, 1.05)
     ax.set_xlabel("doc-line to code-definition distance (estimated real tokens)")
-    ax.set_ylabel("recall of planted drifts")
-    ax.set_title("DocDrift planted-drift recall vs distance (Beam, 4-6 plants per bucket)")
+    ax.set_ylabel("strict recall of planted drifts")
+    ax.set_title("DocDrift planted-drift recall vs distance (Beam; 4-6 plants per bucket per seed)")
     ax.grid(alpha=0.3)
-    ax.legend(fontsize=7, loc="best")
+    ax.legend(fontsize=8, loc="upper left")
     fig.tight_layout()
     fig.savefig(OUT / "recall_vs_distance.png", dpi=150)
 
@@ -409,6 +451,8 @@ def main() -> None:
     p.add_argument("method", choices=sorted(METHODS))
     p.add_argument("--seed", type=int, default=1)
     p.add_argument("--reasoning", default="medium")
+    p.add_argument("--new-cap", type=int, default=0, help="cap on tokens used since --new-base")
+    p.add_argument("--new-base", type=int, default=0)
     p.set_defaults(fn=cmd_run)
     p = sub.add_parser("score")
     p.set_defaults(fn=cmd_score)

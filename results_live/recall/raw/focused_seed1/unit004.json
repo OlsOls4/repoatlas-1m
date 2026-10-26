@@ -1,0 +1,22 @@
+{
+ "method": "focused",
+ "seed": 1,
+ "unit": 4,
+ "status": 200,
+ "latency_s": 30.9,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:45:02.021927+00:00",
+ "usage": {
+  "prompt_tokens": 941023,
+  "completion_tokens": 10467,
+  "total_tokens": 951490,
+  "prompt_tokens_details": {
+   "cached_tokens": 940288
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\":[{\"finding_id\":\"DD-1\",\"drift_kind\":\"name\",\"explanation\":\"The docstring advertises `httpcore.default_ssl_context()`, but the package exposes `httpcore.initial_ssl_context()` instead.\",\"doc_citation\":{\"path\":\"httpcore/httpcore/_async/http_proxy.py\",\"start_line\":88,\"end_line\":88,\"quote\":\"                If not specified, the default `httpcore.default_ssl_context()`\"},\"code_citation\":{\"path\":\"httpcore/httpcore/_ssl.py\",\"start_line\":6,\"end_line\":6,\"quote\":\"def initial_ssl_context() -> ssl.SSLContext:\"},\"proposed_fix\":\"Update the `AsyncHTTPProxy` docstring to reference `httpcore.initial_ssl_context()`.\"},{\"finding_id\":\"DD-2\",\"drift_kind\":\"name\",\"explanation\":\"`AsyncSOCKSProxy` is documented as sending requests via an HTTP proxy, but its implementation creates SOCKS5 connections.\",\"doc_citation\":{\"path\":\"httpcore/httpcore/_async/socks_proxy.py\",\"start_line\":107,\"end_line\":107,\"quote\":\"    A connection pool that sends requests via an HTTP proxy.\"},\"code_citation\":{\"path\":\"httpcore/httpcore/_async/socks_proxy.py\",\"start_line\":176,\"end_line\":178,\"quote\":\"    def create_connection(self, origin: Origin) -> AsyncConnectionInterface:\\n        return AsyncSocks5Connection(\\n            proxy_origin=self._proxy_url.origin,\"},\"proposed_fix\":\"Change the class docstring to describe it as sending requests via a SOCKS5 proxy.\"},{\"finding_id\":\"DD-3\",\"drift_kind\":\"name\",\"explanation\":\"`SOCKSProxy` is documented as sending requests via an HTTP proxy, but its implementation creates SOCKS5 connections.\",\"doc_citation\":{\"path\":\"httpcore/httpcore/_sync/socks_proxy.py\",\"start_line\":107,\"end_line\":107,\"quote\":\"    A connection pool that sends requests via an HTTP proxy.\"},\"code_citation\":{\"path\":\"httpcore/httpcore/_sync/socks_proxy.py\",\"start_line\":176,\"end_line\":178,\"quote\":\"    def create_connection(self, origin: Origin) -> ConnectionInterface:\\n        return Socks5Connection(\\n            proxy_origin=self._proxy_url.origin,\"},\"proposed_fix\":\"Change the class docstring to describe it as sending requests via a SOCKS5 proxy.\"},{\"finding_id\":\"DD-4\",\"drift_kind\":\"signature\",\"explanation\":\"The documented parameter name `temp_dir` does not match the actual parameter name `temp_directory`.\",\"doc_citation\":{\"path\":\"click/src/click/testing.py\",\"start_line\":764,\"end_line\":764,\"quote\":\"        :param temp_dir: Create the temporary directory under this\"},\"code_citation\":{\"path\":\"click/src/click/testing.py\",\"start_line\":744,\"end_line\":744,\"quote\":\"        self, temp_directory: str | os.PathLike[str] | None = None\"},\"proposed_fix\":\"Rename the docstring parameter to `temp_directory`.\"}],\"atlas_claims\":[]}",
+ "reasoning_chars": 38881
+}

@@ -1,0 +1,44 @@
+[
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": true,
+  "finding_id": "DD-5",
+  "drift_kind": "name",
+  "explanation": "The Click advanced documentation refers to `build_pass_decorator`, which does not exist in the source; the decorator factory is named `make_pass_decorator`.",
+  "doc_citation": {
+   "path": "click/docs/advanced.md",
+   "start_line": 179,
+   "end_line": 180,
+   "quote": "    pass pass pass  # A straightforward way to do this is to use {func}`build_pass_decorator` to pass"
+  },
+  "code_citation": {
+   "path": "click/src/click/decorators.py",
+   "start_line": 51,
+   "end_line": 51,
+   "quote": "def make_pass_decorator("
+  }
+ },
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": true,
+  "code_verified": true,
+  "finding_id": "DD-9",
+  "drift_kind": "signature",
+  "explanation": "The HTTPX advanced transports documentation shows a custom transport's `handle_request` accepting positional HTTP components, while the code's `BaseTransport.handle_request` accepts a single `Request` object.",
+  "doc_citation": {
+   "path": "httpx/docs/advanced/transports.md",
+   "start_line": 284,
+   "end_line": 284,
+   "quote": "    def handle_request(self, method, url, headers, stream, extensions):"
+  },
+  "code_citation": {
+   "path": "httpx/httpx/_transports/base.py",
+   "start_line": 26,
+   "end_line": 26,
+   "quote": "    def handle_request(self, request: Request) -> Response:"
+  }
+ }
+]

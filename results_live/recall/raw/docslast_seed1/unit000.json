@@ -1,0 +1,22 @@
+{
+ "method": "docslast",
+ "seed": 1,
+ "unit": 0,
+ "status": 200,
+ "latency_s": 34.1,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:40:59.833064+00:00",
+ "usage": {
+  "prompt_tokens": 940423,
+  "completion_tokens": 3886,
+  "total_tokens": 944309,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The Jinja API docs call get_tmpl, but the Environment method is named get_template.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 55, \"end_line\": 55, \"quote\": \"    template = env.get_tmpl(\\\"mytemplate.html\\\")\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/environment.py\", \"start_line\": 981, \"end_line\": 981, \"quote\": \"    def get_template(\"}, \"proposed_fix\": \"Replace `env.get_tmpl(\\\"mytemplate.html\\\")` with `env.get_template(\\\"mytemplate.html\\\")`.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The Jinja API docs autoclass the nonexistent TemplateFlow; the corresponding class in code is TemplateStream.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 219, \"end_line\": 219, \"quote\": \".. autoclass:: jinja2.environment.TemplateFlow()\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/environment.py\", \"start_line\": 1570, \"end_line\": 1570, \"quote\": \"class TemplateStream:\"}, \"proposed_fix\": \"Replace `jinja2.environment.TemplateFlow()` with `jinja2.environment.TemplateStream()` (or remove that autoclass line).\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The structlog standard-library example uses structlog.stdlib.add_journal_name, which does not exist; the code provides add_logger_name.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 194, \"end_line\": 194, \"quote\": \"        structlog.stdlib.add_journal_name,\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 871, \"end_line\": 871, \"quote\": \"def add_logger_name(\"}, \"proposed_fix\": \"Replace `structlog.stdlib.add_journal_name` with `structlog.stdlib.add_logger_name` in the example configuration.\"}, {\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The Werkzeug tutorial imports SharedDataMiddleware, but the code class is SharedPayloadMiddleware.\", \"doc_citation\": {\"path\": \"werkzeug/docs/tutorial.rst\", \"start_line\": 163, \"end_line\": 163, \"quote\": \"app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/middleware/shared_data.py\", \"start_line\": 29, \"end_line\": 29, \"quote\": \"class SharedPayloadMiddleware:\"}, \"proposed_fix\": \"Replace `SharedDataMiddleware` with `SharedPayloadMiddleware` and import `SharedPayloadMiddleware` accordingly.\"}, {\"finding_id\": \"DD-5\", \"drift_kind\": \"signature\", \"explanation\": \"The HTTPX custom transport documentation shows handle_request with individual arguments, but BaseTransport.handle_request accepts request.\", \"doc_citation\": {\"path\": \"httpx/docs/advanced/transports.md\", \"start_line\": 178, \"end_line\": 178, \"quote\": \"    def handle_request(self, method, url, headers, stream, extensions):\"}, \"code_citation\": {\"path\": \"httpx/httpx/_transports/base.py\", \"start_line\": 26, \"end_line\": 26, \"quote\": \"    def handle_request(self, request: Request) -> Response:\"}, \"proposed_fix\": \"Update the example to `def handle_request(self, request: httpx.Request) -> httpx.Response: ...`.\"}, {\"finding_id\": \"DD-6\", \"drift_kind\": \"name\", \"explanation\": \"The HTTPX WSGI transport documentation uses WSGITransport, but the code class is WSGICarrier.\", \"doc_citation\": {\"path\": \"httpx/docs/advanced/transports.md\", \"start_line\": 62, \"end_line\": 62, \"quote\": \"transport = httpx.WSGITransport(app=app)\"}, \"code_citation\": {\"path\": \"httpx/httpx/_transports/wsgi.py\", \"start_line\": 44, \"end_line\": 44, \"quote\": \"class WSGICarrier(BaseTransport):\"}, \"proposed_fix\": \"Replace `httpx.WSGITransport(app=app)` with `httpx.WSGICarrier(app=app)` throughout the WSGI transport example.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 11592
+}

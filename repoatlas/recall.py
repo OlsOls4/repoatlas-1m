@@ -721,3 +721,69 @@ def _rename_param(root: Path, pl: dict, py_files: list[Path], lines_of) -> int:
         ls[ln - 1] = line[:col] + new + line[col + length:]
         n += 1
     return n
+
+
+# ---------------------------------------------------------------- v2: whole-context variants
+
+def reorder_pack(pack: RepoPack, order: list[str], ref: str) -> RepoPack:
+    """Same files and line numbers, different file order (blocks rebuilt exactly as the packer writes them)."""
+
+    by_path = {f.path: f for f in pack.files}
+    assert sorted(order) == sorted(by_path), "reorder must keep the same file set"
+    files = [by_path[p] for p in order]
+    text = pack_header(ref) + "".join(_make_file_block(f.path, f.lines) for f in files) + "FILES_END\n"
+    return pack.model_copy(update={"files": files, "pack_text": text, "ref": ref, "total_tokens": tok(text)})
+
+
+def docs_last_order(pack: RepoPack) -> list[str]:
+    code = [f.path for f in pack.files if not _is_doc_file(f.path)]
+    docs = [f.path for f in pack.files if _is_doc_file(f.path)]
+    return code + docs
+
+
+def shuffled_order(pack: RepoPack, seed: int) -> list[str]:
+    order = [f.path for f in pack.files]
+    random.Random(seed).shuffle(order)
+    return order
+
+
+def focus_slices(pack: RepoPack, n_code_slices: int = 4) -> list[list[str]]:
+    """Slice 0 = every .md/.rst file; slices 1..n = the .py files (docstrings/help text) in pack order, split into
+    roughly equal token shares."""
+
+    docs = [f.path for f in pack.files if _is_doc_file(f.path)]
+    py = [f for f in pack.files if not _is_doc_file(f.path)]
+    total = sum(f.token_count for f in py)
+    slices: list[list[str]] = [docs] + [[] for _ in range(n_code_slices)]
+    run = 0
+    for f in py:
+        idx = min(int(run / total * n_code_slices), n_code_slices - 1)
+        slices[1 + idx].append(f.path)
+        run += f.token_count
+    return slices
+
+
+DOCS_LAST_SUFFIX = (
+    "\n\nFINAL INSTRUCTIONS (these come after the corpus; follow them together with the task above):\n"
+    "All documentation files (.md/.rst) have been placed at the END of the corpus, after all source code. "
+    "Go through every documentation file one by one, in order, and then through the docstrings, and check every "
+    "name, class, function, parameter, default and example against the source code anywhere above (the defining "
+    "code may be hundreds of thousands of tokens earlier). Do not stop early: keep going until every documentation "
+    "file has been checked, and report every drift you can cite with verbatim quotes. "
+    "Output ONLY the JSON object in the shape specified at the top.\n"
+)
+
+
+def focused_suffix(paths: list[str], idx: int, n: int) -> str:
+    kind = ("documentation files: audit the whole of each file" if all(_is_doc_file(p) for p in paths)
+            else "source files: audit their docstrings, comments and help/usage text")
+    return (
+        f"\n\nFINAL INSTRUCTIONS FOR THIS PASS ({idx + 1} of {n}; these come after the corpus):\n"
+        f"In this pass, audit ONLY the documentation in the following {len(paths)} {kind}.\n"
+        + "".join(f"- {p}\n" for p in paths)
+        + "For each of these files, go through it from top to bottom and check every name, class, function, "
+        "parameter, default and example it mentions against ANY code anywhere in the corpus above (the defining code "
+        "is often in another file, possibly far away). Only report drifts whose doc_citation is in one of the files "
+        "listed above. Do not stop early: finish every listed file, and report every drift you can cite with "
+        "verbatim quotes. Output ONLY the JSON object in the shape specified at the top.\n"
+    )

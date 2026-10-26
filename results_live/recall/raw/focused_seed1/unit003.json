@@ -1,0 +1,22 @@
+{
+ "method": "focused",
+ "seed": 1,
+ "unit": 3,
+ "status": 200,
+ "latency_s": 16.5,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:44:30.925593+00:00",
+ "usage": {
+  "prompt_tokens": 940741,
+  "completion_tokens": 5662,
+  "total_tokens": 946403,
+  "prompt_tokens_details": {
+   "cached_tokens": 940288
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"other\", \"explanation\": \"The Cookie value field's docstring incorrectly describes it as the cookie key; the field represents the cookie value.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/test.py\", \"start_line\": 1388, \"end_line\": 1388, \"quote\": \"\\\"\\\"\\\"The cookie key, encoded as a client would see it.\\\"\\\"\\\"\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/test.py\", \"start_line\": 1387, \"end_line\": 1387, \"quote\": \"value: str\"}, \"proposed_fix\": \"Change the docstring for `value` to \\\"\\\"\\\"The cookie value, encoded as a client would see it.\\\"\\\"\\\". (Located at werkzeug/src/werkzeug/test.py line 1388.)\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The If-Match documentation refers to the deprecated `ETags` name while the code uses `ETagSet`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 515, \"end_line\": 515, \"quote\": \"An :class:`.ETags`, empty if not set.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 503, \"end_line\": 503, \"quote\": \"if_match = header_property[ETagSet](\"}, \"proposed_fix\": \"Replace `:class:`.ETags`` with `:class:`.ETagSet`` in the If-Match docstring. (Located at werkzeug/src/werkzeug/sansio/request.py line 515.)\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The If-None-Match documentation refers to the deprecated `ETags` name while the code uses `ETagSet`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 523, \"end_line\": 523, \"quote\": \"An :class:`.ETags`, empty if not set.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 514, \"end_line\": 514, \"quote\": \"if_none_match = header_property[ETagSet](\"}, \"proposed_fix\": \"Replace `:class:`.ETags`` with `:class:`.ETagSet`` in the If-None-Match docstring. (Located at werkzeug/src/werkzeug/sansio/request.py line 523.)\"}, {\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The select_address_family docstring says it returns AF_INET4, but the implementation returns socket.AF_INET.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/serving.py\", \"start_line\": 655, \"end_line\": 655, \"quote\": \"Return ``AF_INET4``, ``AF_INET6``, or ``AF_UNIX`` depending on\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/serving.py\", \"start_line\": 661, \"end_line\": 661, \"quote\": \"return socket.AF_INET\"}, \"proposed_fix\": \"Replace ``AF_INET4`` with ``AF_INET`` in the select_address_family docstring. (Located at werkzeug/src/werkzeug/serving.py line 655.)\"}, {\"finding_id\": \"DD-5\", \"drift_kind\": \"default\", \"explanation\": \"The password hash documentation states the default pbkdf2 iteration count as 600000, while the code's default is 1000000.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/security.py\", \"start_line\": 90, \"end_line\": 90, \"quote\": \"the default is ``pbkdf2:sha256:600000``. See :func:`hashlib.pbkdf2_hmac`.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/security.py\", \"start_line\": 9, \"end_line\": 9, \"quote\": \"DEFAULT_PBKDF2_ITERATIONS = 1_000_000\"}, \"proposed_fix\": \"Update the default string to ``pbkdf2:sha256:1000000``. (Located at werkzeug/src/werkzeug/security.py line 90.)\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 16756
+}

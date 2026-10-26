@@ -1,7 +1,7 @@
 {
-  "prompt_tokens": 6718057,
-  "completion_tokens": 120360,
-  "total_tokens": 6838417,
+  "prompt_tokens": 15183948,
+  "completion_tokens": 201220,
+  "total_tokens": 15385168,
   "calls": [
     {
       "label": "probe-200000",
@@ -602,6 +602,114 @@
         }
       },
       "latency_s": 11.2
+    },
+    {
+      "label": "docslast-seed1-u0",
+      "usage": {
+        "prompt_tokens": 940423,
+        "completion_tokens": 3886,
+        "total_tokens": 944309,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 34.1
+    },
+    {
+      "label": "docslast-seed2-u0",
+      "usage": {
+        "prompt_tokens": 940416,
+        "completion_tokens": 13124,
+        "total_tokens": 953540,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 53.9
+    },
+    {
+      "label": "focused-seed1-u0",
+      "usage": {
+        "prompt_tokens": 940521,
+        "completion_tokens": 12279,
+        "total_tokens": 952800,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 65.0
+    },
+    {
+      "label": "focused-seed1-u1",
+      "usage": {
+        "prompt_tokens": 941083,
+        "completion_tokens": 14688,
+        "total_tokens": 955771,
+        "prompt_tokens_details": {
+          "cached_tokens": 934272
+        }
+      },
+      "latency_s": 41.7
+    },
+    {
+      "label": "focused-seed1-u2",
+      "usage": {
+        "prompt_tokens": 940881,
+        "completion_tokens": 8508,
+        "total_tokens": 949389,
+        "prompt_tokens_details": {
+          "cached_tokens": 940288
+        }
+      },
+      "latency_s": 28.7
+    },
+    {
+      "label": "focused-seed1-u3",
+      "usage": {
+        "prompt_tokens": 940741,
+        "completion_tokens": 5662,
+        "total_tokens": 946403,
+        "prompt_tokens_details": {
+          "cached_tokens": 940288
+        }
+      },
+      "latency_s": 16.5
+    },
+    {
+      "label": "focused-seed1-u4",
+      "usage": {
+        "prompt_tokens": 941023,
+        "completion_tokens": 10467,
+        "total_tokens": 951490,
+        "prompt_tokens_details": {
+          "cached_tokens": 940288
+        }
+      },
+      "latency_s": 30.9
+    },
+    {
+      "label": "shuffled-seed1-u0",
+      "usage": {
+        "prompt_tokens": 940289,
+        "completion_tokens": 5995,
+        "total_tokens": 946284,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        }
+      },
+      "latency_s": 37.8
+    },
+    {
+      "label": "focusdocs-seed2-u0",
+      "usage": {
+        "prompt_tokens": 940514,
+        "completion_tokens": 6251,
+        "total_tokens": 946765,
+        "prompt_tokens_details": {
+          "cached_tokens": 940224
+        }
+      },
+      "latency_s": 32.2
     }
   ]
 }

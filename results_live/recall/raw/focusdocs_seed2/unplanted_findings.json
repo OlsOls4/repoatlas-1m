@@ -1,0 +1,23 @@
+[
+ {
+  "unit": 0,
+  "known_real": false,
+  "doc_verified": false,
+  "code_verified": true,
+  "finding_id": "DD-9",
+  "drift_kind": "name",
+  "explanation": "The Jinja template documentation example imports `PackageReader`, but the public class is `PackageLoader`.",
+  "doc_citation": {
+   "path": "jinja/docs/templates.rst",
+   "start_line": 242,
+   "end_line": 242,
+   "quote": "from jinja2 import Environment, PackageReader, select_autoescape"
+  },
+  "code_citation": {
+   "path": "jinja/src/jinja2/__init__.py",
+   "start_line": 28,
+   "end_line": 28,
+   "quote": "from .loaders import PackageLoader as PackageLoader"
+  }
+ }
+]

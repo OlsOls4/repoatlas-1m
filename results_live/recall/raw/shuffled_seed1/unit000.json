@@ -1,0 +1,22 @@
+{
+ "method": "shuffled",
+ "seed": 1,
+ "unit": 0,
+ "status": 200,
+ "latency_s": 37.8,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:45:41.184080+00:00",
+ "usage": {
+  "prompt_tokens": 940289,
+  "completion_tokens": 5995,
+  "total_tokens": 946284,
+  "prompt_tokens_details": {
+   "cached_tokens": 384
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The Jinja API example calls `Environment.get_tmpl`, but the code defines `Environment.get_template`.\", \"doc_citation\": {\"path\": \"jinja/docs/api.rst\", \"start_line\": 55, \"end_line\": 55, \"quote\": \"template = env.get_tmpl(\\\"mytemplate.html\\\")\"}, \"code_citation\": {\"path\": \"jinja/src/jinja2/environment.py\", \"start_line\": 981, \"end_line\": 981, \"quote\": \"    def get_template(\"}, \"proposed_fix\": \"Replace `env.get_tmpl` with `env.get_template` in the example.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The standard-library configuration example uses `structlog.stdlib.add_journal_name`, but the code provides `add_logger_name`.\", \"doc_citation\": {\"path\": \"structlog/docs/standard-library.md\", \"start_line\": 194, \"end_line\": 194, \"quote\": \"structlog.stdlib.add_journal_name,\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/stdlib.py\", \"start_line\": 871, \"end_line\": 871, \"quote\": \"def add_logger_name(\"}, \"proposed_fix\": \"Replace `structlog.stdlib.add_journal_name` with `structlog.stdlib.add_logger_name` in the example.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The quickstart example calls `raise_for_state` on a response, but the response method is named `raise_for_status`.\", \"doc_citation\": {\"path\": \"httpx/docs/quickstart.md\", \"start_line\": 287, \"end_line\": 287, \"quote\": \">>> not_found.raise_for_state()\"}, \"code_citation\": {\"path\": \"httpx/httpx/_models.py\", \"start_line\": 795, \"end_line\": 795, \"quote\": \"    def raise_for_status(self) -> Response:\"}, \"proposed_fix\": \"Replace `raise_for_state()` with `raise_for_status()` in the quickstart example.\"}, {\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The quickstart example calls `Response.raise_for_state`, but the response method is named `raise_for_status`.\", \"doc_citation\": {\"path\": \"httpx/docs/quickstart.md\", \"start_line\": 298, \"end_line\": 298, \"quote\": \">>> r.raise_for_state()\"}, \"code_citation\": {\"path\": \"httpx/httpx/_models.py\", \"start_line\": 795, \"end_line\": 795, \"quote\": \"    def raise_for_status(self) -> Response:\"}, \"proposed_fix\": \"Replace `raise_for_state()` with `raise_for_status()` in the quickstart example.\"}, {\"finding_id\": \"DD-5\", \"drift_kind\": \"signature\", \"explanation\": \"The transports documentation's mounting example uses an outdated `handle_request` signature taking method, url, headers, stream, and extensions; the transport API implements `handle_request(request)`.\", \"doc_citation\": {\"path\": \"httpx/docs/advanced/transports.md\", \"start_line\": 285, \"end_line\": 285, \"quote\": \"    def handle_request(self, method, url, headers, stream, extensions):\"}, \"code_citation\": {\"path\": \"httpx/httpx/_transports/base.py\", \"start_line\": 26, \"end_line\": 26, \"quote\": \"    def handle_request(self, request: Request) -> Response:\"}, \"proposed_fix\": \"Rewrite the mounted transport example to implement `handle_request(self, request)` and return an `httpx.Response`.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 4104
+}

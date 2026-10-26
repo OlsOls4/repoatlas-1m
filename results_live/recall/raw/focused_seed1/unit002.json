@@ -1,0 +1,22 @@
+{
+ "method": "focused",
+ "seed": 1,
+ "unit": 2,
+ "status": 200,
+ "latency_s": 28.7,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:44:14.199415+00:00",
+ "usage": {
+  "prompt_tokens": 940881,
+  "completion_tokens": 8508,
+  "total_tokens": 949389,
+  "prompt_tokens_details": {
+   "cached_tokens": 940288
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The response documentation refers to `werkzeug.utils.send_document`, but the codebase provides `werkzeug.utils.send_file`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/response.py\", \"start_line\": 105, \"end_line\": 105, \"quote\": \"        checks. Use :func:`~werkzeug.utils.send_document` instead of setting\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/utils.py\", \"start_line\": 309, \"end_line\": 309, \"quote\": \"def send_file(\"}, \"proposed_fix\": \"Use :func:`~werkzeug.utils.send_file` instead of setting this manually.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"signature\", \"explanation\": \"The `WWWAuthenticate.token` docstring describes it as a dict of parameters, but the parameter and attribute are typed as a string token.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\", \"start_line\": 260, \"end_line\": 260, \"quote\": \"        \\\"\\\"\\\"A dict of parameters for the header. Only one of this or :attr:`token` should\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/datastructures/auth.py\", \"start_line\": 224, \"end_line\": 224, \"quote\": \"        token: str | None = None,\"}, \"proposed_fix\": \"A token for the header. Only one of this or :attr:`parameters` should have a value for a given scheme.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"other\", \"explanation\": \"The docstring says the default bound logger is `structlog.BoundLogger`, but the builtin configuration uses `make_filtering_bound_logger(0)`.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/_config.py\", \"start_line\": 135, \"end_line\": 135, \"quote\": \"        and is `structlog.BoundLogger` by default.\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/_config.py\", \"start_line\": 61, \"end_line\": 61, \"quote\": \"_BUILTIN_DEFAULT_WRAPPER_CLASS = make_filtering_bound_logger(0)\"}, \"proposed_fix\": \"and is `structlog.make_filtering_bound_logger(0)` by default.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 31887
+}

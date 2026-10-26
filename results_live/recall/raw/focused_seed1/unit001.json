@@ -1,0 +1,22 @@
+{
+ "method": "focused",
+ "seed": 1,
+ "unit": 1,
+ "status": 200,
+ "latency_s": 41.7,
+ "rate_headers": {},
+ "max_tokens": 40000,
+ "reasoning_effort": "medium",
+ "at": "2026-10-26T21:43:45.206241+00:00",
+ "usage": {
+  "prompt_tokens": 941083,
+  "completion_tokens": 14688,
+  "total_tokens": 955771,
+  "prompt_tokens_details": {
+   "cached_tokens": 934272
+  }
+ },
+ "finish_reason": "stop",
+ "content": "{\"findings\": [{\"finding_id\": \"DD-1\", \"drift_kind\": \"name\", \"explanation\": \"The docstring refers to the Twisted helper class `PlainFileObserver`, but `structlog.twisted` defines it as `PlainFileLogObserver`.\", \"doc_citation\": {\"path\": \"structlog/src/structlog/twisted.py\", \"start_line\": 235, \"end_line\": 235, \"quote\": \":class:`PlainFileObserver` or Twisted's stock `FileLogObserver\"}, \"code_citation\": {\"path\": \"structlog/src/structlog/twisted.py\", \"start_line\": 202, \"end_line\": 202, \"quote\": \"class PlainFileLogObserver:\"}, \"proposed_fix\": \"Replace `PlainFileObserver` with `PlainFileLogObserver`.\"}, {\"finding_id\": \"DD-2\", \"drift_kind\": \"name\", \"explanation\": \"The deprecation note names a misspelled parameter, `reqeust_key`, that does not exist in `DebuggedApplication.__init__`; the removed Werkzeug parameter is `request_key`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 255, \"end_line\": 255, \"quote\": \"The ``reqeust_key`` parameter was removed.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/debug/__init__.py\", \"start_line\": 264, \"end_line\": 264, \"quote\": \"    def __init__(\"}, \"proposed_fix\": \"Correct the parameter name to ``request_key``.\"}, {\"finding_id\": \"DD-3\", \"drift_kind\": \"name\", \"explanation\": \"The `If-Match` property documentation refers to the old `ETags` class instead of the Werkzeug 3.2 `ETagSet` class used by `Request.if_match`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 510, \"end_line\": 510, \"quote\": \"An :class:`.ETags`, empty if not set.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 503, \"end_line\": 503, \"quote\": \"if_match = header_property[ETagSet](\"}, \"proposed_fix\": \"Change `ETags` to `ETagSet`.\"}, {\"finding_id\": \"DD-4\", \"drift_kind\": \"name\", \"explanation\": \"The `If-None-Match` property documentation refers to the old `ETags` class instead of the Werkzeug 3.2 `ETagSet` class used by `Request.if_none_match`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 522, \"end_line\": 522, \"quote\": \"An :class:`.ETags`, empty if not set.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/sansio/request.py\", \"start_line\": 514, \"end_line\": 514, \"quote\": \"    if_none_match = header_property[ETagSet](\"}, \"proposed_fix\": \"Change `ETags` to `ETagSet`.\"}, {\"finding_id\": \"DD-5\", \"drift_kind\": \"name\", \"explanation\": \"The compatibility wrapper return documentation claims an `ETags` object, but `_parse_etags` actually calls `ds.ETagSet.from_header`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/http.py\", \"start_line\": 974, \"end_line\": 974, \"quote\": \":return: an :class:`~werkzeug.datastructures.ETags` object.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/http.py\", \"start_line\": 970, \"end_line\": 970, \"quote\": \"def _parse_etags(value: str | None) -> ds.ETagSet:\"}, \"proposed_fix\": \"Change `ETags` to `ETagSet` in the return description.\"}, {\"finding_id\": \"DD-6\", \"drift_kind\": \"env_var\", \"explanation\": \"The deprecated `input_stream` property returns `environ[\\\"wsgi.input\\\"]`, but its deprecation note directs users to the unrelated `environ[\\\"REMOTE_USER\\\"]`.\", \"doc_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 587, \"end_line\": 587, \"quote\": \"Will be removed in Werkzeug 4.0. Use ``environ[\\\"REMOTE_USER\\\"]`` instead.\"}, \"code_citation\": {\"path\": \"werkzeug/src/werkzeug/wrappers/request.py\", \"start_line\": 596, \"end_line\": 596, \"quote\": \"return self.environ[\\\"wsgi.input\\\"]  # type: ignore[no-any-return]\"}, \"proposed_fix\": \"Change the deprecation note to reference ``environ[\\\"wsgi.input\\\"]`` (or :attr:`stream`), matching the property's returned value and recommended replacement.\"}], \"atlas_claims\": []}",
+ "reasoning_chars": 51657
+}
