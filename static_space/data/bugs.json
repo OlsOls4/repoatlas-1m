@@ -17,7 +17,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-01",
+    "short_title": "Docs reference `arrow.fromordinal`, which doesn't exist",
+    "doc_quote": ">>> arrow.fromordinal(737741)\n            <Arrow [2020-11-12T00:00:00+00:00]>",
+    "code_quote": ""
   },
   {
     "id": "hybrid/arrow/S22",
@@ -37,7 +41,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "ARW-02",
+    "short_title": "Docs reference `arrow.locale`, which doesn't exist",
+    "doc_quote": ":mod:`arrow.locale`\n=====================",
+    "code_quote": ""
   },
   {
     "id": "arrow-400000/DD-1",
@@ -62,7 +70,11 @@
       "url": "https://github.com/arrow-py/arrow/pull/1355",
       "note": "From results_live/upstream_status.json. Other people's PRs."
     },
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-03",
+    "short_title": "Using timestring= as documented raises TypeError for unexpected keyword argument.",
+    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.",
+    "code_quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\n        \"\"\"Returns a new :class:`Arrow <arrow.arrow.Arrow>` object, that represents"
   },
   {
     "id": "hybrid/attrs/S11",
@@ -82,7 +94,11 @@
     "repo_url": "https://github.com/python-attrs/attrs",
     "ref": "c8bb9bf",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "ATR-01",
+    "short_title": "Docs reference `attrs.converter.pipe`, which doesn't exist",
+    "doc_quote": "x = attrs.field(converter=attrs.converter.pipe(c1, c2, c3))\n      x = attrs.field(converter=[c1, c2, c3])",
+    "code_quote": ""
   },
   {
     "id": "cattrs-400000/DD-1",
@@ -102,7 +118,11 @@
     "repo_url": "https://github.com/python-attrs/cattrs",
     "ref": "7a24f77",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "CAT-01",
+    "short_title": "Catching the documented exception name fails because the class does not exist.",
+    "doc_quote": "...\nForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber\n>>> hook = make_dict_structure_fn(TestClass, c, _cattrs_forbid_extra_keys=False)",
+    "code_quote": "class ForbiddenExtraKeysError(CattrsError):\n    \"\"\""
   },
   {
     "id": "cattrs-400000/DD-2",
@@ -122,7 +142,11 @@
     "repo_url": "https://github.com/python-attrs/cattrs",
     "ref": "7a24f77",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "CAT-02",
+    "short_title": "Using cache= as documented raises TypeError; parameter is cache_result.",
+    "doc_quote": ":param cache: Whether to cache the returned hook.",
+    "code_quote": "def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
   },
   {
     "id": "cattrs-400000/DD-3",
@@ -142,7 +166,11 @@
     "repo_url": "https://github.com/python-attrs/cattrs",
     "ref": "7a24f77",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "CAT-03",
+    "short_title": "Using cache= as documented raises TypeError; parameter is cache_result.",
+    "doc_quote": ":param cache: Whether to cache the returned hook.",
+    "code_quote": "def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
   },
   {
     "id": "click-400000/DD-1",
@@ -162,7 +190,11 @@
     "repo_url": "https://github.com/pallets/click",
     "ref": "2247b35",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "CLK-01",
+    "short_title": "Docs reference a non-existent FileType symbol, breaking class links and examples.",
+    "doc_quote": "the parameter name if possible.\n- {exc}`FileError` this is an error that is raised by the\n  {class}`FileType` if Click encounters issues opening the file.",
+    "code_quote": "class File(ParamType[t.IO[t.Any]]):\n    \"\"\"Declares a parameter to be a file for reading or writing.  The file"
   },
   {
     "id": "hybrid/httpx/S4",
@@ -182,7 +214,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-01",
+    "short_title": "Docs pass `extensions=` to `httpx.get(...)`, which has no such parameter",
+    "doc_quote": "extensions = {\"target\": b\"/test^path\"}\nresponse = httpx.get(\"https://www.example.com\", extensions=extensions)\n```",
+    "code_quote": "def get(\n    url: URL | str,"
   },
   {
     "id": "hybrid/httpx/S5",
@@ -202,7 +238,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-02",
+    "short_title": "Docs pass `extensions=` to `httpx.request(...)`, which has no such parameter",
+    "doc_quote": "extensions = {\"target\": b\"*\"}\nresponse = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)\n```",
+    "code_quote": "def request(\n    method: str,"
   },
   {
     "id": "httpx-400000/DD-1",
@@ -227,7 +267,11 @@
       "url": "https://github.com/encode/httpx/pull/3774",
       "note": "From results_live/upstream_status.json. Other people's PRs."
     },
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-03",
+    "short_title": "Following the docs raises AttributeError: module 'httpx' has no attribute 'Mounts'.",
+    "doc_quote": "# A client where any `http` requests are always redirected to `https`\ntransport = httpx.Mounts({\n    'http://': HTTPSRedirect()",
+    "code_quote": "__all__ = [\n    \"ASGITransport\","
   },
   {
     "id": "httpx-400000/DD-2",
@@ -247,7 +291,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-04",
+    "short_title": "Following the docstring raises TypeError: unexpected keyword argument 'app'.",
+    "doc_quote": "```\n    client = httpx.Client(app=app)",
+    "code_quote": "def __init__(\n        self,"
   },
   {
     "id": "hybrid/httpx/ADD-AD-2",
@@ -267,7 +315,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-05",
+    "short_title": "The API reference lists Response.next() and Response.anext(), but Response has no suc…",
+    "doc_quote": "* `def .close()` - **None**\n* `def .next()` - **Response**\n* `def .aread()` - **bytes**",
+    "code_quote": "class Response:\n    def __init__("
   },
   {
     "id": "hybrid/httpx/ADD-AD-3",
@@ -287,7 +339,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-06",
+    "short_title": "The API reference still documents URL.is_ssl, but URL has no is_ssl property.",
+    "doc_quote": "* `.fragment` - **str**\n* `.is_ssl` - **bool**\n* `.is_absolute_url` - **bool**",
+    "code_quote": "class URL:\n    \"\"\""
   },
   {
     "id": "hybrid/httpx/ADD-AD-1",
@@ -307,7 +363,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-07",
+    "short_title": "The mounting-transports example uses the removed tuple-returning handle_request style…",
+    "doc_quote": "def handle_request(self, method, url, headers, stream, extensions):\n        scheme, host, port, path = url",
+    "code_quote": "def handle_request(self, request: Request) -> Response:\n        \"\"\""
   },
   {
     "id": "hybrid/httpx/ADD-AD-5",
@@ -327,7 +387,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-08",
+    "short_title": "The progress example references response.iter_content(), which Response does not prov…",
+    "doc_quote": "This interface is required for properly determining download progress, because the total number of bytes returned by `response.content` or `response.iter_content()` will not always correspond with the raw content length of the response if HTTP response compression is being used.",
+    "code_quote": "def iter_bytes(self, chunk_size: int | None = None) -> typing.Iterator[bytes]:\n        \"\"\""
   },
   {
     "id": "hybrid/jinja/S19",
@@ -347,7 +411,11 @@
     "repo_url": "https://github.com/pallets/jinja",
     "ref": "5ef7011",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "JIN-01",
+    "short_title": "Docs reference `_last`, which doesn't exist",
+    "doc_quote": "if the iterable is exhausted. Only peeks one item ahead, caching\n        the result in :attr:`_last` for use in subsequent checks. The\n        cache is reset when :meth:`__next__` is called.",
+    "code_quote": ""
   },
   {
     "id": "hybrid/jinja/ADD-AD-2",
@@ -367,7 +435,11 @@
     "repo_url": "https://github.com/pallets/jinja",
     "ref": "5ef7011",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "JIN-02",
+    "short_title": "The Mako configuration example uses the misspelled keyword commend_end_string instead…",
+    "doc_quote": "comment_start_string=\"<%doc>\",\n        commend_end_string=\"</%doc>\",\n        line_statement_prefix=\"%\",",
+    "code_quote": "variable_end_string: str = VARIABLE_END_STRING,\n        comment_start_string: str = COMMENT_START_STRING,\n        comment_end_string: str = COMMENT_END_STRING,"
   },
   {
     "id": "hybrid/jinja/ADD-AD-1",
@@ -387,7 +459,11 @@
     "repo_url": "https://github.com/pallets/jinja",
     "ref": "5ef7011",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "JIN-03",
+    "short_title": "The documentation tells users to pass newstyle=True to env.install_translations, but…",
+    "doc_quote": "You can use \"new style\" gettext calls by setting\n``env.newstyle_gettext = True`` or passing ``newstyle=True`` to\n``env.install_translations``. They are fully supported by the Babel",
+    "code_quote": "environment.extend(\n            install_gettext_translations=self._install,\n            install_null_translations=self._install_null,"
   },
   {
     "id": "hybrid/marshmallow/S34",
@@ -407,7 +483,11 @@
     "repo_url": "https://github.com/marshmallow-code/marshmallow",
     "ref": "b762ea2",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "MM-01",
+    "short_title": "Docs pass `pass_many=` to `marshmallow.post_dump(...)`, which has no such parameter",
+    "doc_quote": "@post_dump(pass_many=True)\n        def wrap_with_envelope(self, data, many, **kwargs):",
+    "code_quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,"
   },
   {
     "id": "hybrid/marshmallow/S33",
@@ -427,7 +507,11 @@
     "repo_url": "https://github.com/marshmallow-code/marshmallow",
     "ref": "b762ea2",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "MM-02",
+    "short_title": "Docs pass `pass_many=` to `marshmallow.pre_load(...)`, which has no such parameter",
+    "doc_quote": "@pre_load(pass_many=True)\n        def unwrap_envelope(self, data, many, **kwargs):",
+    "code_quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,"
   },
   {
     "id": "hybrid/marshmallow/ADD-AD-2",
@@ -447,7 +531,11 @@
     "repo_url": "https://github.com/marshmallow-code/marshmallow",
     "ref": "b762ea2",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "MM-03",
+    "short_title": "The API documentation references a default parameter that the fields do not accept; f…",
+    "doc_quote": "\"\"\"An URL field.\n\n    :param default: Default value for the field if the attribute is not set.",
+    "code_quote": "class _BaseFieldKwargs(typing.TypedDict, total=False):\n    load_default: typing.Any"
   },
   {
     "id": "hybrid/marshmallow/ADD-AD-1",
@@ -467,7 +555,11 @@
     "repo_url": "https://github.com/marshmallow-code/marshmallow",
     "ref": "b762ea2",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "MM-04",
+    "short_title": "The prose instructs users to use pass_many=True, but the decorators now use pass_coll…",
+    "doc_quote": "In cases where your pre- and post-processing methods needs to handle the input collection when processing multiple objects, add ``pass_many=True`` to the method decorators.",
+    "code_quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,"
   },
   {
     "id": "hybrid/nox/S20",
@@ -487,7 +579,11 @@
     "repo_url": "https://github.com/wntrblm/nox",
     "ref": "afa3983",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "NOX-01",
+    "short_title": "Docs pass `channels=` to `session.conda_install(...)`, which has no such parameter",
+    "doc_quote": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+    "code_quote": "def conda_install(\n        self,"
   },
   {
     "id": "nox-400000/DD-1",
@@ -512,7 +608,11 @@
       "url": "https://github.com/wntrblm/nox/pull/1216",
       "note": "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
     },
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "NOX-02",
+    "short_title": "Using the documented option name raises AttributeError in Noxfile configuration.",
+    "doc_quote": "If the Noxfile sets ``nox.options.reuse_existing_virtualenvs``, you can override the Noxfile setting from the command line by using ``--no-reuse-existing-virtualenvs``.\nSimilarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+    "code_quote": ")\n    reuse_venv: ReuseVenvType = attrs.field(\n        default=\"no\","
   },
   {
     "id": "starlette-400000/DD-1",
@@ -537,7 +637,11 @@
       "url": "https://github.com/Kludex/starlette/pull/3746",
       "note": "From results_live/upstream_status.json."
     },
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "STR-01",
+    "short_title": "Following the docs can raise TypeError for multiple values of mode.",
+    "doc_quote": "JSON messages default to being received over text data frames, from version 0.10.0 onwards.\nUse `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+    "code_quote": "async def receive_json(self, mode: str = \"text\") -> Any:\n        if mode not in {\"text\", \"binary\"}:"
   },
   {
     "id": "hybrid/werkzeug/S42",
@@ -557,7 +661,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "WZG-01",
+    "short_title": "Docs mention `setlist(value)`: documented param 'value' not in signature of setlist (…",
+    "doc_quote": "must not come from untrusted user input.\n        :param value: An iterable of header values. Newlines are not allowed and\n            will raise a ``ValueError``.",
+    "code_quote": "def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:\n        \"\"\"Remove any existing values for a header and add new ones."
   },
   {
     "id": "hybrid/werkzeug/S36",
@@ -577,7 +685,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "WZG-02",
+    "short_title": "Docs reference `werkzeug.exceptions.RequestRedirect`, which doesn't exist",
+    "doc_quote": ":exc:`~werkzeug.exceptions.NotFound`, :exc:`~werkzeug.exceptions.MethodNotAllowed`,\nor :exc:`~werkzeug.exceptions.RequestRedirect`.  For more details about those\nexceptions have a look at the documentation of the :meth:`MapAdapter.match` method.",
+    "code_quote": ""
   },
   {
     "id": "hybrid/werkzeug/S40",
@@ -597,7 +709,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "WZG-03",
+    "short_title": "Docs reference `werkzeug.middleware.SharedDataMiddleware`, which doesn't exist",
+    "doc_quote": "serve static files from using\n        :class:`~werkzeug.middleware.SharedDataMiddleware`.\n    :param passthrough_errors: Don't catch unhandled exceptions at the",
+    "code_quote": ""
   },
   {
     "id": "hybrid/werkzeug/S35",
@@ -617,87 +733,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": true
-  },
-  {
-    "id": "marshmallow-400000/DD-2",
-    "library": "marshmallow",
-    "title": "marshmallow: Using default= as documented raises TypeError in marshmallow 4.x.",
-    "summary": "Using default= as documented raises TypeError in marshmallow 4.x.",
-    "verdict": "true",
-    "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
-    "finder": "whole-repo Beam",
-    "doc_path": "docs/top_level.rst",
-    "doc_line": 10,
-    "doc_url": "https://github.com/marshmallow-code/marshmallow/blob/b762ea2/docs/top_level.rst#L10",
-    "code_path": "src/marshmallow/fields.py",
-    "code_line": 380,
-    "code_url": "https://github.com/marshmallow-code/marshmallow/blob/b762ea2/src/marshmallow/fields.py#L380",
-    "repo_url": "https://github.com/marshmallow-code/marshmallow",
-    "ref": "b762ea2",
-    "upstream": null,
-    "cross_file": true
-  },
-  {
-    "id": "hybrid/structlog/S15",
-    "library": "structlog",
-    "title": "structlog: Docs reference `PlainFileObserver`, which doesn't exist",
-    "summary": "Docs reference `PlainFileObserver`, which doesn't exist",
-    "verdict": "true",
-    "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
-    "finder": "symbol check (untriaged)",
-    "doc_path": "src/structlog/twisted.py",
-    "doc_line": 235,
-    "doc_url": "https://github.com/hynek/structlog/blob/19c4f21/src/structlog/twisted.py#L235",
-    "code_path": "",
-    "code_line": null,
-    "code_url": "",
-    "repo_url": "https://github.com/hynek/structlog",
-    "ref": "19c4f21",
-    "upstream": null,
-    "cross_file": false
-  },
-  {
-    "id": "structlog-400000/DD-2",
-    "library": "structlog",
-    "title": "structlog: Documented symbol path does not exist, so direct lookup fails.",
-    "summary": "Documented symbol path does not exist, so direct lookup fails.",
-    "verdict": "true",
-    "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
-    "finder": "symbol check (untriaged)",
-    "doc_path": "docs/standard-library.md",
-    "doc_line": 116,
-    "doc_url": "https://github.com/hynek/structlog/blob/19c4f21/docs/standard-library.md#L116",
-    "code_path": "src/structlog/stdlib.py",
-    "code_line": 39,
-    "code_url": "https://github.com/hynek/structlog/blob/19c4f21/src/structlog/stdlib.py#L39",
-    "repo_url": "https://github.com/hynek/structlog",
-    "ref": "19c4f21",
-    "upstream": null,
-    "cross_file": true
-  },
-  {
-    "id": "hybrid/werkzeug/ADD-AD-1",
-    "library": "werkzeug",
-    "title": "werkzeug: The deprecated `input_stream` property is documented as replacing the wrong feature;…",
-    "summary": "The deprecated `input_stream` property is documented as replacing the wrong feature; it should point to `stream`, not `REMOTE_USER`.",
-    "verdict": "true",
-    "badge": "checked",
-    "badge_note": "Ran, but not a strict API error (not counted in the 30).",
-    "finder": "Beam (added in triage)",
-    "doc_path": "src/werkzeug/wrappers/request.py",
-    "doc_line": 585,
-    "doc_url": "https://github.com/pallets/werkzeug/blob/b73dce5/src/werkzeug/wrappers/request.py#L585",
-    "code_path": "src/werkzeug/wrappers/request.py",
-    "code_line": 595,
-    "code_url": "https://github.com/pallets/werkzeug/blob/b73dce5/src/werkzeug/wrappers/request.py#L595",
-    "repo_url": "https://github.com/pallets/werkzeug",
-    "ref": "b73dce5",
-    "upstream": null,
-    "cross_file": false
+    "cross_file": true,
+    "display_id": "WZG-04",
+    "short_title": "import: `werkzeug.routing.NotFound`: 'NotFound' not found on werkzeug.routing",
+    "doc_quote": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect",
+    "code_quote": ""
   },
   {
     "id": "arrow/arrow-400000:DD-2",
@@ -717,7 +757,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-04",
+    "short_title": "Beam: true. Kept false per handcheck.md: en-us and en_us are normalised (locales.py:54)",
+    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.",
+    "code_quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\n        \"\"\"Returns a new :class:`Arrow <arrow.arrow.Arrow>` object, that represents"
   },
   {
     "id": "arrow/arrow-400000:DD-4",
@@ -737,7 +781,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "ARW-05",
+    "short_title": "Beam: true. Kept false: same as DD-3",
+    "doc_quote": "+--------------------------------+--------------+-------------------------------------------+\n|                                |H             |0, 1, 2 ... 23, 24                         |\n+--------------------------------+--------------+-------------------------------------------+",
+    "code_quote": "if token == \"H\":\n            return f\"{dt.hour}\"\n        if token == \"hh\":"
   },
   {
     "id": "arrow/arrow-400000:DD-3",
@@ -757,7 +805,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "ARW-06",
+    "short_title": "Beam: true. Kept false: the parser accepts hour 24 (parser.py:792)",
+    "doc_quote": "+--------------------------------+--------------+-------------------------------------------+\n|**Hour**                        |HH            |00, 01, 02 ... 23, 24                      |\n+--------------------------------+--------------+-------------------------------------------+",
+    "code_quote": "if token == \"HH\":\n            return f\"{dt.hour:02d}\"\n        if token == \"H\":"
   },
   {
     "id": "arrow/ADD-AD-1",
@@ -777,7 +829,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-07",
+    "short_title": "docs/guide.rst:398 '001 ... 365' is an illustrative ellipsis range in a parse+format…",
+    "doc_quote": "+--------------------------------+--------------+-------------------------------------------+\n|**Day of Year**                 |DDDD          |001, 002, 003 ... 364, 365                 |\n+--------------------------------+--------------+-------------------------------------------+",
+    "code_quote": ""
   },
   {
     "id": "arrow/ADD-AD-2",
@@ -797,7 +853,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-08",
+    "short_title": "docs/guide.rst:400 same as AD-1 for DDD",
+    "doc_quote": "+--------------------------------+--------------+-------------------------------------------+\n|                                |DDD           |1, 2, 3 ... 364, 365                       |\n+--------------------------------+--------------+-------------------------------------------+",
+    "code_quote": ""
   },
   {
     "id": "arrow/ADD-AD-3",
@@ -817,7 +877,11 @@
     "repo_url": "https://github.com/arrow-py/arrow",
     "ref": "2224255",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "ARW-09",
+    "short_title": "docs/guide.rst:414 'W' examples include 2019-W17; the table covers parsing too (guide…",
+    "doc_quote": "+--------------------------------+--------------+-------------------------------------------+\n|**ISO week date**               |W             |2011-W05-4, 2019-W17                       |\n+--------------------------------+--------------+-------------------------------------------+",
+    "code_quote": ""
   },
   {
     "id": "httpx/S7",
@@ -837,7 +901,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "HTX-09",
+    "short_title": "Beam: true. Kept false: docs/compatibility.md:56 is inside the requests.Session examp…",
+    "doc_quote": "while request is not None:\n    response = session.send(request, allow_redirects=False)\n    request = response.next",
+    "code_quote": "def send(\n        self,"
   },
   {
     "id": "httpx/ADD-AD-4",
@@ -857,7 +925,11 @@
     "repo_url": "https://github.com/encode/httpx",
     "ref": "b5addb6",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "HTX-10",
+    "short_title": "docs/compatibility.md:168 mounts example is garbled Python (key/value swapped). A doc…",
+    "doc_quote": "This change is for better consistency with more complex mappings, that might also include domain names, such as `mounts={\"all://\": ..., httpx.HTTPTransport(proxy=\"all://www.example.com\": None})` which maps all requests onto a proxy, except for requests to \"www.example.com\" which have an explicit exclusion.",
+    "code_quote": ""
   },
   {
     "id": "jinja/jinja-400000:DD-1",
@@ -877,7 +949,11 @@
     "repo_url": "https://github.com/pallets/jinja",
     "ref": "5ef7011",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "JIN-04",
+    "short_title": "Beam: true. Kept unclear per handcheck.md",
+    "doc_quote": "additional methods:\n\n.. method:: jinja2.Environment.install_gettext_translations(translations, newstyle=False)",
+    "code_quote": "def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None"
   },
   {
     "id": "marshmallow/marshmallow-400000:DD-1",
@@ -897,7 +973,35 @@
     "repo_url": "https://github.com/marshmallow-code/marshmallow",
     "ref": "b762ea2",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "MM-05",
+    "short_title": "Beam: true. Kept false: Schema calls OPTIONS_CLASS(meta), so **kwargs is empty and th…",
+    "doc_quote": "\"\"\"\n\n        def __init__(self, meta, **kwargs):",
+    "code_quote": "def __init__(self, meta: type):\n        self.fields = getattr(meta, \"fields\", ())"
+  },
+  {
+    "id": "marshmallow-400000/DD-2",
+    "library": "marshmallow",
+    "title": "marshmallow: Using default= as documented raises TypeError in marshmallow 4.x.",
+    "summary": "Using default= as documented raises TypeError in marshmallow 4.x.",
+    "verdict": "true",
+    "badge": "checked",
+    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "finder": "whole-repo Beam",
+    "doc_path": "docs/top_level.rst",
+    "doc_line": 10,
+    "doc_url": "https://github.com/marshmallow-code/marshmallow/blob/b762ea2/docs/top_level.rst#L10",
+    "code_path": "src/marshmallow/fields.py",
+    "code_line": 380,
+    "code_url": "https://github.com/marshmallow-code/marshmallow/blob/b762ea2/src/marshmallow/fields.py#L380",
+    "repo_url": "https://github.com/marshmallow-code/marshmallow",
+    "ref": "b762ea2",
+    "upstream": null,
+    "cross_file": true,
+    "display_id": "MM-06",
+    "short_title": "Using default= as documented raises TypeError in marshmallow 4.x.",
+    "doc_quote": ".. Can't use :autodata: here due to Sphinx bug: https://github.com/sphinx-doc/sphinx/issues/6495\n.. data:: missing",
+    "code_quote": "# deserialized value\n        self._validate_missing(value)\n        if value is missing_:"
   },
   {
     "id": "structlog/S16",
@@ -917,7 +1021,59 @@
     "repo_url": "https://github.com/hynek/structlog",
     "ref": "19c4f21",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "STL-01",
+    "short_title": "Docs mention `columns(value)`: documented param 'value' not in signature of columns (…",
+    "doc_quote": "Args:\n            value:\n                A list of `Column` objects defining both the order and format",
+    "code_quote": "@property\n    def columns(self) -> list[Column]:\n        \"\"\""
+  },
+  {
+    "id": "hybrid/structlog/S15",
+    "library": "structlog",
+    "title": "structlog: Docs reference `PlainFileObserver`, which doesn't exist",
+    "summary": "Docs reference `PlainFileObserver`, which doesn't exist",
+    "verdict": "true",
+    "badge": "checked",
+    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "finder": "symbol check (untriaged)",
+    "doc_path": "src/structlog/twisted.py",
+    "doc_line": 235,
+    "doc_url": "https://github.com/hynek/structlog/blob/19c4f21/src/structlog/twisted.py#L235",
+    "code_path": "",
+    "code_line": null,
+    "code_url": "",
+    "repo_url": "https://github.com/hynek/structlog",
+    "ref": "19c4f21",
+    "upstream": null,
+    "cross_file": false,
+    "display_id": "STL-02",
+    "short_title": "Docs reference `PlainFileObserver`, which doesn't exist",
+    "doc_quote": "Twisted log observer to wrap.  For example\n            :class:`PlainFileObserver` or Twisted's stock `FileLogObserver\n            <https://docs.twisted.org/en/stable/api/",
+    "code_quote": ""
+  },
+  {
+    "id": "structlog-400000/DD-2",
+    "library": "structlog",
+    "title": "structlog: Documented symbol path does not exist, so direct lookup fails.",
+    "summary": "Documented symbol path does not exist, so direct lookup fails.",
+    "verdict": "true",
+    "badge": "checked",
+    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "finder": "symbol check (untriaged)",
+    "doc_path": "docs/standard-library.md",
+    "doc_line": 116,
+    "doc_url": "https://github.com/hynek/structlog/blob/19c4f21/docs/standard-library.md#L116",
+    "code_path": "src/structlog/stdlib.py",
+    "code_line": 39,
+    "code_url": "https://github.com/hynek/structlog/blob/19c4f21/src/structlog/stdlib.py#L39",
+    "repo_url": "https://github.com/hynek/structlog",
+    "ref": "19c4f21",
+    "upstream": null,
+    "cross_file": true,
+    "display_id": "STL-03",
+    "short_title": "Documented symbol path does not exist, so direct lookup fails.",
+    "doc_quote": "```\n\n  The mapping of names to numbers is in `structlog.stdlib._NAME_TO_LEVEL`.",
+    "code_quote": "from ._frames import _find_first_app_frame_and_name, _format_stack\nfrom ._log_levels import LEVEL_TO_NAME, NAME_TO_LEVEL, add_log_level\nfrom .contextvars import ("
   },
   {
     "id": "structlog/structlog-400000:DD-1",
@@ -937,7 +1093,11 @@
     "repo_url": "https://github.com/hynek/structlog",
     "ref": "19c4f21",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "STL-04",
+    "short_title": "The documentation for make_filtering_bound_logger says a string min_level must be one…",
+    "doc_quote": "If you pass a string, it must be one of: ``critical``, ``error``,\n            ``warning``, ``info``, ``debug``, ``notset`` (upper/lower case",
+    "code_quote": "NAME_TO_LEVEL = {\n    \"critical\": CRITICAL,"
   },
   {
     "id": "werkzeug/S38",
@@ -957,7 +1117,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "WZG-05",
+    "short_title": "Beam: true. Kept false: proxy_fix.py:55 says the values are stored 'in the WSGI envir…",
+    "doc_quote": "The original values of the headers are stored in the WSGI\n    environ as ``werkzeug.proxy_fix.orig``, a dict.",
+    "code_quote": "{\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),"
   },
   {
     "id": "werkzeug/S39",
@@ -977,7 +1141,11 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": false
+    "cross_file": false,
+    "display_id": "WZG-06",
+    "short_title": "Beam: true. Kept false: same as S38 (proxy_fix.py:83)",
+    "doc_quote": "Original WSGI environ values are stored in the ``werkzeug.proxy_fix.orig`` dict.",
+    "code_quote": "{\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),"
   },
   {
     "id": "werkzeug/S41",
@@ -997,6 +1165,34 @@
     "repo_url": "https://github.com/pallets/werkzeug",
     "ref": "b73dce5",
     "upstream": null,
-    "cross_file": true
+    "cross_file": true,
+    "display_id": "WZG-07",
+    "short_title": "Beam: true. Kept unclear: test.py:1103 is a historical 0.5 note; werkzeug.FileWrapper…",
+    "doc_quote": "instead of ``mimetype``. This change was made for\n            consistency with :class:`werkzeug.FileWrapper`.",
+    "code_quote": "if name == \"FileWrapper\":\n            warnings.warn("
+  },
+  {
+    "id": "hybrid/werkzeug/ADD-AD-1",
+    "library": "werkzeug",
+    "title": "werkzeug: The deprecated `input_stream` property is documented as replacing the wrong feature;…",
+    "summary": "The deprecated `input_stream` property is documented as replacing the wrong feature; it should point to `stream`, not `REMOTE_USER`.",
+    "verdict": "true",
+    "badge": "checked",
+    "badge_note": "Ran, but not a strict API error (not counted in the 30).",
+    "finder": "Beam (added in triage)",
+    "doc_path": "src/werkzeug/wrappers/request.py",
+    "doc_line": 585,
+    "doc_url": "https://github.com/pallets/werkzeug/blob/b73dce5/src/werkzeug/wrappers/request.py#L585",
+    "code_path": "src/werkzeug/wrappers/request.py",
+    "code_line": 595,
+    "code_url": "https://github.com/pallets/werkzeug/blob/b73dce5/src/werkzeug/wrappers/request.py#L595",
+    "repo_url": "https://github.com/pallets/werkzeug",
+    "ref": "b73dce5",
+    "upstream": null,
+    "cross_file": false,
+    "display_id": "WZG-08",
+    "short_title": "The deprecated `input_stream` property is documented as replacing the wrong feature;…",
+    "doc_quote": ".. deprecated:: 3.2\n            Will be removed in Werkzeug 4.0. Use ``environ[\"REMOTE_USER\"]`` instead.",
+    "code_quote": "stacklevel=2,\n        )\n        return self.environ[\"wsgi.input\"]  # type: ignore[no-any-return]"
   }
 ]

@@ -47,9 +47,10 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert any("15 of 33" in str(row[1]) for row in compare_rows)
     assert any("9 of 33" in str(row[1]) for row in compare_rows)
     hybrid_tokens = str(next(row[4] for row in compare_rows if "hybrid (symbol" in str(row[0]).lower()))
-    assert "4,739,392" in hybrid_tokens
-    assert "~9.2M triage-only" in hybrid_tokens
-    assert any("9,302,105" in str(row[4]) or "~9.3M" in str(row[4]) for row in compare_rows)
+    assert "~9.2M tokens (two whole-repo passes over 12 libraries)" in hybrid_tokens
+    assert "9,302,105" not in hybrid_tokens
+    assert "9,302,105" in documents["benchmark"]["token_footnote"]
+    assert "4,739,392" in documents["benchmark"]["token_footnote"]
     ablation = documents["benchmark"]["ablation"]
     assert ablation["available"] is True
     assert ablation["claim"].startswith("Long context didn't make verdicts more accurate")
@@ -66,6 +67,31 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert beamv3["recipe"].startswith("Recommended: symbol check + whole-repo Beam triage")
     assert hero["hybrid_true"] == 34
     assert hero["repro_true"] == 30
+    assert "bugs in 11 of 12 libraries" in hero["lead"]
+    assert "pydantic-settings had none" in hero["lead"]
+    assert hero["true_library_count"] == 11
+    replay = documents["replay"]
+    assert replay["drift_card"]["doc_line"] == 74
+    assert "receive_json(data, mode=\"binary\")" in replay["drift_card"]["doc_quote"]
+    assert "mode: str = \"text\"" in replay["drift_card"]["code_quote"]
+    assert replay["drift_card"]["error"].startswith("TypeError")
+    assert replay["candidates"][1]["doc_line"] == 73
+    assert "line 74" in replay["drift_card"]["doc_line_note"]
+    starlette_cards = [bug for bug in documents["bugs"] if bug["library"] == "starlette"]
+    assert starlette_cards
+    assert starlette_cards[0]["display_id"].startswith("STR-")
+    true_libs = {bug["library"] for bug in documents["bugs"] if bug["verdict"] == "true"}
+    assert len(true_libs) == 11
+    pack = documents["benchmark"]["pack_coverage"]
+    assert pack["available"] is True
+    starlette_pack = next(row for row in pack["rows"] if row[0] == "starlette")
+    assert starlette_pack[4] == "yes"
+    assert "327,836" in pack["note"]
+    copy = documents["copy"]
+    assert "app.py" not in copy["cli"]
+    assert "run_benchmark.py" not in copy["cli"]
+    assert copy["local"] == ""
+    assert copy["links"]["code"].endswith("repoatlas-1m")
     dumped = json.dumps(documents).lower()
     assert "improves accuracy" not in dumped
     assert "improves precision" not in dumped
@@ -138,6 +164,16 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     index_html = (target / "index.html").read_text(encoding="utf-8")
     assert 'id="recorded-run"' in index_html
     assert "DocDrift" in index_html
+    assert "python3 app.py" not in index_html
+    assert "run_benchmark.py" not in index_html
+    assert "Gradio" not in index_html
+    assert 'role="tab"' in index_html
+    assert 'id="drift-card"' in index_html
+    assert "Code not recorded" not in (target / "assets" / "app.js").read_text(encoding="utf-8")
+    readme = (target / "README.md").read_text(encoding="utf-8")
+    assert "python3 app.py" not in readme
+    assert "run_benchmark.py" not in readme
+    assert "Gradio" not in readme
     hero = json.loads((target / "data" / "hero.json").read_text(encoding="utf-8"))
     stats = compute_hero_stats(load_hybrid_payload())
     assert hero["hybrid_true"] == stats["hybrid_true"]

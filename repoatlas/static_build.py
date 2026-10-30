@@ -70,6 +70,24 @@ HF_SPACE_COLORS: frozenset[str] = frozenset(
 )
 HF_SHORT_DESCRIPTION: str = "Beam finds real docs-vs-code bugs in Python libraries"
 HF_SHORT_DESCRIPTION_MAX: int = 60
+DISPLAY_PREFIX: dict[str, str] = {
+    "arrow": "ARW",
+    "attrs": "ATR",
+    "cattrs": "CAT",
+    "click": "CLK",
+    "httpx": "HTX",
+    "jinja": "JIN",
+    "marshmallow": "MM",
+    "nox": "NOX",
+    "pydantic-settings": "PDS",
+    "starlette": "STR",
+    "structlog": "STL",
+    "werkzeug": "WZG",
+}
+PUBLIC_CODE_URL: str = "https://github.com/OlsOls4/repoatlas-1m"
+PUBLIC_DATASET_URL: str = "https://huggingface.co/datasets/ollymcbride4/docdrift-bugs"
+PUBLIC_THREAD_URL: str = "https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5"
+PACK_CACHE: dict[str, dict[str, list[str]]] = {}
 
 
 class StaticPayload(TypedDict):
@@ -109,7 +127,7 @@ def build_static_payload() -> StaticPayload:
         verdict_sites=verdict_sites,
     )
     return StaticPayload(
-        hero=_build_hero(payload, stats),
+        hero=_build_hero(payload, stats, bugs),
         bugs=bugs,
         benchmark=_build_benchmark(payload, stats),
         repros=_build_repros(payload, sources),
@@ -147,18 +165,53 @@ def write_static_space(destination: Path | None = None) -> Path:
             shutil.copy2(source, assets_dir / asset_name)
     if RECALL_CHART_PATH.exists():
         shutil.copy2(RECALL_CHART_PATH, assets_dir / "recall_vs_distance.png")
+    og_source: Path = ASSETS_SOURCE_DIRECTORY / "og.png"
+    if og_source.exists():
+        shutil.copy2(og_source, assets_dir / "og.png")
     (target / "README.md").write_text(_static_readme(documents["hero"], documents["copy"]), encoding="utf-8")
     return target
 
 
-def _build_hero(payload: HybridPayload, stats: HybridHeroStats) -> dict[str, object]:
+def _build_hero(
+    payload: HybridPayload,
+    stats: HybridHeroStats,
+    bugs: list[dict[str, object]] | None = None,
+) -> dict[str, object]:
     """
     @brief Hero numbers derived from hybrid.json via compute_hero_stats.
     """
 
+    del payload
     max_probe: int = _max_probe_tokens()
+    cards = bugs or []
+    true_libs = sorted(
+        {
+            str(bug.get("library", ""))
+            for bug in cards
+            if str(bug.get("verdict", "")).lower() == "true" and bug.get("library")
+        }
+    )
+    true_n = len(true_libs)
+    none_true = sorted(set(DISPLAY_PREFIX) - set(true_libs))
+    none_clause = ""
+    if none_true:
+        none_clause = f"; {', '.join(none_true)} had none"
     return {
         "headline": headline_sentence(stats),
+        "lead": (
+            f"DocDrift gives Beam an entire Python library (docs + code, up to ~400k tokens) in one call. "
+            f"Beam checks every suspicious doc example against the whole codebase, then writes a script that runs it. "
+            f"Across {stats['repo_count']} popular libraries (bugs in {true_n} of {stats['repo_count']} libraries"
+            f"{none_clause}) it found "
+            f"{stats['hybrid_true']} real docs bugs; {stats['repro_true']} crash exactly as the docs are written."
+        ),
+        "tiles": [
+            [stats["hybrid_true"], f"real docs bugs · {true_n} of {stats['repo_count']} libraries"],
+            [stats["repro_true"], "crash when you run the docs"],
+            ["2", "fixes filed upstream (starlette #3746, nox #1216)"],
+        ],
+        "true_library_count": true_n,
+        "libraries_without_true": none_true,
         "hybrid_true": stats["hybrid_true"],
         "repo_count": stats["repo_count"],
         "hybrid_findings": stats["hybrid_findings"],
@@ -186,8 +239,8 @@ def _build_hero(payload: HybridPayload, stats: HybridHeroStats) -> dict[str, obj
         "judged": stats["judged"],
         "max_probe_tokens": max_probe,
         "label_note": (
-            f"Labels were {LABEL_SOURCE}. The stored field is still hand_verdict. "
-            f"The {stats['universe_size']}-drift set is the union of what the methods found, so it favours them."
+            f"Labels: {LABEL_SOURCE}, not a human. Recall is measured against the "
+            f"{stats['universe_size']} drifts any method found, so it flatters the methods."
         ),
         "end_to_end_tokens_text": end_to_end_repro_token_text(stats),
         "non_bug_badges": non_bug_badge_phrase(stats),
@@ -239,12 +292,13 @@ def _build_bug_cards(
             cards.append(rendered)
     cards.sort(
         key=lambda row: (
-            0 if row.get("verdict") == "true" else 1,
             0 if row.get("badge") == "reproduced" else 1,
             str(row.get("library", "")),
             str(row.get("title", "")),
         )
     )
+    _assign_display_ids(cards)
+    _attach_quotes(cards)
     return cards
 
 
@@ -478,10 +532,19 @@ def _build_benchmark(payload: HybridPayload, stats: HybridHeroStats) -> dict[str
             "docstring_pooled": docstring_pooled_text(),
             "chart": "assets/recall_vs_distance.png",
             "source": "results_live/recall/",
+            "buckets": ["~1k", "~10k", "~50k", "~100k", "~200k", "~400k", "700k+"],
+            "default_series": _recall_default_series(),
         },
         "chart_present": RECALL_CHART_PATH.exists(),
         "ablation": load_ablation_payload(),
         "beamv3": load_beamv3_payload(),
+        "token_footnote": (
+            f"~9.2M tokens (two whole-repo passes over 12 libraries). "
+            f"{stats['whole_tokens']:,} first sweep + {stats['triage_tokens']:,} hybrid triage. "
+            f"+{stats['repro_tokens']:,} for repro scripts = {stats['end_to_end_tokens']:,} end to end."
+        ),
+        "pack_coverage": _pack_coverage(),
+        "recall_extra": True,
     }
 
 
@@ -617,6 +680,7 @@ def _build_replay(stats: HybridHeroStats, index_findings: list[dict[str, object]
             "note": "Filed by this project. Open, not merged.",
         },
         "repro_note": _starlette_repro_note(tracebacks, stats),
+        "drift_card": _starlette_drift_card(pack, tracebacks),
     }
 
 
@@ -648,6 +712,8 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
     @brief Judge-facing copy blocks. Numeric slots come from stats, not literals in HTML.
     """
 
+    max_probe_tokens: int = _max_probe_tokens()
+    ablation = load_ablation_payload()
     return {
         "how_beam": [
             (
@@ -680,7 +746,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             NOX_PR_NOTE,
             "httpx #3774 and arrow #1355 were already reported upstream by others.",
             "cattrs and click have drafts in the repo; they are not listed as filed.",
-            "This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives.",
+            "This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI.",
         ],
         "glossary": [
             "Triage: Beam judges symbol-check and whole-repo candidates as true_drift, false, or unclear against one packed library prompt.",
@@ -689,22 +755,58 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             f"hand_verdict: stored field name. It means {LABEL_SOURCE}, not a human annotator.",
         ],
         "cli": (
+            "pip install git+https://github.com/OlsOls4/repoatlas-1m\n"
+            "export OLLAMA_API_KEY=YOUR_KEY\n"
             "docdrift run https://github.com/OWNER/REPO --max-tokens 400000"
         ),
-        "cli_sweep": (
-            "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py "
-            "--repos-file benchmarks/repos_sweep_2026-10-26.yaml "
-            "--repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug "
-            "--token-limits 400000 --output-dir results_live"
-        ),
+        "cli_sweep": "",
         "ollama_key": (
             "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. "
             "Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive."
         ),
-        "local": (
-            "python3 -m pip install -r requirements-dev.txt && "
-            "python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py"
+        "local": "",
+        "links": {
+            "code": PUBLIC_CODE_URL,
+            "dataset": PUBLIC_DATASET_URL,
+            "thread": PUBLIC_THREAD_URL,
+        },
+        "criteria": [
+            {
+                "title": "Creativity",
+                "body": "Treats docs as executable claims. Beam reads the whole library, then writes a script that **runs the docs**. A bug counts only if the doc's own line crashes.",
+            },
+            {
+                "title": "Technical execution",
+                "body": (
+                    f"- {stats['repo_count']} pinned libraries\n"
+                    f"- a strict repro gate: {stats['repro_true']} bugs crash on the doc's own line\n"
+                    f"- {stats['repro_true_findings']} of {stats['repro_findings']} badges real\n"
+                    f"- ablation + stability rerun ({ablation['stability_agree']}/{ablation['stability_n']})\n"
+                    "- every number traces to the dataset"
+                ),
+            },
+            {
+                "title": "Usefulness",
+                "body": (
+                    f"{stats['hybrid_true']} real docs bugs in libraries people use (httpx, marshmallow, werkzeug, starlette, attrs, click…). "
+                    "2 PRs filed upstream (starlette #3746, nox #1216), both open. A CLI for your own repo."
+                ),
+            },
+            {
+                "title": "Beam",
+                "body": (
+                    "one whole-repo call per library (11 of 12; structlog failed, cattrs needed 2). "
+                    f"With the whole repo, Beam cited the true evidence in another file {ablation['outside_cite_whole']} times; "
+                    f"with local files only, {ablation['outside_cite_local']}. "
+                    f"Prompts up to {max_probe_tokens:,} tokens accepted."
+                ),
+            },
+        ],
+        "why_caption": (
+            "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. "
+            f"Cost: ~{ablation['token_multiplier']}× tokens ({ablation['whole_tokens']:,} vs {ablation['local_tokens']:,})."
         ),
+        "why_matched_cost_note": "Matched-cost local bar: not run yet.",
         "built_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": [
             "results_live/hybrid/hybrid.json",
@@ -725,7 +827,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "results_live/ablation/raw/ API bodies",
             "results_live/beamv3/repros/*/ per-attempt logs",
             "dataset/ traces and other raw sweep artifacts",
-            "Gradio app.py runtime, caches, and virtualenvs",
+            "raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
         ],
     }
 
@@ -764,7 +866,7 @@ Repo name: RepoAtlas-1M. **DocDrift v2** finds docs drift (docs say one thing, c
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
-This Space is **static** because Hugging Face now requires a PRO subscription to host Gradio or Docker Spaces on free CPU Basic. The Gradio app (`app.py`) is still in the repository and unchanged in behaviour if a hosting grant arrives.
+This Space is a **static recording**; it makes no Beam calls.
 
 ## What is docs drift?
 
@@ -791,18 +893,6 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 ```
 
 {copy['ollama_key']}
-
-Recorded Space / Gradio app:
-
-```bash
-{copy['local']}
-```
-
-Earlier whole-repo sweep (your key; none is embedded here):
-
-```bash
-{copy['cli_sweep']}
-```
 
 ## Exclusions
 
@@ -964,3 +1054,209 @@ def _recall_far_hits() -> tuple[tuple[int, int], tuple[int, int]]:
             elif run == "chunk128k_seed1":
                 chunked = pair
     return focused, chunked
+
+
+def _assign_display_ids(cards: list[dict[str, object]]) -> None:
+    """
+    @brief Stable ARW-01 style IDs per library. Raw id stays on the card.
+    """
+
+    counters: dict[str, int] = {}
+    for card in cards:
+        library = str(card.get("library", ""))
+        counters[library] = counters.get(library, 0) + 1
+        prefix = DISPLAY_PREFIX.get(library, library[:3].upper())
+        card["display_id"] = f"{prefix}-{counters[library]:02d}"
+        title = str(card.get("title") or "")
+        card["short_title"] = re.sub(rf"^{re.escape(library)}:\s*", "", title, count=1)
+
+
+def _attach_quotes(cards: list[dict[str, object]]) -> None:
+    """
+    @brief Pull doc/code lines from the recorded pack, not a live clone.
+    """
+
+    for card in cards:
+        library = str(card.get("library", ""))
+        card["doc_quote"] = _pack_quote(library, str(card.get("doc_path") or ""), card.get("doc_line"))
+        card["code_quote"] = _pack_quote(library, str(card.get("code_path") or ""), card.get("code_line"))
+
+
+def _pack_files(library: str) -> dict[str, list[str]]:
+    """
+    @brief Path -> packed source lines for one library's 400k trace.
+    """
+
+    if library in PACK_CACHE:
+        return PACK_CACHE[library]
+    path: Path = RESULTS_LIVE_DIRECTORY / "traces" / f"{library}-400000.json"
+    files: dict[str, list[str]] = {}
+    if path.exists():
+        payload: object = json.loads(path.read_text(encoding="utf-8"))
+        pack = payload.get("pack") if isinstance(payload, dict) else {}
+        for item in _as_dict_list(pack.get("files") if isinstance(pack, dict) else []):
+            files[str(item.get("path", ""))] = [str(line) for line in item.get("lines") or []]
+    PACK_CACHE[library] = files
+    return files
+
+
+def _pack_quote(library: str, path: str, line: object) -> str:
+    """
+    @brief Line ±1 from the packed file, or empty if that file was not packed.
+    """
+
+    if not path:
+        return ""
+    try:
+        number = int(line) if line else 0
+    except (TypeError, ValueError):
+        number = 0
+    if number <= 0:
+        return ""
+    lines = _pack_files(library).get(path) or []
+    if not lines:
+        return ""
+    start = max(0, number - 2)
+    end = min(len(lines), number + 1)
+    chunk = [lines[index].rstrip() for index in range(start, end)]
+    return "\n".join(chunk).strip()
+
+
+def _starlette_drift_card(pack: dict[str, object], tracebacks: list[dict[str, object]]) -> dict[str, object]:
+    """
+    @brief Hero drift card from packed starlette lines. The call is on line 74, not 73.
+    """
+
+    files: dict[str, list[str]] = {}
+    for item in _as_dict_list(pack.get("files")):
+        files[str(item.get("path", ""))] = [str(line) for line in item.get("lines") or []]
+    doc_lines = files.get("docs/websockets.md") or []
+    code_lines = files.get("starlette/websockets.py") or []
+    doc_quote = doc_lines[73].strip() if len(doc_lines) >= 74 else 'websocket.receive_json(data, mode="binary")'
+    code_quote = (
+        code_lines[135].strip()
+        if len(code_lines) >= 136
+        else 'async def receive_json(self, mode: str = "text") -> Any:'
+    )
+    reproduced = [row for row in tracebacks if str(row.get("status")) == "reproduced"]
+    error = "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'"
+    if reproduced:
+        excerpt = str(reproduced[-1].get("excerpt") or "")
+        if "TypeError" in excerpt:
+            error = excerpt.splitlines()[0]
+    return {
+        "doc_path": "docs/websockets.md",
+        "doc_line": 74,
+        "doc_line_note": (
+            "C02 recorded docs/websockets.md:73, which is the sentence before the call. "
+            "The call is on line 74 at 8aa828c."
+        ),
+        "doc_quote": doc_quote,
+        "code_path": "starlette/websockets.py",
+        "code_line": 136,
+        "code_quote": code_quote,
+        "error": error,
+        "found_by": "Beam's whole-repo pass (C02)",
+        "pr_url": "https://github.com/Kludex/starlette/pull/3746",
+        "pr_label": "PR #3746 open, not merged",
+        "hand_written": True,
+        "hand_written_note": (
+            "Repro script for this one was written by hand from Beam's verdict; the other repros were written by Beam."
+        ),
+    }
+
+
+def _pack_coverage() -> dict[str, object]:
+    """
+    @brief Per-library pack size and truncation from recorded traces.
+    """
+
+    libraries = [
+        "starlette",
+        "httpx",
+        "click",
+        "structlog",
+        "nox",
+        "arrow",
+        "cattrs",
+        "marshmallow",
+        "attrs",
+        "jinja",
+        "werkzeug",
+        "pydantic-settings",
+    ]
+    headers = ["Library", "Files packed", "Tokens packed", "Cap", "Truncated", "Skipped (binary/undecodable)", "Last packed file"]
+    rows: list[list[str]] = []
+    for library in libraries:
+        path = RESULTS_LIVE_DIRECTORY / "traces" / f"{library}-400000.json"
+        if not path.exists():
+            continue
+        payload: object = json.loads(path.read_text(encoding="utf-8"))
+        pack = payload.get("pack") if isinstance(payload, dict) else {}
+        if not isinstance(pack, dict):
+            continue
+        files = _as_dict_list(pack.get("files"))
+        skipped = pack.get("skipped_paths") if isinstance(pack.get("skipped_paths"), list) else []
+        last = str(files[-1].get("path", "")) if files else ""
+        rows.append(
+            [
+                library,
+                str(len(files)),
+                f"{_as_int(pack.get('total_tokens')):,}",
+                f"{_as_int(pack.get('token_limit')):,}",
+                "yes" if pack.get("truncated") else "no",
+                str(len(skipped)),
+                last,
+            ]
+        )
+    return {
+        "available": bool(rows),
+        "headers": headers,
+        "rows": rows,
+        "note": (
+            "truncated: true means the packer hit the remaining-budget cutoff while files were still in the queue. "
+            "skipped_paths only records binary or undecodable files, so the dropped remainder is not listed. "
+            "Starlette packed 119 files (327,836 of a 400,000 token cap), including test files; "
+            "the last packed file was tests/middleware/test_middleware.py."
+        ),
+    }
+
+
+def _recall_default_series() -> list[dict[str, object]]:
+    """
+    @brief Three planted-drift series for the default chart: focused, whole-repo, chunked 128k.
+    """
+
+    wanted = {
+        "focused_seed1": "focused whole-context",
+        "whole_seed1": "whole-repo",
+        "chunk128k_seed1": "chunked 128k",
+    }
+    columns = [
+        "~1k strict",
+        "~10k strict",
+        "~50k strict",
+        "~100k strict",
+        "~200k strict",
+        "~400k strict",
+        "700k+ strict",
+    ]
+    series: list[dict[str, object]] = []
+    if not RECALL_BUCKETS_PATH.exists():
+        return series
+    import csv
+
+    with RECALL_BUCKETS_PATH.open("r", encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            run = str(row.get("run", ""))
+            if run not in wanted:
+                continue
+            points: list[float] = []
+            for column in columns:
+                match = re.fullmatch(r"\s*(\d+)\s*/\s*(\d+)\s*", str(row.get(column, "")))
+                points.append((int(match.group(1)) / int(match.group(2))) if match and int(match.group(2)) else 0.0)
+            series.append({"id": run, "label": wanted[run], "points": points})
+    order = list(wanted.keys())
+    series.sort(key=lambda item: order.index(str(item["id"])))
+    return series
+

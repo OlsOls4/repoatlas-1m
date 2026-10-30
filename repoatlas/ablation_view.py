@@ -41,6 +41,8 @@ class AblationPayload(TypedDict):
     cross_file_cite_local: str
     outside_cite_whole: str
     outside_cite_local: str
+    accuracy_whole: str
+    accuracy_local: str
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -68,6 +70,8 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "cross_file_cite_local": "",
         "outside_cite_whole": "",
         "outside_cite_local": "",
+        "accuracy_whole": "",
+        "accuracy_local": "",
     }
     if not target.exists():
         return empty
@@ -150,6 +154,8 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "cross_file_cite_local": _frac(local, "cross_file_verdict_and_cite_right", "cross_file_cases"),
         "outside_cite_whole": _frac(whole, "outside_local_verdict_and_cite_right", "gold_outside_local_cases"),
         "outside_cite_local": _frac(local, "outside_local_verdict_and_cite_right", "gold_outside_local_cases"),
+        "accuracy_whole": _fmt_num(whole.get("accuracy")),
+        "accuracy_local": _fmt_num(local.get("accuracy")),
     }
 
 

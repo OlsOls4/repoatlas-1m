@@ -23,7 +23,7 @@ Repo name: RepoAtlas-1M. **DocDrift v2** finds docs drift (docs say one thing, c
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
-This Space is **static** because Hugging Face now requires a PRO subscription to host Gradio or Docker Spaces on free CPU Basic. The Gradio app (`app.py`) is still in the repository and unchanged in behaviour if a hosting grant arrives.
+This Space is a **static recording**; it makes no Beam calls.
 
 ## What is docs drift?
 
@@ -55,27 +55,17 @@ Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/
 - Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.
 - httpx #3774 and arrow #1355 were already reported upstream by others.
 - cattrs and click have drafts in the repo; they are not listed as filed.
-- This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives.
+- This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI.
 
 ## Run it on your repo
 
 ```bash
+pip install git+https://github.com/OlsOls4/repoatlas-1m
+export OLLAMA_API_KEY=YOUR_KEY
 docdrift run https://github.com/OWNER/REPO --max-tokens 400000
 ```
 
 Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.
-
-Recorded Space / Gradio app:
-
-```bash
-python3 -m pip install -r requirements-dev.txt && python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py
-```
-
-Earlier whole-repo sweep (your key; none is embedded here):
-
-```bash
-BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live
-```
 
 ## Exclusions
 
@@ -87,4 +77,4 @@ This static folder does not include:
 - results_live/ablation/raw/ API bodies
 - results_live/beamv3/repros/*/ per-attempt logs
 - dataset/ traces and other raw sweep artifacts
-- Gradio app.py runtime, caches, and virtualenvs
+- raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)

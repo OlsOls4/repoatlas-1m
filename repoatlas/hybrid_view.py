@@ -759,10 +759,7 @@ def triage_only_token_text(stats: HybridHeroStats) -> str:
     @brief Sweep + triage cost; ~9.2M and not the repro-inclusive total.
     """
 
-    return (
-        f"{stats['triage_tokens']:,} triage-only + {stats['whole_tokens']:,} earlier whole-repo sweep "
-        f"= {stats['triage_end_to_end_tokens']:,} (~9.2M triage-only)"
-    )
+    return "~9.2M tokens (two whole-repo passes over 12 libraries)"
 
 
 def end_to_end_repro_token_text(stats: HybridHeroStats) -> str:
@@ -770,10 +767,7 @@ def end_to_end_repro_token_text(stats: HybridHeroStats) -> str:
     @brief Full end-to-end including repro: 9,302,105 (~9.3M).
     """
 
-    return (
-        f"{stats['end_to_end_tokens']:,} (~9.3M) = "
-        f"{stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}"
-    )
+    return "~9.2M tokens (two whole-repo passes over 12 libraries)"
 
 
 def focused_pass_tokens() -> int:

@@ -26,14 +26,14 @@
       "34 of 45 (22 of 33 on the 9-repo union)",
       60,
       "75%",
-      "4,739,392 triage-only + 4,424,575 earlier whole-repo sweep = 9,163,967 (~9.2M triage-only)"
+      "~9.2M tokens (two whole-repo passes over 12 libraries)"
     ],
     [
       "Hybrid + repro-confirmed (strict)",
       "30 of 45 (19 of 33 on the 9-repo union)",
       41,
       "92.7%",
-      "9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138"
+      "~9.2M tokens (two whole-repo passes over 12 libraries)"
     ],
     [
       "Chunked Beam (~32k chunks) (9-repo union)",
@@ -83,7 +83,57 @@
     "focused_multiplier": 4.8,
     "docstring_pooled": "1/32 pooled over 2 seeds (0/18 + 1/14)",
     "chart": "assets/recall_vs_distance.png",
-    "source": "results_live/recall/"
+    "source": "results_live/recall/",
+    "buckets": [
+      "~1k",
+      "~10k",
+      "~50k",
+      "~100k",
+      "~200k",
+      "~400k",
+      "700k+"
+    ],
+    "default_series": [
+      {
+        "id": "focused_seed1",
+        "label": "focused whole-context",
+        "points": [
+          0.25,
+          0.0,
+          0.25,
+          0.75,
+          0.0,
+          0.25,
+          0.8333333333333334
+        ]
+      },
+      {
+        "id": "whole_seed1",
+        "label": "whole-repo",
+        "points": [
+          0.0,
+          0.0,
+          0.0,
+          0.5,
+          0.0,
+          0.0,
+          0.5
+        ]
+      },
+      {
+        "id": "chunk128k_seed1",
+        "label": "chunked 128k",
+        "points": [
+          0.25,
+          0.0,
+          0.5,
+          0.5,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    ]
   },
   "chart_present": true,
   "ablation": {
@@ -215,7 +265,9 @@
     "cross_file_cite_whole": "25/30",
     "cross_file_cite_local": "14/30",
     "outside_cite_whole": "11/13",
-    "outside_cite_local": "0/13"
+    "outside_cite_local": "0/13",
+    "accuracy_whole": "0.839",
+    "accuracy_local": "0.839"
   },
   "beamv3": {
     "available": true,
@@ -398,5 +450,130 @@
     "stability_n": 19,
     "ledger_tokens": 7713453,
     "ledger_calls": 168
-  }
+  },
+  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end.",
+  "pack_coverage": {
+    "available": true,
+    "headers": [
+      "Library",
+      "Files packed",
+      "Tokens packed",
+      "Cap",
+      "Truncated",
+      "Skipped (binary/undecodable)",
+      "Last packed file"
+    ],
+    "rows": [
+      [
+        "starlette",
+        "119",
+        "327,836",
+        "400,000",
+        "yes",
+        "0",
+        "tests/middleware/test_middleware.py"
+      ],
+      [
+        "httpx",
+        "89",
+        "327,864",
+        "400,000",
+        "yes",
+        "0",
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
+      [
+        "click",
+        "73",
+        "327,831",
+        "400,000",
+        "yes",
+        "0",
+        "tests/test_types/test_Path.py"
+      ],
+      [
+        "structlog",
+        "115",
+        "318,657",
+        "400,000",
+        "no",
+        "3",
+        "tests/processors/__init__.py"
+      ],
+      [
+        "nox",
+        "103",
+        "294,382",
+        "400,000",
+        "no",
+        "0",
+        "tests/resources/sym_dir/sym_file.txt"
+      ],
+      [
+        "arrow",
+        "50",
+        "280,937",
+        "400,000",
+        "no",
+        "0",
+        "tests/__init__.py"
+      ],
+      [
+        "cattrs",
+        "170",
+        "262,894",
+        "400,000",
+        "no",
+        "0",
+        "tests/strategies/__init__.py"
+      ],
+      [
+        "marshmallow",
+        "96",
+        "247,224",
+        "400,000",
+        "no",
+        "0",
+        "tests/__init__.py"
+      ],
+      [
+        "attrs",
+        "116",
+        "327,857",
+        "400,000",
+        "yes",
+        "1",
+        ".github/workflows/codspeed.yml"
+      ],
+      [
+        "jinja",
+        "105",
+        "300,733",
+        "400,000",
+        "no",
+        "0",
+        "tests/res/__init__.py"
+      ],
+      [
+        "werkzeug",
+        "138",
+        "327,823",
+        "400,000",
+        "yes",
+        "6",
+        ".github/pull_request_template.md"
+      ],
+      [
+        "pydantic-settings",
+        "56",
+        "311,093",
+        "400,000",
+        "no",
+        "0",
+        "tests/example_test_config.json"
+      ]
+    ],
+    "note": "truncated: true means the packer hit the remaining-budget cutoff while files were still in the queue. skipped_paths only records binary or undecodable files, so the dropped remainder is not listed. Starlette packed 119 files (327,836 of a 400,000 token cap), including test files; the last packed file was tests/middleware/test_middleware.py."
+  },
+  "recall_extra": true
 }

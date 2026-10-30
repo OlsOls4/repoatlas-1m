@@ -66,5 +66,20 @@
     "url": "https://github.com/Kludex/starlette/pull/3746",
     "note": "Filed by this project. Open, not merged."
   },
-  "repro_note": "v2 strict repro: TypeError on the DOC-LITERAL receive_json(data, mode=\"binary\") line. Counted in the 30. Script written by hand from Beam's verdict."
+  "repro_note": "v2 strict repro: TypeError on the DOC-LITERAL receive_json(data, mode=\"binary\") line. Counted in the 30. Script written by hand from Beam's verdict.",
+  "drift_card": {
+    "doc_path": "docs/websockets.md",
+    "doc_line": 74,
+    "doc_line_note": "C02 recorded docs/websockets.md:73, which is the sentence before the call. The call is on line 74 at 8aa828c.",
+    "doc_quote": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+    "code_path": "starlette/websockets.py",
+    "code_line": 136,
+    "code_quote": "async def receive_json(self, mode: str = \"text\") -> Any:",
+    "error": "TypeError: WebSocket.receive_json() got multiple values for argument 'mode'",
+    "found_by": "Beam's whole-repo pass (C02)",
+    "pr_url": "https://github.com/Kludex/starlette/pull/3746",
+    "pr_label": "PR #3746 open, not merged",
+    "hand_written": true,
+    "hand_written_note": "Repro script for this one was written by hand from Beam's verdict; the other repros were written by Beam."
+  }
 }

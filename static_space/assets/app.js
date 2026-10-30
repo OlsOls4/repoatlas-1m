@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const state = { bugs: [] };
+  const state = { bugs: [], library: "all", badge: "real", chartBuilt: false };
 
   function $(id) {
     return document.getElementById(id);
@@ -20,31 +20,187 @@
     return Number(value).toLocaleString("en-US");
   }
 
-  function percent(value) {
-    const pct = value <= 1 ? value * 100 : value;
-    return Math.abs(pct - Math.round(pct)) < 0.05 ? Math.round(pct) + "%" : pct.toFixed(1) + "%";
+  function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
   }
 
-  function renderHero(hero) {
-    $("headline").textContent = hero.headline + ".";
-    $("hero-note").textContent = hero.label_note;
-    const tiles = [
-      [hero.hybrid_true, "Real docs bugs, checked against the source by an AI reviewer"],
-      [percent(hero.hybrid_precision), "of flagged findings were real (" + hero.hybrid_true_findings + " / " + hero.hybrid_findings + ")"],
-      [hero.repro_true, "Reproduce an API error when you run the docs"],
-      [hero.rejected_true + " of " + hero.true_candidates_judged, "Real bugs Beam's triage threw away"],
-    ];
+  function mdInline(s) {
+    if (!s) {
+      return "";
+    }
+    return escapeHtml(s)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  }
+
+  function md(s) {
+    if (!s) {
+      return "";
+    }
+    const lines = String(s).split(/\n/);
+    let out = "";
+    let inL = false;
+    for (let i = 0; i < lines.length; i += 1) {
+      const t = mdInline(lines[i]);
+      if (/^\s*- /.test(t) || /^\s*- /.test(lines[i])) {
+        if (!inL) {
+          out += "<ul>";
+          inL = true;
+        }
+        out += "<li>" + t.replace(/^\s*- /, "") + "</li>";
+      } else {
+        if (inL) {
+          out += "</ul>";
+          inL = false;
+        }
+        if (t.trim()) {
+          out += "<p>" + t + "</p>";
+        }
+      }
+    }
+    return out + (inL ? "</ul>" : "");
+  }
+
+  function formatDate(iso) {
+    try {
+      return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+    } catch (err) {
+      return iso;
+    }
+  }
+
+  function renderHero(hero, copy, replay) {
+    $("headline").innerHTML = md(hero.lead || hero.headline);
+    $("hero-note").innerHTML = md(hero.label_note);
+    const tiles = hero.tiles || [];
     $("tiles").innerHTML = tiles
       .map(function (tile) {
         return "<div class='tile'><strong>" + tile[0] + "</strong><span>" + tile[1] + "</span></div>";
       })
       .join("");
+    const links = (copy && copy.links) || {};
+    const linkHtml =
+      (links.code ? '<a href="' + links.code + '">Code</a> · ' : "") +
+      (links.dataset ? '<a href="' + links.dataset + '">Dataset</a> · ' : "") +
+      (links.thread ? '<a href="' + links.thread + '">Thread</a>' : "");
+    $("hero-links").innerHTML = linkHtml;
+    $("run-links").innerHTML = linkHtml;
+    renderDrift(replay);
+    fetch("assets/docdrift-75s.mp4", { method: "HEAD" })
+      .then(function (response) {
+        if (response.ok) {
+          $("demo-video").hidden = false;
+        }
+      })
+      .catch(function () {});
+  }
+
+  function renderDrift(replay) {
+    const card = (replay && replay.drift_card) || {};
+    $("drift-doc").textContent = card.doc_quote || "";
+    $("drift-code").textContent = card.code_quote || "";
+    $("drift-err").textContent = card.error || "";
+    const pr = card.pr_url
+      ? '<a href="' + card.pr_url + '">' + (card.pr_label || "PR #3746") + "</a>"
+      : "";
+    $("drift-foot").innerHTML =
+      "→ Found by Beam's whole-repo pass (C02)" + (pr ? " · " + pr : "");
+    $("drift-honest").textContent =
+      card.hand_written_note ||
+      "Repro script for this one was written by hand from Beam's verdict; the other repros were written by Beam.";
   }
 
   function renderHowBeam(copy) {
-    $("how-beam").innerHTML = copy.how_beam.map(function (item) {
-      return "<li>" + item + "</li>";
-    }).join("");
+    $("how-beam").innerHTML = (copy.how_beam || [])
+      .map(function (item) {
+        return "<li>" + md(item) + "</li>";
+      })
+      .join("");
+    $("criteria-box").innerHTML = (copy.criteria || [])
+      .map(function (row) {
+        return "<article><h3>" + row.title + "</h3>" + md(row.body) + "</article>";
+      })
+      .join("");
+  }
+
+  function renderWhy(ablation, copy) {
+    const caption =
+      (copy && copy.why_caption) ||
+      "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file.";
+    $("why-caption").textContent = caption;
+    if (!ablation || !ablation.available) {
+      return;
+    }
+    const pairs = [];
+    if (ablation.outside_cite_whole && ablation.outside_cite_local) {
+      pairs.push(["Off-file evidence cited", ablation.outside_cite_whole, ablation.outside_cite_local]);
+    }
+    if (ablation.cross_file_cite_whole && ablation.cross_file_cite_local) {
+      pairs.push(["Cross-file citations", ablation.cross_file_cite_whole, ablation.cross_file_cite_local]);
+    }
+    if (ablation.accuracy_whole && ablation.accuracy_local) {
+      pairs.push(["Verdict accuracy", ablation.accuracy_whole, ablation.accuracy_local]);
+    }
+    if (!pairs.length) {
+      return;
+    }
+    const width = 640;
+    const rowH = 56;
+    const height = 24 + pairs.length * rowH;
+    let bars = "";
+    pairs.forEach(function (pair, index) {
+      const y = 20 + index * rowH;
+      const whole = frac(pair[1]);
+      const local = frac(pair[2]);
+      bars +=
+        '<text class="bar-label" x="0" y="' +
+        y +
+        '">' +
+        pair[0] +
+        "</text>" +
+        '<rect class="bar-whole" x="0" y="' +
+        (y + 6) +
+        '" width="' +
+        Math.max(8, whole * 420) +
+        '" height="10" rx="2"></rect>' +
+        '<text class="bar-label" x="' +
+        (Math.max(8, whole * 420) + 8) +
+        '" y="' +
+        (y + 15) +
+        '">whole ' +
+        pair[1] +
+        "</text>" +
+        '<rect class="bar-local" x="0" y="' +
+        (y + 20) +
+        '" width="' +
+        Math.max(4, local * 420) +
+        '" height="10" rx="2"></rect>' +
+        '<text class="bar-label" x="' +
+        (Math.max(4, local * 420) + 8) +
+        '" y="' +
+        (y + 29) +
+        '">local ' +
+        pair[2] +
+        "</text>";
+    });
+    $("why-chart").innerHTML =
+      '<svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="' + caption + '">' + bars + "</svg>";
+    $("why-placeholder").textContent =
+      copy.why_matched_cost_note || "Matched-cost local bar: not run yet.";
+  }
+
+  function frac(text) {
+    const match = String(text).match(/(\d+(?:\.\d+)?)(?:\s*\/\s*(\d+))?/);
+    if (!match) {
+      return 0;
+    }
+    if (match[2]) {
+      return Number(match[1]) / Number(match[2]);
+    }
+    const value = Number(match[1]);
+    return value > 1 ? value / 100 : value;
   }
 
   function uniqueLibraries(bugs) {
@@ -55,13 +211,61 @@
     return Object.keys(names).sort();
   }
 
-  function renderLibraryFilter(bugs) {
-    const select = $("library-filter");
-    select.innerHTML = "<option value='all'>All libraries</option>" + uniqueLibraries(bugs)
-      .map(function (name) {
-        return "<option value='" + name + "'>" + name + "</option>";
-      })
-      .join("");
+  function badgeCounts(bugs) {
+    const counts = { reproduced: 0, checked: 0, false: 0, true: 0 };
+    bugs.forEach(function (bug) {
+      if (counts[bug.badge] !== undefined) {
+        counts[bug.badge] += 1;
+      }
+      if (bug.verdict === "true") {
+        counts.true += 1;
+      }
+    });
+    return counts;
+  }
+
+  function renderChips(bugs) {
+    const libraries = uniqueLibraries(bugs);
+    $("library-chips").innerHTML =
+      chip("all", "All libraries", state.library === "all") +
+      libraries
+        .map(function (name) {
+          return chip(name, name, state.library === name);
+        })
+        .join("");
+    const counts = badgeCounts(bugs);
+    $("badge-chips").innerHTML =
+      chip("real", "Real " + counts.true, state.badge === "real") +
+      chip("reproduced", "Reproduced " + counts.reproduced, state.badge === "reproduced") +
+      chip("checked", "Checked " + counts.checked, state.badge === "checked") +
+      chip("false", "False " + counts.false, state.badge === "false") +
+      chip("all", "All " + bugs.length, state.badge === "all");
+    $("library-chips").querySelectorAll(".chip").forEach(function (button) {
+      button.addEventListener("click", function () {
+        state.library = button.getAttribute("data-value");
+        renderChips(bugs);
+        renderBugs();
+      });
+    });
+    $("badge-chips").querySelectorAll(".chip").forEach(function (button) {
+      button.addEventListener("click", function () {
+        state.badge = button.getAttribute("data-value");
+        renderChips(bugs);
+        renderBugs();
+      });
+    });
+  }
+
+  function chip(value, label, pressed) {
+    return (
+      '<button type="button" class="chip" data-value="' +
+      value +
+      '" aria-pressed="' +
+      (pressed ? "true" : "false") +
+      '">' +
+      label +
+      "</button>"
+    );
   }
 
   function matchesFilter(bug, library, badge) {
@@ -77,209 +281,298 @@
     return bug.badge === badge;
   }
 
-  function renderBugs() {
-    const library = $("library-filter").value;
-    const badge = $("badge-filter").value;
-    const html = state.bugs
-      .filter(function (bug) {
-        return matchesFilter(bug, library, badge);
-      })
-      .map(function (bug) {
-        const doc = bug.doc_path
-          ? (bug.doc_url
-            ? "<a href='" + bug.doc_url + "'>" + bug.doc_path + (bug.doc_line ? ":" + bug.doc_line : "") + "</a>"
-            : bug.doc_path + (bug.doc_line ? ":" + bug.doc_line : ""))
-          : "not recorded";
-        const code = bug.code_path
-          ? (bug.code_url
-            ? "<a href='" + bug.code_url + "'>" + bug.code_path + (bug.code_line ? ":" + bug.code_line : "") + "</a>"
-            : bug.code_path + (bug.code_line ? ":" + bug.code_line : ""))
-          : "not recorded";
-        const upstream = bug.upstream
-          ? "<span class='pill pill-open'>" +
-            (bug.upstream.url ? "<a href='" + bug.upstream.url + "'>" + bug.upstream.label + "</a>" : bug.upstream.label) +
-            "</span>"
-          : "";
-        return (
-          "<article class='card'>" +
-          "<span class='pill pill-" + bug.badge + "'>" + bug.badge + "</span>" +
-          (bug.finder ? "<span class='pill'>" + bug.finder + "</span>" : "") +
-          upstream +
-          "<h3>" + bug.title + "</h3>" +
-          "<p>" + bug.summary + "</p>" +
-          "<p class='meta'><b>Doc</b> " + doc + "<br><b>Code</b> " + code +
-          (bug.ref ? "<br><b>Commit</b> " + bug.ref : "") +
-          (bug.badge_note ? "<br>" + bug.badge_note : "") +
-          (bug.upstream && bug.upstream.note ? "<br>" + bug.upstream.note : "") +
-          "</p></article>"
-        );
-      })
-      .join("");
-    $("bug-grid").innerHTML = html || "<p>No cards match this filter.</p>";
+  function duplicateSummary(bug) {
+    const title = String(bug.title || "");
+    const summary = String(bug.summary || "");
+    if (!summary) {
+      return true;
+    }
+    const stripped = title.replace(/^[A-Za-z0-9._-]+:\s*/, "");
+    return summary === title || summary === stripped;
   }
 
-  function renderBenchmark(benchmark) {
-    const table = $("compare-table");
-    table.innerHTML =
+  function renderBugs() {
+    const matched = state.bugs.filter(function (bug) {
+      return matchesFilter(bug, state.library, state.badge);
+    });
+    $("bug-count").textContent = "Showing " + matched.length + " of " + state.bugs.length;
+    $("bug-grid").innerHTML =
+      matched
+        .map(function (bug) {
+          const display = bug.display_id || bug.id;
+          const docBlock = bug.doc_quote
+            ? "<p class='lbl'>Docs say</p><pre class='mini doc'>" + escapeHtml(bug.doc_quote) + "</pre>"
+            : "";
+          let codeBlock = "";
+          if (bug.code_quote) {
+            codeBlock = "<p class='lbl'>Code says</p><pre class='mini code'>" + escapeHtml(bug.code_quote) + "</pre>";
+          } else if (!bug.code_url && !bug.code_path) {
+            codeBlock =
+              "<p class='lbl'>Code says</p><pre class='mini code'>Symbol not found anywhere in " +
+              bug.library +
+              (bug.ref ? " @" + bug.ref : "") +
+              "</pre>";
+          }
+          const runBlock = bug.badge_note
+            ? "<p class='lbl'>Running it gives</p><pre class='mini err'>" + escapeHtml(bug.badge_note) + "</pre>"
+            : "";
+          const docLink = bug.doc_url
+            ? "<a href='" + bug.doc_url + "'>" + bug.doc_path + (bug.doc_line ? ":" + bug.doc_line : "") + "</a>"
+            : bug.doc_path
+              ? bug.doc_path + (bug.doc_line ? ":" + bug.doc_line : "")
+              : "";
+          const codeLink = bug.code_url
+            ? "<a href='" + bug.code_url + "'>" + bug.code_path + (bug.code_line ? ":" + bug.code_line : "") + "</a>"
+            : "";
+          const upstream = bug.upstream
+            ? "<span class='pill pill-open'>" +
+              (bug.upstream.url ? "<a href='" + bug.upstream.url + "'>" + bug.upstream.label + "</a>" : bug.upstream.label) +
+              "</span>"
+            : "";
+          const title = bug.short_title || String(bug.title || "").replace(/^[A-Za-z0-9._-]+:\s*/, "");
+          const summary = duplicateSummary(bug) ? "" : "<p>" + md(bug.summary) + "</p>";
+          return (
+            "<article class='card' title='" +
+            escapeHtml(bug.id) +
+            "'>" +
+            "<span class='disp-id'>" +
+            display +
+            "</span>" +
+            "<span class='pill'>" +
+            bug.library +
+            "</span>" +
+            "<span class='pill pill-" +
+            bug.badge +
+            "'>" +
+            bug.badge +
+            "</span>" +
+            (bug.cross_file ? "<span class='pill'>cross-file</span>" : "") +
+            upstream +
+            "<h3>" +
+            mdInline(title) +
+            "</h3>" +
+            summary +
+            docBlock +
+            codeBlock +
+            runBlock +
+            "<p class='meta'>" +
+            (docLink ? "<b>Doc</b> " + docLink : "") +
+            (codeLink ? "<br><b>Code</b> " + codeLink : "") +
+            (bug.ref ? "<br><b>Commit</b> " + bug.ref : "") +
+            "</p></article>"
+          );
+        })
+        .join("") || "<p>No cards match this filter.</p>";
+  }
+
+  function tableHtml(headers, rows, extraFrom) {
+    return (
       "<thead><tr>" +
-      benchmark.headers.map(function (header) {
-        return "<th>" + header + "</th>";
-      }).join("") +
+      headers
+        .map(function (header, index) {
+          return "<th" + extraClass(index, extraFrom) + ">" + header + "</th>";
+        })
+        .join("") +
       "</tr></thead><tbody>" +
-      benchmark.rows
+      rows
         .map(function (row) {
           return (
             "<tr>" +
             row
-              .map(function (cell) {
-                return "<td>" + cell + "</td>";
+              .map(function (cell, index) {
+                return (
+                  "<td data-label='" +
+                  escapeHtml(headers[index] || "") +
+                  "'" +
+                  extraClass(index, extraFrom) +
+                  ">" +
+                  mdCell(cell) +
+                  "</td>"
+                );
               })
               .join("") +
             "</tr>"
           );
         })
         .join("") +
-      "</tbody>";
+      "</tbody>"
+    );
+  }
+
+  function extraClass(index, extraFrom) {
+    if (extraFrom && extraFrom.indexOf(index) !== -1) {
+      return " class='extra-col'";
+    }
+    return "";
+  }
+
+  function mdCell(cell) {
+    return mdInline(String(cell));
+  }
+
+  function renderBenchmark(benchmark, hero) {
+    $("bench-headlines").innerHTML =
+      tile(hero.hybrid_true + " of " + hero.universe_size, "found") +
+      tile(hero.hybrid_true_findings + " of " + hero.hybrid_findings, "flagged were real") +
+      tile(String(hero.repro_true), "reproduce");
+    $("token-footnote").innerHTML = md(benchmark.token_footnote || "");
+    $("compare-table").innerHTML = tableHtml(benchmark.headers, benchmark.rows);
     $("funnel").innerHTML = benchmark.funnel
       .map(function (step) {
-        return "<li><b>" + step.step + ":</b> " + step.true + " true. " + step.detail + "</li>";
+        return "<li><b>" + step.step + ":</b> " + step.true + " true. " + md(step.detail) + "</li>";
       })
-        .join("");
+      .join("");
     const ablation = benchmark.ablation || {};
     if (ablation.available) {
-      $("ablation-claim").textContent = ablation.claim;
-      $("ablation-table").innerHTML =
-        "<thead><tr>" +
-        ablation.headers.map(function (header) {
-          return "<th>" + header + "</th>";
-        }).join("") +
-        "</tr></thead><tbody>" +
-        ablation.rows
-          .map(function (row) {
-            return (
-              "<tr>" +
-              row
-                .map(function (cell) {
-                  return "<td>" + cell + "</td>";
-                })
-                .join("") +
-              "</tr>"
-            );
-          })
-          .join("") +
-        "</tbody>";
+      $("ablation-claim").innerHTML = md(ablation.claim);
+      $("ablation-table").innerHTML = tableHtml(ablation.headers, ablation.rows);
       $("ablation-caveats").innerHTML = (ablation.caveats || [])
         .map(function (item) {
-          return "<li>" + item + "</li>";
+          return "<li>" + md(item) + "</li>";
         })
         .join("");
     }
     const beamv3 = benchmark.beamv3 || {};
     if (beamv3.available) {
       $("beamv3-title").textContent = beamv3.title || "Catching what one whole-repo call misses";
-      $("beamv3-claim").textContent = beamv3.claim;
-      $("beamv3-recipe").textContent = beamv3.recipe;
-      $("beamv3-table").innerHTML =
-        "<thead><tr>" +
-        beamv3.headers.map(function (header) {
-          return "<th>" + header + "</th>";
-        }).join("") +
-        "</tr></thead><tbody>" +
-        beamv3.rows
-          .map(function (row) {
-            return (
-              "<tr>" +
-              row
-                .map(function (cell) {
-                  return "<td>" + cell + "</td>";
-                })
-                .join("") +
-              "</tr>"
-            );
-          })
-          .join("") +
-        "</tbody>";
+      $("beamv3-claim").innerHTML = md(beamv3.claim);
+      $("beamv3-recipe").innerHTML = md(beamv3.recipe);
+      const extra = [1, 3, 4, 5, 7, 9, 10, 12, 13];
+      $("beamv3-table").innerHTML = tableHtml(beamv3.headers, beamv3.rows, extra);
+    }
+    const toggle = $("beamv3-cols");
+    if (toggle) {
+      toggle.addEventListener("toggle", function () {
+        $("beamv3-table").classList.toggle("show-all", toggle.open);
+      });
+    }
+    if (beamv3.available) {
       $("beamv3-caveats").innerHTML = (beamv3.caveats || [])
         .map(function (item) {
-          return "<li>" + item + "</li>";
+          return "<li>" + md(item) + "</li>";
         })
         .join("");
     }
-    const recall = benchmark.recall;
-    $("recall-note").textContent =
+    const recall = benchmark.recall || {};
+    $("recall-note").innerHTML = md(
       "Separate planted-drift distance probe, not a triage-accuracy result. Beam accepted prompts up to " +
-      formatNumber(recall.max_probe_tokens) +
-      " tokens. Focused whole-context passes hit " +
-      recall.far_hits[0] +
-      "/" +
-      recall.far_hits[1] +
-      " planted drifts 700k+ tokens apart vs " +
-      recall.chunk_far[0] +
-      "/" +
-      recall.chunk_far[1] +
-      " for chunked 128k, seed 1 only, at ~" +
-      recall.focused_multiplier +
-      "× tokens (" +
-      formatNumber(recall.focused_tokens) +
-      " vs ~" +
-      (recall.chunk_baseline_tokens / 1000000).toFixed(1) +
-      "M). " +
-      recall.docstring_pooled +
-      ".";
+        formatNumber(recall.max_probe_tokens) +
+        " tokens. Focused whole-context passes hit " +
+        (recall.far_hits ? recall.far_hits[0] + "/" + recall.far_hits[1] : "") +
+        " planted drifts 700k+ tokens apart vs " +
+        (recall.chunk_far ? recall.chunk_far[0] + "/" + recall.chunk_far[1] : "") +
+        " for chunked 128k, seed 1 only, n=6."
+    );
+    drawRecall(recall);
     if (benchmark.chart_present) {
       const image = $("recall-chart");
       image.src = benchmark.recall.chart;
       image.hidden = false;
     }
-    $("benchmark-notes").textContent = benchmark.notes_markdown;
+    $("benchmark-notes").innerHTML = md(benchmark.notes_markdown || "");
+    const pack = benchmark.pack_coverage;
+    if (pack && pack.available) {
+      $("pack-note").innerHTML = md(pack.note || "");
+      $("pack-table").innerHTML = tableHtml(pack.headers, pack.rows);
+    }
+  }
+
+  function tile(value, label) {
+    return "<div class='tile'><strong>" + value + "</strong><span>" + label + "</span></div>";
+  }
+
+  function drawRecall(recall) {
+    const series = recall.default_series;
+    if (!series || !series.length) {
+      return;
+    }
+    const buckets = recall.buckets || ["~1k", "~10k", "~50k", "~100k", "~200k", "~400k", "700k+"];
+    const width = 720;
+    const height = 220;
+    const left = 36;
+    const bottom = 36;
+    const plotW = width - left - 120;
+    const plotH = height - bottom - 20;
+    let paths = "";
+    const colors = ["#a84a1c", "#2f6d4f", "#5c574e"];
+    series.forEach(function (line, s) {
+      const pts = (line.points || []).map(function (value, i) {
+        const x = left + (i / Math.max(1, buckets.length - 1)) * plotW;
+        const y = 20 + plotH * (1 - value);
+        return x + "," + y;
+      });
+      const last = pts[pts.length - 1] ? pts[pts.length - 1].split(",") : ["0", "0"];
+      paths +=
+        '<polyline fill="none" stroke="' +
+        colors[s % colors.length] +
+        '" stroke-width="2" points="' +
+        pts.join(" ") +
+        '"></polyline>' +
+        '<text x="' +
+        (Number(last[0]) + 8) +
+        '" y="' +
+        (Number(last[1]) + 4) +
+        '" font-size="12">' +
+        escapeHtml(line.label) +
+        "</text>";
+    });
+    const axis = buckets
+      .map(function (name, i) {
+        const x = left + (i / Math.max(1, buckets.length - 1)) * plotW;
+        return '<text x="' + x + '" y="' + (height - 8) + '" font-size="11" text-anchor="middle">' + name + "</text>";
+      })
+      .join("");
+    $("recall-svg").innerHTML =
+      '<svg viewBox="0 0 ' +
+      width +
+      " " +
+      height +
+      '" role="img" aria-label="Planted-drift strict recall by distance, three methods">' +
+      paths +
+      axis +
+      "</svg>";
   }
 
   function renderRepros(repros) {
-    $("repro-table").innerHTML =
-      "<thead><tr><th>Id</th><th>Library</th><th>Verdict</th><th>Status</th><th>Strict</th><th>Error</th></tr></thead><tbody>" +
-      repros
-        .map(function (row) {
-          return (
-            "<tr><td>" +
-            row.id +
-            "</td><td>" +
-            row.library +
-            "</td><td>" +
-            row.verdict +
-            "</td><td>" +
-            row.status +
-            "</td><td>" +
-            (row.strict_confirmed ? "yes" : "no") +
-            "</td><td>" +
-            (row.error_excerpt || row.exception_type || "") +
-            "</td></tr>"
-          );
-        })
-        .join("") +
-      "</tbody>";
+    const headers = ["Id", "Library", "Verdict", "Status", "Strict", "Error"];
+    const rows = repros.map(function (row) {
+      return [
+        row.id,
+        row.library,
+        row.verdict,
+        row.status,
+        row.strict_confirmed ? "yes" : "no",
+        row.error_excerpt || row.exception_type || "",
+      ];
+    });
+    $("repro-table").innerHTML = tableHtml(headers, rows);
   }
 
   function renderReplay(replay) {
+    const seconds = replay.latency_seconds ? Math.round(replay.latency_seconds) + " s" : "";
     $("replay-banner").innerHTML =
-      "<b>Recording</b> of the real starlette pack. " +
+      "<b>Recorded run</b> · starlette @" +
+      (replay.ref || "8aa828c") +
+      " · " +
+      formatDate(replay.recorded_at) +
+      " · " +
       formatNumber(replay.prompt_tokens) +
-      " prompt tokens, " +
-      formatNumber(replay.completion_tokens) +
-      " completion tokens, packed " +
-      replay.recorded_at +
-      ". " +
+      " tokens in one Beam call" +
+      (seconds ? " · " + seconds : "") +
+      " · " +
       replay.candidate_count +
-      " candidates (" +
-      replay.symbol_candidates +
-      " symbol check + " +
-      replay.whole_candidates +
-      " whole-repo pass). Kept " +
+      " candidates → " +
       replay.kept +
-      ", rejected " +
+      " real, " +
       replay.rejected +
-      ". Source " +
-      replay.trace_path +
-      ".";
+      " rejected.";
+    $("replay-banner").title = replay.trace_path || "";
+    $("player-summary").textContent =
+      "Watch the recorded starlette run (" +
+      replay.candidate_count +
+      " candidates → " +
+      replay.kept +
+      " kept)";
     $("player-candidates").innerHTML = (replay.candidates || [])
       .map(function (item) {
         return (
@@ -292,30 +585,18 @@
           ":" +
           item.doc_line +
           " — " +
-          item.claim +
+          md(item.claim) +
           "</li>"
         );
       })
       .join("");
     $("player-verdicts").innerHTML = (replay.candidates || [])
       .map(function (item) {
-        const site = item.code_path
-          ? item.code_path + (item.code_line ? ":" + item.code_line : "")
-          : "no code cite";
-        return (
-          "<li><b>" +
-          item.id +
-          " → " +
-          item.verdict +
-          "</b> " +
-          site +
-          ". " +
-          item.reason +
-          "</li>"
-        );
+        const site = item.code_path ? item.code_path + (item.code_line ? ":" + item.code_line : "") : "no code cite";
+        return "<li><b>" + item.id + " → " + item.verdict + "</b> " + site + ". " + md(item.reason) + "</li>";
       })
       .join("");
-    $("player-repro-note").textContent = replay.repro_note || "";
+    $("player-repro-note").innerHTML = md(replay.repro_note || "");
     $("player-tracebacks").innerHTML = (replay.tracebacks || [])
       .map(function (row) {
         return (
@@ -332,48 +613,92 @@
       })
       .join("");
     const pr = replay.pr || {};
-    $("player-pr").innerHTML = pr.url
-      ? '<a href="' + pr.url + '">' + pr.label + "</a> — " + (pr.note || "")
-      : "";
+    $("player-pr").innerHTML = pr.url ? '<a href="' + pr.url + '">' + pr.label + "</a> — " + (pr.note || "") : "";
   }
 
   function renderCopy(copy) {
-    $("ollama-key").textContent = copy.ollama_key;
-    $("local-cmd").textContent = copy.local;
+    $("ollama-key").innerHTML = md(copy.ollama_key);
     $("cli-cmd").textContent = copy.cli;
-    if ($("sweep-cmd")) {
-      $("sweep-cmd").textContent = copy.cli_sweep || "";
-    }
     $("limits-list").innerHTML = copy.limits
       .map(function (item) {
-        return "<li>" + item + "</li>";
+        return "<li>" + md(item) + "</li>";
       })
       .join("");
     $("exclusions-list").innerHTML = (copy.exclusions || [])
       .map(function (item) {
-        return "<li>" + item + "</li>";
+        return "<li>" + md(item) + "</li>";
       })
       .join("");
     $("glossary-list").innerHTML = (copy.glossary || [])
       .map(function (item) {
-        return "<li>" + item + "</li>";
+        return "<li>" + md(item) + "</li>";
       })
       .join("");
     $("sources").textContent = "Sources: " + copy.sources.join("; ");
   }
 
-  function bindTabs() {
+  function activateTab(name, setHash, shouldFocus) {
     const buttons = document.querySelectorAll(".tab");
+    const panels = document.querySelectorAll(".panel");
+    buttons.forEach(function (button, index) {
+      const selected = button.getAttribute("data-tab") === name;
+      button.classList.toggle("is-active", selected);
+      button.setAttribute("aria-selected", selected ? "true" : "false");
+      button.tabIndex = selected ? 0 : -1;
+      if (selected && shouldFocus) {
+        button.focus({ preventScroll: true });
+      }
+      button.setAttribute("data-index", String(index));
+    });
+    panels.forEach(function (panel) {
+      const selected = panel.id === name;
+      panel.classList.toggle("is-active", selected);
+      panel.hidden = !selected;
+    });
+    if (setHash !== false) {
+      history.replaceState(null, "", "#" + name);
+    }
+    if (name === "benchmark" && !state.chartBuilt) {
+      state.chartBuilt = true;
+    }
+  }
+
+  function bindTabs() {
+    const buttons = Array.prototype.slice.call(document.querySelectorAll(".tab"));
     buttons.forEach(function (button) {
       button.addEventListener("click", function () {
-        const name = button.getAttribute("data-tab");
-        buttons.forEach(function (other) {
-          other.classList.toggle("is-active", other === button);
-        });
-        document.querySelectorAll(".panel").forEach(function (panel) {
-          panel.classList.toggle("is-active", panel.id === name);
-        });
+        activateTab(button.getAttribute("data-tab"), true, true);
       });
+    });
+    document.querySelector(".tabs").addEventListener("keydown", function (event) {
+      const keys = { ArrowRight: 1, ArrowLeft: -1, Home: "home", End: "end" };
+      if (!(event.key in keys)) {
+        return;
+      }
+      event.preventDefault();
+      const current = buttons.findIndex(function (button) {
+        return button.getAttribute("aria-selected") === "true";
+      });
+      let next = current;
+      if (event.key === "Home") {
+        next = 0;
+      } else if (event.key === "End") {
+        next = buttons.length - 1;
+      } else {
+        next = (current + keys[event.key] + buttons.length) % buttons.length;
+      }
+      activateTab(buttons[next].getAttribute("data-tab"), true, true);
+    });
+    const hash = (location.hash || "#story").replace("#", "");
+    const known = buttons.some(function (button) {
+      return button.getAttribute("data-tab") === hash;
+    });
+    activateTab(known ? hash : "story", false);
+    window.addEventListener("hashchange", function () {
+      const name = location.hash.replace("#", "");
+      if (name) {
+        activateTab(name, false);
+      }
     });
   }
 
@@ -394,16 +719,15 @@
       const replay = documents[4];
       const copy = documents[5];
       state.bugs = bugs;
-      renderHero(hero);
+      renderHero(hero, copy, replay);
       renderHowBeam(copy);
-      renderLibraryFilter(bugs);
+      renderWhy(benchmark.ablation, copy);
+      renderChips(bugs);
       renderBugs();
-      renderBenchmark(benchmark);
+      renderBenchmark(benchmark, hero);
       renderRepros(repros);
       renderReplay(replay);
       renderCopy(copy);
-      $("library-filter").addEventListener("change", renderBugs);
-      $("badge-filter").addEventListener("change", renderBugs);
     })
     .catch(function (error) {
       $("headline").textContent = "Could not load recorded results: " + error.message;

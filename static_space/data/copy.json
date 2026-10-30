@@ -14,7 +14,7 @@
     "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.",
     "httpx #3774 and arrow #1355 were already reported upstream by others.",
     "cattrs and click have drafts in the repo; they are not listed as filed.",
-    "This page is a static recording. Hugging Face now requires PRO to host Gradio on free CPU Basic. The Gradio app in app.py is unchanged if a grant arrives."
+    "This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI."
   ],
   "glossary": [
     "Triage: Beam judges symbol-check and whole-repo candidates as true_drift, false, or unclear against one packed library prompt.",
@@ -22,11 +22,36 @@
     "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line.",
     "hand_verdict: stored field name. It means checked against the source by an AI reviewer, not a human annotator."
   ],
-  "cli": "docdrift run https://github.com/OWNER/REPO --max-tokens 400000",
-  "cli_sweep": "BEAM_PROVIDER=ollama OLLAMA_API_KEY=YOUR_KEY python3 scripts/run_benchmark.py --repos-file benchmarks/repos_sweep_2026-10-26.yaml --repos httpx,click,attrs,pydantic-settings,structlog,jinja,nox,arrow,cattrs,marshmallow,werkzeug --token-limits 400000 --output-dir results_live",
+  "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000",
+  "cli_sweep": "",
   "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.",
-  "local": "python3 -m pip install -r requirements-dev.txt && python3 scripts/build_results_live_index.py && python3 -m pytest -q && python3 app.py",
-  "built_at": "2026-10-26T23:31:55Z",
+  "local": "",
+  "links": {
+    "code": "https://github.com/OlsOls4/repoatlas-1m",
+    "dataset": "https://huggingface.co/datasets/ollymcbride4/docdrift-bugs",
+    "thread": "https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5"
+  },
+  "criteria": [
+    {
+      "title": "Creativity",
+      "body": "Treats docs as executable claims. Beam reads the whole library, then writes a script that **runs the docs**. A bug counts only if the doc's own line crashes."
+    },
+    {
+      "title": "Technical execution",
+      "body": "- 12 pinned libraries\n- a strict repro gate: 30 bugs crash on the doc's own line\n- 38 of 41 badges real\n- ablation + stability rerun (26/27)\n- every number traces to the dataset"
+    },
+    {
+      "title": "Usefulness",
+      "body": "34 real docs bugs in libraries people use (httpx, marshmallow, werkzeug, starlette, attrs, click…). 2 PRs filed upstream (starlette #3746, nox #1216), both open. A CLI for your own repo."
+    },
+    {
+      "title": "Beam",
+      "body": "one whole-repo call per library (11 of 12; structlog failed, cattrs needed 2). With the whole repo, Beam cited the true evidence in another file 11/13 times; with local files only, 0/13. Prompts up to 947,446 tokens accepted."
+    }
+  ],
+  "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
+  "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+  "built_at": "2026-10-30T11:37:29Z",
   "sources": [
     "results_live/hybrid/hybrid.json",
     "results_live/hybrid/hybrid.csv",
@@ -46,6 +71,6 @@
     "results_live/ablation/raw/ API bodies",
     "results_live/beamv3/repros/*/ per-attempt logs",
     "dataset/ traces and other raw sweep artifacts",
-    "Gradio app.py runtime, caches, and virtualenvs"
+    "raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)"
   ]
 }
