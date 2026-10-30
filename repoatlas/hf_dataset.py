@@ -27,6 +27,12 @@ ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_l
 MATCHED_COST_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "results.json"
 MATCHED_COST_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "beam_usage_ledger.json"
 MATCHED_COST_EXT_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost_ext" / "beam_usage_ledger.json"
+MATCHED_COST_EXT_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost_ext" / "results.json"
+PUBLIC_SPACE_URL: str = "https://huggingface.co/spaces/ollymcbride4/docdrift"
+PUBLIC_CODE_URL: str = "https://github.com/OlsOls4/repoatlas-1m"
+PUBLIC_DATASET_URL: str = "https://huggingface.co/datasets/ollymcbride4/docdrift-bugs"
+PUBLIC_THREAD_URL: str = "https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5"
+PUBLIC_VIDEO_URL: str = "https://huggingface.co/spaces/ollymcbride4/docdrift/resolve/main/assets/docdrift-demo.mp4"
 BEAMV3_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "results.json"
 BEAMV3_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "beam_usage_ledger.json"
 FRESH_RUN_FINDINGS_PATH: Path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
@@ -50,6 +56,7 @@ def build_hf_dataset(destination: Path | None = None) -> Path:
     repros = _repro_rows()
     plants = _planted_rows()
     ablation = _ablation_verdicts()
+    ext_verdicts = _matched_cost_ext_verdicts()
     beamv3 = _beamv3_findings()
     ledger = _token_ledger()
     _write_table(target, "findings", findings)
@@ -57,10 +64,12 @@ def build_hf_dataset(destination: Path | None = None) -> Path:
     _write_table(target, "repros", repros)
     _write_table(target, "planted_drift", plants)
     _write_table(target, "ablation_verdicts", ablation)
+    _write_table(target, "matched_cost_ext_verdicts", ext_verdicts)
     _write_table(target, "beamv3_findings", beamv3)
     _write_table(target, "token_ledger", ledger)
     (target / "README.md").write_text(
-        _card(stats, findings, verdicts, repros, plants, ablation, beamv3, ledger), encoding="utf-8"
+        _card(stats, findings, verdicts, repros, plants, ablation, ext_verdicts, beamv3, ledger),
+        encoding="utf-8",
     )
     return target
 
@@ -231,6 +240,66 @@ def _ablation_verdicts() -> list[dict[str, object]]:
     return rows
 
 
+def _arm_cite_cols(prefix: str, arm: dict[str, object]) -> dict[str, object]:
+    """
+    @brief Flatten one arm's verdict and citation fields for the extension table.
+    """
+
+    citation = _as_dict(arm.get("citation"))
+    return {
+        f"{prefix}_verdict": arm.get("verdict"),
+        f"{prefix}_kept": arm.get("kept"),
+        f"{prefix}_cite_correct": arm.get("cite_correct"),
+        f"{prefix}_cite_verified": arm.get("cite_verified"),
+        f"{prefix}_cite_file_correct": arm.get("cite_file_correct"),
+        f"{prefix}_reason": strip_local_paths(str(arm.get("reason") or "")),
+        f"{prefix}_cite_path": str(citation.get("path") or ""),
+        f"{prefix}_cite_start": citation.get("start_line"),
+        f"{prefix}_cite_end": citation.get("end_line"),
+        f"{prefix}_cite_quote": strip_local_paths(str(citation.get("quote") or "")),
+    }
+
+
+def _matched_cost_ext_verdicts() -> list[dict[str, object]]:
+    """
+    @brief Scored extension items from matched_cost_ext/results.json rows (63 recorded items).
+    """
+
+    if not MATCHED_COST_EXT_RESULTS_PATH.exists():
+        return []
+    payload: object = json.loads(MATCHED_COST_EXT_RESULTS_PATH.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        return []
+    rows: list[dict[str, object]] = []
+    for item in _as_dict_list(payload.get("rows")):
+        whole = _as_dict(item.get("whole"))
+        local = _as_dict(item.get("local"))
+        matched = _as_dict(item.get("matched"))
+        gold = item.get("gold")
+        row: dict[str, object] = {
+            "key": item.get("key", ""),
+            "set": item.get("set", ""),
+            "stratum": item.get("stratum", ""),
+            "unit": item.get("unit", ""),
+            "label": item.get("label", ""),
+            "hand_verdict": item.get("label", ""),
+            "hand_verdict_description": LABEL_SOURCE,
+            "truth": item.get("truth"),
+            "cross_file": item.get("cross_file"),
+            "gold_outside_local": item.get("gold_outside_local"),
+            "gold_in_matched_context": item.get("gold_in_matched_context"),
+            "gold": json.dumps(gold, ensure_ascii=False) if gold is not None else "",
+            "whole_error": strip_local_paths(str(item.get("whole_error") or "")),
+            "local_error": strip_local_paths(str(item.get("local_error") or "")),
+            "matched_error": strip_local_paths(str(item.get("matched_error") or "")),
+        }
+        row.update(_arm_cite_cols("whole", whole))
+        row.update(_arm_cite_cols("local", local))
+        row.update(_arm_cite_cols("matched", matched))
+        rows.append(row)
+    return rows
+
+
 def _beamv3_findings() -> list[dict[str, object]]:
     """
     @brief One row per beam v3 finding, including unlabelled items.
@@ -390,6 +459,7 @@ def _card(
     repros: list[dict[str, object]],
     plants: list[dict[str, object]],
     ablation: list[dict[str, object]],
+    ext_verdicts: list[dict[str, object]],
     beamv3: list[dict[str, object]],
     ledger: list[dict[str, object]],
 ) -> str:
@@ -399,6 +469,8 @@ def _card(
 
     hybrid_true = stats["hybrid_true"] if isinstance(stats, dict) else ""
     repro_true = stats["repro_true"] if isinstance(stats, dict) else ""
+    ext_cross = sum(1 for row in ext_verdicts if row.get("cross_file"))
+    ext_outside = sum(1 for row in ext_verdicts if row.get("gold_outside_local"))
     return f"""---
 pretty_name: DocDrift bugs
 configs:
@@ -412,11 +484,15 @@ configs:
     data_files: planted_drift.parquet
   - config_name: ablation_verdicts
     data_files: ablation_verdicts.parquet
+  - config_name: matched_cost_ext_verdicts
+    data_files: matched_cost_ext_verdicts.parquet
   - config_name: beamv3_findings
     data_files: beamv3_findings.parquet
   - config_name: token_ledger
     data_files: token_ledger.parquet
 license: cc-by-4.0
+size_categories:
+  - n<1K
 task_categories:
   - text-classification
 language:
@@ -437,6 +513,17 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 
 **Licence.** DocDrift's own labels, verdicts, and notes are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Quoted documentation and source excerpts remain under each library's own licence (all 12 are permissive OSS).
 
+```python
+from datasets import load_dataset
+ds = load_dataset("ollymcbride4/docdrift-bugs", "findings")
+```
+
+- Space: {PUBLIC_SPACE_URL}
+- Demo video: {PUBLIC_VIDEO_URL}
+- Code: {PUBLIC_CODE_URL}
+- Dataset: {PUBLIC_DATASET_URL}
+- HF thread: {PUBLIC_THREAD_URL}
+
 ## How it was built
 
 1. Pin each library to a recorded commit.
@@ -454,6 +541,7 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 | repros | {len(repros)} | Executable repro cases | `case_id`, `repo`, `status`, `strict_confirmed`, `exception_type`, `error_excerpt`, `evidence` |
 | planted_drift | {len(plants)} | Planted-drift set + ground truth | original probe fields plus `seed` |
 | ablation_verdicts | {len(ablation)} | Whole-repo vs local-file vs matched-cost retrieval triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `matched_verdict`, `stability_verdict`, citation flags |
+| matched_cost_ext_verdicts | {len(ext_verdicts)} | Scored pre-registered extension items only ({len(ext_verdicts)} rows in this file; {ext_cross} cross-file, {ext_outside} outside-local). Pooled 52/78 includes the original 56 from `ablation_verdicts`; those original rows are not duplicated here. | `key`, `set`, `stratum`, `label`, `hand_verdict`, `cross_file`, `gold_outside_local`, per-arm `whole_` / `local_` / `matched_` verdicts and citations |
 | beamv3_findings | {len(beamv3)} | Extra 32k-docstring-chunk and docs-pass findings (unlabelled not counted as true) | `id`, `repo`, `pass`, `doc_path`, `doc_line`, `label`, `drift_id`, `label_by`, `hand_verdict`, `hand_verdict_description`, `new_vs_hybrid`, `strict_confirmed`, `explanation` |
 | token_ledger | {len(ledger)} | Hybrid + first-sweep + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`first_sweep`, `hybrid`, `ablation`, `beamv3`, `matched_cost`, `matched_cost_ext`, `fresh_run`) |
 
@@ -461,15 +549,15 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 
 ## Limits
 
-- The 45-drift universe is the union of method output, so it favours those methods.
+- The 45-drift universe is the union of method output, so it favours those methods. The 45 true hybrid findings are a different set from those 45 pooled drifts.
 - 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 first sweep + 4,739,392 hybrid triage + 138,138 repro. The first sweep is in `token_ledger` as `ledger=first_sweep` (12 rows from the recorded 400k traces).
-- Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; matched-cost extension 7,528,878; tomlkit CLI run 185,842.
-- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items. A pre-registered extension added 63 items (57 planted renames, 6 real structlog). Pooled, retrieval grounded 38/78 cross-file cases vs 52/78 for the whole repo (McNemar p = 0.0094). Accuracy still did not differ (105/118 vs 108/119). The new items alone give p = 0.096 (not shown at this n), and the pooled p is 0.18 without one pre-registered parse-failure re-send. Pre-registration: design_ext.md sha256 42f6b6fe…c996.
+- Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; matched-cost extension 7,528,878; tomlkit CLI run 185,842. Matched-cost controls plus the recording: 11,672,154.
+- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items. A pre-registered extension added 63 items (57 planted renames, 6 real structlog). Pooled, retrieval grounded 38/78 cross-file cases vs 52/78 for the whole repo (McNemar p = 0.0094). Outside-local: 38/61 vs 25/61 (p = 0.0146). Accuracy still did not differ (105/118 vs 108/119). The new items alone give p = 0.096 (not shown at this n), and the pooled p is 0.18 without one pre-registered parse-failure re-send. Pre-registration: design_ext.md sha256 42f6b6fe…c996.
 - 32k docstring chunks recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid + 32k chunks). Headline stays 34 of 45.
 
 ## Citation
 
-DocDrift bugs: docs-vs-code drifts in 12 Python libraries, found with Beam. Labels by an AI reviewer against source at the pinned commit. Dataset: https://huggingface.co/datasets/ollymcbride4/docdrift-bugs
+DocDrift bugs: docs-vs-code drifts in 12 Python libraries, found with Beam. Labels by an AI reviewer against source at the pinned commit. Dataset: {PUBLIC_DATASET_URL}
 """

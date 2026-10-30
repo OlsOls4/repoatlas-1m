@@ -61,6 +61,9 @@ def test_ablation_payload_matches_recorded_results() -> None:
     assert payload["matched_ext_cross_matched"] == "38/78"
     assert payload["matched_ext_p"] == "0.0094"
     assert payload["matched_ext_tokens"] == 7_528_878
+    assert payload["matched_ext_outside_whole"] == "38/61"
+    assert payload["matched_ext_outside_matched"] == "25/61"
+    assert payload["matched_ext_outside_p"] == "0.0146"
     assert "Pre-registered extension" in note and "p = 0.096" in note
     kept = next(row for row in payload["rows"] if row[0] == "True candidates kept")
     rejected = next(row for row in payload["rows"] if row[0] == "False/unclear candidates rejected")

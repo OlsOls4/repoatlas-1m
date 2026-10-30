@@ -181,97 +181,188 @@
     if (!ablation || !ablation.available) {
       return;
     }
+    const retrievalLegend = "retrieval (same budget)";
+    const subsetTag = "subset n=56";
     const matchedOn = Boolean(ablation.matched_available && (ablation.outside_cite_matched || ablation.cross_file_cite_matched));
-    const pairs = [];
+    const rows = [];
+    if (ablation.matched_ext_available && ablation.matched_ext_cross_whole) {
+      rows.push({
+        label: "Cross-file, pooled (n=78, same budget)",
+        whole: ablation.matched_ext_cross_whole,
+        retrieval: ablation.matched_ext_cross_matched,
+        local: "",
+        extra: "p=" + (ablation.matched_ext_p || ""),
+      });
+      if (ablation.matched_ext_outside_whole) {
+        rows.push({
+          label: "Off-file, pooled (n=61, same budget)",
+          whole: ablation.matched_ext_outside_whole,
+          retrieval: ablation.matched_ext_outside_matched,
+          local: "",
+          extra: "p=" + (ablation.matched_ext_outside_p || ""),
+        });
+      }
+    }
     if (ablation.outside_cite_whole && ablation.outside_cite_local) {
-      pairs.push([
-        "Off-file evidence cited",
-        ablation.outside_cite_whole,
-        ablation.outside_cite_local,
-        matchedOn ? ablation.outside_cite_matched : "",
-      ]);
+      rows.push({
+        label: "Off-file evidence cited (" + subsetTag + ")",
+        whole: ablation.outside_cite_whole,
+        retrieval: matchedOn ? ablation.outside_cite_matched : "",
+        local: ablation.outside_cite_local,
+        extra: "",
+      });
     }
     if (ablation.cross_file_cite_whole && ablation.cross_file_cite_local) {
-      pairs.push([
-        "Cross-file citations",
-        ablation.cross_file_cite_whole,
-        ablation.cross_file_cite_local,
-        matchedOn ? ablation.cross_file_cite_matched : "",
-      ]);
+      rows.push({
+        label: "Cross-file citations (" + subsetTag + ")",
+        whole: ablation.cross_file_cite_whole,
+        retrieval: matchedOn ? ablation.cross_file_cite_matched : "",
+        local: ablation.cross_file_cite_local,
+        extra: "",
+      });
     }
     if (ablation.accuracy_whole && ablation.accuracy_local) {
-      pairs.push([
-        "Verdict accuracy",
-        ablation.accuracy_whole,
-        ablation.accuracy_local,
-        matchedOn ? ablation.accuracy_matched : "",
-      ]);
+      rows.push({
+        label: "Verdict accuracy (" + subsetTag + ")",
+        whole: ablation.accuracy_whole,
+        retrieval: matchedOn ? ablation.accuracy_matched : "",
+        local: ablation.accuracy_local,
+        extra: "",
+      });
     }
-    if (!pairs.length) {
+    if (!rows.length) {
       return;
     }
-    const width = 640;
-    const rowH = matchedOn ? 78 : 56;
-    const height = 24 + pairs.length * rowH;
+    const width = 720;
+    const rowH = 86;
+    const height = 28 + rows.length * rowH;
     let bars = "";
-    pairs.forEach(function (pair, index) {
-      const y = 20 + index * rowH;
-      const whole = frac(pair[1]);
-      const local = frac(pair[2]);
-      const matched = pair[3] ? frac(pair[3]) : 0;
+    rows.forEach(function (row, index) {
+      const y = 22 + index * rowH;
+      const whole = frac(row.whole);
+      const retrieval = row.retrieval ? frac(row.retrieval) : 0;
+      const local = row.local ? frac(row.local) : 0;
+      const title = row.extra ? row.label + " · " + row.extra : row.label;
       bars +=
         '<text class="bar-label" x="0" y="' +
         y +
         '">' +
-        pair[0] +
+        escapeHtml(title) +
         "</text>" +
         '<rect class="bar-whole" x="0" y="' +
-        (y + 6) +
+        (y + 8) +
         '" width="' +
         Math.max(8, whole * 420) +
-        '" height="10" rx="2"></rect>' +
+        '" height="12" rx="2"></rect>' +
         '<text class="bar-label" x="' +
         (Math.max(8, whole * 420) + 8) +
         '" y="' +
-        (y + 15) +
+        (y + 18) +
         '">whole ' +
-        pair[1] +
+        escapeHtml(String(row.whole)) +
         "</text>";
-      if (pair[3]) {
+      let nextY = y + 24;
+      if (row.retrieval) {
         bars +=
           '<rect class="bar-matched" x="0" y="' +
-          (y + 20) +
+          nextY +
           '" width="' +
-          Math.max(4, matched * 420) +
-          '" height="10" rx="2"></rect>' +
+          Math.max(4, retrieval * 420) +
+          '" height="12" rx="2"></rect>' +
           '<text class="bar-label" x="' +
-          (Math.max(4, matched * 420) + 8) +
+          (Math.max(4, retrieval * 420) + 8) +
           '" y="' +
-          (y + 29) +
-          '">matched ' +
-          pair[3] +
+          (nextY + 10) +
+          '">' +
+          escapeHtml(retrievalLegend) +
+          " " +
+          escapeHtml(String(row.retrieval)) +
+          "</text>";
+        nextY += 16;
+      }
+      if (row.local) {
+        bars +=
+          '<rect class="bar-local" x="0" y="' +
+          nextY +
+          '" width="' +
+          Math.max(4, local * 420) +
+          '" height="12" rx="2"></rect>' +
+          '<text class="bar-label" x="' +
+          (Math.max(4, local * 420) + 8) +
+          '" y="' +
+          (nextY + 10) +
+          '">local ' +
+          escapeHtml(String(row.local)) +
           "</text>";
       }
-      const localY = pair[3] ? y + 34 : y + 20;
-      bars +=
-        '<rect class="bar-local" x="0" y="' +
-        localY +
-        '" width="' +
-        Math.max(4, local * 420) +
-        '" height="10" rx="2"></rect>' +
-        '<text class="bar-label" x="' +
-        (Math.max(4, local * 420) + 8) +
-        '" y="' +
-        (localY + 9) +
-        '">local ' +
-        pair[2] +
-        "</text>";
     });
+    let list = "<ul class='why-chart-list'>";
+    rows.forEach(function (row) {
+      if (row.label.indexOf("Cross-file, pooled") === 0) {
+        const wholeCount = String(row.whole).split("/")[0];
+        const retrievalCount = String(row.retrieval).split("/")[0];
+        list +=
+          "<li><strong>" +
+          escapeHtml(
+            "Cross-file, pooled (n=78, same budget): whole " +
+              wholeCount +
+              " · retrieval " +
+              retrievalCount +
+              " · " +
+              row.extra
+          ) +
+          "</strong></li>";
+        return;
+      }
+      list += "<li><strong>" + escapeHtml(row.label) + "</strong>";
+      list += "<span class='why-arm'>whole " + escapeHtml(String(row.whole));
+      if (row.retrieval) {
+        list += " · " + escapeHtml(retrievalLegend) + " " + escapeHtml(String(row.retrieval));
+      }
+      if (row.local) {
+        list += " · local " + escapeHtml(String(row.local));
+      }
+      if (row.extra) {
+        list += " · " + escapeHtml(row.extra);
+      }
+      list += "</span></li>";
+    });
+    list += "</ul>";
+    const wholeN = String(ablation.matched_ext_cross_whole || "").split("/")[0];
+    const retrievalN = String(ablation.matched_ext_cross_matched || "").split("/")[0];
+    const aria =
+      ablation.matched_ext_cross_whole && ablation.matched_ext_cross_matched
+        ? "Cross-file, pooled (n=78, same budget): whole " +
+          wholeN +
+          " · retrieval " +
+          retrievalN +
+          " · p=" +
+          (ablation.matched_ext_p || "")
+        : caption;
     $("why-chart").innerHTML =
-      '<svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="' + caption + '">' + bars + "</svg>";
+      '<svg viewBox="0 0 ' +
+      width +
+      " " +
+      height +
+      '" role="img" aria-label="' +
+      escapeHtml(aria) +
+      '">' +
+      bars +
+      "</svg>" +
+      list;
     const subset = $("why-subset");
     if (subset) {
-      subset.textContent = (copy && copy.why_subset_note) || (ablation && ablation.subset_note) || "";
+      const outside =
+        ablation.matched_ext_outside_whole && ablation.matched_ext_outside_matched
+          ? " Outside-local pooled: whole " +
+            ablation.matched_ext_outside_whole +
+            " vs retrieval " +
+            ablation.matched_ext_outside_matched +
+            " (p = " +
+            (ablation.matched_ext_outside_p || "") +
+            ")."
+          : "";
+      subset.textContent = ((copy && copy.why_subset_note) || (ablation && ablation.subset_note) || "") + outside;
     }
     const placeholder = $("why-placeholder");
     const note = (copy && copy.why_matched_cost_note) || "Matched-cost local bar: not run yet.";
@@ -766,6 +857,19 @@
   function renderCopy(copy) {
     $("ollama-key").innerHTML = md(copy.ollama_key);
     $("cli-cmd").textContent = copy.cli;
+    const cliCost = $("cli-cost");
+    if (cliCost) {
+      cliCost.textContent = copy.cli_cost ? "Typical recorded cost: " + copy.cli_cost : "";
+    }
+    const cliPreview = $("cli-preview");
+    if (cliPreview) {
+      cliPreview.textContent = copy.cli_output_preview || "";
+      cliPreview.hidden = !copy.cli_output_preview;
+    }
+    const wallNote = $("bug-wall-note");
+    if (wallNote) {
+      wallNote.textContent = copy.bug_wall_note || "";
+    }
     $("limits-list").innerHTML = copy.limits
       .map(function (item) {
         return "<li>" + md(item) + "</li>";

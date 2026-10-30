@@ -107,6 +107,7 @@
 
     <section id="bugs" class="panel" role="tabpanel" aria-labelledby="tab-bugs" tabindex="0" hidden>
       <h2>Bug wall</h2>
+      <p class="lede" id="bug-wall-note"></p>
       <p class="lede">Docs say / code says / running it gives. Permalinks point at the pinned commit.</p>
       <div class="filters" id="bug-filters">
         <div class="chips" id="library-chips"></div>
@@ -176,7 +177,9 @@
         </details>
       </details>
       <h3>CLI</h3>
+      <p class="lede" id="cli-cost"></p>
       <pre><code id="cli-cmd"></code></pre>
+      <pre><code id="cli-preview"></code></pre>
       <p class="links" id="run-links"></p>
     </section>
 
@@ -191,6 +194,7 @@
 
   <footer>
     <p>Every number comes from the companion dataset. No API keys are embedded. This Space is a static recording; it makes no Beam calls.</p>
+    <p class="links footer-links"><a href="https://github.com/OlsOls4/repoatlas-1m">Code</a> · <a href="https://huggingface.co/datasets/ollymcbride4/docdrift-bugs">Dataset</a> · <a href="https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5">Thread</a></p>
   </footer>
   <script src="assets/asciinema-player.min.js"></script>
   <script src="assets/app.js"></script>

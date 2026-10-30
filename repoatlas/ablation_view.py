@@ -68,6 +68,9 @@ class AblationPayload(TypedDict):
     matched_ext_cross_matched: str
     matched_ext_p: str
     matched_ext_tokens: int
+    matched_ext_outside_whole: str
+    matched_ext_outside_matched: str
+    matched_ext_outside_p: str
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -120,6 +123,9 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "matched_ext_cross_matched": "",
         "matched_ext_p": "",
         "matched_ext_tokens": 0,
+        "matched_ext_outside_whole": "",
+        "matched_ext_outside_matched": "",
+        "matched_ext_outside_p": "",
     }
     if not target.exists():
         return empty
@@ -348,6 +354,9 @@ def _matched_cost_ext_fields() -> dict[str, object]:
             "matched_ext_cross_matched": "",
             "matched_ext_p": "",
             "matched_ext_tokens": 0,
+            "matched_ext_outside_whole": "",
+            "matched_ext_outside_matched": "",
+            "matched_ext_outside_p": "",
         }
     pooled = raw.get("pooled") if isinstance(raw.get("pooled"), dict) else {}
     new_only = raw.get("new_only") if isinstance(raw.get("new_only"), dict) else {}
@@ -378,6 +387,10 @@ def _matched_cost_ext_fields() -> dict[str, object]:
             else "."
         )
     )
+    oxw, oxm, op_text = _paired(pooled.get("outside_local_verdict_and_cite_whole_vs_matched"))
+    outside_block = pooled.get("outside_local_verdict_and_cite_whole_vs_matched")
+    if isinstance(outside_block, dict) and isinstance(outside_block.get("exact_mcnemar_p"), (int, float)):
+        op_text = f"{float(outside_block['exact_mcnemar_p']):.4f}".rstrip("0").rstrip(".")
     return {
         "matched_ext_available": True,
         "matched_ext_note": note,
@@ -385,6 +398,9 @@ def _matched_cost_ext_fields() -> dict[str, object]:
         "matched_ext_cross_matched": xm,
         "matched_ext_p": p_text,
         "matched_ext_tokens": int(tokens.get("ledger_total") or 0),
+        "matched_ext_outside_whole": oxw,
+        "matched_ext_outside_matched": oxm,
+        "matched_ext_outside_p": op_text,
     }
 
 
@@ -412,6 +428,9 @@ def _matched_cost_fields() -> dict[str, object]:
         "matched_ext_cross_matched": "",
         "matched_ext_p": "",
         "matched_ext_tokens": 0,
+        "matched_ext_outside_whole": "",
+        "matched_ext_outside_matched": "",
+        "matched_ext_outside_p": "",
     }
     raw = _matched_cost_payload()
     if raw is None:

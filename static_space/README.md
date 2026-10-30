@@ -45,6 +45,7 @@ Numbers below come from the companion dataset.
 
 ## Limits
 
+- Packs are capped at 400k so a whole repo plus 32k output fits with headroom; Beam accepted 947,446 in a probe. 5 of 12 first-sweep packs hit the remaining-budget cutoff (starlette, httpx, click, attrs, werkzeug). The packer puts tests, CI and examples last; exact dropped paths were not recorded in the traces.
 - The 45-drift universe is the union of method output, so it favours those methods.
 - Labels were checked against the source by an AI reviewer. (Field name in the dataset: `hand_verdict`.)
 - Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.
@@ -64,7 +65,7 @@ export OLLAMA_API_KEY=YOUR_KEY
 docdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings
 ```
 
-Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.
+Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the repository (docs and source first, up to the token cap), sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.
 
 ## Exclusions
 

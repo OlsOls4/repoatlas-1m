@@ -50,7 +50,7 @@
       "3,342,201"
     ]
   ],
-  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.\n- **2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)** received a strict repro badge. The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Hybrid triage-only cost is about **9.2M** tokens (4,424,575 + 4,739,392 = 9,163,967). End-to-end including repro is **9,302,105 (~9.3M)** (4,424,575 + 4,739,392 + 138,138). The cheaper symbol-only-candidate variant was not run.\n- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The matched-cost retrieval control spent **3,957,434** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The tomlkit `docdrift run` recording spent **185,842** extra tokens. Together with matched-cost that is **4,143,276**, not part of the 9.3M hybrid end-to-end.",
+  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.\n- **2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)** received a strict repro badge.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Both whole-repo passes (first sweep + hybrid triage) cost about **9.2M** tokens (4,424,575 + 4,739,392 = 9,163,967). End-to-end including repro is **9,302,105 (~9.3M)** (4,424,575 + 4,739,392 + 138,138). The cheaper symbol-only-candidate variant was not run.\n- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The matched-cost retrieval control spent **3,957,434** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The tomlkit `docdrift run` recording spent **185,842** extra tokens. Matched-cost controls spent 3,957,434 + 7,528,878 (extension). Together with the recording that is **11,672,154**, not part of the 9.3M hybrid end-to-end.",
   "funnel": [
     {
       "step": "Symbol check",
@@ -292,7 +292,10 @@
     "matched_ext_cross_whole": "52/78",
     "matched_ext_cross_matched": "38/78",
     "matched_ext_p": "0.0094",
-    "matched_ext_tokens": 7528878
+    "matched_ext_tokens": 7528878,
+    "matched_ext_outside_whole": "38/61",
+    "matched_ext_outside_matched": "25/61",
+    "matched_ext_outside_p": "0.0146"
   },
   "beamv3": {
     "available": true,
@@ -598,7 +601,7 @@
         "tests/example_test_config.json"
       ]
     ],
-    "note": "truncated: true means the packer hit the remaining-budget cutoff while files were still in the queue. skipped_paths only records binary or undecodable files, so the dropped remainder is not listed. Starlette packed 119 files (327,836 of a 400,000 token cap), including test files; the last packed file was tests/middleware/test_middleware.py."
+    "note": "truncated: true means the packer hit the remaining-budget cutoff while files were still in the queue. skipped_paths only records binary or undecodable files, so the dropped remainder is not listed. 5 of 12 first-sweep packs hit the remaining-budget cutoff (starlette, httpx, click, attrs, werkzeug). The packer puts tests, CI and examples last; exact dropped paths were not recorded in the traces. Starlette packed 119 files (327,836 of a 400,000 token cap), including test files; the last packed file was tests/middleware/test_middleware.py."
   },
   "recall_extra": true
 }

@@ -28,7 +28,8 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     headline = headline_sentence(stats)
     assert headline == (
         f"{stats['hybrid_true']} real docs bugs in {stats['repo_count']} Python libraries. "
-        f"3 in 4 flagged findings were real ({stats['hybrid_true_findings']} of {stats['hybrid_findings']}); "
+        f"3 in 4 flagged findings were real ({stats['hybrid_true_findings']} of {stats['hybrid_findings']}; "
+        f"these {stats['hybrid_true_findings']} are {stats['hybrid_true']} distinct bugs); "
         f"{stats['repro_true']} bugs reproduce a real API error when you run the docs"
     )
     assert stats["rejected_true"] == 0
@@ -71,7 +72,11 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     assert "1,948,469" in notes
     assert "3,957,434" in notes
     assert "185,842" in notes
-    assert "4,143,276" in notes
+    assert "11,672,154" in notes
+    assert "4,143,276" not in notes
+    assert "Both whole-repo passes (first sweep + hybrid triage)" in notes
+    assert "10 of 11 reproduce" not in notes
+    assert "Matched-cost controls spent 3,957,434 + 7,528,878" in notes
     assert "hand-checked" not in notes.lower()
     assert "hand-verified" not in notes.lower()
     assert "hand-true" not in notes

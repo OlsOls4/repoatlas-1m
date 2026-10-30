@@ -5,6 +5,7 @@
     "Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge."
   ],
   "limits": [
+    "Packs are capped at 400k so a whole repo plus 32k output fits with headroom; Beam accepted 947,446 in a probe. 5 of 12 first-sweep packs hit the remaining-budget cutoff (starlette, httpx, click, attrs, werkzeug). The packer puts tests, CI and examples last; exact dropped paths were not recorded in the traces.",
     "The 45-drift universe is the union of method output, so it favours those methods.",
     "Labels were checked against the source by an AI reviewer. (Field name in the dataset: `hand_verdict`.)",
     "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
@@ -23,7 +24,7 @@
   ],
   "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings",
   "cli_sweep": "",
-  "ollama_key": "Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.",
+  "ollama_key": "Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the repository (docs and source first, up to the token cap), sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.",
   "local": "",
   "links": {
     "code": "https://github.com/OlsOls4/repoatlas-1m",
@@ -45,7 +46,7 @@
     },
     {
       "title": "Beam",
-      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens). At the same token budget, retrieval matched verdicts (46/56 vs 47/56) but grounded fewer cross-file cases (19/30 vs 25/30; p = 0.070, not shown at this n). A pre-registered extension pooled to 38/78 vs 52/78 (p = 0.0094)."
+      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens). At the same token budget, retrieval matched verdicts (46/56 vs 47/56) but grounded fewer cross-file cases (19/30 vs 25/30; p = 0.070, not shown at this n). A pre-registered extension at the same token budget: whole-repo grounded 52/78 cross-file items vs retrieval 38/78 (exact McNemar p = 0.0094). Outside-local evidence: 38/61 vs 25/61 (p = 0.0146)."
     }
   ],
   "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
@@ -60,8 +61,11 @@
   "sample_note": "tomlkit @ d7def7d · 2 findings: a version-claim drift (citation verified; docs say TOML 1.0.0, tests accept 1.1.0) and a quickstart snippet missing its imports (NameError, strict-confirmed; arguable as drift) · 185,842 tokens · 96 s",
   "repro_caption": "Some bugs have 2 scripts (one per candidate); 30 distinct bugs reproduce.",
   "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
-  "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
-  "built_at": "2026-10-30T14:26:53Z",
+  "bench_caption": "Recall denominator = 45 real drifts found by any method (benchmark pool) (a different 45 from the 45 true hybrid findings). 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
+  "bug_wall_note": "49 cards: 34 real bugs + 15 false/unclear findings (60 findings total; duplicates of the same bug are merged)",
+  "cli_cost": "tomlkit: 185,842 tokens, 96 s",
+  "cli_output_preview": "[1/4] symbol check: tomlkit @ d7def7d\n      0 symbol flags\n[2/4] packing the whole repository (RepoAtlas packer)",
+  "built_at": "2026-10-30T14:45:16Z",
   "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",

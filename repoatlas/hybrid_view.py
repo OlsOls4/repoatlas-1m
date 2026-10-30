@@ -245,7 +245,8 @@ def headline_sentence(stats: HybridHeroStats) -> str:
     ratio_text: str = "3 in 4" if findings and abs((true_findings / findings) - 0.75) < 0.02 else f"{true_findings} of {findings}"
     return (
         f"{stats['hybrid_true']} real docs bugs in {stats['repo_count']} Python libraries. "
-        f"{ratio_text} flagged findings were real ({true_findings} of {findings}); "
+        f"{ratio_text} flagged findings were real ({true_findings} of {findings}; "
+        f"these {true_findings} are {stats['hybrid_true']} distinct bugs); "
         f"{stats['repro_true']} bugs reproduce a real API error when you run the docs"
     )
 
@@ -395,13 +396,12 @@ def build_notes_markdown(payload: HybridPayload) -> str:
         f"{stats['true_candidates_judged']} true candidates, while removing "
         f"**{stats['removed_false']}** of {stats['removed_false'] + kept_false} false or unclear ones. "
         "11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.",
-        f"- **{non_bug_badge_phrase(stats)}** received a strict repro badge. "
-        "The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.",
+        f"- **{non_bug_badge_phrase(stats)}** received a strict repro badge.",
         "- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.",
         f"- Chunked Beam alone found **{len(chunked_only)}** local docstring/prose drifts the hybrid misses.",
         "- The strict repro rule was set after the first repro run.",
         "- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).",
-        f"- Hybrid triage-only cost is about **9.2M** tokens "
+        f"- Both whole-repo passes (first sweep + hybrid triage) cost about **9.2M** tokens "
         f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} = {stats['triage_end_to_end_tokens']:,}). "
         f"End-to-end including repro is **{stats['end_to_end_tokens']:,} (~9.3M)** "
         f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}). "
@@ -760,37 +760,51 @@ def non_bug_badge_phrase(stats: HybridHeroStats) -> str:
 
 def load_extra_experiment_tokens() -> dict[str, int]:
     """
-    @brief Matched-cost ledger + tomlkit fresh-run tokens; not part of the 9.3M hybrid total.
+    @brief Matched-cost ledgers + tomlkit fresh-run tokens; not part of the 9.3M hybrid total.
     """
 
     matched = 0
     fresh = 0
+    ext = 0
     matched_path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "beam_usage_ledger.json"
     if matched_path.exists():
         payload: object = json.loads(matched_path.read_text(encoding="utf-8"))
         if isinstance(payload, dict):
             matched = int(payload.get("total_tokens") or 0)
+    ext_path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost_ext" / "beam_usage_ledger.json"
+    if ext_path.exists():
+        payload = json.loads(ext_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            ext = int(payload.get("total_tokens") or 0)
     fresh_path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
     if fresh_path.exists():
         payload = json.loads(fresh_path.read_text(encoding="utf-8"))
         if isinstance(payload, dict):
             tokens = payload.get("tokens") if isinstance(payload.get("tokens"), dict) else {}
             fresh = int(tokens.get("total") or 0)
-    return {"matched_cost": matched, "fresh_run": fresh, "round6": matched + fresh}
+    return {
+        "matched_cost": matched,
+        "fresh_run": fresh,
+        "matched_cost_ext": ext,
+        "round6": matched + fresh,
+    }
 
 
 def _round6_token_notes() -> list[str]:
     extra = load_extra_experiment_tokens()
     notes: list[str] = []
+    ext_tokens = extra["matched_cost_ext"]
     if extra["matched_cost"]:
         notes.append(
             f"- The matched-cost retrieval control spent **{extra['matched_cost']:,}** extra tokens. "
             "That ledger is not part of the 9.3M hybrid end-to-end."
         )
     if extra["fresh_run"]:
+        combined = extra["matched_cost"] + extra["fresh_run"] + ext_tokens
         notes.append(
             f"- The tomlkit `docdrift run` recording spent **{extra['fresh_run']:,}** extra tokens. "
-            f"Together with matched-cost that is **{extra['round6']:,}**, not part of the 9.3M hybrid end-to-end."
+            f"Matched-cost controls spent {extra['matched_cost']:,} + {ext_tokens:,} (extension). "
+            f"Together with the recording that is **{combined:,}**, not part of the 9.3M hybrid end-to-end."
         )
     return notes
 

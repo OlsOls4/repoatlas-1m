@@ -62,6 +62,17 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert len(ablation) == 56
     assert "matched_verdict" in ablation[0]
     assert any(row.get("matched_verdict") for row in ablation)
+    ext_verdicts = [
+        json.loads(line)
+        for line in (target / "matched_cost_ext_verdicts.jsonl").read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(ext_verdicts) == 63
+    assert all(row.get("set") == "ext" for row in ext_verdicts)
+    assert sum(1 for row in ext_verdicts if row.get("cross_file")) == 49
+    assert sum(1 for row in ext_verdicts if row.get("gold_outside_local")) == 48
+    assert "whole_verdict" in ext_verdicts[0]
+    assert "matched_cite_path" in ext_verdicts[0]
+    assert "matched_verdict" in ext_verdicts[0]
     beamv3 = [json.loads(line) for line in (target / "beamv3_findings.jsonl").read_text(encoding="utf-8").splitlines()]
     assert len(beamv3) == 115
     assert any(row.get("label") == "unlabelled" for row in beamv3)
@@ -76,6 +87,17 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert "52/78" in card and "38/78" in card
     assert "0.0094" in card
     assert "matched_cost_ext" in card
+    assert "matched_cost_ext_verdicts" in card
+    assert "load_dataset(\"ollymcbride4/docdrift-bugs\", \"findings\")" in card
+    assert "size_categories:" in card
+    assert "n<1K" in card
+    assert "huggingface.co/spaces/ollymcbride4/docdrift" in card
+    assert "github.com/OlsOls4/repoatlas-1m" in card
+    assert "discussions/5" in card
+    assert "63 scored rows" in card or "63 rows in this file" in card
+    assert "11,672,154" in card
+    assert "38/61" in card and "25/61" in card
+    assert "0.0146" in card
     assert "185,842" in card
     assert "Extra experimental runs, not in the 9.3M" in card
     assert "Together +4,143,276" not in card

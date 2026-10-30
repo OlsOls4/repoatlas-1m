@@ -769,6 +769,11 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             ),
         ],
         "limits": [
+            (
+                f"Packs are capped at 400k so a whole repo plus 32k output fits with headroom; "
+                f"Beam accepted {max_probe_tokens:,} in a probe. "
+                f"{_first_sweep_cap_sentence()}"
+            ),
             "The 45-drift universe is the union of method output, so it favours those methods.",
             f"Labels were {LABEL_SOURCE}. (Field name in the dataset: `hand_verdict`.)",
             "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
@@ -794,7 +799,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         "ollama_key": (
             "Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. "
             "Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. "
-            "`docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, "
+            "`docdrift run` packs the repository (docs and source first, up to the token cap), sends it to Beam for triage (32k output tokens, "
             "citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. "
             "Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). "
             "No key is stored in this Space or in the archive."
@@ -842,8 +847,15 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                         f"({ablation['cross_file_cite_matched']} vs {ablation['cross_file_cite_whole']}; "
                         f"p = {ablation['matched_mcnemar_p']}, not shown at this n)."
                         + (
-                            f" A pre-registered extension pooled to {ablation['matched_ext_cross_matched']} vs "
-                            f"{ablation['matched_ext_cross_whole']} (p = {ablation['matched_ext_p']})."
+                            f" A pre-registered extension at the same token budget: whole-repo grounded "
+                            f"{ablation['matched_ext_cross_whole']} cross-file items vs retrieval "
+                            f"{ablation['matched_ext_cross_matched']} (exact McNemar p = {ablation['matched_ext_p']})."
+                            + (
+                                f" Outside-local evidence: {ablation['matched_ext_outside_whole']} vs "
+                                f"{ablation['matched_ext_outside_matched']} (p = {ablation['matched_ext_outside_p']})."
+                                if ablation.get("matched_ext_outside_whole")
+                                else ""
+                            )
                             if ablation.get("matched_ext_available")
                             else ""
                         )
@@ -885,10 +897,19 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "or when the docs live under docs/ or a .md/.rst file and no code path was cited."
         ),
         "bench_caption": (
-            f"{stats['universe_size']} = all real drifts any method found. "
+            f"Recall denominator = {stats['universe_size']} real drifts found by any method (benchmark pool) "
+            f"(a different {stats['universe_size']} from the {stats['hybrid_true_findings']} true hybrid findings). "
             f"{stats['hybrid_findings']} = what the hybrid flagged. "
             f"{stats['repro_true']} of {stats['hybrid_true']} = bugs whose doc line crashes when run."
         ),
+        "bug_wall_note": (
+            f"{stats['hybrid_true'] + (stats['hybrid_findings'] - stats['hybrid_true_findings'])} cards: "
+            f"{stats['hybrid_true']} real bugs + "
+            f"{stats['hybrid_findings'] - stats['hybrid_true_findings']} false/unclear findings "
+            f"({stats['hybrid_findings']} findings total; duplicates of the same bug are merged)"
+        ),
+        "cli_cost": _fresh_run_cli_cost(),
+        "cli_output_preview": _fresh_run_output_preview(),
         "built_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources_public": (
             "Every number is in the companion dataset "
@@ -982,6 +1003,78 @@ def _fresh_run_sample_note() -> str:
         )
     strict = sum(1 for row in repros if isinstance(row, dict) and row.get("strict_confirmed"))
     return f"tomlkit @ {ref} · {len(findings)} findings, {strict} strict-confirmed · {total:,} tokens{wall_text}"
+
+
+def _fresh_run_cli_cost() -> str:
+    """
+    @brief Typical recorded CLI cost from the tomlkit fresh run.
+    """
+
+    path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
+    if not path.exists():
+        return ""
+    raw: object = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        return ""
+    tokens = raw.get("tokens") if isinstance(raw.get("tokens"), dict) else {}
+    total = int(tokens.get("total") or 0)
+    wall = raw.get("wall_seconds")
+    wall_text = f", {wall:.0f} s" if isinstance(wall, (int, float)) else ""
+    if not total:
+        return ""
+    return f"tomlkit: {total:,} tokens{wall_text}"
+
+
+def _fresh_run_output_preview() -> str:
+    """
+    @brief First three lines of the recorded tomlkit CLI output.
+    """
+
+    text = _fresh_run_sample_output()
+    if not text:
+        return ""
+    return "\n".join(text.splitlines()[:3])
+
+
+def _first_sweep_cap_sentence() -> str:
+    """
+    @brief Honest truncation count from the 12 first-sweep 400k pack traces.
+    """
+
+    libraries = [
+        "starlette",
+        "httpx",
+        "click",
+        "structlog",
+        "nox",
+        "arrow",
+        "cattrs",
+        "marshmallow",
+        "attrs",
+        "jinja",
+        "werkzeug",
+        "pydantic-settings",
+    ]
+    truncated: list[str] = []
+    present = 0
+    for library in libraries:
+        path = RESULTS_LIVE_DIRECTORY / "traces" / f"{library}-400000.json"
+        if not path.exists():
+            continue
+        payload: object = json.loads(path.read_text(encoding="utf-8"))
+        pack = payload.get("pack") if isinstance(payload, dict) else {}
+        if not isinstance(pack, dict):
+            continue
+        present += 1
+        if pack.get("truncated"):
+            truncated.append(library)
+    if not present:
+        return ""
+    names = ", ".join(truncated) if truncated else "none"
+    return (
+        f"{len(truncated)} of {present} first-sweep packs hit the remaining-budget cutoff ({names}). "
+        "The packer puts tests, CI and examples last; exact dropped paths were not recorded in the traces."
+    )
 
 
 def _fresh_run_sample_output() -> str:
@@ -1392,6 +1485,7 @@ def _pack_coverage() -> dict[str, object]:
         "note": (
             "truncated: true means the packer hit the remaining-budget cutoff while files were still in the queue. "
             "skipped_paths only records binary or undecodable files, so the dropped remainder is not listed. "
+            f"{_first_sweep_cap_sentence()} "
             "Starlette packed 119 files (327,836 of a 400,000 token cap), including test files; "
             "the last packed file was tests/middleware/test_middleware.py."
         ),
@@ -1500,6 +1594,7 @@ def _fill_index_html(source: str, hero: dict[str, object], copy: dict[str, objec
     filled = filled.replace("<!--HERO_NOTE-->", html.escape(str(hero.get("label_note") or "")))
     filled = filled.replace("<!--HERO_LINKS-->", link_html)
     filled = filled.replace('content="assets/og.png"', f'content="{html.escape(OG_IMAGE_URL, quote=True)}"')
+    filled = filled.replace("<!--FOOTER_LINKS-->", link_html)
     video = copy.get("video")
     if video:
         filled = filled.replace('id="demo-video" class="demo-video" hidden', 'id="demo-video" class="demo-video"')

@@ -122,6 +122,9 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "7,528,878" in documents["benchmark"]["token_footnote"]
     assert "together" not in documents["benchmark"]["token_footnote"].lower()
     assert "4,143,276" not in documents["benchmark"]["token_footnote"]
+    assert "11,672,154" in documents["benchmark"]["notes_markdown"]
+    assert "Both whole-repo passes (first sweep + hybrid triage)" in documents["benchmark"]["notes_markdown"]
+    assert "10 of 11 reproduce" not in documents["benchmark"]["notes_markdown"]
     assert "isolated venv" in copy["ollama_key"]
     assert "--out findings" in copy["cli"]
     assert "24 + 1 + 9 = 34" in copy["how_beam"][1]
@@ -133,6 +136,24 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "46/56" in beam_row["body"] and "47/56" in beam_row["body"]
     assert "19/30" in beam_row["body"] and "25/30" in beam_row["body"]
     assert "not shown at this n" in beam_row["body"]
+    assert "whole-repo grounded 52/78 cross-file items vs retrieval 38/78" in beam_row["body"]
+    assert "exact McNemar p = 0.0094" in beam_row["body"]
+    assert "pooled to 38/78 vs 52/78" not in beam_row["body"]
+    assert "38/61" in beam_row["body"] and "25/61" in beam_row["body"]
+    assert "0.0146" in beam_row["body"]
+    assert "these 45 are 34 distinct bugs" in hero["headline"]
+    assert copy["bench_caption"].startswith("Recall denominator = 45 real drifts found by any method")
+    assert "a different 45 from the 45 true hybrid findings" in copy["bench_caption"]
+    assert "45 = all real drifts any method found" not in copy["bench_caption"]
+    assert "packs the repository (docs and source first, up to the token cap)" in copy["ollama_key"]
+    assert "packs the whole repository" not in copy["ollama_key"]
+    assert "5 of 12 first-sweep packs" in copy["limits"][0]
+    assert "exact dropped paths were not recorded" in copy["limits"][0]
+    assert "947,446" in copy["limits"][0]
+    assert copy["bug_wall_note"].startswith("49 cards: 34 real bugs + 15 false/unclear")
+    assert "60 findings total" in copy["bug_wall_note"]
+    assert copy["cli_cost"].startswith("tomlkit: 185,842 tokens")
+    assert "[1/4] symbol check" in copy["cli_output_preview"]
     assert any("prompt 404,652 tokens" in item for item in copy["limits"])
     assert "11 of 12" in hero["headline"]
     assert "in 12 Python libraries" not in hero["headline"]
@@ -309,6 +330,30 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert "RepoAtlas-1M" not in readme
     assert "11 of 12" in readme
     assert "34 real docs bugs in 12 Python libraries" not in readme
+    github_readme = Path("README.md").read_text(encoding="utf-8")
+    assert "sdk: gradio" not in github_readme
+    assert "app_file: app.py" not in github_readme
+    assert "python3 app.py" not in github_readme
+    assert "## Live tab" not in github_readme
+    assert "Live tab guardrails" not in github_readme
+    assert "Space behaviour" not in github_readme
+    assert "34 real docs bugs in 11 of 12 Python libraries" in github_readme
+    assert "34 real docs bugs in 12 Python libraries" not in github_readme
+    assert "DocDrift: docs say / code says / running gives" in github_readme
+    assert "pip install git+https://github.com/OlsOls4/repoatlas-1m" in github_readme
+    assert "/home/box" not in github_readme
+    assert "these 45 are 34 distinct bugs" in github_readme
+    js = (target / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "retrieval (same budget)" in js
+    assert "subset n=56" in js
+    assert "Cross-file, pooled (n=78, same budget)" in js
+    css = (target / "assets" / "app.css").read_text(encoding="utf-8")
+    assert "why-chart-list" in css
+    assert "mask-image" in css
+    index_html = (target / "index.html").read_text(encoding="utf-8")
+    assert 'id="bug-wall-note"' in index_html
+    assert 'id="cli-cost"' in index_html
+    assert "footer-links" in index_html
     hero = json.loads((target / "data" / "hero.json").read_text(encoding="utf-8"))
     stats = compute_hero_stats(load_hybrid_payload())
     assert hero["hybrid_true"] == stats["hybrid_true"]
