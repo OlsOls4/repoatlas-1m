@@ -407,7 +407,7 @@ def build_notes_markdown(payload: HybridPayload) -> str:
         f"({stats['whole_tokens']:,} + {stats['triage_tokens']:,} + {stats['repro_tokens']:,}). "
         "The cheaper symbol-only-candidate variant was not run.",
         "- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
-        "- The docs-pass + py32k beam v3 experiment spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
+        "- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
     ]
     return "\n".join(lines)
 
@@ -422,9 +422,12 @@ def build_beam_did_markdown(stats: HybridHeroStats, max_probe_tokens: int, far_h
         f"- **Triage filter.** Beam judged {stats['judged']} candidates, rejected "
         f"{stats['rejected_true']} of {stats['true_candidates_judged']} true ones, and removed "
         f"{stats['removed_false']} of {stats['removed_false'] + stats['kept_false']} false or unclear ones.\n"
-        f"- **New finds.** Beam added {stats['additions_true']} true drifts the script missed "
-        f"({stats['additions_new']} new to the union, mostly cross-file or prose), taking the distinct-true count "
-        f"from {stats['symbol_true']} (symbol check) to {stats['hybrid_true']}.\n"
+        f"- **New finds.** Beam's triage kept all {stats['symbol_true']} true symbol-check drifts, "
+        f"kept {stats['hybrid_true'] - stats['symbol_true'] - stats['additions_true']} extra from the whole-repo pass's own candidates, "
+        f"and added {stats['additions_true']} drifts the checker missed "
+        f"({stats['additions_new']} new to the union): "
+        f"{stats['symbol_true']} + {stats['hybrid_true'] - stats['symbol_true'] - stats['additions_true']} + "
+        f"{stats['additions_true']} = {stats['hybrid_true']}.\n"
         f"- **Repro author.** Beam wrote the doc-literal repro scripts "
         f"({stats['repro_tokens']:,} tokens). The starlette headline script was written by hand from Beam's verdict. "
         f"{stats['repro_true']} distinct bugs reproduce a real API error; "
@@ -767,7 +770,8 @@ def end_to_end_repro_token_text(stats: HybridHeroStats) -> str:
     @brief Full end-to-end including repro: 9,302,105 (~9.3M).
     """
 
-    return "~9.2M tokens (two whole-repo passes over 12 libraries)"
+    del stats
+    return "~9.3M tokens (two whole-repo passes plus repro scripts)"
 
 
 def focused_pass_tokens() -> int:

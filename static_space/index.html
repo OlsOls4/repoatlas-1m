@@ -20,12 +20,15 @@
       <p class="eyebrow">Build with Beam · docs that lie, caught by running them</p>
       <p class="brand">DocDrift</p>
       <h1>Your docs say one thing. Your code does another.</h1>
-      <div class="headline" id="headline">Loading recorded results…</div>
-      <div class="tiles" id="tiles"></div>
-      <div class="note" id="hero-note"></div>
-      <p class="links" id="hero-links"></p>
+      <div class="headline" id="headline">
+        <p class="lead-full">DocDrift gives Beam an entire Python library (docs + code, up to ~400k tokens) in one call. Beam checks every suspicious doc example against the whole codebase, then writes a script that runs it. Across 12 popular libraries (bugs in 11 of 12 libraries; pydantic-settings had none) it found 34 real docs bugs; 30 crash exactly as the docs are written.</p>
+        <p class="lead-short">Beam read 12 whole Python libraries and ran their docs: 34 real bugs, 30 reproduce.</p>
+      </div>
+      <div class="tiles" id="tiles"><div class='tile'><strong>34</strong><span>real docs bugs · 11 of 12 libraries</span></div><div class='tile'><strong>30</strong><span>crash when you run the docs</span></div><div class='tile'><strong>2</strong><span>fixes filed upstream (starlette #3746, nox #1216)</span></div></div>
+      <div class="note" id="hero-note">Labels: checked against the source by an AI reviewer, not a human. Recall is measured against the 45 drifts any method found, so it flatters the methods.</div>
+      <p class="links" id="hero-links"><a href="https://github.com/OlsOls4/repoatlas-1m">Code</a> · <a href="https://huggingface.co/datasets/ollymcbride4/docdrift-bugs">Dataset</a> · <a href="https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5">Thread</a></p>
       <div id="demo-video" class="demo-video" hidden>
-        <video id="demo-video-el" controls preload="metadata" playsinline poster="assets/og.png" src="assets/docdrift-75s.mp4"></video>
+        <video id="demo-video-el" controls preload="none" playsinline poster="assets/og.png"></video>
       </div>
     </div>
     <aside class="drift" id="drift-card" aria-label="Starlette docs-drift example">
@@ -49,36 +52,36 @@
     <button type="button" class="tab" role="tab" id="tab-limits" data-tab="limits" aria-controls="limits" aria-selected="false" tabindex="-1">Limits</button>
   </nav>
 
-  <section id="recorded-run" class="player">
-    <details>
-      <summary id="player-summary">Watch the recorded starlette run</summary>
-      <p class="player-kicker">Recording — not a live call</p>
-      <h2>Recorded starlette pack</h2>
-      <aside class="banner" id="replay-banner"></aside>
-      <div class="player-grid">
-        <div>
-          <h3>Candidates</h3>
-          <ol id="player-candidates"></ol>
-        </div>
-        <div>
-          <h3>Beam verdicts</h3>
-          <ol id="player-verdicts"></ol>
-        </div>
-      </div>
-      <h3>Repro traceback</h3>
-      <p id="player-repro-note" class="lede"></p>
-      <div id="player-tracebacks"></div>
-      <p id="player-pr" class="pr-line"></p>
-    </details>
-  </section>
-
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section id="story" class="panel is-active" role="tabpanel" aria-labelledby="tab-story" tabindex="0">
       <h2>How this uses Beam</h2>
       <div class="criteria" id="criteria-box"></div>
+      <section id="recorded-run" class="player">
+        <details>
+          <summary id="player-summary">Watch the recorded starlette run</summary>
+          <p class="player-kicker">Recording — not a live call</p>
+          <h3>Recorded starlette pack</h3>
+          <aside class="banner" id="replay-banner"></aside>
+          <div class="player-grid">
+            <div>
+              <h4>Candidates</h4>
+              <ol id="player-candidates"></ol>
+            </div>
+            <div>
+              <h4>Beam verdicts</h4>
+              <ol id="player-verdicts"></ol>
+            </div>
+          </div>
+          <h4>Repro traceback</h4>
+          <p id="player-repro-note" class="lede"></p>
+          <div id="player-tracebacks"></div>
+          <p id="player-pr" class="pr-line"></p>
+        </details>
+      </section>
       <h2>Why 1M context</h2>
       <p class="lede" id="why-caption"></p>
       <div id="why-chart" class="why-chart"></div>
+      <p class="lede" id="why-subset"></p>
       <p class="note" id="why-placeholder"></p>
       <h2>What is docs drift?</h2>
       <p>Docs say one thing, the code does another. Worked example from starlette: docs call <code>receive_json(data, mode="binary")</code>; the implementation is <code>receive_json(self, mode: str = "text")</code>. Following the docs can raise <code>TypeError</code>.</p>
@@ -100,14 +103,18 @@
     <section id="bugs" class="panel" role="tabpanel" aria-labelledby="tab-bugs" tabindex="0" hidden>
       <h2>Bug wall</h2>
       <p class="lede">Docs say / code says / running it gives. Permalinks point at the pinned commit.</p>
-      <div class="chips" id="library-chips"></div>
-      <div class="chips" id="badge-chips"></div>
+      <div class="filters" id="bug-filters">
+        <div class="chips" id="library-chips"></div>
+        <div class="chips" id="badge-chips"></div>
+      </div>
       <p class="count" id="bug-count" aria-live="polite"></p>
+      <p id="cross-file-def" class="note"></p>
       <div id="bug-grid" class="grid"></div>
     </section>
 
     <section id="benchmark" class="panel" role="tabpanel" aria-labelledby="tab-benchmark" tabindex="0" hidden>
       <h2>Benchmark</h2>
+      <p class="lede" id="bench-caption"></p>
       <div class="headline-cards" id="bench-headlines"></div>
       <p class="lede" id="token-footnote"></p>
       <div class="table-wrap">
@@ -120,6 +127,7 @@
       <div class="table-wrap">
         <table id="ablation-table" class="cards"></table>
       </div>
+      <p id="ablation-subset" class="lede"></p>
       <ul id="ablation-caveats"></ul>
       <h3 id="beamv3-title">Catching what one whole-repo call misses</h3>
       <p id="beamv3-claim" class="lede"></p>
@@ -132,7 +140,7 @@
       <h3>Planted-drift distance probe</h3>
       <p id="recall-note"></p>
       <div id="recall-svg" class="recall-svg"></div>
-      <details id="recall-all"><summary>Show all methods</summary><img id="recall-chart" alt="Planted-drift strict recall by distance, every recorded method" hidden></details>
+      <details id="recall-all"><summary>Show all methods</summary><img id="recall-chart" alt="Planted-drift strict recall by distance, every recorded method" hidden loading="lazy"></details>
       <h3 id="pack-title">Pack coverage</h3>
       <p class="lede" id="pack-note"></p>
       <div class="table-wrap">
@@ -143,7 +151,7 @@
 
     <section id="repros" class="panel" role="tabpanel" aria-labelledby="tab-repros" tabindex="0" hidden>
       <h2>Repros</h2>
-      <p class="lede">Each row is a script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError on a DOC-LITERAL line. The starlette headline script was written by hand from Beam's verdict; the others were written by Beam.</p>
+      <p class="lede">Each row is a script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError on a documented-usage line. The starlette headline script was written by hand from Beam's verdict; the others were written by Beam.</p>
       <div class="table-wrap">
         <table id="repro-table" class="cards"></table>
       </div>
@@ -154,6 +162,10 @@
       <p id="ollama-key"></p>
       <h3>CLI</h3>
       <pre><code id="cli-cmd"></code></pre>
+      <details id="sample-output" hidden>
+        <summary>Sample output on a library DocDrift had never seen</summary>
+        <pre id="sample-pre"></pre>
+      </details>
       <p class="links" id="run-links"></p>
     </section>
 
@@ -167,7 +179,7 @@
   </main>
 
   <footer>
-    <p>Generated from <code>results_live/</code>. No API keys are embedded. This Space is a static recording; it makes no Beam calls.</p>
+    <p>Every number comes from the companion dataset. No API keys are embedded. This Space is a static recording; it makes no Beam calls.</p>
   </footer>
   <script src="assets/app.js"></script>
 </body>

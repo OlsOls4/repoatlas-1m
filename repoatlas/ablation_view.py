@@ -43,6 +43,11 @@ class AblationPayload(TypedDict):
     outside_cite_local: str
     accuracy_whole: str
     accuracy_local: str
+    accuracy_whole_subset: str
+    accuracy_local_subset: str
+    outside_cite_whole_subset: str
+    outside_cite_local_subset: str
+    subset_note: str
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -72,6 +77,11 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "outside_cite_local": "",
         "accuracy_whole": "",
         "accuracy_local": "",
+        "accuracy_whole_subset": "",
+        "accuracy_local_subset": "",
+        "outside_cite_whole_subset": "",
+        "outside_cite_local_subset": "",
+        "subset_note": "",
     }
     if not target.exists():
         return empty
@@ -156,6 +166,18 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "outside_cite_local": _frac(local, "outside_local_verdict_and_cite_right", "gold_outside_local_cases"),
         "accuracy_whole": _fmt_num(whole.get("accuracy")),
         "accuracy_local": _fmt_num(local.get("accuracy")),
+        "accuracy_whole_subset": _fmt_num(whole_sub.get("accuracy")),
+        "accuracy_local_subset": _fmt_num(local_sub.get("accuracy")),
+        "outside_cite_whole_subset": _frac(whole_sub, "outside_local_verdict_and_cite_right", "gold_outside_local_cases"),
+        "outside_cite_local_subset": _frac(local_sub, "outside_local_verdict_and_cite_right", "gold_outside_local_cases"),
+        "subset_note": (
+            f"On the {stab_n}-item rerun subset, local-only scored higher on verdict accuracy "
+            f"({_fmt_num(local_sub.get('accuracy'))} vs {_fmt_num(whole_sub.get('accuracy'))}). "
+            "Whole-repo's advantage is citation: "
+            f"{_frac(whole_sub, 'outside_local_verdict_and_cite_right', 'gold_outside_local_cases')} vs "
+            f"{_frac(local_sub, 'outside_local_verdict_and_cite_right', 'gold_outside_local_cases')} "
+            "when the proof lives outside the candidate's files."
+        ),
     }
 
 

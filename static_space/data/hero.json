@@ -1,6 +1,7 @@
 {
   "headline": "34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 30 bugs reproduce a real API error when you run the docs",
   "lead": "DocDrift gives Beam an entire Python library (docs + code, up to ~400k tokens) in one call. Beam checks every suspicious doc example against the whole codebase, then writes a script that runs it. Across 12 popular libraries (bugs in 11 of 12 libraries; pydantic-settings had none) it found 34 real docs bugs; 30 crash exactly as the docs are written.",
+  "lead_short": "Beam read 12 whole Python libraries and ran their docs: 34 real bugs, 30 reproduce.",
   "tiles": [
     [
       34,
@@ -46,6 +47,6 @@
   "judged": 56,
   "max_probe_tokens": 947446,
   "label_note": "Labels: checked against the source by an AI reviewer, not a human. Recall is measured against the 45 drifts any method found, so it flatters the methods.",
-  "end_to_end_tokens_text": "~9.2M tokens (two whole-repo passes over 12 libraries)",
+  "end_to_end_tokens_text": "~9.3M tokens (two whole-repo passes plus repro scripts)",
   "non_bug_badges": "2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)"
 }

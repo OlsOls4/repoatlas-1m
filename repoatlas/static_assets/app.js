@@ -72,41 +72,52 @@
   }
 
   function renderHero(hero, copy, replay) {
-    $("headline").innerHTML = md(hero.lead || hero.headline);
-    $("hero-note").innerHTML = md(hero.label_note);
-    const tiles = hero.tiles || [];
-    $("tiles").innerHTML = tiles
-      .map(function (tile) {
-        return "<div class='tile'><strong>" + tile[0] + "</strong><span>" + tile[1] + "</span></div>";
-      })
-      .join("");
+    if (!$("headline").querySelector(".lead-full") || !$("headline").querySelector(".lead-full").textContent.trim()) {
+      $("headline").innerHTML =
+        "<p class='lead-full'>" + escapeHtml(hero.lead || hero.headline || "") + "</p>" +
+        "<p class='lead-short'>" + escapeHtml(hero.lead_short || "") + "</p>";
+    }
+    if (!$("tiles").children.length && hero.tiles) {
+      $("tiles").innerHTML = hero.tiles
+        .map(function (tile) {
+          return "<div class='tile'><strong>" + tile[0] + "</strong><span>" + tile[1] + "</span></div>";
+        })
+        .join("");
+    }
+    $("hero-note").textContent = hero.label_note || "";
     const links = (copy && copy.links) || {};
     const linkHtml =
       (links.code ? '<a href="' + links.code + '">Code</a> · ' : "") +
       (links.dataset ? '<a href="' + links.dataset + '">Dataset</a> · ' : "") +
       (links.thread ? '<a href="' + links.thread + '">Thread</a>' : "");
-    $("hero-links").innerHTML = linkHtml;
+    if (!$("hero-links").querySelector("a")) {
+      $("hero-links").innerHTML = linkHtml;
+    }
     $("run-links").innerHTML = linkHtml;
     renderDrift(replay);
-    fetch("assets/docdrift-75s.mp4", { method: "HEAD" })
-      .then(function (response) {
-        if (response.ok) {
-          $("demo-video").hidden = false;
-        }
-      })
-      .catch(function () {});
+    if (copy && copy.video) {
+      $("demo-video-el").src = copy.video;
+      $("demo-video").hidden = false;
+    }
+    const sample = $("sample-output");
+    if (sample && copy && copy.sample_output) {
+      $("sample-pre").textContent = copy.sample_output;
+      sample.hidden = false;
+    }
   }
 
   function renderDrift(replay) {
     const card = (replay && replay.drift_card) || {};
-    $("drift-doc").textContent = card.doc_quote || "";
-    $("drift-code").textContent = card.code_quote || "";
+    $("drift-doc").innerHTML = mdInline(card.doc_quote || "");
+    $("drift-code").innerHTML = mdInline(card.code_quote || "");
     $("drift-err").textContent = card.error || "";
     const pr = card.pr_url
       ? '<a href="' + card.pr_url + '">' + (card.pr_label || "PR #3746") + "</a>"
       : "";
     $("drift-foot").innerHTML =
-      "→ Found by Beam's whole-repo pass (C02)" + (pr ? " · " + pr : "");
+      "→ " +
+      escapeHtml(card.found_by || "Found by Beam's whole-repo pass (also flagged by the symbol check)") +
+      (pr ? " · " + pr : "");
     $("drift-honest").textContent =
       card.hand_written_note ||
       "Repro script for this one was written by hand from Beam's verdict; the other repros were written by Beam.";
@@ -187,6 +198,10 @@
     });
     $("why-chart").innerHTML =
       '<svg viewBox="0 0 ' + width + " " + height + '" role="img" aria-label="' + caption + '">' + bars + "</svg>";
+    const subset = $("why-subset");
+    if (subset) {
+      subset.textContent = (copy && copy.why_subset_note) || (ablation && ablation.subset_note) || "";
+    }
     $("why-placeholder").textContent =
       copy.why_matched_cost_note || "Matched-cost local bar: not run yet.";
   }
@@ -238,7 +253,7 @@
       chip("real", "Real " + counts.true, state.badge === "real") +
       chip("reproduced", "Reproduced " + counts.reproduced, state.badge === "reproduced") +
       chip("checked", "Checked " + counts.checked, state.badge === "checked") +
-      chip("false", "False " + counts.false, state.badge === "false") +
+      chip("false", "False / unclear " + counts.false, state.badge === "false") +
       chip("all", "All " + bugs.length, state.badge === "all");
     $("library-chips").querySelectorAll(".chip").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -301,17 +316,17 @@
         .map(function (bug) {
           const display = bug.display_id || bug.id;
           const docBlock = bug.doc_quote
-            ? "<p class='lbl'>Docs say</p><pre class='mini doc'>" + escapeHtml(bug.doc_quote) + "</pre>"
+            ? "<p class='lbl'>Docs say</p><pre class='mini doc'>" + mdInline(bug.doc_quote) + "</pre>"
             : "";
           let codeBlock = "";
           if (bug.code_quote) {
-            codeBlock = "<p class='lbl'>Code says</p><pre class='mini code'>" + escapeHtml(bug.code_quote) + "</pre>";
-          } else if (!bug.code_url && !bug.code_path) {
+            codeBlock = "<p class='lbl'>Code says</p><pre class='mini code'>" + mdInline(bug.code_quote) + "</pre>";
+          } else if (!bug.code_url && !bug.code_path && bug.verdict === "true") {
             codeBlock =
-              "<p class='lbl'>Code says</p><pre class='mini code'>Symbol not found anywhere in " +
-              bug.library +
-              (bug.ref ? " @" + bug.ref : "") +
-              "</pre>";
+              "<p class='lbl'>Code says</p><pre class='mini code'>Not found at the documented path in " +
+              escapeHtml(bug.library) +
+              (bug.ref ? " @" + escapeHtml(bug.ref) : "") +
+              ". See the repro below.</pre>";
           }
           const runBlock = bug.badge_note
             ? "<p class='lbl'>Running it gives</p><pre class='mini err'>" + escapeHtml(bug.badge_note) + "</pre>"
@@ -346,7 +361,9 @@
             "'>" +
             bug.badge +
             "</span>" +
-            (bug.cross_file ? "<span class='pill'>cross-file</span>" : "") +
+            (bug.cross_file
+              ? "<span class='pill' title='The doc and the code it describes are in different files.' aria-describedby='cross-file-def'>cross-file</span>"
+              : "") +
             upstream +
             "<h3>" +
             mdInline(title) +
@@ -407,14 +424,22 @@
   }
 
   function mdCell(cell) {
+    if (cell && typeof cell === "object" && cell.text !== undefined) {
+      const title = cell.title ? " title='" + escapeHtml(cell.title) + "'" : "";
+      return "<span" + title + ">" + mdInline(String(cell.text)) + "</span>";
+    }
     return mdInline(String(cell));
   }
 
-  function renderBenchmark(benchmark, hero) {
+  function renderBenchmark(benchmark, hero, copy) {
+    const caption = $("bench-caption");
+    if (caption) {
+      caption.textContent = (copy && copy.bench_caption) || "";
+    }
     $("bench-headlines").innerHTML =
       tile(hero.hybrid_true + " of " + hero.universe_size, "found") +
       tile(hero.hybrid_true_findings + " of " + hero.hybrid_findings, "flagged were real") +
-      tile(String(hero.repro_true), "reproduce");
+      tile(hero.repro_true + " of " + hero.hybrid_true, "reproduce");
     $("token-footnote").innerHTML = md(benchmark.token_footnote || "");
     $("compare-table").innerHTML = tableHtml(benchmark.headers, benchmark.rows);
     $("funnel").innerHTML = benchmark.funnel
@@ -426,6 +451,10 @@
     if (ablation.available) {
       $("ablation-claim").innerHTML = md(ablation.claim);
       $("ablation-table").innerHTML = tableHtml(ablation.headers, ablation.rows);
+      const subsetLine = $("ablation-subset");
+      if (subsetLine) {
+        subsetLine.textContent = ablation.subset_note || (copy && copy.why_subset_note) || "";
+      }
       $("ablation-caveats").innerHTML = (ablation.caveats || [])
         .map(function (item) {
           return "<li>" + md(item) + "</li>";
@@ -466,8 +495,16 @@
     drawRecall(recall);
     if (benchmark.chart_present) {
       const image = $("recall-chart");
-      image.src = benchmark.recall.chart;
-      image.hidden = false;
+      const details = $("recall-all");
+      image.setAttribute("data-src", benchmark.recall.chart);
+      if (details) {
+        details.addEventListener("toggle", function () {
+          if (details.open && !image.getAttribute("src")) {
+            image.src = image.getAttribute("data-src");
+            image.hidden = false;
+          }
+        });
+      }
     }
     $("benchmark-notes").innerHTML = md(benchmark.notes_markdown || "");
     const pack = benchmark.pack_coverage;
@@ -495,6 +532,28 @@
     const plotH = height - bottom - 20;
     let paths = "";
     const colors = ["#a84a1c", "#2f6d4f", "#5c574e"];
+    const den = recall.far_hits ? recall.far_hits[1] : 0;
+    let grid = "";
+    [0, 0.5, 1].forEach(function (tick) {
+      const y = 20 + plotH * (1 - tick);
+      grid +=
+        '<line class="grid" x1="' +
+        left +
+        '" y1="' +
+        y +
+        '" x2="' +
+        (left + plotW) +
+        '" y2="' +
+        y +
+        '"></line>' +
+        '<text x="' +
+        (left - 6) +
+        '" y="' +
+        (y + 4) +
+        '" font-size="11" text-anchor="end">' +
+        tick +
+        "</text>";
+    });
     series.forEach(function (line, s) {
       const pts = (line.points || []).map(function (value, i) {
         const x = left + (i / Math.max(1, buckets.length - 1)) * plotW;
@@ -502,18 +561,22 @@
         return x + "," + y;
       });
       const last = pts[pts.length - 1] ? pts[pts.length - 1].split(",") : ["0", "0"];
+      const lastVal = (line.points || [])[(line.points || []).length - 1] || 0;
+      const short =
+        line.id === "focused_seed1" ? "focused" : line.id === "chunk128k_seed1" ? "chunked" : "whole-repo";
+      const endLabel = den ? short + " " + Math.round(lastVal * den) + "/" + den : line.label;
       paths +=
         '<polyline fill="none" stroke="' +
         colors[s % colors.length] +
         '" stroke-width="2" points="' +
         pts.join(" ") +
         '"></polyline>' +
-        '<text x="' +
+        '<text class="endlabel" x="' +
         (Number(last[0]) + 8) +
         '" y="' +
         (Number(last[1]) + 4) +
-        '" font-size="12">' +
-        escapeHtml(line.label) +
+        '">' +
+        escapeHtml(endLabel) +
         "</text>";
     });
     const axis = buckets
@@ -522,6 +585,7 @@
         return '<text x="' + x + '" y="' + (height - 8) + '" font-size="11" text-anchor="middle">' + name + "</text>";
       })
       .join("");
+    paths = grid + paths;
     $("recall-svg").innerHTML =
       '<svg viewBox="0 0 ' +
       width +
@@ -537,7 +601,7 @@
     const headers = ["Id", "Library", "Verdict", "Status", "Strict", "Error"];
     const rows = repros.map(function (row) {
       return [
-        row.id,
+        { text: row.display_id || row.id, title: row.id },
         row.library,
         row.verdict,
         row.status,
@@ -634,7 +698,11 @@
         return "<li>" + md(item) + "</li>";
       })
       .join("");
-    $("sources").textContent = "Sources: " + copy.sources.join("; ");
+    $("sources").textContent = copy.sources_public || "";
+    const cross = $("cross-file-def");
+    if (cross) {
+      cross.textContent = copy.cross_file_note || "";
+    }
   }
 
   function activateTab(name, setHash, shouldFocus) {
@@ -696,7 +764,9 @@
     activateTab(known ? hash : "story", false);
     window.addEventListener("hashchange", function () {
       const name = location.hash.replace("#", "");
-      if (name) {
+      if (buttons.some(function (button) {
+        return button.getAttribute("data-tab") === name;
+      })) {
         activateTab(name, false);
       }
     });
@@ -724,7 +794,7 @@
       renderWhy(benchmark.ablation, copy);
       renderChips(bugs);
       renderBugs();
-      renderBenchmark(benchmark, hero);
+      renderBenchmark(benchmark, hero, copy);
       renderRepros(repros);
       renderReplay(replay);
       renderCopy(copy);

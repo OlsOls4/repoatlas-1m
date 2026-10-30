@@ -1,17 +1,17 @@
 {
   "how_beam": [
     "Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.",
-    "New finds. Beam added 9 true drifts the checker missed (7 new to the union), taking distinct trues from 24 to 34.",
+    "Beam's triage kept all 24 true symbol-check drifts, kept 1 extra from the whole-repo pass's own candidates, and added 9 drifts the checker missed (7 new to the union): 24 + 1 + 9 = 34.",
     "Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
     "Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers. On the same 56 candidates, whole-repo and local-file triage both kept 32/32 true and rejected 15/24 false; 6 of 56 disagreements split 3-3. Whole-repo cited the correct file:line in 25/30 cross-file cases vs 14/30 for local, and 11/13 vs 0/13 when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: 26/27 verdicts matched."
   ],
   "limits": [
     "The 45-drift universe is the union of method output, so it favours those methods.",
-    "Labels were checked against the source by an AI reviewer. The stored field is still hand_verdict.",
+    "Labels were checked against the source by an AI reviewer. (Field name in the dataset: `hand_verdict`.)",
     "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
     "A true drift can still fail the strict repro rule (marshmallow T11, structlog untriaged, werkzeug input_stream).",
     "2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict repro badge.",
-    "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json.",
+    "Filed by this project. Open, not merged. Status checked 30 Oct 2026.",
     "httpx #3774 and arrow #1355 were already reported upstream by others.",
     "cattrs and click have drafts in the repo; they are not listed as filed.",
     "This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI."
@@ -19,8 +19,7 @@
   "glossary": [
     "Triage: Beam judges symbol-check and whole-repo candidates as true_drift, false, or unclear against one packed library prompt.",
     "Strict badge: TypeError, AttributeError, ImportError, or NameError raised on a DOC-LITERAL usage line.",
-    "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line.",
-    "hand_verdict: stored field name. It means checked against the source by an AI reviewer, not a human annotator."
+    "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line."
   ],
   "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000",
   "cli_sweep": "",
@@ -46,12 +45,18 @@
     },
     {
       "title": "Beam",
-      "body": "one whole-repo call per library (11 of 12; structlog failed, cattrs needed 2). With the whole repo, Beam cited the true evidence in another file 11/13 times; with local files only, 0/13. Prompts up to 947,446 tokens accepted."
+      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens)."
     }
   ],
   "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
   "why_matched_cost_note": "Matched-cost local bar: not run yet.",
-  "built_at": "2026-10-30T11:37:29Z",
+  "why_subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
+  "video": null,
+  "sample_output": "",
+  "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
+  "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
+  "built_at": "2026-10-30T12:03:23Z",
+  "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",
     "results_live/hybrid/hybrid.csv",

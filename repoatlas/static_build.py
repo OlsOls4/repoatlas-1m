@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
+import html
 import json
 from pathlib import Path
 import re
@@ -63,7 +64,7 @@ HYBRID_TRIAGE_STARLETTE_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "triage
 NEVER_FILED_REPOS: frozenset[str] = frozenset({"cattrs", "click"})
 NOX_PR_URL: str = "https://github.com/wntrblm/nox/pull/1216"
 NOX_PR_NOTE: str = (
-    "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
+    "Filed by this project. Open, not merged. Status checked 30 Oct 2026."
 )
 HF_SPACE_COLORS: frozenset[str] = frozenset(
     {"red", "yellow", "green", "blue", "indigo", "purple", "pink", "gray"}
@@ -130,7 +131,7 @@ def build_static_payload() -> StaticPayload:
         hero=_build_hero(payload, stats, bugs),
         bugs=bugs,
         benchmark=_build_benchmark(payload, stats),
-        repros=_build_repros(payload, sources),
+        repros=_attach_repro_display_ids(_build_repros(payload, sources), bugs),
         replay=_build_replay(stats, index_findings),
         copy=_build_copy(stats),
     )
@@ -160,7 +161,10 @@ def write_static_space(destination: Path | None = None) -> Path:
         if not source.exists():
             raise FileNotFoundError(f"missing static asset {source}")
         if asset_name == "index.html":
-            shutil.copy2(source, target / "index.html")
+            (target / "index.html").write_text(
+                _fill_index_html(source.read_text(encoding="utf-8"), documents["hero"], documents["copy"]),
+                encoding="utf-8",
+            )
         else:
             shutil.copy2(source, assets_dir / asset_name)
     if RECALL_CHART_PATH.exists():
@@ -204,6 +208,10 @@ def _build_hero(
             f"Across {stats['repo_count']} popular libraries (bugs in {true_n} of {stats['repo_count']} libraries"
             f"{none_clause}) it found "
             f"{stats['hybrid_true']} real docs bugs; {stats['repro_true']} crash exactly as the docs are written."
+        ),
+        "lead_short": (
+            f"Beam read {stats['repo_count']} whole Python libraries and ran their docs: "
+            f"{stats['hybrid_true']} real bugs, {stats['repro_true']} reproduce."
         ),
         "tiles": [
             [stats["hybrid_true"], f"real docs bugs · {true_n} of {stats['repo_count']} libraries"],
@@ -434,7 +442,7 @@ def _badge_for_card(card: dict[str, object], stats: HybridHeroStats) -> tuple[st
         return "reproduced", excerpt[:180]
     if str(card.get("repro_status", "")) == "reproduced":
         return "checked", f"Ran, but not a strict API error (not counted in the {stats['repro_true']})."
-    return "checked", "Checked against the source (file:line evidence); no strict v2 repro badge."
+    return "checked", "Checked against the source (file:line evidence); no strict repro badge."
 
 
 def _upstream_for(
@@ -697,12 +705,12 @@ def _starlette_repro_note(tracebacks: list[dict[str, object]], stats: HybridHero
         if not origin_sentence.endswith("."):
             origin_sentence += "."
         return (
-            f"v2 strict repro: {kind} on the DOC-LITERAL "
+            f"Strict repro: {kind} on the documented-usage "
             f"receive_json(data, mode=\"binary\") line. Counted in the {stats['repro_true']}. "
             f"{origin_sentence}"
         )
     return (
-        f"v2 strict repro could not run (setup RuntimeError). "
+        f"Strict repro could not run (setup RuntimeError). "
         f"Not counted in the {stats['repro_true']}. An earlier docs-runner did raise TypeError."
     )
 
@@ -724,9 +732,14 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                 f"{stats['removed_false']} of {stats['removed_false'] + stats['kept_false']} false or unclear ones."
             ),
             (
-                f"New finds. Beam added {stats['additions_true']} true drifts the checker missed "
-                f"({stats['additions_new']} new to the union), taking distinct trues from "
-                f"{stats['symbol_true']} to {stats['hybrid_true']}."
+                f"Beam's triage kept all {stats['symbol_true']} true symbol-check drifts, "
+                f"kept {stats['hybrid_true'] - stats['symbol_true'] - stats['additions_true']} extra "
+                "from the whole-repo pass's own candidates, "
+                f"and added {stats['additions_true']} drifts the checker missed "
+                f"({stats['additions_new']} new to the union): "
+                f"{stats['symbol_true']} + "
+                f"{stats['hybrid_true'] - stats['symbol_true'] - stats['additions_true']} + "
+                f"{stats['additions_true']} = {stats['hybrid_true']}."
             ),
             (
                 f"Repro author. Beam wrote the doc-literal repro scripts ({stats['repro_tokens']:,} tokens). "
@@ -739,7 +752,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         ],
         "limits": [
             "The 45-drift universe is the union of method output, so it favours those methods.",
-            f"Labels were {LABEL_SOURCE}. The stored field is still hand_verdict.",
+            f"Labels were {LABEL_SOURCE}. (Field name in the dataset: `hand_verdict`.)",
             "Citation check means quote alignment of cited lines vs packed source, with a ±3-line shift allowed. It is not a verdict that the drift is real.",
             "A true drift can still fail the strict repro rule (marshmallow T11, structlog untriaged, werkzeug input_stream).",
             f"{non_bug_badge_phrase(stats)} received a strict repro badge.",
@@ -752,7 +765,6 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "Triage: Beam judges symbol-check and whole-repo candidates as true_drift, false, or unclear against one packed library prompt.",
             "Strict badge: TypeError, AttributeError, ImportError, or NameError raised on a DOC-LITERAL usage line.",
             "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line.",
-            f"hand_verdict: stored field name. It means {LABEL_SOURCE}, not a human annotator.",
         ],
         "cli": (
             "pip install git+https://github.com/OlsOls4/repoatlas-1m\n"
@@ -795,10 +807,11 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             {
                 "title": "Beam",
                 "body": (
-                    "one whole-repo call per library (11 of 12; structlog failed, cattrs needed 2). "
-                    f"With the whole repo, Beam cited the true evidence in another file {ablation['outside_cite_whole']} times; "
-                    f"with local files only, {ablation['outside_cite_local']}. "
-                    f"Prompts up to {max_probe_tokens:,} tokens accepted."
+                    "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), "
+                    f"with prompts up to {max_probe_tokens:,} tokens accepted. "
+                    f"With the whole repo, Beam cited the proof in another file {ablation['outside_cite_whole']} times, "
+                    f"vs {ablation['outside_cite_local']} with local files. "
+                    f"Beam also wrote the repro scripts ({stats['repro_tokens']:,} tokens)."
                 ),
             },
         ],
@@ -807,7 +820,24 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             f"Cost: ~{ablation['token_multiplier']}× tokens ({ablation['whole_tokens']:,} vs {ablation['local_tokens']:,})."
         ),
         "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+        "why_subset_note": ablation.get("subset_note") or "",
+        "video": None,
+        "sample_output": "",
+        "cross_file_note": (
+            "Cross-file means the documented claim and the cited implementation are in different files "
+            "(including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, "
+            "or when the docs live under docs/ or a .md/.rst file and no code path was cited."
+        ),
+        "bench_caption": (
+            f"{stats['universe_size']} = all real drifts any method found. "
+            f"{stats['hybrid_findings']} = what the hybrid flagged. "
+            f"{stats['repro_true']} of {stats['hybrid_true']} = bugs whose doc line crashes when run."
+        ),
         "built_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "sources_public": (
+            "Every number is in the companion dataset "
+            "(findings, triage verdicts, repros, ablation, token ledger)."
+        ),
         "sources": [
             "results_live/hybrid/hybrid.json",
             "results_live/hybrid/hybrid.csv",
@@ -860,9 +890,9 @@ tags:
 
 # DocDrift
 
-Repo name: RepoAtlas-1M. **DocDrift v2** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) to triage them and add cross-file or prose drift. 11 of 12 libraries were triaged in one call; structlog failed; cattrs needed 2 calls. A generated script then runs the documented usage and keeps the ones that raise a real API error.
+**DocDrift** finds docs drift (docs say one thing, code does another) in Python libraries. A free symbol check proposes candidates. Beam reads each library's docs and source (about 300–400k tokens) to triage them and add cross-file or prose drift. 11 of 12 libraries were triaged in one call; structlog failed; cattrs needed 2 calls. A generated script then runs the documented usage and keeps the ones that raise a real API error.
 
-**Results:** {hero['headline']}. Beam's triage threw away {hero['rejected_true']} of {hero['true_candidates_judged']} real bugs.
+**Results:** {hero['hybrid_true']} real docs bugs in {hero['true_library_count']} of {hero['repo_count']} libraries; {hero['repro_true']} reproduce. Beam's triage threw away {hero['rejected_true']} of {hero['true_candidates_judged']} real bugs.
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
@@ -874,7 +904,7 @@ Docs and code disagree in a way that can break users who follow the docs. Starle
 
 ## How Beam is used
 
-Numbers below come from `results_live/hybrid/hybrid.json`, `results_live/hybrid/repros/repros.json`, `results_live/recall/`, `results_live/ablation/results.json`, and `results_live/beamv3/results.json`.
+Numbers below come from the companion dataset.
 
 {how_beam}
 
@@ -1119,6 +1149,19 @@ def _pack_quote(library: str, path: str, line: object) -> str:
     start = max(0, number - 2)
     end = min(len(lines), number + 1)
     chunk = [lines[index].rstrip() for index in range(start, end)]
+    content = [item for item in chunk if item.strip() and not set(item.strip()) <= set("=-~")]
+    heading_only = bool(content) and all(
+        item.lstrip().startswith(":") or item.lstrip().startswith("..") for item in content
+    )
+    if heading_only:
+        cursor = end
+        while cursor < len(lines):
+            text = lines[cursor].rstrip()
+            cursor += 1
+            if not text.strip() or set(text.strip()) <= set("=-~"):
+                continue
+            chunk.append(text)
+            break
     return "\n".join(chunk).strip()
 
 
@@ -1148,15 +1191,15 @@ def _starlette_drift_card(pack: dict[str, object], tracebacks: list[dict[str, ob
         "doc_path": "docs/websockets.md",
         "doc_line": 74,
         "doc_line_note": (
-            "C02 recorded docs/websockets.md:73, which is the sentence before the call. "
-            "The call is on line 74 at 8aa828c."
+            "The whole-repo pass recorded docs/websockets.md:73, the sentence before the call. "
+            "The call is on line 74 at 8aa828c. The symbol check flagged the same call."
         ),
         "doc_quote": doc_quote,
         "code_path": "starlette/websockets.py",
         "code_line": 136,
         "code_quote": code_quote,
         "error": error,
-        "found_by": "Beam's whole-repo pass (C02)",
+        "found_by": "Beam's whole-repo pass (also flagged by the symbol check)",
         "pr_url": "https://github.com/Kludex/starlette/pull/3746",
         "pr_label": "PR #3746 open, not merged",
         "hand_written": True,
@@ -1259,4 +1302,69 @@ def _recall_default_series() -> list[dict[str, object]]:
     order = list(wanted.keys())
     series.sort(key=lambda item: order.index(str(item["id"])))
     return series
+
+
+def _attach_repro_display_ids(
+    repros: list[dict[str, object]],
+    bugs: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    """
+    @brief Map repro rows onto ARW-01 style ids from the bug wall.
+    """
+
+    lookup: dict[str, str] = {}
+    error_map: list[tuple[str, str, str]] = []
+    for bug in bugs:
+        display = str(bug.get("display_id") or "")
+        raw = str(bug.get("id") or "")
+        library = str(bug.get("library") or "")
+        if not display:
+            continue
+        lookup[raw] = display
+        lookup[raw.replace("/", ":")] = display
+        lookup[f"{library}:{raw.replace('/', ':')}"] = display
+        tail = raw.rsplit("/", 1)[-1]
+        lookup[f"{library}:{tail}"] = display
+        lookup[f"{library}/{tail}"] = display
+        note = str(bug.get("badge_note") or "")
+        if note:
+            error_map.append((library, note, display))
+    for row in repros:
+        rid = str(row.get("id") or "")
+        library = str(row.get("library") or "")
+        display = lookup.get(rid) or lookup.get(f"{library}:{rid}") or lookup.get(rid.replace(":", "/"))
+        if not display:
+            excerpt = str(row.get("error_excerpt") or "")
+            needle = excerpt[:40]
+            if needle:
+                for lib, note, mapped in error_map:
+                    if lib == library and needle in note:
+                        display = mapped
+                        break
+        row["display_id"] = display or rid
+    return repros
+
+
+def _fill_index_html(source: str, hero: dict[str, object], copy: dict[str, object]) -> str:
+    """
+    @brief Inline the recorded lead and tiles so the first paint does not swap placeholder copy.
+    """
+
+    tiles = "".join(
+        f"<div class='tile'><strong>{html.escape(str(tile[0]))}</strong><span>{html.escape(str(tile[1]))}</span></div>"
+        for tile in (hero.get("tiles") or [])
+        if isinstance(tile, (list, tuple)) and len(tile) >= 2
+    )
+    links = copy.get("links") if isinstance(copy.get("links"), dict) else {}
+    link_html = " · ".join(
+        f'<a href="{html.escape(str(links[key]), quote=True)}">{label}</a>'
+        for key, label in (("code", "Code"), ("dataset", "Dataset"), ("thread", "Thread"))
+        if links.get(key)
+    )
+    filled = source.replace("<!--LEAD_FULL-->", html.escape(str(hero.get("lead") or "")))
+    filled = filled.replace("<!--LEAD_SHORT-->", html.escape(str(hero.get("lead_short") or "")))
+    filled = filled.replace("<!--TILES-->", tiles)
+    filled = filled.replace("<!--HERO_NOTE-->", html.escape(str(hero.get("label_note") or "")))
+    filled = filled.replace("<!--HERO_LINKS-->", link_html)
+    return filled
 

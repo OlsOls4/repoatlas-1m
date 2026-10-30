@@ -47,8 +47,10 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert any("15 of 33" in str(row[1]) for row in compare_rows)
     assert any("9 of 33" in str(row[1]) for row in compare_rows)
     hybrid_tokens = str(next(row[4] for row in compare_rows if "hybrid (symbol" in str(row[0]).lower()))
+    strict_tokens = str(next(row[4] for row in compare_rows if "repro-confirmed" in str(row[0]).lower()))
     assert "~9.2M tokens (two whole-repo passes over 12 libraries)" in hybrid_tokens
     assert "9,302,105" not in hybrid_tokens
+    assert "~9.3M tokens (two whole-repo passes plus repro scripts)" in strict_tokens
     assert "9,302,105" in documents["benchmark"]["token_footnote"]
     assert "4,739,392" in documents["benchmark"]["token_footnote"]
     ablation = documents["benchmark"]["ablation"]
@@ -92,6 +94,23 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "run_benchmark.py" not in copy["cli"]
     assert copy["local"] == ""
     assert copy["links"]["code"].endswith("repoatlas-1m")
+    assert copy["video"] is None
+    assert copy["sample_output"] == ""
+    assert "24 + 1 + 9 = 34" in copy["how_beam"][1]
+    assert "taking distinct trues from 24 to 34" not in copy["how_beam"][1]
+    assert "0.926" in copy["why_subset_note"]
+    assert "0.815" in copy["why_subset_note"]
+    arw02 = next(bug for bug in documents["bugs"] if bug["display_id"] == "ARW-02")
+    assert "automodule:: arrow.locales" in arw02["doc_quote"]
+    dumped = json.dumps(documents)
+    assert "Symbol not found anywhere" not in dumped
+    assert "C02" not in json.dumps(documents["replay"]["drift_card"])
+    assert "C03" not in json.dumps(documents["replay"]["drift_card"])
+    assert "whole-repo pass" in documents["replay"]["drift_card"]["found_by"]
+    assert "v2" not in documents["replay"]["repro_note"]
+    assert all("v2" not in str(bug.get("badge_note") or "") for bug in documents["bugs"])
+    hybrid_beamv3 = next(row for row in beamv3["rows"] if str(row[0]).startswith("Hybrid (existing"))
+    assert "triage pass only" in str(hybrid_beamv3[11])
     dumped = json.dumps(documents).lower()
     assert "improves accuracy" not in dumped
     assert "improves precision" not in dumped
@@ -169,11 +188,27 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert "Gradio" not in index_html
     assert 'role="tab"' in index_html
     assert 'id="drift-card"' in index_html
+    assert 'tabindex="-1"' in index_html
+    assert 'src="assets/docdrift-75s.mp4"' not in index_html
+    assert index_html.find('id="story"') < index_html.find('id="recorded-run"')
+    assert "Loading recorded results" not in index_html
+    assert "lead-full" in index_html
+    assert 'id="sample-output"' in index_html
     assert "Code not recorded" not in (target / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "Symbol not found anywhere" not in (target / "assets" / "app.js").read_text(encoding="utf-8")
+    assert "False / unclear" in (target / "assets" / "app.js").read_text(encoding="utf-8")
+    documents = build_static_payload()
+    starlette_s1 = next(row for row in documents["repros"] if row["id"] == "starlette:S1")
+    assert str(starlette_s1["display_id"]).startswith("STR-")
+    arrow_s24 = next(row for row in documents["repros"] if row["id"] == "arrow:S24")
+    assert str(arrow_s24["display_id"]).startswith("ARW-")
     readme = (target / "README.md").read_text(encoding="utf-8")
     assert "python3 app.py" not in readme
     assert "run_benchmark.py" not in readme
     assert "Gradio" not in readme
+    assert "RepoAtlas-1M" not in readme
+    assert "11 of 12" in readme
+    assert "34 real docs bugs in 12 Python libraries" not in readme
     hero = json.loads((target / "data" / "hero.json").read_text(encoding="utf-8"))
     stats = compute_hero_stats(load_hybrid_payload())
     assert hero["hybrid_true"] == stats["hybrid_true"]

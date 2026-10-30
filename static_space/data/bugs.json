@@ -44,7 +44,7 @@
     "cross_file": true,
     "display_id": "ARW-02",
     "short_title": "Docs reference `arrow.locale`, which doesn't exist",
-    "doc_quote": ":mod:`arrow.locale`\n=====================",
+    "doc_quote": ":mod:`arrow.locale`\n=====================\n.. automodule:: arrow.locales",
     "code_quote": ""
   },
   {
@@ -73,7 +73,7 @@
     "cross_file": false,
     "display_id": "ARW-03",
     "short_title": "Using timestring= as documented raises TypeError for unexpected keyword argument.",
-    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.",
+    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.\n        Usage::",
     "code_quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\n        \"\"\"Returns a new :class:`Arrow <arrow.arrow.Arrow>` object, that represents"
   },
   {
@@ -145,7 +145,7 @@
     "cross_file": false,
     "display_id": "CAT-02",
     "short_title": "Using cache= as documented raises TypeError; parameter is cache_result.",
-    "doc_quote": ":param cache: Whether to cache the returned hook.",
+    "doc_quote": ":param cache: Whether to cache the returned hook.\n\n        .. versionadded:: 24.1.0",
     "code_quote": "def get_unstructure_hook(\n        self, type: Any, cache_result: bool = True\n    ) -> UnstructureHook:"
   },
   {
@@ -169,7 +169,7 @@
     "cross_file": false,
     "display_id": "CAT-03",
     "short_title": "Using cache= as documented raises TypeError; parameter is cache_result.",
-    "doc_quote": ":param cache: Whether to cache the returned hook.",
+    "doc_quote": ":param cache: Whether to cache the returned hook.\n\n        .. versionadded:: 24.1.0",
     "code_quote": "def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
   },
   {
@@ -606,7 +606,7 @@
       "kind": "filed_open",
       "label": "Open PR #1216",
       "url": "https://github.com/wntrblm/nox/pull/1216",
-      "note": "Filed by this project. Open, not merged. Recorded in results_live/upstream_status.json."
+      "note": "Filed by this project. Open, not merged. Status checked 30 Oct 2026."
     },
     "cross_file": true,
     "display_id": "NOX-02",
@@ -760,7 +760,7 @@
     "cross_file": false,
     "display_id": "ARW-04",
     "short_title": "Beam: true. Kept false per handcheck.md: en-us and en_us are normalised (locales.py:54)",
-    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.",
+    "doc_quote": ":param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.\n\n        Usage::",
     "code_quote": "def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\n        \"\"\"Returns a new :class:`Arrow <arrow.arrow.Arrow>` object, that represents"
   },
   {
@@ -986,7 +986,7 @@
     "summary": "Using default= as documented raises TypeError in marshmallow 4.x.",
     "verdict": "true",
     "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "badge_note": "Checked against the source (file:line evidence); no strict repro badge.",
     "finder": "whole-repo Beam",
     "doc_path": "docs/top_level.rst",
     "doc_line": 10,
@@ -1000,7 +1000,7 @@
     "cross_file": true,
     "display_id": "MM-06",
     "short_title": "Using default= as documented raises TypeError in marshmallow 4.x.",
-    "doc_quote": ".. Can't use :autodata: here due to Sphinx bug: https://github.com/sphinx-doc/sphinx/issues/6495\n.. data:: missing",
+    "doc_quote": ".. Can't use :autodata: here due to Sphinx bug: https://github.com/sphinx-doc/sphinx/issues/6495\n.. data:: missing\n\n   Singleton value that indicates that a field's value is missing from input",
     "code_quote": "# deserialized value\n        self._validate_missing(value)\n        if value is missing_:"
   },
   {
@@ -1034,7 +1034,7 @@
     "summary": "Docs reference `PlainFileObserver`, which doesn't exist",
     "verdict": "true",
     "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "badge_note": "Checked against the source (file:line evidence); no strict repro badge.",
     "finder": "symbol check (untriaged)",
     "doc_path": "src/structlog/twisted.py",
     "doc_line": 235,
@@ -1058,7 +1058,7 @@
     "summary": "Documented symbol path does not exist, so direct lookup fails.",
     "verdict": "true",
     "badge": "checked",
-    "badge_note": "Checked against the source (file:line evidence); no strict v2 repro badge.",
+    "badge_note": "Checked against the source (file:line evidence); no strict repro badge.",
     "finder": "symbol check (untriaged)",
     "doc_path": "docs/standard-library.md",
     "doc_line": 116,

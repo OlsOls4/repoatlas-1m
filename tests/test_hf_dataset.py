@@ -53,3 +53,13 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert LABEL_SOURCE in card
     assert "7,713,453" in card
     assert "unlabelled not counted as true" in card
+    assert "Unpublished" not in card
+    assert "license: cc-by-4.0" in card
+    assert "CC BY 4.0" in card
+    assert "11 of 12" in card
+    assert "hand_verdict" in card
+    assert "not a human annotator" in card.lower() or "not a human" in card.lower()
+    assert "tags:" in card and "long-context" in card and "- beam" in card
+    assert "ollymcbride4/docdrift-bugs" in card
+    assert "results_live/" not in card
+    assert "RepoAtlas-1M" not in card

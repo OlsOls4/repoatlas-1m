@@ -48,8 +48,13 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     assert any("15 of 33" in cell for cell in found_cells)
     assert any("9 of 33" in cell for cell in found_cells)
     assert any("~9.2M tokens (two whole-repo passes over 12 libraries)" in cell for cell in token_cells)
+    assert any("~9.3M tokens (two whole-repo passes plus repro scripts)" in cell for cell in token_cells)
     assert all("9,302,105" not in cell for cell in token_cells)
-    assert all("~9.3M" not in cell for cell in token_cells)
+    strict_tokens = str(next(row[4] for row in rows if "repro-confirmed" in str(row[0]).lower()))
+    hybrid_tokens = str(next(row[4] for row in rows if "hybrid (symbol" in str(row[0]).lower()))
+    assert "~9.3M" in strict_tokens
+    assert "~9.2M" in hybrid_tokens
+    assert "~9.3M" not in hybrid_tokens
     notes = build_notes_markdown(payload)
     assert "union of what the methods found" in notes
     assert "rejected **0** of 32 true candidates" in notes

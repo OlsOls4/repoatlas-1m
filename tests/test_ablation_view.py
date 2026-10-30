@@ -30,6 +30,10 @@ def test_ablation_payload_matches_recorded_results() -> None:
     assert payload["outside_cite_whole"] == "11/13"
     assert payload["outside_cite_local"] == "0/13"
     assert payload["accuracy_whole"] == payload["accuracy_local"] == "0.839"
+    assert payload["accuracy_whole_subset"] == "0.815"
+    assert payload["accuracy_local_subset"] == "0.926"
+    assert "0.926 vs 0.815" in payload["subset_note"]
+    assert "4/4 vs 0/4" in payload["subset_note"]
     kept = next(row for row in payload["rows"] if row[0] == "True candidates kept")
     rejected = next(row for row in payload["rows"] if row[0] == "False/unclear candidates rejected")
     assert kept[1] == kept[2] == "32/32"

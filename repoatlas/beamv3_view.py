@@ -151,13 +151,16 @@ def load_beamv3_payload(path: Path | None = None) -> BeamV3Payload:
         "marginal_tokens_per_extra_drift",
     )
     table_rows = [[_fmt_cell(item.get(key) if isinstance(item, dict) else None) for key in keys] for item in rows_raw]
+    for row in table_rows:
+        if row and str(row[0]).startswith("Hybrid (existing") and len(row) > 11:
+            row[11] = f"{row[11]} (triage pass only)"
     claim = (
-        f"32k docstring chunks (py32k) recovered {len(py_extra)} of the 11 drifts hybrid missed; "
+        f"32k docstring chunks recovered {len(py_extra)} of the 11 drifts hybrid missed; "
         f"the docs-focused whole-context pass recovered {len(docs_extra)}; "
         f"{len(still_missed)} prose-doc drifts are still missed. Union coverage "
         f"{hybrid_of_45} → {union_of_45} of 45. Marginal cost ~{round(py_marg / 1000)}k tokens per extra "
-        f"drift for py32k vs ~{docs_marg / 1_000_000:.1f}M for the docs pass. Precision of the new "
-        f"findings is a lower bound: {py_lb} for hybrid+py32k new items ({py_lab} among labelled); "
+        f"drift for 32k chunks vs ~{docs_marg / 1_000_000:.1f}M for the docs pass. Precision of the new "
+        f"findings is a lower bound: {py_lb} for hybrid + 32k-chunk new items ({py_lab} among labelled); "
         "most are unlabelled and are not counted as true. "
         f"{len(new_ai)} new true drifts sit outside the labelled 45 ({LABEL_SOURCE}). "
         f"Stability repeat: {stab_agree}/{stab_n} verdicts agreed."
@@ -175,7 +178,7 @@ def load_beamv3_payload(path: Path | None = None) -> BeamV3Payload:
             "'Among labelled' is biased upward: the labelled items are the ones that hit known drifts.",
             f"15 new-item labels were {LABEL_SOURCE} at the pack ref, not a human maintainer. Unclear counts as not-true.",
             f"{len(still_missed)} still-missed drifts are prose-doc: {', '.join(still_missed)}.",
-            "Whole-repo is one call per repo; py32k is one call per 32k Python-docstring chunk; docs is one focused whole-context call per repo.",
+            "Whole-repo is one call per repo; the extra pass is one call per 32k Python-docstring chunk; docs is one focused whole-context call per repo.",
             f"This run's own ledger is {ledger_tokens:,} tokens over {ledger_calls} calls. "
             "That is extra experimental cost, not part of the 9.3M hybrid end-to-end.",
             "The shipped CLI is still symbol check + one whole-repo triage. "
