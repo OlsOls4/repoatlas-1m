@@ -25,8 +25,11 @@ LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "beam_usage_ledger.json"
 RECALL_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "recall" / "usage_ledger.json"
 ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
 ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
+MATCHED_COST_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "results.json"
+MATCHED_COST_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "beam_usage_ledger.json"
 BEAMV3_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "results.json"
 BEAMV3_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "beamv3" / "beam_usage_ledger.json"
+FRESH_RUN_FINDINGS_PATH: Path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
 GROUND_TRUTH_SEED1: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed1.json"
 GROUND_TRUTH_SEED2: Path = RESULTS_LIVE_DIRECTORY / "recall" / "ground_truth_seed2.json"
 
@@ -188,11 +191,19 @@ def _ablation_verdicts() -> list[dict[str, object]]:
     payload: object = json.loads(ABLATION_RESULTS_PATH.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):
         return []
+    matched_by_key: dict[str, dict[str, object]] = {}
+    if MATCHED_COST_RESULTS_PATH.exists():
+        matched_payload: object = json.loads(MATCHED_COST_RESULTS_PATH.read_text(encoding="utf-8"))
+        if isinstance(matched_payload, dict):
+            for item in _as_dict_list(matched_payload.get("rows")):
+                matched_by_key[str(item.get("key", ""))] = item
     rows: list[dict[str, object]] = []
     for item in _as_dict_list(payload.get("rows")):
         whole = _as_dict(item.get("whole"))
         local = _as_dict(item.get("local"))
         stability = _as_dict(item.get("stability")) if item.get("stability") else {}
+        matched_item = matched_by_key.get(str(item.get("key", "")), {})
+        matched = _as_dict(matched_item.get("matched")) if matched_item else {}
         rows.append(
             {
                 "key": item.get("key", ""),
@@ -206,11 +217,15 @@ def _ablation_verdicts() -> list[dict[str, object]]:
                 "gold_outside_local": item.get("gold_outside_local"),
                 "whole_verdict": whole.get("verdict"),
                 "local_verdict": local.get("verdict"),
+                "matched_verdict": matched.get("verdict"),
                 "stability_verdict": stability.get("verdict"),
                 "whole_cite_correct": whole.get("cite_correct"),
                 "local_cite_correct": local.get("cite_correct"),
+                "matched_cite_correct": matched.get("cite_correct"),
                 "whole_cite_verified": whole.get("cite_verified"),
                 "local_cite_verified": local.get("cite_verified"),
+                "matched_cite_verified": matched.get("cite_verified"),
+                "gold_in_matched_context": matched_item.get("gold_in_matched_context"),
             }
         )
     return rows
@@ -253,7 +268,7 @@ def _beamv3_findings() -> list[dict[str, object]]:
 
 def _token_ledger() -> list[dict[str, object]]:
     """
-    @brief Combined hybrid + recall + ablation + beamv3 token ledger rows.
+    @brief Combined hybrid + recall + ablation + beamv3 + matched-cost + fresh-run token ledger rows.
     """
 
     rows: list[dict[str, object]] = []
@@ -262,6 +277,7 @@ def _token_ledger() -> list[dict[str, object]]:
         ("recall", RECALL_LEDGER_PATH),
         ("ablation", ABLATION_LEDGER_PATH),
         ("beamv3", BEAMV3_LEDGER_PATH),
+        ("matched_cost", MATCHED_COST_LEDGER_PATH),
     ):
         if not path.exists():
             continue
@@ -275,6 +291,28 @@ def _token_ledger() -> list[dict[str, object]]:
             row = dict(entry)
             row["ledger"] = source
             rows.append(row)
+    if FRESH_RUN_FINDINGS_PATH.exists():
+        payload = json.loads(FRESH_RUN_FINDINGS_PATH.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            tokens = payload.get("tokens") if isinstance(payload.get("tokens"), dict) else {}
+            rows.append(
+                {
+                    "kind": "triage",
+                    "label": str(payload.get("repo") or "tomlkit"),
+                    "prompt": int(tokens.get("triage_prompt") or 0),
+                    "completion": int(tokens.get("triage_completion") or 0),
+                    "ledger": "fresh_run",
+                }
+            )
+            rows.append(
+                {
+                    "kind": "repro",
+                    "label": str(payload.get("repo") or "tomlkit"),
+                    "prompt": int(tokens.get("repro_prompt") or 0),
+                    "completion": int(tokens.get("repro_completion") or 0),
+                    "ledger": "fresh_run",
+                }
+            )
     return rows
 
 
@@ -369,9 +407,9 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 | triage_verdicts | {len(verdicts)} | Beam triage verdicts (56 judged) | `repo`, `candidate_id`, `source_id`, `verdict`, `reason`, `code_path`, `code_line`, `code_quote` |
 | repros | {len(repros)} | Executable repro cases | `case_id`, `repo`, `status`, `strict_confirmed`, `exception_type`, `error_excerpt`, `evidence` |
 | planted_drift | {len(plants)} | Planted-drift set + ground truth | original probe fields plus `seed` |
-| ablation_verdicts | {len(ablation)} | Whole-repo vs local-file triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `stability_verdict`, citation flags |
+| ablation_verdicts | {len(ablation)} | Whole-repo vs local-file vs matched-cost retrieval triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `matched_verdict`, `stability_verdict`, citation flags |
 | beamv3_findings | {len(beamv3)} | Extra 32k-docstring-chunk and docs-pass findings (unlabelled not counted as true) | `id`, `repo`, `pass`, `doc_path`, `doc_line`, `label`, `drift_id`, `label_by`, `hand_verdict`, `hand_verdict_description`, `new_vs_hybrid`, `strict_confirmed`, `explanation` |
-| token_ledger | {len(ledger)} | Hybrid + recall + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`hybrid`, `recall`, `ablation`, `beamv3`) |
+| token_ledger | {len(ledger)} | Hybrid + recall + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`hybrid`, `recall`, `ablation`, `beamv3`, `matched_cost`, `fresh_run`) |
 
 `hand_verdict` means {LABEL_SOURCE}. It is not a human annotator.
 
@@ -383,7 +421,8 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
 - Extra coverage-pass ledger (docs + 32k chunks + stability + repro, not in that 9.3M): 7,713,453 tokens over 168 calls.
-- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding.
+- Matched-cost retrieval control (not in that 9.3M): 3,957,434 tokens over 57 calls. tomlkit fresh `docdrift run` (not in that 9.3M): 185,842 tokens. Together +4,143,276 for these runs.
+- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items.
 - 32k docstring chunks recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid + 32k chunks). Headline stays 34 of 45.
 
 ## Citation

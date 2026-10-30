@@ -1,0 +1,78 @@
+{
+  "prompt_tokens": 67270,
+  "completion_tokens": 1853,
+  "finish_reason": "stop",
+  "latency_seconds": 15.501637751003727,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "In the documented example, `f` is an `io.BytesIO`, whose standard-library `read(size)` accepts a chunk-size argument; this is not an httpx method.",
+      "code_citation": {
+        "path": "docs/advanced/clients.md",
+        "start_line": 254,
+        "end_line": 258,
+        "quote": "    total = 32 * 1024 * 1024  # 32m\n    with tqdm(ascii=True, unit_scale=True, unit='B', unit_divisor=1024, total=total) as bar:\n        with io.BytesIO(random.randbytes(total)) as f:\n            while data := f.read(1024):\n                yield data"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "S3"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S3",
+    "doc_path": "docs/advanced/clients.md",
+    "doc_line": 256,
+    "doc_end": 256,
+    "doc_text": "while data := f.read(1024):",
+    "claim": "method-call-signature: `f.read(...)`: 1 positional args but signature takes 0; no package method 'read' accepts it (e.g. Request.read at httpx/_models.py:468)",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "httpx/_models.py",
+    "httpx/__version__.py",
+    "httpx/_transports/base.py",
+    "httpx/_client.py",
+    "httpx/_main.py",
+    "httpx/_api.py",
+    "docs/advanced/clients.md",
+    "httpx/_transports/mock.py",
+    "docs/advanced/resource-limits.md",
+    "docs/CNAME",
+    "tests/common.py",
+    "tests/test_content.py",
+    "tests/test_multipart.py"
+  ],
+  "file_tiers": {
+    "httpx/_models.py": "T0_local",
+    "docs/advanced/clients.md": "T0_local",
+    "httpx/_client.py": "T1_symbol",
+    "httpx/_main.py": "T1_symbol",
+    "httpx/_api.py": "T1_symbol",
+    "tests/test_content.py": "T1_symbol",
+    "tests/test_multipart.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "httpx/_transports/base.py": "T1_symbol",
+    "httpx/__version__.py": "T2_imports",
+    "tests/common.py": "T2_imports",
+    "httpx/_transports/mock.py": "T2_imports",
+    "docs/advanced/resource-limits.md": "T3_bm25",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "httpx/_models.py",
+    "docs/advanced/clients.md"
+  ],
+  "prompt_chars": 219078,
+  "est_prompt_tokens": 56368
+}

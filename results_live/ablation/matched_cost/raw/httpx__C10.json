@@ -1,0 +1,32 @@
+{
+  "label": "httpx:C10:S9",
+  "payload_sha256": "3316905a15896c3673994aabbc69d97f24a3b6e5828e899cc5d3cd4f9b9b42a0",
+  "latency_seconds": 8.254186667007161,
+  "body": {
+    "id": "chatcmpl-465",
+    "object": "chat.completion",
+    "created": 1793360284,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C10\", \"verdict\": \"true_drift\", \"reason\": \"The WSGITransport docstring shows httpx.Client(app=app), but Client.__init__ has no app parameter; an app must be passed via WSGITransport and the transport argument.\", \"code_citation\": {\"path\": \"httpx/_client.py\", \"start_line\": 639, \"end_line\": 644, \"quote\": \"    def __init__(\\n        self,\\n        *,\\n        auth: AuthTypes | None = None,\\n        params: QueryParamTypes | None = None,\"}, \"suggested_doc_fix\": \"Replace `client = httpx.Client(app=app)` with explicit transport setup, e.g. `transport = httpx.WSGITransport(app=app)` followed by `client = httpx.Client(transport=transport)`.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need solve candidate C10. Let's inspect. Candidate says docs httpx/_transports/wsgi.py:50 | doc text: 'client = httpx.Client(app=app)' | report: call-signature: `httpx.Client(...)`: no parameter named 'app' (def httpx/_client.py:639).\n\nWe need decide true_drift/false/unclear. Code: WSGITransport docstring in wsgi.py lines 44-75 says simplest way use `app` argument: ``` client = httpx.Client(app=app) ```. But httpx.Client has no app param. Instead WSGITransport wraps app. Historically httpx.Client used to have app= maybe older versions? Current code no. Documentation drift true. Suggested doc fix: use transport=httpx.WSGITransport(app=app) or httpx.Client(transport=httpx.WSGITransport(app=app)). Need cite code location perhaps doc location? Task wants verdict code location relied on. For C10 code citation likely httpx/_client.py:639 def signature no app. Or maybe wsgi.py. They ask single code location relied on. We can cite /httpx/_client.py start 639 end 661 quote def __init__ ... no app. Since report says def. Need output exact.\n\nAdditional findings cross-file? Need find other doc drifts candidates missed. We should inspect repo for doc strings with wrong API. Candidate only. Need perhaps identify ASGITransport? It docstring shows httpx.AsyncClient(transport=transport), okay. WSGI docstring first says client = httpx.Client(app=app) but app not supported. That's candidate. Are there others like old param? Let's examine files. WSGITransport's doc says \"client = httpx.Client(app=app)\" false. ASGITransport docstring has valid construction. default.py module docstring valid mount examples? It uses WSGITransport? no.\n\nCould be in docs/advanced/transports.md WSGI example uses transport=httpx.WSGITransport(app=app), then client transport=transport. valid. Does it anywhere mention httpx.Client(app=app)? Let's grep mentally: only wsgi.py docstring line 50. WSGI code docstring. Candidate points exact.\n\nNeed maybe report true_drift. suggested_doc_fix \"Replace `client = httpx.Client(app=app)` with `transport = httpx.WSGITransport(app=app)` and `client = httpx.Client(transport=transport)` (or update the example to instantiate the transport explicitly).\" Need one line. JSON strict.\n\nLet's ensure code quote verbatim from lines 639-661 maybe:\n639|    def __init__(\n640|        self,\n641|        *,\n642|        auth: AuthTypes | None = None,\n...\n661|    ) -> None:\nWe can quote maybe just lines 639-642:\n\"    def __init__(\\n        self,\\n        *,\\n        auth: AuthTypes | None = None,\"\nNeed JSON string escapes. Could cite httpx/_transports/wsgi.py lines 44-51? But report's no app parameter due code. The \"code location relied on\" maybe wsgi.py lines 44-51 quote docstring? But they want code? We need choose. The task says code location. likely /httpx/_client.py:639. Use that. Suggested fix doc only. Additional none.\n\nBut maybe there is another drift: WSGITransport docstring says simplest way use `app` argument but doesn't. Candidate report exactly. We mark true_drift.\n\nNeed final only JSON. Let's craft."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 66805,
+      "completion_tokens": 1026,
+      "total_tokens": 67831,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-30T11:38:05.080627+00:00"
+}

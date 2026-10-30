@@ -1,0 +1,88 @@
+{
+  "prompt_tokens": 66492,
+  "completion_tokens": 913,
+  "finish_reason": "stop",
+  "latency_seconds": 9.687754619983025,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The documentation's custom SchemaOpts subclass forwards **kwargs to SchemaOpts.__init__, but SchemaOpts.__init__ and SchemaMeta both only pass meta.",
+      "code_citation": {
+        "path": "src/marshmallow/schema.py",
+        "start_line": 205,
+        "end_line": 205,
+        "quote": "    def __init__(self, meta: type):"
+      },
+      "suggested_doc_fix": "Remove **kwargs from the example: use `def __init__(self, meta):` and `SchemaOpts.__init__(self, meta)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "marshmallow-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "marshmallow-400000:DD-1",
+    "doc_path": "docs/extending/custom_options.rst",
+    "doc_line": 40,
+    "doc_end": 41,
+    "doc_text": "        def __init__(self, meta, **kwargs):\n            SchemaOpts.__init__(self, meta, **kwargs)",
+    "claim": "The docs show a custom `SchemaOpts` subclass accepting and forwarding `**kwargs` to `SchemaOpts.__init__`, but the implementation accepts only `meta`.",
+    "code_hint": "src/marshmallow/schema.py:205-205 '    def __init__(self, meta: type):'",
+    "candidate_id": "C04"
+  },
+  "context_files": [
+    "src/marshmallow/__init__.py",
+    "src/marshmallow/fields.py",
+    "src/marshmallow/validate.py",
+    "src/marshmallow/types.py",
+    "src/marshmallow/schema.py",
+    "src/marshmallow/class_registry.py",
+    "src/marshmallow/orderedset.py",
+    "src/marshmallow/error_store.py",
+    "src/marshmallow/exceptions.py",
+    "src/marshmallow/experimental/context.py",
+    "src/marshmallow/constants.py",
+    "performance/benchmark.py",
+    "docs/extending/custom_options.rst",
+    "docs/.gitignore",
+    "tests/base.py",
+    "tests/foo_serializer.py",
+    "tests/test_registry.py",
+    "tests/test_utils.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "src/marshmallow/schema.py": "T0_local",
+    "docs/extending/custom_options.rst": "T0_local",
+    "src/marshmallow/fields.py": "T1_symbol",
+    "src/marshmallow/validate.py": "T1_symbol",
+    "performance/benchmark.py": "T1_symbol",
+    "src/marshmallow/orderedset.py": "T1_symbol",
+    "src/marshmallow/error_store.py": "T1_symbol",
+    "src/marshmallow/exceptions.py": "T1_symbol",
+    "src/marshmallow/experimental/context.py": "T1_symbol",
+    "tests/base.py": "T1_symbol",
+    "tests/test_registry.py": "T1_symbol",
+    "tests/test_utils.py": "T1_symbol",
+    "src/marshmallow/__init__.py": "T2_imports",
+    "src/marshmallow/class_registry.py": "T2_imports",
+    "src/marshmallow/constants.py": "T2_imports",
+    "src/marshmallow/types.py": "T2_imports",
+    "tests/foo_serializer.py": "T2_imports",
+    "docs/.gitignore": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25"
+  },
+  "local_files": [
+    "src/marshmallow/schema.py",
+    "docs/extending/custom_options.rst"
+  ],
+  "prompt_chars": 217741,
+  "est_prompt_tokens": 56417
+}

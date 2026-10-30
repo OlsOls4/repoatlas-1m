@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C02:cattrs-400000:DD-1",
+  "payload_sha256": "3742f3b1322427d52f6e5ef0599ae1e75d96bd315e11e77518e3ce9fb69636f3",
+  "latency_seconds": 10.677019730996108,
+  "body": {
+    "id": "chatcmpl-771",
+    "object": "chat.completion",
+    "created": 1793360539,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C02\", \"verdict\": \"true_drift\", \"reason\": \"The documentation uses the singular exception name ForbiddenExtraKeyError, while the code defines and uses the plural ForbiddenExtraKeysError.\", \"code_citation\": {\"path\": \"src/cattrs/errors.py\", \"start_line\": 118, \"end_line\": 118, \"quote\": \"class ForbiddenExtraKeysError(CattrsError):\"}, \"suggested_doc_fix\": \"Replace ForbiddenExtraKeyError with ForbiddenExtraKeysError in the forbid_extra_keys traceback example.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer strict JSON. Need analyze candidate C02. Docs line 279 says ForbiddenExtraKeyError; code defines ForbiddenExtraKeysError. Need verdict true_drift. Need code citation path start/end quote verbatim. Docs citation maybe candidate includes. Need code location showing. Candidate true.\n\nNeed list any OTHER documentation drifts candidates missed, especially cross-file. Need inspect repo docs and code. We have only customizing.md maybe errors. Need find other drifts. Need not repeat candidate. Need carefully scan provided docs. Could include docs customizing.md other exceptions? Let's inspect challenge: candidate report says exception name plural keys vs singular key. Code class ForbiddenExtraKeysError. Doc line 279 says ForbiddenExtraKeyError. True. Proposed fix docs use ForbiddenExtraKeysError. Additional findings maybe in docs customizing.md traceback line 279? Also lines 135 and 235 use cattrs.errors.ForbiddenExtraKeysError? Let's check:\nline 117 doc snippet:\n>>> c.structure({\"an_int\": 1, \"else\": 2}, E)\nTraceback ...\ncattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else\nThis matches code. Good.\nline 135 same.\nline 235 cattrs.errors.ForbiddenExtraKeysError? doc line? In customizing.md line 235: cattrs.errors.ForbiddenExtraKeysError: Extra fields... (matches). So only line 279 maybe true. Additional findings cross-file. Need search docs. There may be using wrong param names. Let's inspect docs all. Only customizing.md provided. Could inspect other markdown not in pack? Pack includes customizing.md, modules.rst. No README? only listed files. Additional findings should be based repo. Need perhaps find doc references to `BaseValidationError` etc. Let's scan docs/customizing text mentally. Potential drifts:\n- Docs say `ForbiddenExtraKeyError` plural mismatch candidate.\n- Docs examples use `_cattrs_forbid_extra_keys=False`, code uses same.\n- Docs maybe says `Converter.forbid_extra_keys`? Need converter code not included. But likely fine.\n- Docs `make_dict_unstructure_fn._cattrs_omit_if_default` exists.\n- Docs error `ForbiddenExtraKeysError: Extra fields in constructor for TestClass: nummber` code __str__: `Extra fields in constructor for {cl.__name__}: ...`. yes plural keys. Good.\n- Potential issue candidate's doctest line 267 has `:options: +SKIP`, so no test. But drift still doc as written wrong.\n- Additional cross-file: README or other docs not provided. modules.rst just toctree. Could there be candidate C02 only. Maybe no additional. But task asks list any OTHER docs drifts. Need ensure not miss obvious. Let's scan docs for names:\n`IterableValidationError`? code has.\n`ClassValidationError`.\n`AttributeValidationNote`.\n`__notes__`.\nPotential drift: Docs at line 279 uses `ForbiddenExtraKeyError` singular. Could be one verdict.\nNeed output JSON only. suggested_doc_fix for C02 maybe \"Replace ForbiddenExtraKeyError with ForbiddenExtraKeysError on line 279.\" Doc-only fix string.\n\nAdditional findings maybe docs line 264 says `{meth}`make_dict_structure_fn()` though should maybe `{func}`? Not drift semantic.\nNeed consider false positives: docs line 279 has code cited `cattrs.errors.ForbiddenExtraKeyError`? Actually text omitted leading cattrs.errors? Candidate doc text only 'ForbiddenExtraKeyError...'. True drift.\n\nNeed decide if additional findings. Let's search mentally any mismatch between docs and code:\n- `make_dict_structure_fn` parameter `_cattrs_forbid_extra_keys` accepts bool or Literal from converter; doc says from converter. okay.\n- `forbid_extra_keys` can only per-class or default, okay.\n- Docs line 279 error class mismatch.\nCould there be docs saying `ForbiddenExtraKeyError` at line 279 only. They have correct at lines 135 etc. Good.\n\nNeed include code citation for candidate code at src/cattrs/errors.py lines 118-118. Quote exact: \"class ForbiddenExtraKeysError(CattrsError):\". JSON string can include. Ensure no trailing pipe. `start_line`:118, `end_line`:118.\n\nNeed maybe doc_citation for candidate? Schema verdicts only code_citation, not doc citation. Good.\n\nNeed produce additional_findings empty array if none. But should we include a cross-file drift from docs/customizing.md line 279 to src/cattrs/errors.py? Candidate already. No.\n\nLet's craft final JSON. Ensure valid JSON escaping. `reason` one line. `suggested_doc_fix` nonempty. Additional none.\n\nPotential requirement: \"suggested_doc_fix empty string unless true_drift.\" For C02 true. Good.\n\nLet's final."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 66683,
+      "completion_tokens": 1192,
+      "total_tokens": 67875,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-30T11:42:19.631927+00:00"
+}

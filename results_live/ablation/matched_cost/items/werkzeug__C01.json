@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 66622,
+  "completion_tokens": 2862,
+  "finish_reason": "stop",
+  "latency_seconds": 17.76788345197565,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "werkzeug.routing does not export NotFound, so the documented import line is incorrect.",
+      "code_citation": {
+        "path": "src/werkzeug/routing/__init__.py",
+        "start_line": 117,
+        "end_line": 123,
+        "quote": "from .exceptions import BuildError as BuildError\nfrom .exceptions import NoMatch as NoMatch\nfrom .exceptions import RequestAliasRedirect as RequestAliasRedirect\nfrom .exceptions import RequestPath as RequestPath\nfrom .exceptions import RequestRedirect as RequestRedirect\nfrom .exceptions import RoutingException as RoutingException\nfrom .exceptions import WebsocketMismatch as WebsocketMismatch"
+      },
+      "suggested_doc_fix": "from werkzeug.routing import Map, Rule, RequestRedirect\nfrom werkzeug.exceptions import NotFound",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S35"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S35",
+    "doc_path": "docs/routing.rst",
+    "doc_line": 24,
+    "doc_end": 24,
+    "doc_text": "from werkzeug.routing import Map, Rule, NotFound, RequestRedirect",
+    "claim": "import: `werkzeug.routing.NotFound`: 'NotFound' not found on werkzeug.routing",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "src/werkzeug/datastructures/__init__.py",
+    "src/werkzeug/wrappers/__init__.py",
+    "src/werkzeug/routing/__init__.py",
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/_internal.py",
+    "src/werkzeug/datastructures/auth.py",
+    "src/werkzeug/routing/map.py",
+    "src/werkzeug/routing/rules.py",
+    "src/werkzeug/sansio/response.py",
+    "src/werkzeug/datastructures/range.py",
+    "src/werkzeug/routing/exceptions.py",
+    "src/werkzeug/routing/matcher.py",
+    "docs/routing.rst",
+    "docs/middleware/shared_data.rst",
+    "examples/i18nurls/application.py"
+  ],
+  "file_tiers": {
+    "docs/routing.rst": "T0_local",
+    "src/werkzeug/exceptions.py": "T1_symbol",
+    "src/werkzeug/routing/map.py": "T1_symbol",
+    "src/werkzeug/routing/rules.py": "T1_symbol",
+    "src/werkzeug/routing/exceptions.py": "T1_symbol",
+    "src/werkzeug/_internal.py": "T2_imports",
+    "src/werkzeug/datastructures/auth.py": "T2_imports",
+    "src/werkzeug/datastructures/range.py": "T2_imports",
+    "src/werkzeug/sansio/response.py": "T2_imports",
+    "src/werkzeug/datastructures/__init__.py": "T2_imports",
+    "src/werkzeug/routing/__init__.py": "T2_imports",
+    "src/werkzeug/routing/matcher.py": "T2_imports",
+    "src/werkzeug/wrappers/__init__.py": "T2_imports",
+    "examples/i18nurls/application.py": "T2_imports",
+    "docs/middleware/shared_data.rst": "T3_bm25"
+  },
+  "local_files": [
+    "docs/routing.rst"
+  ],
+  "prompt_chars": 223166,
+  "est_prompt_tokens": 56404
+}

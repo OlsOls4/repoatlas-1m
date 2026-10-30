@@ -146,7 +146,10 @@ h2 { margin-top: 0; }
 .why-chart svg { width: 100%; height: auto; }
 .bar-label { font: 13px var(--sans); fill: var(--ink); }
 .bar-whole { fill: #a84a1c; }
+.bar-matched { fill: #3d6b8a; }
 .bar-local { fill: #8a7b68; }
+#sample-cast { margin: 8px 0 16px; }
+#sample-cast .ap-wrapper { max-width: 100%; }
 
 .method { padding-left: 1.2rem; }
 .method-diagram { width: 100%; max-width: 640px; height: auto; margin: 8px 0 24px; }

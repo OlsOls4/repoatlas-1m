@@ -1,0 +1,82 @@
+{
+  "prompt_tokens": 68506,
+  "completion_tokens": 3923,
+  "finish_reason": "stop",
+  "latency_seconds": 21.676822243985953,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The documented output range for H includes 24, but the formatter only renders datetime.hour, whose maximum value is 23.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 83,
+        "end_line": 83,
+        "quote": "            return f\"{dt.hour}\""
+      },
+      "suggested_doc_fix": "Change the H token output example from '0, 1, 2 ... 23, 24' to '0, 1, 2 ... 22, 23'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-4"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-4",
+    "doc_path": "docs/guide.rst",
+    "doc_line": 418,
+    "doc_end": 418,
+    "doc_text": "||                                |H             |0, 1, 2 ... 23, 24                         |",
+    "claim": "The supported-token table lists H as producing hours through 24, while the formatter renders the datetime hour field without zero padding.",
+    "code_hint": "arrow/formatter.py:83-83 '            return f\"{dt.hour}\"'",
+    "candidate_id": "C07"
+  },
+  "context_files": [
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "docs/guide.rst",
+    "docs/Makefile",
+    "LICENSE",
+    "tests/utils.py",
+    "tests/test_factory.py",
+    ".github/workflows/continuous_integration.yml",
+    "tests/conftest.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "arrow/formatter.py": "T0_local",
+    "docs/guide.rst": "T0_local",
+    "arrow/arrow.py": "T1_symbol",
+    "arrow/parser.py": "T1_symbol",
+    "tests/test_factory.py": "T1_symbol",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "tests/utils.py": "T2_imports",
+    "arrow/factory.py": "T2_imports",
+    "arrow/api.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "LICENSE": "T3_bm25",
+    ".github/workflows/continuous_integration.yml": "T3_bm25",
+    "docs/Makefile": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25"
+  },
+  "local_files": [
+    "arrow/formatter.py",
+    "docs/guide.rst"
+  ],
+  "prompt_chars": 200486,
+  "est_prompt_tokens": 56359
+}

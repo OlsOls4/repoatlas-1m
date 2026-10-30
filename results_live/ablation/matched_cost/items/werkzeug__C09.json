@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 66555,
+  "completion_tokens": 4569,
+  "finish_reason": "stop",
+  "latency_seconds": 29.75176382699283,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C09",
+      "verdict": "true_drift",
+      "reason": "The docstring references `werkzeug.FileWrapper`, but Werkzeug's top-level package does not export a `FileWrapper` class.",
+      "code_citation": {
+        "path": "src/werkzeug/__init__.py",
+        "start_line": 1,
+        "end_line": 4,
+        "quote": "from .serving import run_simple as run_simple\nfrom .test import Client as Client\nfrom .wrappers import Request as Request\nfrom .wrappers import Response as Response"
+      },
+      "suggested_doc_fix": "Replace `:class:`werkzeug.FileWrapper`` with `:class:`werkzeug.datastructures.FileStorage``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S41"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S41",
+    "doc_path": "src/werkzeug/test.py",
+    "doc_line": 1103,
+    "doc_end": 1103,
+    "doc_text": "consistency with :class:`werkzeug.FileWrapper`.",
+    "claim": "role: `werkzeug.FileWrapper`: 'FileWrapper' not found on werkzeug",
+    "code_hint": "",
+    "candidate_id": "C09"
+  },
+  "context_files": [
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/_internal.py",
+    "src/werkzeug/datastructures/structures.py",
+    "src/werkzeug/datastructures/headers.py",
+    "src/werkzeug/utils.py",
+    "src/werkzeug/urls.py",
+    "src/werkzeug/datastructures/auth.py",
+    "src/werkzeug/datastructures/file_storage.py",
+    "src/werkzeug/test.py",
+    "src/werkzeug/sansio/multipart.py",
+    "docs/middleware/shared_data.rst",
+    "docs/middleware/dispatcher.rst",
+    "docs/middleware/http_proxy.rst",
+    "docs/middleware/proxy_fix.rst",
+    "tests/test_utils.py"
+  ],
+  "file_tiers": {
+    "src/werkzeug/test.py": "T0_local",
+    "src/werkzeug/_internal.py": "T2_imports",
+    "src/werkzeug/datastructures/auth.py": "T2_imports",
+    "src/werkzeug/datastructures/file_storage.py": "T2_imports",
+    "src/werkzeug/datastructures/headers.py": "T2_imports",
+    "src/werkzeug/datastructures/structures.py": "T2_imports",
+    "src/werkzeug/sansio/multipart.py": "T2_imports",
+    "src/werkzeug/urls.py": "T2_imports",
+    "src/werkzeug/utils.py": "T2_imports",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "tests/test_utils.py": "T2_imports",
+    "docs/middleware/shared_data.rst": "T3_bm25",
+    "docs/middleware/dispatcher.rst": "T3_bm25",
+    "docs/middleware/http_proxy.rst": "T3_bm25",
+    "docs/middleware/proxy_fix.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/test.py"
+  ],
+  "prompt_chars": 212049,
+  "est_prompt_tokens": 56407
+}

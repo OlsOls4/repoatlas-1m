@@ -21,9 +21,9 @@
     "Strict badge: TypeError, AttributeError, ImportError, or NameError raised on a DOC-LITERAL usage line.",
     "Line-shifted match: the cited quote matched packed source within ±3 lines of the model-cited line."
   ],
-  "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000",
+  "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings",
   "cli_sweep": "",
-  "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.",
+  "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.",
   "local": "",
   "links": {
     "code": "https://github.com/OlsOls4/repoatlas-1m",
@@ -49,13 +49,15 @@
     }
   ],
   "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
-  "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+  "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\". The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for the same spend.",
   "why_subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
   "video": null,
-  "sample_output": "",
+  "sample_output": "[1/4] symbol check: tomlkit @ d7def7d\n      0 symbol flags\n[2/4] packing the whole repository (RepoAtlas packer)\n      pack 141,326 tokens, 81 files, truncated=False; projected prompt 172,418 (guard 400,000)\n[3/4] Beam whole-repo triage: 1 call, 0 candidates + open search for cross-file drift\n[4/4] executable repro: doc-literal script per true_drift / extra finding, isolated venv, no network\n[venv] installing tomlkit@d7def7d\n[tomlkit:AD-1] attempt 1: could_not_run (lint) 'line 10: try/except catching Exception is not allowed'\n[tomlkit:AD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax'\n[tomlkit:AD-2] attempt 1: reproduced (expected_exception) \"NameError: name 'datetime' is not defined\"\n\nDocDrift report: tomlkit @ d7def7dbcc59\n============================================================\ncandidates triaged: 0  \nextra findings from the whole-repo pass: 2\n  AD-1 [other] The documentation still advertises TOML 1.0.0-compliance while the test suite an\n      docs docs/index.rst:17  code tests/test_toml_tests.py:17  (verified)\n  AD-2 [other] The quickstart writing snippet uses unqualified `datetime(...)` and `utc` names \n      docs docs/quickstart.rst:121  code tomlkit/api.py:202  (UNVERIFIED)\nexecutable repro (isolated venv, no network):\n  tomlkit:AD-1: reproduced AssertionError\n  tomlkit:AD-2: reproduced NameError  STRICT-CONFIRMED\n------------------------------------------------------------\nBeam tokens: triage 167,937 in + 4,975 out; repro 12,930 (3 calls); total 185,842\nwall time 96s (triage call 35s)\n",
+  "sample_cast": "assets/docdrift_tomlkit.cast",
+  "sample_note": "tomlkit @ d7def7d · 2 findings, both true when checked against the source, 1 strict-confirmed · 185,842 tokens · 96 s",
   "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
   "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
-  "built_at": "2026-10-30T12:03:23Z",
+  "built_at": "2026-10-30T12:17:04Z",
   "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",
@@ -67,13 +69,17 @@
     "results_live/upstream_status.json",
     "results_live/traces/starlette-400000.json (summary and pack metadata only)",
     "results_live/ablation/results.json",
-    "results_live/beamv3/results.json"
+    "results_live/ablation/matched_cost/results.json",
+    "results_live/beamv3/results.json",
+    "results_live/fresh_run/findings.json",
+    "results_live/fresh_run/stdout.log"
   ],
   "exclusions": [
     "results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
     "results_live/hybrid/repros/*/attempts.json per-attempt logs",
     "results_live/hybrid/triage/*.json (read at build time, not shipped)",
     "results_live/ablation/raw/ API bodies",
+    "results_live/ablation/matched_cost/raw/ API bodies",
     "results_live/beamv3/repros/*/ per-attempt logs",
     "dataset/ traces and other raw sweep artifacts",
     "raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)"

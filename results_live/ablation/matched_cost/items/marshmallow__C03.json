@@ -1,0 +1,63 @@
+{
+  "prompt_tokens": 67798,
+  "completion_tokens": 1236,
+  "finish_reason": "stop",
+  "latency_seconds": 9.903639931988437,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "AppError is intentionally user-defined in the same documentation example, not an undefined package API.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "class AppError(Exception):\n        pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S31"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S31",
+    "doc_path": "docs/extending/custom_error_handling.rst",
+    "doc_line": 28,
+    "doc_end": 28,
+    "doc_text": "schema.load({\"email\": \"invalid-email\"})  # raises AppError",
+    "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "docs/nesting.rst",
+    "docs/extending/custom_error_handling.rst",
+    "docs/extending/overriding_attribute_access.rst",
+    "tests/foo_serializer.py",
+    "tests/test_deserialization.py",
+    "tests/test_schema.py",
+    "examples/invalid_package.json"
+  ],
+  "file_tiers": {
+    "docs/extending/custom_error_handling.rst": "T0_local",
+    "tests/test_deserialization.py": "T1_symbol",
+    "tests/test_schema.py": "T1_symbol",
+    "docs/nesting.rst": "T1_symbol",
+    "docs/extending/overriding_attribute_access.rst": "T1_symbol",
+    "tests/foo_serializer.py": "T2_imports",
+    "examples/invalid_package.json": "T3_bm25"
+  },
+  "local_files": [
+    "docs/extending/custom_error_handling.rst"
+  ],
+  "prompt_chars": 208570,
+  "est_prompt_tokens": 56408
+}

@@ -1,0 +1,67 @@
+{
+  "prompt_tokens": 66816,
+  "completion_tokens": 1177,
+  "finish_reason": "stop",
+  "latency_seconds": 9.806862755009206,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The package defines and raises `ForbiddenExtraKeysError` (plural Keys), while the documentation says `ForbiddenExtraKeyError` (singular Key).",
+      "code_citation": {
+        "path": "src/cattrs/gen/__init__.py",
+        "start_line": 26,
+        "end_line": 26,
+        "quote": "    ForbiddenExtraKeysError,"
+      },
+      "suggested_doc_fix": "Replace `ForbiddenExtraKeyError` with `ForbiddenExtraKeysError`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S25"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S25",
+    "doc_path": "docs/customizing.md",
+    "doc_line": 279,
+    "doc_end": 279,
+    "doc_text": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber",
+    "claim": "exception-name:undefined: `ForbiddenExtraKeyError`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/cattrs/gen/__init__.py",
+    "src/cattrs/_generics.py",
+    "src/cattrs/converters.py",
+    "src/cattrs/_compat.py",
+    "src/cattrs/gen/typeddicts.py",
+    "docs/customizing.md",
+    "tests/test_gen_dict.py",
+    "tests/test_generics_695.py"
+  ],
+  "file_tiers": {
+    "docs/customizing.md": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/cattrs/gen/__init__.py": "T1_symbol",
+    "src/cattrs/converters.py": "T1_symbol",
+    "src/cattrs/_compat.py": "T1_symbol",
+    "src/cattrs/gen/typeddicts.py": "T1_symbol",
+    "tests/test_gen_dict.py": "T1_symbol",
+    "tests/test_generics_695.py": "T1_symbol",
+    "src/cattrs/_generics.py": "T2_imports"
+  },
+  "local_files": [
+    "docs/customizing.md"
+  ],
+  "prompt_chars": 218307,
+  "est_prompt_tokens": 56395
+}

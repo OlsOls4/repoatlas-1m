@@ -44,6 +44,7 @@ from repoatlas.hybrid_view import (
     focused_cost_multiplier,
     focused_pass_tokens,
     headline_sentence,
+    load_extra_experiment_tokens,
     load_hybrid_payload,
     merge_hybrid_true_findings,
     non_bug_badge_phrase,
@@ -167,6 +168,13 @@ def write_static_space(destination: Path | None = None) -> Path:
             )
         else:
             shutil.copy2(source, assets_dir / asset_name)
+    for vendor_name in ("asciinema-player.min.js", "asciinema-player.css"):
+        vendor = ASSETS_SOURCE_DIRECTORY / vendor_name
+        if vendor.exists():
+            shutil.copy2(vendor, assets_dir / vendor_name)
+    cast_source = RESULTS_LIVE_DIRECTORY / "fresh_run" / "docdrift_tomlkit.cast"
+    if cast_source.exists():
+        shutil.copy2(cast_source, assets_dir / "docdrift_tomlkit.cast")
     if RECALL_CHART_PATH.exists():
         shutil.copy2(RECALL_CHART_PATH, assets_dir / "recall_vs_distance.png")
     og_source: Path = ASSETS_SOURCE_DIRECTORY / "og.png"
@@ -546,11 +554,7 @@ def _build_benchmark(payload: HybridPayload, stats: HybridHeroStats) -> dict[str
         "chart_present": RECALL_CHART_PATH.exists(),
         "ablation": load_ablation_payload(),
         "beamv3": load_beamv3_payload(),
-        "token_footnote": (
-            f"~9.2M tokens (two whole-repo passes over 12 libraries). "
-            f"{stats['whole_tokens']:,} first sweep + {stats['triage_tokens']:,} hybrid triage. "
-            f"+{stats['repro_tokens']:,} for repro scripts = {stats['end_to_end_tokens']:,} end to end."
-        ),
+        "token_footnote": _token_footnote(stats),
         "pack_coverage": _pack_coverage(),
         "recall_extra": True,
     }
@@ -769,12 +773,16 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         "cli": (
             "pip install git+https://github.com/OlsOls4/repoatlas-1m\n"
             "export OLLAMA_API_KEY=YOUR_KEY\n"
-            "docdrift run https://github.com/OWNER/REPO --max-tokens 400000"
+            "docdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings"
         ),
         "cli_sweep": "",
         "ollama_key": (
             "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. "
-            "Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive."
+            "Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. "
+            "`docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, "
+            "citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. "
+            "Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). "
+            "No key is stored in this Space or in the archive."
         ),
         "local": "",
         "links": {
@@ -819,10 +827,16 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. "
             f"Cost: ~{ablation['token_multiplier']}× tokens ({ablation['whole_tokens']:,} vs {ablation['local_tokens']:,})."
         ),
-        "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+        "why_matched_cost_note": ablation.get("why_matched_cost_note") or "Matched-cost local bar: not run yet.",
         "why_subset_note": ablation.get("subset_note") or "",
         "video": None,
-        "sample_output": "",
+        "sample_output": _fresh_run_sample_output(),
+        "sample_cast": (
+            "assets/docdrift_tomlkit.cast"
+            if (RESULTS_LIVE_DIRECTORY / "fresh_run" / "docdrift_tomlkit.cast").exists()
+            else ""
+        ),
+        "sample_note": _fresh_run_sample_note(),
         "cross_file_note": (
             "Cross-file means the documented claim and the cited implementation are in different files "
             "(including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, "
@@ -848,18 +862,82 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "results_live/upstream_status.json",
             "results_live/traces/starlette-400000.json (summary and pack metadata only)",
             "results_live/ablation/results.json",
+            "results_live/ablation/matched_cost/results.json",
             "results_live/beamv3/results.json",
+            "results_live/fresh_run/findings.json",
+            "results_live/fresh_run/stdout.log",
         ],
         "exclusions": [
             "results_live/traces/*.json raw traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
             "results_live/hybrid/repros/*/attempts.json per-attempt logs",
             "results_live/hybrid/triage/*.json (read at build time, not shipped)",
             "results_live/ablation/raw/ API bodies",
+            "results_live/ablation/matched_cost/raw/ API bodies",
             "results_live/beamv3/repros/*/ per-attempt logs",
             "dataset/ traces and other raw sweep artifacts",
             "raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)",
         ],
     }
+
+
+def _token_footnote(stats: HybridHeroStats) -> str:
+    """
+    @brief Hybrid 9.3M plus extra experimental ledgers, generated from recorded files.
+    """
+
+    extra = load_extra_experiment_tokens()
+    lines = [
+        f"~9.2M tokens (two whole-repo passes over 12 libraries). "
+        f"{stats['whole_tokens']:,} first sweep + {stats['triage_tokens']:,} hybrid triage. "
+        f"+{stats['repro_tokens']:,} for repro scripts = {stats['end_to_end_tokens']:,} end to end.",
+        "Extra experimental (not in that 9.3M): ablation 1,948,469; beam v3 7,713,453"
+        + (
+            f"; matched-cost control {extra['matched_cost']:,}; "
+            f"tomlkit fresh CLI run {extra['fresh_run']:,} "
+            f"(together +{extra['round6']:,} for these runs)."
+            if extra["round6"]
+            else "."
+        ),
+    ]
+    return " ".join(lines)
+
+
+def _fresh_run_sample_note() -> str:
+    """
+    @brief One-line tomlkit recording stats from findings.json / summary.
+    """
+
+    path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
+    if not path.exists():
+        return ""
+    raw: object = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        return ""
+    tokens = raw.get("tokens") if isinstance(raw.get("tokens"), dict) else {}
+    triage = raw.get("triage") if isinstance(raw.get("triage"), dict) else {}
+    findings = triage.get("additional_findings") if isinstance(triage.get("additional_findings"), list) else []
+    repros = raw.get("repros") if isinstance(raw.get("repros"), list) else []
+    strict = sum(1 for row in repros if isinstance(row, dict) and row.get("strict_confirmed"))
+    total = int(tokens.get("total") or 0)
+    wall = raw.get("wall_seconds")
+    ref = str(raw.get("ref") or "")[:7]
+    true_clause = ", both true when checked against the source" if len(findings) == 2 else ""
+    wall_text = f" · {wall:.0f} s" if isinstance(wall, (int, float)) else ""
+    return (
+        f"tomlkit @ {ref} · {len(findings)} findings{true_clause}, "
+        f"{strict} strict-confirmed · {total:,} tokens{wall_text}"
+    )
+
+
+def _fresh_run_sample_output() -> str:
+    """
+    @brief Terminal excerpt from the recorded tomlkit `docdrift run`.
+    """
+
+    path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "stdout.log"
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8").rstrip() + "\n"
 
 
 def _static_readme(hero: dict[str, object], copy: dict[str, object]) -> str:

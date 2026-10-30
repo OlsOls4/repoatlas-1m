@@ -1,0 +1,96 @@
+{
+  "prompt_tokens": 66231,
+  "completion_tokens": 1827,
+  "finish_reason": "stop",
+  "latency_seconds": 12.29923646300449,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "The example intentionally calls a mapping's dict.get(key, default), which accepts two arguments; it is not the marshmallow Context.get API.",
+      "code_citation": {
+        "path": "src/marshmallow/schema.py",
+        "start_line": 500,
+        "end_line": 501,
+        "quote": "    def get_attribute(self, obj: typing.Any, attr: str, default: typing.Any):"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S32"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S32",
+    "doc_path": "docs/extending/overriding_attribute_access.rst",
+    "doc_line": 17,
+    "doc_end": 17,
+    "doc_text": "return obj.get(key, default)",
+    "claim": "method-call-signature: `obj.get(...)`: 2 positional args but signature takes 1; no package method 'get' accepts it (e.g. Context.get at src/marshmallow/experimental/context.py:65)",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "context_files": [
+    "src/marshmallow/__init__.py",
+    "src/marshmallow/experimental/__init__.py",
+    "src/marshmallow/fields.py",
+    "src/marshmallow/validate.py",
+    "src/marshmallow/utils.py",
+    "src/marshmallow/types.py",
+    "src/marshmallow/schema.py",
+    "src/marshmallow/class_registry.py",
+    "src/marshmallow/orderedset.py",
+    "src/marshmallow/error_store.py",
+    "src/marshmallow/exceptions.py",
+    "docs/extending/pre_and_post_processing.rst",
+    "src/marshmallow/experimental/context.py",
+    "src/marshmallow/constants.py",
+    "performance/benchmark.py",
+    "docs/extending/custom_options.rst",
+    "docs/extending/overriding_attribute_access.rst",
+    "docs/marshmallow.experimental.context.rst",
+    "docs/.gitignore",
+    "tests/foo_serializer.py",
+    "tests/test_options.py",
+    "examples/package_json_example.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "src/marshmallow/experimental/context.py": "T0_local",
+    "docs/extending/overriding_attribute_access.rst": "T0_local",
+    "src/marshmallow/validate.py": "T1_symbol",
+    "performance/benchmark.py": "T1_symbol",
+    "src/marshmallow/fields.py": "T1_symbol",
+    "src/marshmallow/schema.py": "T1_symbol",
+    "src/marshmallow/orderedset.py": "T1_symbol",
+    "docs/extending/pre_and_post_processing.rst": "T1_symbol",
+    "docs/extending/custom_options.rst": "T1_symbol",
+    "src/marshmallow/__init__.py": "T2_imports",
+    "src/marshmallow/exceptions.py": "T2_imports",
+    "src/marshmallow/types.py": "T2_imports",
+    "src/marshmallow/class_registry.py": "T2_imports",
+    "src/marshmallow/constants.py": "T2_imports",
+    "src/marshmallow/utils.py": "T2_imports",
+    "src/marshmallow/error_store.py": "T2_imports",
+    "tests/foo_serializer.py": "T2_imports",
+    "tests/test_options.py": "T2_imports",
+    "examples/package_json_example.py": "T2_imports",
+    "docs/marshmallow.experimental.context.rst": "T3_bm25",
+    "src/marshmallow/experimental/__init__.py": "T3_bm25",
+    "docs/.gitignore": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25"
+  },
+  "local_files": [
+    "src/marshmallow/experimental/context.py",
+    "docs/extending/overriding_attribute_access.rst"
+  ],
+  "prompt_chars": 219902,
+  "est_prompt_tokens": 56418
+}

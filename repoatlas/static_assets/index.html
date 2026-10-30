@@ -11,6 +11,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2317140f'/%3E%3Ctext x='16' y='23' font-size='20' text-anchor='middle' fill='%23e0795a'%3E≠%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="assets/app.css">
+  <link rel="stylesheet" href="assets/asciinema-player.css">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -164,6 +165,8 @@
       <pre><code id="cli-cmd"></code></pre>
       <details id="sample-output" hidden>
         <summary>Sample output on a library DocDrift had never seen</summary>
+        <p class="lede" id="sample-note"></p>
+        <div id="sample-cast" hidden></div>
         <pre id="sample-pre"></pre>
       </details>
       <p class="links" id="run-links"></p>
@@ -181,6 +184,7 @@
   <footer>
     <p>Every number comes from the companion dataset. No API keys are embedded. This Space is a static recording; it makes no Beam calls.</p>
   </footer>
+  <script src="assets/asciinema-player.min.js"></script>
   <script src="assets/app.js"></script>
 </body>
 </html>

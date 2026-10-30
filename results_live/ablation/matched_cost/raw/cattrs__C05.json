@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C05:cattrs-400000:DD-2",
+  "payload_sha256": "2baf02f659a5ac01cdbda3ea07becbdfd2d25b8055c119be9ae38b84f925adc1",
+  "latency_seconds": 8.560587384999963,
+  "body": {
+    "id": "chatcmpl-65",
+    "object": "chat.completion",
+    "created": 1793360578,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\n  \"verdicts\": [\n    {\n      \"candidate_id\": \"C05\",\n      \"verdict\": \"true_drift\",\n      \"reason\": \"The docstring names the parameter `cache`, but the actual parameter is `cache_result`.\",\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 491,\n        \"end_line\": 493,\n        \"quote\": \"    def get_unstructure_hook(\\n        self, type: Any, cache_result: bool = True\\n    ) -> UnstructureHook:\"\n      },\n      \"suggested_doc_fix\": \"Change `:param cache:` to `:param cache_result:` in the `get_unstructure_hook` docstring.\"\n    }\n  ],\n  \"additional_findings\": [\n    {\n      \"finding_id\": \"AD-1\",\n      \"drift_kind\": \"signature\",\n      \"explanation\": \"The same parameter-name mismatch occurs in `get_structure_hook`: its docstring says `cache` while the signature uses `cache_result`.\",\n      \"doc_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 651,\n        \"end_line\": 651,\n        \"quote\": \":param cache: Whether to cache the returned hook.\"\n      },\n      \"code_citation\": {\n        \"path\": \"src/cattrs/converters.py\",\n        \"start_line\": 640,\n        \"end_line\": 642,\n        \"quote\": \"    def get_structure_hook(\\n        self, type: TypeForm[T], cache_result: bool = True\\n    ) -> Callable[[Any, TypeForm[T]], T]:\"\n      },\n      \"proposed_fix\": \"Change `:param cache:` to `:param cache_result:` in the `get_structure_hook` docstring.\"\n    }\n  ]\n}",
+          "reasoning": "We need answer JSON. Need inspect candidate C05. Doc string at converters.py line 502 says :param cache: but signature uses cache_result. Candidate reports drift. Need decide true/false. We can see code lines 491-510: get_unstructure_hook(self, type, cache_result=True). Doc says :param cache:. This is indeed mismatched parameter name. true_drift. Need code citation. Suggested doc fix perhaps ':param cache_result: Whether to cache the returned hook.' Also same get_structure_hook line 651 says :param cache: while signature cache_result=True. Additional finding candidate missed cross-file: get_structure_hook docstring line 651 documents `cache`, actual `cache_result`. Need include as additional finding. Maybe there are other methods/params? Let's inspect packed repo enough. We need Task 2 list other documentation drifts, especially cross-file, prose. Let's find all :param cache: maybe only those two. Need maybe `_shared.py` calls get_structure_hook(..., cache_result=False) code okay. Docs? Let's search mental. Candidate only one but task asks extra. Could find any doc mismatch e.g. BaseConverter.copy docstrings only detailed_validation, missing params. But those are maybe not drift? Documentation as written maybe incomplete, not necessarily wrong? Candidate report likely auto generated doc-param mismatch. We need identify other drifts candidates missed. Need be careful: only true drift if doc name/param/default doesn't match. Let's inspect all methods with cache parameter mismatches. Code has get_unstructure_hook and get_structure_hook both doc :param cache:. Both true. Additional finding likely AD-1 for get_structure_hook. Maybe also get_loads_hook? Let's examine unpacked only files. There may be docstrings naming `cache`? Search mentally. Only two. But question says cross-file ones where doc in one file names API/param/option/default/import/error in another. Need perhaps package __init__ exports get_unstructure_hook/global? Signature mismatch? __init__ says get_unstructure_hook: Final = global_converter.get_unstructure_hook, doc inherited from method; same candidate C05. The primary candidate docs src/cattrs/converters.py line 502. Additional get_structure_hook not candidate. We can include.\n\nNeed output strict JSON only. Verdict C05 true_drift. Reason signature uses cache_result, docstring uses cache. Code citation quote exact lines 491-493 maybe:\n\"        self, type: Any, cache_result: bool = True\" (line with prefix in pack: 492|        self, type: Any, cache_result: bool = True). Need include start_line end_line. Could citation be 492-492 or include 491? Candidate cited code 492. We can cite 491-493 maybe:\n491|    def get_unstructure_hook(\n492|        self, type: Any, cache_result: bool = True\n493|    ) -> UnstructureHook:\nBut quote must verbatim lines without prefix. Let's use 491-493. Doc citation for candidate? Verdict code citation only requested, not doc. Additional finding requires doc_citation and code_citation. For additional find AD-1: doc_citation at src/cattrs/converters.py:651-651 \":param cache: Whether to cache the returned hook.\" code 640-642. Need ensure line numbers in pack: \n640|    def get_structure_hook(\n641|        self, type: TypeForm[T], cache_result: bool = True\n642|    ) -> Callable[[Any, TypeForm[T]], T]:\n651|        :param cache: Whether to cache the returned hook.\nYes.\n\nCould there be doc signature in __init__? It references method; no docstring. Fine.\n\nsuggested_doc_fix for true candidate: \"Replace `:param cache:` with `:param cache_result:` in the `get_unstructure_hook` docstring.\" Maybe more specific. Additional proposed_fix same for get_structure_hook.\n\nNeed not mention unknown. JSON values strings. Let's craft."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 66681,
+      "completion_tokens": 1307,
+      "total_tokens": 67988,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-30T11:42:59.058870+00:00"
+}

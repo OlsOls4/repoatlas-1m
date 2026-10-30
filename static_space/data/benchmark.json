@@ -50,7 +50,7 @@
       "3,342,201"
     ]
   ],
-  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.\n- **2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)** received a strict repro badge. The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Hybrid triage-only cost is about **9.2M** tokens (4,424,575 + 4,739,392 = 9,163,967). End-to-end including repro is **9,302,105 (~9.3M)** (4,424,575 + 4,739,392 + 138,138). The cheaper symbol-only-candidate variant was not run.\n- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
+  "notes_markdown": "- The **45-drift reference set** is the union of what the methods found, so it favours them. Labels were checked against the source by an AI reviewer. The stored field is still `hand_verdict`.\n- Beam triage judged **56** candidates and rejected **0** of 32 true candidates, while removing **15** of 24 false or unclear ones. 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.\n- **2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear)** received a strict repro badge. The v1 line “10 of 11 reproduce; 0 of 10 false do” is wrong for v2.\n- structlog: Beam's triage reply had no JSON, so its 6 candidates are shown untriaged.\n- Chunked Beam alone found **11** local docstring/prose drifts the hybrid misses.\n- The strict repro rule was set after the first repro run.\n- No prompt caching was observed on triage calls (each billed the full ~300–400k pack).\n- Hybrid triage-only cost is about **9.2M** tokens (4,424,575 + 4,739,392 = 9,163,967). End-to-end including repro is **9,302,105 (~9.3M)** (4,424,575 + 4,739,392 + 138,138). The cheaper symbol-only-candidate variant was not run.\n- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The matched-cost retrieval control spent **3,957,434** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.\n- The tomlkit `docdrift run` recording spent **185,842** extra tokens. Together with matched-cost that is **4,143,276**, not part of the 9.3M hybrid end-to-end.",
   "funnel": [
     {
       "step": "Symbol check",
@@ -251,7 +251,8 @@
       "Whole-repo is one batched call per repo; local is one call per candidate.",
       "Local was given every file the candidate already named.",
       "6 of 56 disagreements split 3-3. Stability rerun: 26/27 verdicts matched.",
-      "Whole-repo used 4,022,532 tokens vs 830,527 for local (~4.8×). This ablation run's own ledger is 1,948,469 tokens over 60 calls; that is extra experimental cost, not part of the 9.3M hybrid end-to-end."
+      "Whole-repo used 4,022,532 tokens vs 830,527 for local (~4.8×). This ablation run's own ledger is 1,948,469 tokens over 60 calls; that is extra experimental cost, not part of the 9.3M hybrid end-to-end.",
+      "Matched-cost retrieval control: 3,888,241 attributable / 3,957,434 as spent (57 calls; same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
     ],
     "n": 56,
     "disagreements": 6,
@@ -272,7 +273,18 @@
     "accuracy_local_subset": "0.926",
     "outside_cite_whole_subset": "4/4",
     "outside_cite_local_subset": "0/4",
-    "subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files."
+    "subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
+    "matched_available": true,
+    "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\". The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for the same spend.",
+    "cross_file_cite_matched": "19/30",
+    "outside_cite_matched": "6/13",
+    "accuracy_matched": "0.821",
+    "matched_tokens": 3888241,
+    "matched_ledger_tokens": 3957434,
+    "matched_ledger_calls": 57,
+    "matched_mcnemar_p": "0.070",
+    "gold_file_retrieved": "8/13",
+    "gold_file_missed": 5
   },
   "beamv3": {
     "available": true,
@@ -456,7 +468,7 @@
     "ledger_tokens": 7713453,
     "ledger_calls": 168
   },
-  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end.",
+  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end. Extra experimental (not in that 9.3M): ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit fresh CLI run 185,842 (together +4,143,276 for these runs).",
   "pack_coverage": {
     "available": true,
     "headers": [

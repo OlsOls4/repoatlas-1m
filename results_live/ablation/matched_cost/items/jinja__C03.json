@@ -1,0 +1,73 @@
+{
+  "prompt_tokens": 66831,
+  "completion_tokens": 1673,
+  "finish_reason": "stop",
+  "latency_seconds": 17.84919952999917,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "Autoescape is a built-in statement keyword, so the documented import path `jinja2.ext.autoescape` does not exist.",
+      "code_citation": {
+        "path": "src/jinja2/parser.py",
+        "start_line": 33,
+        "end_line": 34,
+        "quote": "        \"autoescape\",\n    ]"
+      },
+      "suggested_doc_fix": "Remove or amend the '**Import name:** ``jinja2.ext.autoescape``' line to state that autoescape is built in and no extension import is needed.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S18"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S18",
+    "doc_path": "docs/extensions.rst",
+    "doc_line": 241,
+    "doc_end": 241,
+    "doc_text": "**Import name:** ``jinja2.ext.autoescape``",
+    "claim": "dotted: `jinja2.ext.autoescape`: 'autoescape' not found on jinja2.ext",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/jinja2/__init__.py",
+    "src/jinja2/environment.py",
+    "src/jinja2/utils.py",
+    "src/jinja2/exceptions.py",
+    "src/jinja2/runtime.py",
+    "src/jinja2/visitor.py",
+    "src/jinja2/parser.py",
+    "src/jinja2/defaults.py",
+    "docs/extensions.rst",
+    "tests/test_compile.py",
+    ".github/ISSUE_TEMPLATE/bug-report.md"
+  ],
+  "file_tiers": {
+    "docs/extensions.rst": "T0_local",
+    "src/jinja2/environment.py": "T1_symbol",
+    "src/jinja2/runtime.py": "T1_symbol",
+    "src/jinja2/parser.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/jinja2/utils.py": "T1_symbol",
+    "src/jinja2/exceptions.py": "T1_symbol",
+    "src/jinja2/visitor.py": "T1_symbol",
+    "tests/test_compile.py": "T1_symbol",
+    "src/jinja2/__init__.py": "T2_imports",
+    "src/jinja2/defaults.py": "T2_imports",
+    ".github/ISSUE_TEMPLATE/bug-report.md": "T3_bm25"
+  },
+  "local_files": [
+    "docs/extensions.rst"
+  ],
+  "prompt_chars": 219424,
+  "est_prompt_tokens": 56410
+}

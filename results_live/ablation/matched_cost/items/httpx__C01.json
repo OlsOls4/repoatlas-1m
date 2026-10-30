@@ -1,0 +1,76 @@
+{
+  "prompt_tokens": 67538,
+  "completion_tokens": 1682,
+  "finish_reason": "stop",
+  "latency_seconds": 11.56025278600282,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "false",
+      "reason": "The cited usage matches Rich's progress API, not httpx Headers.update; the CLI uses the same completed= call successfully.",
+      "code_citation": {
+        "path": "httpx/_main.py",
+        "start_line": 270,
+        "end_line": 270,
+        "quote": "progress.update(download_task, completed=response.num_bytes_downloaded)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S2"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S2",
+    "doc_path": "docs/advanced/clients.md",
+    "doc_line": 229,
+    "doc_end": 229,
+    "doc_text": "progress.update(download_task, completed=response.num_bytes_downloaded)",
+    "claim": "method-call-signature: `progress.update(...)`: no parameter named 'completed'; no package method 'update' accepts it (e.g. Headers.update at httpx/_models.py:274)",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "httpx/_models.py",
+    "httpx/__version__.py",
+    "httpx/_urls.py",
+    "httpx/_transports/base.py",
+    "httpx/_client.py",
+    "httpx/_transports/default.py",
+    "httpx/_main.py",
+    "httpx/_api.py",
+    "docs/advanced/clients.md",
+    "httpx/_transports/mock.py",
+    "requirements.txt",
+    "docs/CNAME"
+  ],
+  "file_tiers": {
+    "httpx/_models.py": "T0_local",
+    "docs/advanced/clients.md": "T0_local",
+    "httpx/_main.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "httpx/_urls.py": "T1_symbol",
+    "httpx/_transports/base.py": "T1_symbol",
+    "httpx/_client.py": "T1_symbol",
+    "httpx/_transports/default.py": "T1_symbol",
+    "httpx/_api.py": "T1_symbol",
+    "httpx/__version__.py": "T2_imports",
+    "httpx/_transports/mock.py": "T2_imports",
+    "requirements.txt": "T3_bm25",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "httpx/_models.py",
+    "docs/advanced/clients.md"
+  ],
+  "prompt_chars": 220408,
+  "est_prompt_tokens": 56417
+}

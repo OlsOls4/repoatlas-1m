@@ -11,6 +11,7 @@ from repoatlas.hybrid_view import LABEL_SOURCE, RESULTS_LIVE_DIRECTORY
 
 ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
 ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
+MATCHED_COST_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "results.json"
 
 CLAIM: str = (
     "Long context didn't make verdicts more accurate here; it made them cite the real evidence "
@@ -48,6 +49,17 @@ class AblationPayload(TypedDict):
     outside_cite_whole_subset: str
     outside_cite_local_subset: str
     subset_note: str
+    matched_available: bool
+    why_matched_cost_note: str
+    cross_file_cite_matched: str
+    outside_cite_matched: str
+    accuracy_matched: str
+    matched_tokens: int
+    matched_ledger_tokens: int
+    matched_ledger_calls: int
+    matched_mcnemar_p: str
+    gold_file_retrieved: str
+    gold_file_missed: int
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -82,6 +94,17 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "outside_cite_whole_subset": "",
         "outside_cite_local_subset": "",
         "subset_note": "",
+        "matched_available": False,
+        "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+        "cross_file_cite_matched": "",
+        "outside_cite_matched": "",
+        "accuracy_matched": "",
+        "matched_tokens": 0,
+        "matched_ledger_tokens": 0,
+        "matched_ledger_calls": 0,
+        "matched_mcnemar_p": "",
+        "gold_file_retrieved": "",
+        "gold_file_missed": 0,
     }
     if not target.exists():
         return empty
@@ -150,6 +173,7 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
             f"Whole-repo used {whole_tokens:,} tokens vs {local_tokens:,} for local (~{multiplier}×). "
             f"This ablation run's own ledger is {ledger_tokens:,} tokens over {ledger_calls} calls; "
             "that is extra experimental cost, not part of the 9.3M hybrid end-to-end.",
+            *_matched_cost_caveat(),
         ],
         "n": n,
         "disagreements": n_disagree,
@@ -178,6 +202,7 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
             f"{_frac(local_sub, 'outside_local_verdict_and_cite_right', 'gold_outside_local_cases')} "
             "when the proof lives outside the candidate's files."
         ),
+        **_matched_cost_fields(),
     }
 
 
@@ -246,3 +271,112 @@ def _fmt_num(value: object) -> str:
         return str(value)
     text = f"{number:.3f}".rstrip("0").rstrip(".")
     return text
+
+
+def _matched_cost_payload() -> dict[str, object] | None:
+    """
+    @brief Read results_live/ablation/matched_cost/results.json, or None if missing.
+    """
+
+    if not MATCHED_COST_RESULTS_PATH.exists():
+        return None
+    raw: object = json.loads(MATCHED_COST_RESULTS_PATH.read_text(encoding="utf-8"))
+    return raw if isinstance(raw, dict) else None
+
+
+def _matched_cost_fields() -> dict[str, object]:
+    """
+    @brief Display fields for the Why-1M matched-cost control, generated from results.json.
+    """
+
+    empty: dict[str, object] = {
+        "matched_available": False,
+        "why_matched_cost_note": "Matched-cost local bar: not run yet.",
+        "cross_file_cite_matched": "",
+        "outside_cite_matched": "",
+        "accuracy_matched": "",
+        "matched_tokens": 0,
+        "matched_ledger_tokens": 0,
+        "matched_ledger_calls": 0,
+        "matched_mcnemar_p": "",
+        "gold_file_retrieved": "",
+        "gold_file_missed": 0,
+    }
+    raw = _matched_cost_payload()
+    if raw is None:
+        return empty
+    metrics = raw.get("metrics") if isinstance(raw.get("metrics"), dict) else {}
+    tokens = raw.get("tokens") if isinstance(raw.get("tokens"), dict) else {}
+    paired = raw.get("paired_comparisons") if isinstance(raw.get("paired_comparisons"), dict) else {}
+    retrieval = raw.get("retrieval_coverage") if isinstance(raw.get("retrieval_coverage"), dict) else {}
+    whole = metrics.get("whole") if isinstance(metrics.get("whole"), dict) else {}
+    matched = metrics.get("matched") if isinstance(metrics.get("matched"), dict) else {}
+    cross_cmp = (
+        paired.get("cross_file_verdict_and_cite_whole_vs_matched")
+        if isinstance(paired.get("cross_file_verdict_and_cite_whole_vs_matched"), dict)
+        else {}
+    )
+    n = int(matched.get("n") or whole.get("n") or 0)
+    acc_m = int(matched.get("accuracy_count") or 0)
+    acc_w = int(whole.get("accuracy_count") or 0)
+    xf_m = _frac(matched, "cross_file_verdict_and_cite_right", "cross_file_cases")
+    xf_w = _frac(whole, "cross_file_verdict_and_cite_right", "cross_file_cases")
+    out_m = _frac(matched, "outside_local_verdict_and_cite_right", "gold_outside_local_cases")
+    out_w = _frac(whole, "outside_local_verdict_and_cite_right", "gold_outside_local_cases")
+    out_n = int(matched.get("gold_outside_local_cases") or retrieval.get("outside_local_items") or 0)
+    retrieved = int(retrieval.get("gold_file_retrieved_into_matched_context") or 0)
+    missed = max(0, out_n - retrieved)
+    matched_tokens = int(tokens.get("matched") or 0)
+    ledger_tokens = int(tokens.get("matched_ledger_as_spent") or 0)
+    ledger_calls = int(tokens.get("matched_ledger_calls") or 0)
+    whole_tokens = int(tokens.get("whole") or 0)
+    pct = round(100 * matched_tokens / whole_tokens, 1) if whole_tokens else 0.0
+    p_raw = cross_cmp.get("exact_mcnemar_p")
+    try:
+        p_text = f"{float(p_raw):.3f}"
+    except (TypeError, ValueError):
+        p_text = str(p_raw or "")
+    note = (
+        f"**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** "
+        f"Beam budget as whole-repo triage. That came to {ledger_tokens:,} against {whole_tokens:,} "
+        f"tokens as spent ({matched_tokens:,} attributable; {pct}% of whole-repo) over the same "
+        f"{n} candidates. For each candidate, it got the local files plus the symbol definitions, "
+        "imports and BM25 matches that fit in about 56k tokens.\n\n"
+        f"Verdict accuracy came out the same ({acc_m}/{n} against {acc_w}/{n}). Grounding still "
+        f"favoured the whole repo: the right verdict **and** the right cross-file line in {xf_w} "
+        f"cases, against {xf_m} for retrieval. Where the evidence lives outside the files the doc "
+        f"points at, the figures are {out_w} against {out_m}. Retrieval pulled in importers or "
+        f"re-exports rather than the defining file in {missed} of {out_n} outside-local items.\n\n"
+        f"That gap is suggestive, not proven, at this sample size (exact McNemar p = {p_text}). "
+        'We pre-registered the test and report it as "not shown at this n". The honest takeaway: '
+        "whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the "
+        "right line** more often, for the same spend."
+    )
+    return {
+        "matched_available": True,
+        "why_matched_cost_note": note,
+        "cross_file_cite_matched": xf_m,
+        "outside_cite_matched": out_m,
+        "accuracy_matched": _fmt_num(matched.get("accuracy")),
+        "matched_tokens": matched_tokens,
+        "matched_ledger_tokens": ledger_tokens,
+        "matched_ledger_calls": ledger_calls,
+        "matched_mcnemar_p": p_text,
+        "gold_file_retrieved": f"{retrieved}/{out_n}",
+        "gold_file_missed": missed,
+    }
+
+
+def _matched_cost_caveat() -> list[str]:
+    """
+    @brief Extra experimental-cost caveat for the ablation box.
+    """
+
+    fields = _matched_cost_fields()
+    if not fields["matched_available"]:
+        return []
+    return [
+        f"Matched-cost retrieval control: {int(fields['matched_tokens']):,} attributable / "
+        f"{int(fields['matched_ledger_tokens']):,} as spent ({int(fields['matched_ledger_calls'])} calls; "
+        "same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
+    ]

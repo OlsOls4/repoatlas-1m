@@ -1,0 +1,81 @@
+{
+  "prompt_tokens": 66740,
+  "completion_tokens": 1341,
+  "finish_reason": "stop",
+  "latency_seconds": 10.418974692991469,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "This is a deliberately historical note about an API removed in 0.9, so its absence from the current package is expected rather than documentation drift.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 58,
+        "end_line": 58,
+        "quote": "       The :meth:`linked` function was removed without replacement as it"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S37"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S37",
+    "doc_path": "src/werkzeug/datastructures/headers.py",
+    "doc_line": 58,
+    "doc_end": 58,
+    "doc_text": "The :meth:`linked` function was removed without replacement as it",
+    "claim": "role:undefined: `linked`: :meth: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/datastructures/__init__.py",
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/http.py",
+    "src/werkzeug/_internal.py",
+    "src/werkzeug/datastructures/structures.py",
+    "src/werkzeug/datastructures/headers.py",
+    "src/werkzeug/routing/converters.py",
+    "src/werkzeug/datastructures/mixins.py",
+    "src/werkzeug/routing/matcher.py",
+    "src/werkzeug/middleware/http_proxy.py",
+    "docs/Makefile",
+    "examples/couchy/models.py",
+    "examples/couchy/views.py",
+    ".github/pull_request_template.md"
+  ],
+  "file_tiers": {
+    "src/werkzeug/datastructures/headers.py": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/werkzeug/routing/matcher.py": "T1_symbol",
+    "src/werkzeug/middleware/http_proxy.py": "T1_symbol",
+    "examples/couchy/models.py": "T1_symbol",
+    "examples/couchy/views.py": "T1_symbol",
+    "src/werkzeug/_internal.py": "T2_imports",
+    "src/werkzeug/datastructures/mixins.py": "T2_imports",
+    "src/werkzeug/datastructures/structures.py": "T2_imports",
+    "src/werkzeug/exceptions.py": "T2_imports",
+    "src/werkzeug/http.py": "T2_imports",
+    "src/werkzeug/routing/converters.py": "T2_imports",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "src/werkzeug/datastructures/__init__.py": "T2_imports",
+    ".github/pull_request_template.md": "T3_bm25",
+    "docs/Makefile": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/datastructures/headers.py"
+  ],
+  "prompt_chars": 204876,
+  "est_prompt_tokens": 56402
+}

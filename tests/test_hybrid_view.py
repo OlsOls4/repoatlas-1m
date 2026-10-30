@@ -69,6 +69,9 @@ def test_hybrid_headline_and_comparison_are_data_driven() -> None:
     assert "11 of 12 libraries" in notes
     assert "7,713,453" in notes
     assert "1,948,469" in notes
+    assert "3,957,434" in notes
+    assert "185,842" in notes
+    assert "4,143,276" in notes
     assert "hand-checked" not in notes.lower()
     assert "hand-verified" not in notes.lower()
     assert "hand-true" not in notes

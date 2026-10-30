@@ -1,0 +1,91 @@
+{
+  "prompt_tokens": 68525,
+  "completion_tokens": 2934,
+  "finish_reason": "stop",
+  "latency_seconds": 28.06918665600824,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "fromordinal is a classmethod on Arrow, while the top-level arrow module does not export fromordinal.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 388,
+        "end_line": 388,
+        "quote": "    def fromordinal(cls, ordinal: int) -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Replace `>>> arrow.fromordinal(737741)` with `>>> arrow.Arrow.fromordinal(737741)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S23"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S23",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 396,
+    "doc_end": 396,
+    "doc_text": ">>> arrow.fromordinal(737741)",
+    "claim": "dotted: `arrow.fromordinal`: 'fromordinal' not found on arrow",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "docs/conf.py",
+    "docs/guide.rst",
+    "README.rst",
+    "docs/index.rst",
+    "docs/api-guide.rst",
+    "docs/getting-started.rst",
+    "tests/test_factory.py",
+    "tests/conftest.py",
+    ".github/pull_request_template.md",
+    "tests/test_api.py",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "arrow/arrow.py": "T0_local",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/formatter.py": "T2_imports",
+    "arrow/parser.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "arrow/factory.py": "T2_imports",
+    "arrow/api.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "docs/guide.rst": "T3_bm25",
+    "README.rst": "T3_bm25",
+    "docs/api-guide.rst": "T3_bm25",
+    "tests/test_api.py": "T3_bm25",
+    "pyproject.toml": "T3_bm25",
+    "docs/conf.py": "T3_bm25",
+    "docs/index.rst": "T3_bm25",
+    ".github/ISSUE_TEMPLATE/bug_report.md": "T3_bm25",
+    ".github/pull_request_template.md": "T3_bm25",
+    "tests/test_factory.py": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25",
+    "docs/getting-started.rst": "T3_bm25"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 197852,
+  "est_prompt_tokens": 56298
+}

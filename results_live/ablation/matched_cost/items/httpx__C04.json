@@ -1,0 +1,70 @@
+{
+  "prompt_tokens": 67755,
+  "completion_tokens": 4106,
+  "finish_reason": "stop",
+  "latency_seconds": 26.605425999994623,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The top-level httpx.request signature has no extensions parameter, so the documented call raises TypeError; extensions are accepted by Request and client-level request methods instead.",
+      "code_citation": {
+        "path": "httpx/_api.py",
+        "start_line": 39,
+        "end_line": 56,
+        "quote": "def request(\n    method: str,\n    url: URL | str,\n    *,\n    params: QueryParamTypes | None = None,\n    content: RequestContent | None = None,\n    data: RequestData | None = None,\n    files: RequestFiles | None = None,\n    json: typing.Any | None = None,\n    headers: HeaderTypes | None = None,\n    cookies: CookieTypes | None = None,\n    auth: AuthTypes | None = None,\n    proxy: ProxyTypes | None = None,\n    timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n    follow_redirects: bool = False,\n    verify: ssl.SSLContext | str | bool = True,\n    trust_env: bool = True,\n) -> Response:"
+      },
+      "suggested_doc_fix": "Use a client instance when passing extensions, e.g. `with httpx.Client() as client: response = client.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S5"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S5",
+    "doc_path": "docs/advanced/extensions.md",
+    "doc_line": 179,
+    "doc_end": 179,
+    "doc_text": "response = httpx.request(\"CONNECT\", \"https://www.example.com\", extensions=extensions)",
+    "claim": "call-signature: `httpx.request(...)`: no parameter named 'extensions' (def httpx/_api.py:39)",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "context_files": [
+    "httpx/_models.py",
+    "httpx/_exceptions.py",
+    "httpx/_client.py",
+    "httpx/_auth.py",
+    "httpx/_main.py",
+    "httpx/_api.py",
+    "docs/advanced/transports.md",
+    "docs/advanced/clients.md",
+    "docs/advanced/extensions.md",
+    "docs/CNAME"
+  ],
+  "file_tiers": {
+    "httpx/_api.py": "T0_local",
+    "docs/advanced/extensions.md": "T0_local",
+    "httpx/_client.py": "T1_symbol",
+    "httpx/_models.py": "T1_symbol",
+    "httpx/_exceptions.py": "T1_symbol",
+    "httpx/_auth.py": "T1_symbol",
+    "httpx/_main.py": "T1_symbol",
+    "docs/advanced/transports.md": "T1_symbol",
+    "docs/advanced/clients.md": "T1_symbol",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "httpx/_api.py",
+    "docs/advanced/extensions.md"
+  ],
+  "prompt_chars": 220911,
+  "est_prompt_tokens": 56401
+}

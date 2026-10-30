@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from repoatlas.cli import build_parser, main
-from repoatlas.pipeline import TokenGuardError, format_preflight, run_docdrift
+from repoatlas.pipeline import TRIAGE_MAX_TOKENS, TokenGuardError, format_preflight, run_docdrift
 
 
 FIXTURE: Path = Path("tests/fixtures/docdrift_toy")
@@ -20,10 +20,13 @@ class FakeClient:
 
     def __init__(self) -> None:
         self.calls = 0
+        self.max_tokens: list[int] = []
+        self.messages: list[list[dict[str, str]]] = []
 
     def complete(self, messages: list[dict[str, str]], *, max_tokens: int) -> dict[str, object]:
         self.calls += 1
-        del messages, max_tokens
+        self.max_tokens.append(max_tokens)
+        self.messages.append(messages)
         if self.calls == 1:
             return {"verdicts": [{"candidate_id": "C01", "verdict": "true_drift", "reason": "param title is not in greet"}]}
         return {"status": "planned", "script": "from toy import greet\ngreet(title='Ada')\n"}
@@ -43,7 +46,13 @@ def test_parser_has_run_and_max_tokens() -> None:
     run_parser = parser._subparsers._group_actions[0].choices["run"]
     assert "--docstring-chunks" not in run_parser._option_string_actions
     assert "scripts/beamv3.py" in help_text
-    assert "more coverage at lower precision" in help_text
+    assert "first two steps" not in help_text
+    assert "executable repro" in help_text.lower()
+    assert "--out" in run_parser._option_string_actions
+    assert "--repro-budget" in run_parser._option_string_actions
+    out_args = parser.parse_args(["run", str(FIXTURE), "--out", "fresh_run", "--repro-budget", "100000"])
+    assert out_args.out == "fresh_run"
+    assert out_args.repro_budget == 100000
 
 
 def test_preflight_only_does_not_need_a_key(capsys: pytest.CaptureFixture[str]) -> None:
@@ -77,9 +86,15 @@ def test_injected_client_runs_triage_and_repro() -> None:
     client = FakeClient()
     result = run_docdrift(str(FIXTURE), max_tokens=900_000, client=client)
     assert client.calls == 2
+    assert TRIAGE_MAX_TOKENS == 32_000
+    assert client.max_tokens[0] == 32_000
+    prompt = client.messages[0][1]["content"]
+    assert "Packed repository context follows" in prompt
+    assert "[:20000]" not in Path("repoatlas/pipeline.py").read_text(encoding="utf-8")
     assert result.triage["verdicts"][0]["verdict"] == "true_drift"
     assert result.repros
     assert "projected prompt tokens=" in format_preflight(result)
+    assert "def greet" in prompt
 
 
 def test_run_without_key_exits_2(monkeypatch: pytest.MonkeyPatch) -> None:

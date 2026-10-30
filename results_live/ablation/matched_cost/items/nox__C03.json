@@ -1,0 +1,76 @@
+{
+  "prompt_tokens": 66492,
+  "completion_tokens": 1484,
+  "finish_reason": "stop",
+  "latency_seconds": 12.067098995001288,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The documentation names nox.options.reuse_venvs, but the Noxfile option defined in code is reuse_venv.",
+      "code_citation": {
+        "path": "nox/_options.py",
+        "start_line": 333,
+        "end_line": 333,
+        "quote": "reuse_venv: ReuseVenvType = attrs.field("
+      },
+      "suggested_doc_fix": "Change `nox.options.reuse_venvs` to `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "nox-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "nox-400000:DD-1",
+    "doc_path": "docs/usage.rst",
+    "doc_line": 219,
+    "doc_end": 219,
+    "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+    "claim": "The usage documentation refers to a misspelled Noxfile option, `nox.options.reuse_venvs`, while the code defines the option as `reuse_venv`.",
+    "code_hint": "nox/_options.py:333-333 'reuse_venv: ReuseVenvType = attrs.field('",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "nox/__init__.py",
+    "nox/_options.py",
+    "nox/sessions.py",
+    "nox/registry.py",
+    "nox/_cli.py",
+    "nox/_option_set.py",
+    "nox/_decorators.py",
+    "nox/_completers.py",
+    "docs/config.rst",
+    "docs/usage.rst",
+    "tests/test__cli.py",
+    "tests/test_rattler.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "nox/_options.py": "T0_local",
+    "docs/usage.rst": "T0_local",
+    "nox/_cli.py": "T1_symbol",
+    "nox/sessions.py": "T1_symbol",
+    "nox/registry.py": "T1_symbol",
+    "nox/_option_set.py": "T1_symbol",
+    "nox/_decorators.py": "T1_symbol",
+    "docs/config.rst": "T1_symbol",
+    "tests/test__cli.py": "T1_symbol",
+    "tests/test_rattler.py": "T1_symbol",
+    "nox/__init__.py": "T2_imports",
+    "nox/_completers.py": "T2_imports",
+    ".github/FUNDING.yml": "T3_bm25"
+  },
+  "local_files": [
+    "nox/_options.py",
+    "docs/usage.rst"
+  ],
+  "prompt_chars": 217141,
+  "est_prompt_tokens": 56382
+}

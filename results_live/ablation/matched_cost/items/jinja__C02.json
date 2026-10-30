@@ -1,0 +1,69 @@
+{
+  "prompt_tokens": 66890,
+  "completion_tokens": 2509,
+  "finish_reason": "stop",
+  "latency_seconds": 21.84452667000005,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The `with` statement is built into Jinja's parser as a statement keyword, so the documented import name `jinja2.ext.with_` does not match the code.",
+      "code_citation": {
+        "path": "src/jinja2/parser.py",
+        "start_line": 20,
+        "end_line": 34,
+        "quote": "_statement_keywords = frozenset(\n    [\n        \"for\",\n        \"if\",\n        \"block\",\n        \"extends\",\n        \"print\",\n        \"macro\",\n        \"include\",\n        \"from\",\n        \"import\",\n        \"set\",\n        \"with\",\n        \"autoescape\",\n    ]\n)"
+      },
+      "suggested_doc_fix": "Remove the '**Import name:** ``jinja2.ext.with_``' line, since `{% with %}` is built-in and needs no extension.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S17"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S17",
+    "doc_path": "docs/extensions.rst",
+    "doc_line": 230,
+    "doc_end": 230,
+    "doc_text": "**Import name:** ``jinja2.ext.with_``",
+    "claim": "dotted: `jinja2.ext.with_`: 'with_' not found on jinja2.ext",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/jinja2/__init__.py",
+    "src/jinja2/environment.py",
+    "src/jinja2/exceptions.py",
+    "src/jinja2/runtime.py",
+    "src/jinja2/lexer.py",
+    "src/jinja2/visitor.py",
+    "src/jinja2/parser.py",
+    "docs/extensions.rst",
+    "tests/test_compile.py"
+  ],
+  "file_tiers": {
+    "docs/extensions.rst": "T0_local",
+    "src/jinja2/parser.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/jinja2/environment.py": "T1_symbol",
+    "src/jinja2/exceptions.py": "T1_symbol",
+    "src/jinja2/runtime.py": "T1_symbol",
+    "src/jinja2/lexer.py": "T1_symbol",
+    "src/jinja2/visitor.py": "T1_symbol",
+    "tests/test_compile.py": "T1_symbol",
+    "src/jinja2/__init__.py": "T2_imports"
+  },
+  "local_files": [
+    "docs/extensions.rst"
+  ],
+  "prompt_chars": 223163,
+  "est_prompt_tokens": 56350
+}

@@ -1,0 +1,63 @@
+{
+  "prompt_tokens": 67597,
+  "completion_tokens": 1752,
+  "finish_reason": "stop",
+  "latency_seconds": 15.329236909019528,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "Attribute defines and sets the alias_is_default slot, so the documented attrs.Attribute.alias_is_default flag exists.",
+      "code_citation": {
+        "path": "src/attr/_make.py",
+        "start_line": 2510,
+        "end_line": 2529,
+        "quote": "    __slots__ = (  # noqa: RUF023\n        \"name\",\n        \"default\",\n        \"validator\",\n        \"repr\",\n        \"eq\",\n        \"eq_key\",\n        \"order\",\n        \"order_key\",\n        \"hash\",\n        \"init\",\n        \"metadata\",\n        \"type\",\n        \"converter\",\n        \"kw_only\",\n        \"inherited\",\n        \"on_setattr\",\n        \"alias\",\n        \"alias_is_default\",\n    )"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S12"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "attrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S12",
+    "doc_path": "docs/extending.md",
+    "doc_line": 255,
+    "doc_end": 255,
+    "doc_text": "You can use the `attrs.Attribute.alias_is_default` flag to detect whether an alias was explicitly provided by the user or auto-generated.",
+    "claim": "dotted: `attrs.Attribute.alias_is_default`: 'alias_is_default' not found on attrs.Attribute",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "src/attr/_make.py",
+    "src/attr/_next_gen.py",
+    "docs/extending.md",
+    "changelog.d/1592.change.md",
+    "src/attr/__init__.pyi",
+    "tests/utils.py",
+    "tests/test_functional.py"
+  ],
+  "file_tiers": {
+    "docs/extending.md": "T0_local",
+    "src/attr/_make.py": "T1_symbol",
+    "src/attr/__init__.pyi": "T1_symbol",
+    "tests/utils.py": "T1_symbol",
+    "tests/test_functional.py": "T1_symbol",
+    "src/attr/_next_gen.py": "T1_symbol",
+    "changelog.d/1592.change.md": "T3_bm25"
+  },
+  "local_files": [
+    "docs/extending.md"
+  ],
+  "prompt_chars": 206590,
+  "est_prompt_tokens": 56383
+}

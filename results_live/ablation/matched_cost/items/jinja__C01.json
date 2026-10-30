@@ -1,0 +1,74 @@
+{
+  "prompt_tokens": 66477,
+  "completion_tokens": 2109,
+  "finish_reason": "stop",
+  "latency_seconds": 19.361585434002336,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The install methods use newstyle=None to leave the existing setting unchanged, not newstyle=False as documented.",
+      "code_citation": {
+        "path": "src/jinja2/ext.py",
+        "start_line": 268,
+        "end_line": 270,
+        "quote": "    def _install(\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\n    ) -> None:"
+      },
+      "suggested_doc_fix": "Change the documented defaults from `newstyle=False` to `newstyle=None` (and describe it as leaving the current setting unchanged unless explicitly provided).",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "jinja-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "jinja-400000:DD-1",
+    "doc_path": "docs/extensions.rst",
+    "doc_line": 52,
+    "doc_end": 76,
+    "doc_text": ".. method:: jinja2.Environment.install_gettext_translations(translations, newstyle=False)\n..\n.. method:: jinja2.Environment.install_null_translations(newstyle=False)\n..\n.. method:: jinja2.Environment.install_gettext_callables(gettext, ngettext, newstyle=False, pgettext=None, npgettext=None)",
+    "claim": "The documentation lists newstyle=False as the default for three i18n installation methods, but the implementations use newstyle=None, leaving the existing environment setting unchanged rather than forcing false.",
+    "code_hint": "src/jinja2/ext.py:268-301 '    def _install(\\n        self, translations: \"_SupportedTranslations\", newstyle: bool | None = None\\n    ) -> None:\\n...\\n    def _install_null(self, newstyle: bool | None = None) -> None:\\n...\\n    def _install_callables(\\n        self,\\n        gettext: t.Callable[[str], str],\\n        ngettext: t.Callable[[str, str, int], str],\\n        newstyle: bool | None = None,\\n'",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/jinja2/__init__.py",
+    "src/jinja2/utils.py",
+    "src/jinja2/compiler.py",
+    "src/jinja2/defaults.py",
+    "src/jinja2/ext.py",
+    "src/jinja2/optimizer.py",
+    "docs/extensions.rst",
+    "tests/test_ext.py",
+    "tests/test_utils.py",
+    "tests/test_compile.py",
+    ".devcontainer/on-create-command.sh"
+  ],
+  "file_tiers": {
+    "src/jinja2/ext.py": "T0_local",
+    "docs/extensions.rst": "T0_local",
+    "tests/test_ext.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/jinja2/utils.py": "T1_symbol",
+    "src/jinja2/compiler.py": "T1_symbol",
+    "src/jinja2/optimizer.py": "T1_symbol",
+    "tests/test_utils.py": "T1_symbol",
+    "tests/test_compile.py": "T1_symbol",
+    "src/jinja2/__init__.py": "T2_imports",
+    "src/jinja2/defaults.py": "T2_imports",
+    ".devcontainer/on-create-command.sh": "T3_bm25"
+  },
+  "local_files": [
+    "src/jinja2/ext.py",
+    "docs/extensions.rst"
+  ],
+  "prompt_chars": 215056,
+  "est_prompt_tokens": 56360
+}

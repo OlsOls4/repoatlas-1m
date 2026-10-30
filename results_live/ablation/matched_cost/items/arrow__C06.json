@@ -1,0 +1,84 @@
+{
+  "prompt_tokens": 68857,
+  "completion_tokens": 1315,
+  "finish_reason": "stop",
+  "latency_seconds": 11.165284055983648,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The HH formatting token renders datetime.hour, whose valid range is 00-23, so documenting 24 as an output is incorrect.",
+      "code_citation": {
+        "path": "arrow/formatter.py",
+        "start_line": 81,
+        "end_line": 81,
+        "quote": "            return f\"{dt.hour:02d}\""
+      },
+      "suggested_doc_fix": "Change the HH row output from '00, 01, 02 ... 23, 24' to '00, 01, 02 ... 23'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-3"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-3",
+    "doc_path": "docs/guide.rst",
+    "doc_line": 416,
+    "doc_end": 416,
+    "doc_text": "||                                |HH            |00, 01, 02 ... 23, 24                      |",
+    "claim": "The supported-token table lists HH as producing hours through 24, but the formatter only renders the datetime hour field, whose valid range is 00-23.",
+    "code_hint": "arrow/formatter.py:81-81 '            return f\"{dt.hour:02d}\"'",
+    "candidate_id": "C06"
+  },
+  "context_files": [
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "docs/guide.rst",
+    "docs/api-guide.rst",
+    "docs/getting-started.rst",
+    "tests/utils.py",
+    "tests/test_factory.py",
+    "tests/test_formatter.py",
+    "tests/conftest.py",
+    "tests/test_api.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "arrow/formatter.py": "T0_local",
+    "docs/guide.rst": "T0_local",
+    "arrow/arrow.py": "T1_symbol",
+    "arrow/parser.py": "T1_symbol",
+    "tests/test_factory.py": "T1_symbol",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "tests/utils.py": "T2_imports",
+    "arrow/factory.py": "T2_imports",
+    "arrow/api.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "tests/test_formatter.py": "T3_bm25",
+    "docs/api-guide.rst": "T3_bm25",
+    "tests/test_api.py": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25",
+    "docs/getting-started.rst": "T3_bm25"
+  },
+  "local_files": [
+    "arrow/formatter.py",
+    "docs/guide.rst"
+  ],
+  "prompt_chars": 197220,
+  "est_prompt_tokens": 56315
+}

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from repoatlas.ablation_view import (
     CLAIM,
     ablation_long_context_blurb,
@@ -34,6 +36,24 @@ def test_ablation_payload_matches_recorded_results() -> None:
     assert payload["accuracy_local_subset"] == "0.926"
     assert "0.926 vs 0.815" in payload["subset_note"]
     assert "4/4 vs 0/4" in payload["subset_note"]
+    assert payload["matched_available"] is True
+    assert payload["accuracy_matched"] == "0.821"
+    assert payload["cross_file_cite_matched"] == "19/30"
+    assert payload["outside_cite_matched"] == "6/13"
+    assert payload["matched_tokens"] == 3_888_241
+    assert payload["matched_ledger_tokens"] == 3_957_434
+    assert payload["matched_ledger_calls"] == 57
+    assert payload["matched_mcnemar_p"] == "0.070"
+    assert payload["gold_file_retrieved"] == "8/13"
+    assert payload["gold_file_missed"] == 5
+    note = payload["why_matched_cost_note"]
+    assert "not run yet" not in note.lower()
+    assert "46/56" in note and "47/56" in note
+    assert "25/30" in note and "19/30" in note
+    assert "11/13" in note and "6/13" in note
+    assert "not shown at this n" in note
+    assert "5 of 13" in note
+    assert "importers" in note.lower() or "re-export" in note.lower()
     kept = next(row for row in payload["rows"] if row[0] == "True candidates kept")
     rejected = next(row for row in payload["rows"] if row[0] == "False/unclear candidates rejected")
     assert kept[1] == kept[2] == "32/32"
@@ -53,3 +73,16 @@ def test_ablation_claim_is_grounding_not_accuracy() -> None:
     assert "improves accuracy" not in blurb.lower()
     assert "improves precision" not in table.lower()
     assert "32/32" in table and "11/13" in table
+
+
+def test_matched_cost_scripts_are_repo_relative() -> None:
+    """
+    @brief Recorded-run helper scripts must not hardcode a local checkout or secret path.
+    """
+
+    for name in ("scripts/matched_cost.py", "scripts/matched_score.py"):
+        src = Path(name).read_text(encoding="utf-8")
+        assert "/workspace/docdrift_main" not in src
+        assert "/workspace/ablation" not in src
+        assert "/home/box" not in src
+        assert "OLLAMA_API_KEY" in src or name.endswith("matched_score.py")

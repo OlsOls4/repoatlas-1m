@@ -1,0 +1,25 @@
+[1/4] symbol check: tomlkit @ d7def7d
+      0 symbol flags
+[2/4] packing the whole repository (RepoAtlas packer)
+      pack 141,326 tokens, 81 files, truncated=False; projected prompt 172,418 (guard 400,000)
+[3/4] Beam whole-repo triage: 1 call, 0 candidates + open search for cross-file drift
+[4/4] executable repro: doc-literal script per true_drift / extra finding, isolated venv, no network
+[venv] installing tomlkit@d7def7d
+[tomlkit:AD-1] attempt 1: could_not_run (lint) 'line 10: try/except catching Exception is not allowed'
+[tomlkit:AD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax'
+[tomlkit:AD-2] attempt 1: reproduced (expected_exception) "NameError: name 'datetime' is not defined"
+
+DocDrift report: tomlkit @ d7def7dbcc59
+============================================================
+candidates triaged: 0  
+extra findings from the whole-repo pass: 2
+  AD-1 [other] The documentation still advertises TOML 1.0.0-compliance while the test suite an
+      docs docs/index.rst:17  code tests/test_toml_tests.py:17  (verified)
+  AD-2 [other] The quickstart writing snippet uses unqualified `datetime(...)` and `utc` names 
+      docs docs/quickstart.rst:121  code tomlkit/api.py:202  (UNVERIFIED)
+executable repro (isolated venv, no network):
+  tomlkit:AD-1: reproduced AssertionError
+  tomlkit:AD-2: reproduced NameError  STRICT-CONFIRMED
+------------------------------------------------------------
+Beam tokens: triage 167,937 in + 4,975 out; repro 12,930 (3 calls); total 185,842
+wall time 96s (triage call 35s)

@@ -43,8 +43,16 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert any(row.get("ledger") == "beamv3" for row in ledger)
     beamv3_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "beamv3")
     assert beamv3_tokens == 7_713_453
+    assert any(row.get("ledger") == "matched_cost" for row in ledger)
+    matched_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "matched_cost")
+    assert matched_tokens == 3_957_434
+    assert any(row.get("ledger") == "fresh_run" for row in ledger)
+    fresh_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "fresh_run")
+    assert fresh_tokens == 185_842
     ablation = [json.loads(line) for line in (target / "ablation_verdicts.jsonl").read_text(encoding="utf-8").splitlines()]
     assert len(ablation) == 56
+    assert "matched_verdict" in ablation[0]
+    assert any(row.get("matched_verdict") for row in ablation)
     beamv3 = [json.loads(line) for line in (target / "beamv3_findings.jsonl").read_text(encoding="utf-8").splitlines()]
     assert len(beamv3) == 115
     assert any(row.get("label") == "unlabelled" for row in beamv3)
@@ -52,6 +60,10 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     card = (target / "README.md").read_text(encoding="utf-8")
     assert LABEL_SOURCE in card
     assert "7,713,453" in card
+    assert "4,143,276" in card
+    assert "3,957,434" in card
+    assert "185,842" in card
+    assert "not shown at this n" in card
     assert "unlabelled not counted as true" in card
     assert "Unpublished" not in card
     assert "license: cc-by-4.0" in card

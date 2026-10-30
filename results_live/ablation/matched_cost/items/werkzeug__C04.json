@@ -1,0 +1,71 @@
+{
+  "prompt_tokens": 66998,
+  "completion_tokens": 1782,
+  "finish_reason": "stop",
+  "latency_seconds": 10.335108575003687,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The ``setlist`` method's parameter is named ``values``, but its docstring documents a parameter named ``value``.",
+      "code_citation": {
+        "path": "src/werkzeug/datastructures/headers.py",
+        "start_line": 428,
+        "end_line": 428,
+        "quote": "    def setlist(self, key: str, values: cabc.Iterable[t.Any]) -> None:"
+      },
+      "suggested_doc_fix": "Rename the documented parameter from ``value`` to ``values`` in the ``setlist`` docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S42"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S42",
+    "doc_path": "src/werkzeug/datastructures/headers.py",
+    "doc_line": 433,
+    "doc_end": 433,
+    "doc_text": ":param value: An iterable of header values. Newlines are not allowed and",
+    "claim": "docstring-param: `setlist(value)`: documented param 'value' not in signature of setlist (src/werkzeug/datastructures/headers.py:428)",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/wrappers/__init__.py",
+    "src/werkzeug/sansio/__init__.py",
+    "src/werkzeug/http.py",
+    "src/werkzeug/datastructures/structures.py",
+    "src/werkzeug/datastructures/headers.py",
+    "src/werkzeug/wrappers/response.py",
+    "src/werkzeug/datastructures/auth.py",
+    "src/werkzeug/datastructures/cache_control.py",
+    "docs/middleware/shared_data.rst"
+  ],
+  "file_tiers": {
+    "src/werkzeug/datastructures/headers.py": "T0_local",
+    "src/werkzeug/datastructures/structures.py": "T1_symbol",
+    "src/werkzeug/http.py": "T1_symbol",
+    "src/werkzeug/wrappers/response.py": "T1_symbol",
+    "src/werkzeug/datastructures/auth.py": "T1_symbol",
+    "src/werkzeug/datastructures/cache_control.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "src/werkzeug/sansio/__init__.py": "T2_imports",
+    "src/werkzeug/wrappers/__init__.py": "T2_imports",
+    "docs/middleware/shared_data.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/datastructures/headers.py"
+  ],
+  "prompt_chars": 207132,
+  "est_prompt_tokens": 56390
+}

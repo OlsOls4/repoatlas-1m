@@ -1,0 +1,86 @@
+{
+  "prompt_tokens": 66805,
+  "completion_tokens": 1026,
+  "finish_reason": "stop",
+  "latency_seconds": 8.254186667007161,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C10",
+      "verdict": "true_drift",
+      "reason": "The WSGITransport docstring shows httpx.Client(app=app), but Client.__init__ has no app parameter; an app must be passed via WSGITransport and the transport argument.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 639,
+        "end_line": 644,
+        "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,"
+      },
+      "suggested_doc_fix": "Replace `client = httpx.Client(app=app)` with explicit transport setup, e.g. `transport = httpx.WSGITransport(app=app)` followed by `client = httpx.Client(transport=transport)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S9"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S9",
+    "doc_path": "httpx/_transports/wsgi.py",
+    "doc_line": 50,
+    "doc_end": 50,
+    "doc_text": "client = httpx.Client(app=app)",
+    "claim": "call-signature: `httpx.Client(...)`: no parameter named 'app' (def httpx/_client.py:639)",
+    "code_hint": "",
+    "candidate_id": "C10"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "httpx/__version__.py",
+    "httpx/_client.py",
+    "httpx/_transports/default.py",
+    "docs/advanced/transports.md",
+    "httpx/_transports/asgi.py",
+    "docs/advanced/clients.md",
+    "httpx/_transports/wsgi.py",
+    "docs/compatibility.md",
+    "docs/advanced/extensions.md",
+    "docs/contributing.md",
+    "docs/async.md",
+    "docs/advanced/text-encodings.md",
+    "docs/advanced/timeouts.md",
+    "docs/CNAME",
+    "tests/common.py",
+    "tests/client/test_auth.py",
+    "tests/test_wsgi.py"
+  ],
+  "file_tiers": {
+    "httpx/_client.py": "T0_local",
+    "httpx/_transports/wsgi.py": "T0_local",
+    "docs/advanced/transports.md": "T1_symbol",
+    "httpx/_transports/asgi.py": "T1_symbol",
+    "tests/client/test_auth.py": "T1_symbol",
+    "tests/test_wsgi.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "httpx/_transports/default.py": "T1_symbol",
+    "docs/advanced/clients.md": "T1_symbol",
+    "docs/compatibility.md": "T1_symbol",
+    "docs/advanced/extensions.md": "T1_symbol",
+    "docs/contributing.md": "T1_symbol",
+    "docs/async.md": "T1_symbol",
+    "docs/advanced/text-encodings.md": "T1_symbol",
+    "docs/advanced/timeouts.md": "T1_symbol",
+    "httpx/__version__.py": "T2_imports",
+    "tests/common.py": "T2_imports",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "httpx/_client.py",
+    "httpx/_transports/wsgi.py"
+  ],
+  "prompt_chars": 217531,
+  "est_prompt_tokens": 56372
+}

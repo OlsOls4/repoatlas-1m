@@ -1,0 +1,68 @@
+{
+  "prompt_tokens": 67497,
+  "completion_tokens": 2897,
+  "finish_reason": "stop",
+  "latency_seconds": 17.699754442990525,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "Marshmallow 4 renamed the decorator option from pass_many to pass_collection, but this documentation example still uses pass_many=True.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 152,
+        "end_line": 155,
+        "quote": "def post_dump(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n"
+      },
+      "suggested_doc_fix": "Replace `@post_dump(pass_many=True)` with `@post_dump(pass_collection=True)`.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S34"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S34",
+    "doc_path": "docs/extending/pre_and_post_processing.rst",
+    "doc_line": 66,
+    "doc_end": 66,
+    "doc_text": "@post_dump(pass_many=True)",
+    "claim": "call-signature: `marshmallow.post_dump(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:152)",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "context_files": [
+    "src/marshmallow/__init__.py",
+    "src/marshmallow/schema.py",
+    "src/marshmallow/decorators.py",
+    "docs/upgrading.rst",
+    "docs/nesting.rst",
+    "docs/extending/pre_and_post_processing.rst",
+    "tests/base.py",
+    "tests/test_decorators.py",
+    "examples/flask_example.py"
+  ],
+  "file_tiers": {
+    "src/marshmallow/decorators.py": "T0_local",
+    "docs/extending/pre_and_post_processing.rst": "T0_local",
+    "docs/upgrading.rst": "T1_symbol",
+    "tests/test_decorators.py": "T1_symbol",
+    "src/marshmallow/__init__.py": "T2_imports",
+    "tests/base.py": "T2_imports",
+    "src/marshmallow/schema.py": "T2_imports",
+    "docs/nesting.rst": "T3_bm25",
+    "examples/flask_example.py": "T3_bm25"
+  },
+  "local_files": [
+    "src/marshmallow/decorators.py",
+    "docs/extending/pre_and_post_processing.rst"
+  ],
+  "prompt_chars": 218358,
+  "est_prompt_tokens": 56390
+}

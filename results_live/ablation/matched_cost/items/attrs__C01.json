@@ -1,0 +1,63 @@
+{
+  "prompt_tokens": 67277,
+  "completion_tokens": 1544,
+  "finish_reason": "stop",
+  "latency_seconds": 12.757581042998936,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The documented path uses the singular `attrs.converter`, but attrs exposes the module as `attrs.converters`.",
+      "code_citation": {
+        "path": "src/attr/__init__.pyi",
+        "start_line": 17,
+        "end_line": 17,
+        "quote": "from . import converters as converters"
+      },
+      "suggested_doc_fix": "x = attrs.field(converter=attrs.converters.pipe(c1, c2, c3))",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S11"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "attrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S11",
+    "doc_path": "docs/api.rst",
+    "doc_line": 702,
+    "doc_end": 702,
+    "doc_text": "x = attrs.field(converter=attrs.converter.pipe(c1, c2, c3))",
+    "claim": "dotted: `attrs.converter.pipe`: 'converter' not found on attrs",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "src/attr/_make.py",
+    "src/attr/_next_gen.py",
+    "docs/api.rst",
+    "src/attrs/validators.py",
+    "src/attr/__init__.pyi",
+    "src/attr/converters.pyi",
+    "tests/strategies.py"
+  ],
+  "file_tiers": {
+    "docs/api.rst": "T0_local",
+    "src/attr/_make.py": "T1_symbol",
+    "src/attr/_next_gen.py": "T1_symbol",
+    "src/attr/__init__.pyi": "T1_symbol",
+    "tests/strategies.py": "T1_symbol",
+    "src/attr/converters.pyi": "T1_symbol",
+    "src/attrs/validators.py": "T2_imports"
+  },
+  "local_files": [
+    "docs/api.rst"
+  ],
+  "prompt_chars": 205322,
+  "est_prompt_tokens": 56404
+}

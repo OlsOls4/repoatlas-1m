@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 66249,
+  "completion_tokens": 2105,
+  "finish_reason": "stop",
+  "latency_seconds": 15.899955358996522,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documentation uses the plural option name `reuse_venvs`, but the Noxfile option is singular `reuse_venv`.",
+      "code_citation": {
+        "path": "tests/test__option_set.py",
+        "start_line": 152,
+        "end_line": 152,
+        "quote": "reuse_venv=\"no\","
+      },
+      "suggested_doc_fix": "Change `nox.options.reuse_venvs` to `nox.options.reuse_venv`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S21"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S21",
+    "doc_path": "docs/usage.rst",
+    "doc_line": 219,
+    "doc_end": 219,
+    "doc_text": "Similarly you can override ``nox.options.reuse_venvs`` from the Noxfile via the command line by using ``--reuse-venv=yes|no|always|never``.",
+    "claim": "dotted:name-not-in-code: `nox.options.reuse_venvs`: 'reuse_venvs' appears nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "nox/__init__.py",
+    "nox/sessions.py",
+    "nox/registry.py",
+    "nox/_cli.py",
+    "nox/project.py",
+    "nox/_option_set.py",
+    "nox/tasks.py",
+    "nox/_decorators.py",
+    "nox/popen.py",
+    "nox/_typing.py",
+    "nox/_parallel.py",
+    "docs/usage.rst",
+    "tests/test__option_set.py",
+    ".github/dependabot.yml"
+  ],
+  "file_tiers": {
+    "docs/usage.rst": "T0_local",
+    "nox/sessions.py": "T1_symbol",
+    "nox/_cli.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "nox/registry.py": "T1_symbol",
+    "nox/project.py": "T1_symbol",
+    "nox/_option_set.py": "T1_symbol",
+    "nox/tasks.py": "T1_symbol",
+    "nox/_decorators.py": "T1_symbol",
+    "nox/popen.py": "T1_symbol",
+    "nox/_parallel.py": "T1_symbol",
+    "tests/test__option_set.py": "T1_symbol",
+    "nox/__init__.py": "T2_imports",
+    "nox/_typing.py": "T2_imports",
+    ".github/dependabot.yml": "T3_bm25"
+  },
+  "local_files": [
+    "docs/usage.rst"
+  ],
+  "prompt_chars": 218622,
+  "est_prompt_tokens": 56391
+}

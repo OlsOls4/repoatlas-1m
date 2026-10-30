@@ -1,0 +1,91 @@
+{
+  "prompt_tokens": 66848,
+  "completion_tokens": 1937,
+  "finish_reason": "stop",
+  "latency_seconds": 14.53722988901427,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "SharedDataMiddleware is defined in werkzeug.middleware.shared_data, not exposed directly as werkzeug.middleware.SharedDataMiddleware.",
+      "code_citation": {
+        "path": "src/werkzeug/serving.py",
+        "start_line": 1075,
+        "end_line": 1077,
+        "quote": "        from .middleware.shared_data import SharedDataMiddleware\n\n        application = SharedDataMiddleware(application, static_files)"
+      },
+      "suggested_doc_fix": "Use ':class:`~werkzeug.middleware.shared_data.SharedDataMiddleware`.' instead of ':class:`~werkzeug.middleware.SharedDataMiddleware`.'",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S40"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S40",
+    "doc_path": "src/werkzeug/serving.py",
+    "doc_line": 1021,
+    "doc_end": 1021,
+    "doc_text": ":class:`~werkzeug.middleware.SharedDataMiddleware`.",
+    "claim": "role: `werkzeug.middleware.SharedDataMiddleware`: 'SharedDataMiddleware' not found on werkzeug.middleware",
+    "code_hint": "",
+    "candidate_id": "C08"
+  },
+  "context_files": [
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/wrappers/__init__.py",
+    "src/werkzeug/debug/__init__.py",
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/_internal.py",
+    "src/werkzeug/utils.py",
+    "src/werkzeug/urls.py",
+    "src/werkzeug/datastructures/set.py",
+    "src/werkzeug/debug/tbtools.py",
+    "src/werkzeug/security.py",
+    "src/werkzeug/serving.py",
+    "src/werkzeug/_reloader.py",
+    "src/werkzeug/middleware/shared_data.py",
+    "src/werkzeug/local.py",
+    "docs/deployment/proxy_fix.rst",
+    "docs/middleware/index.rst",
+    "docs/middleware/shared_data.rst",
+    "docs/middleware/dispatcher.rst",
+    "docs/middleware/http_proxy.rst",
+    "docs/middleware/proxy_fix.rst",
+    "docs/middleware/profiler.rst"
+  ],
+  "file_tiers": {
+    "src/werkzeug/serving.py": "T0_local",
+    "src/werkzeug/middleware/shared_data.py": "T1_symbol",
+    "src/werkzeug/local.py": "T1_symbol",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "src/werkzeug/_internal.py": "T2_imports",
+    "src/werkzeug/_reloader.py": "T2_imports",
+    "src/werkzeug/datastructures/set.py": "T2_imports",
+    "src/werkzeug/debug/__init__.py": "T2_imports",
+    "src/werkzeug/debug/tbtools.py": "T2_imports",
+    "src/werkzeug/exceptions.py": "T2_imports",
+    "src/werkzeug/urls.py": "T2_imports",
+    "src/werkzeug/security.py": "T2_imports",
+    "src/werkzeug/utils.py": "T2_imports",
+    "src/werkzeug/wrappers/__init__.py": "T2_imports",
+    "docs/deployment/proxy_fix.rst": "T3_bm25",
+    "docs/middleware/index.rst": "T3_bm25",
+    "docs/middleware/shared_data.rst": "T3_bm25",
+    "docs/middleware/dispatcher.rst": "T3_bm25",
+    "docs/middleware/http_proxy.rst": "T3_bm25",
+    "docs/middleware/proxy_fix.rst": "T3_bm25",
+    "docs/middleware/profiler.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/serving.py"
+  ],
+  "prompt_chars": 216528,
+  "est_prompt_tokens": 56415
+}

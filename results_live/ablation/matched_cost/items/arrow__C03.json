@@ -1,0 +1,83 @@
+{
+  "prompt_tokens": 67793,
+  "completion_tokens": 3339,
+  "finish_reason": "stop",
+  "latency_seconds": 23.430374702991685,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "The dehumanize docstring documents the first parameter as timestring, but the method signature names it input_string.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1344,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":"
+      },
+      "suggested_doc_fix": "Replace ':param timestring:' with ':param input_string:'.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "arrow-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "arrow-400000:DD-1",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 1349,
+    "doc_end": 1349,
+    "doc_text": ":param timestring: a ``str`` representing a humanized relative time.",
+    "claim": "The dehumanize docstring names the first parameter timestring, while its actual signature parameter is input_string.",
+    "code_hint": "arrow/arrow.py:1344-1344 '    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":'",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "README.rst",
+    "docs/Makefile",
+    ".pre-commit-config.yaml",
+    "tests/utils.py",
+    "CHANGELOG.rst",
+    "tests/conftest.py",
+    ".github/pull_request_template.md",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "arrow/arrow.py": "T0_local",
+    "arrow/factory.py": "T1_symbol",
+    "arrow/api.py": "T1_symbol",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/formatter.py": "T2_imports",
+    "arrow/parser.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "CHANGELOG.rst": "T3_bm25",
+    "README.rst": "T3_bm25",
+    ".github/ISSUE_TEMPLATE/bug_report.md": "T3_bm25",
+    ".pre-commit-config.yaml": "T3_bm25",
+    "docs/Makefile": "T3_bm25",
+    "tests/utils.py": "T3_bm25",
+    ".github/pull_request_template.md": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 197386,
+  "est_prompt_tokens": 56346
+}

@@ -1,0 +1,83 @@
+{
+  "prompt_tokens": 67129,
+  "completion_tokens": 1597,
+  "finish_reason": "stop",
+  "latency_seconds": 13.583466134994524,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "true_drift",
+      "reason": "The signature parameter is named `cache_result`, but the docstring documents it as `cache`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 640,
+        "end_line": 642,
+        "quote": "    def get_structure_hook(\n        self, type: TypeForm[T], cache_result: bool = True\n    ) -> Callable[[Any, TypeForm[T]], T]:"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:` in the `get_structure_hook` docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S28"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S28",
+    "doc_path": "src/cattrs/converters.py",
+    "doc_line": 651,
+    "doc_end": 651,
+    "doc_text": ":param cache: Whether to cache the returned hook.",
+    "claim": "docstring-param: `get_structure_hook(cache)`: documented param 'cache' not in signature of get_structure_hook (src/cattrs/converters.py:640)",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/cattrs/__init__.py",
+    "src/cattr/preconf/__init__.py",
+    "src/cattrs/converters.py",
+    "src/cattrs/_compat.py",
+    "src/cattrs/literals.py",
+    "src/cattrs/cols.py",
+    "src/cattrs/sentinels.py",
+    "src/cattrs/disambiguators.py",
+    "src/cattrs/preconf/msgspec.py",
+    "docs/modules.rst",
+    "tests/test_converter.py",
+    "tests/test_gen_dict.py",
+    "tests/test_disambiguators.py",
+    "tests/preconf/test_msgspec_cpython.py",
+    "tests/test_typing_structure.md",
+    "tests/test_cols.py"
+  ],
+  "file_tiers": {
+    "src/cattrs/converters.py": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/cattrs/__init__.py": "T1_symbol",
+    "src/cattrs/sentinels.py": "T1_symbol",
+    "src/cattrs/preconf/msgspec.py": "T1_symbol",
+    "docs/modules.rst": "T1_symbol",
+    "tests/test_converter.py": "T1_symbol",
+    "tests/test_gen_dict.py": "T1_symbol",
+    "tests/test_disambiguators.py": "T1_symbol",
+    "tests/preconf/test_msgspec_cpython.py": "T1_symbol",
+    "tests/test_typing_structure.md": "T1_symbol",
+    "tests/test_cols.py": "T1_symbol",
+    "src/cattrs/_compat.py": "T2_imports",
+    "src/cattrs/cols.py": "T2_imports",
+    "src/cattrs/disambiguators.py": "T2_imports",
+    "src/cattrs/literals.py": "T2_imports",
+    "src/cattr/preconf/__init__.py": "T3_bm25"
+  },
+  "local_files": [
+    "src/cattrs/converters.py"
+  ],
+  "prompt_chars": 213265,
+  "est_prompt_tokens": 56400
+}

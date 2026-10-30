@@ -1,0 +1,11 @@
+{"version": 2, "width": 100, "height": 30, "timestamp": 1793359900, "env": {"SHELL": null, "TERM": "dumb"}, "title": "docdrift run tomlkit"}
+[0.003274, "o", "$ docdrift run https://github.com/python-poetry/tomlkit --max-tokens 400000 --out fresh_run\r\n"]
+[1.574825, "o", "[1/4] symbol check: tomlkit @ d7def7d\r\n"]
+[1.680943, "o", "      0 symbol flags\r\n[2/4] packing the whole repository (RepoAtlas packer)\r\n"]
+[1.938306, "o", "      pack 141,326 tokens, 81 files, truncated=False; projected prompt 172,418 (guard 400,000)\r\n[3/4] Beam whole-repo triage: 1 call, 0 candidates + open search for cross-file drift\r\n"]
+[36.552164, "o", "[4/4] executable repro: doc-literal script per true_drift / extra finding, isolated venv, no network\r\n"]
+[54.981168, "o", "[venv] installing tomlkit@d7def7d\r\n"]
+[55.621983, "o", "[tomlkit:AD-1] attempt 1: could_not_run (lint) 'line 10: try/except catching Exception is not allowed'\r\n"]
+[69.763777, "o", "[tomlkit:AD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax'\r\n"]
+[96.374195, "o", "[tomlkit:AD-2] attempt 1: reproduced (expected_exception) \"NameError: name 'datetime' is not defined\"\r\n"]
+[96.375079, "o", "\r\nDocDrift report: tomlkit @ d7def7dbcc59\r\n============================================================\r\ncandidates triaged: 0  \r\nextra findings from the whole-repo pass: 2\r\n  AD-1 [other] The documentation still advertises TOML 1.0.0-compliance while the test suite an\r\n      docs docs/index.rst:17  code tests/test_toml_tests.py:17  (verified)\r\n  AD-2 [other] The quickstart writing snippet uses unqualified `datetime(...)` and `utc` names \r\n      docs docs/quickstart.rst:121  code tomlkit/api.py:202  (UNVERIFIED)\r\nexecutable repro (isolated venv, no network):\r\n  tomlkit:AD-1: reproduced AssertionError\r\n  tomlkit:AD-2: reproduced NameError  STRICT-CONFIRMED\r\n------------------------------------------------------------\r\nBeam tokens: triage 167,937 in + 4,975 out; repro 12,930 (3 calls); total 185,842\r\nwall time 96s (triage call 35s)\r\n"]

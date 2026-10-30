@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 66911,
+  "completion_tokens": 3612,
+  "finish_reason": "stop",
+  "latency_seconds": 23.58049362699967,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "`FileType` is never exported or defined; Click exports the file type as `File`.",
+      "code_citation": {
+        "path": "src/click/__init__.py",
+        "start_line": 59,
+        "end_line": 59,
+        "quote": "from .types import File as File"
+      },
+      "suggested_doc_fix": "Replace `{class}`FileType` with `{class}`File` in docs/exceptions.md.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S10"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "click",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S10",
+    "doc_path": "docs/exceptions.md",
+    "doc_line": 110,
+    "doc_end": 110,
+    "doc_text": "{class}`FileType` if Click encounters issues opening the file.",
+    "claim": "role:undefined: `FileType`: :class: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/click/__init__.py",
+    "src/click/_compat.py",
+    "src/click/utils.py",
+    "src/click/exceptions.py",
+    "src/click/globals.py",
+    "src/click/termui.py",
+    "src/click/_termui_impl.py",
+    "docs/utils.md",
+    "docs/exceptions.md",
+    "docs/click-concepts.md",
+    "README.md",
+    "docs/command-line-reference.md",
+    "tests/test_testing.py",
+    "tests/test_types/test_Path.py"
+  ],
+  "file_tiers": {
+    "docs/exceptions.md": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/click/utils.py": "T1_symbol",
+    "src/click/exceptions.py": "T1_symbol",
+    "src/click/termui.py": "T1_symbol",
+    "src/click/_termui_impl.py": "T1_symbol",
+    "tests/test_testing.py": "T1_symbol",
+    "tests/test_types/test_Path.py": "T1_symbol",
+    "src/click/_compat.py": "T2_imports",
+    "src/click/globals.py": "T2_imports",
+    "src/click/__init__.py": "T2_imports",
+    "docs/utils.md": "T3_bm25",
+    "docs/click-concepts.md": "T3_bm25",
+    "README.md": "T3_bm25",
+    "docs/command-line-reference.md": "T3_bm25"
+  },
+  "local_files": [
+    "docs/exceptions.md"
+  ],
+  "prompt_chars": 211375,
+  "est_prompt_tokens": 56416
+}

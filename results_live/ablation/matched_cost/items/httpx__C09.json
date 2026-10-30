@@ -1,0 +1,74 @@
+{
+  "prompt_tokens": 67628,
+  "completion_tokens": 3263,
+  "finish_reason": "stop",
+  "latency_seconds": 21.25449649101938,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C09",
+      "verdict": "true_drift",
+      "reason": "httpx.Client.__init__ has no `app` parameter, so `httpx.Client(app=app)` is invalid; WSGI apps must be passed via a transport.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 639,
+        "end_line": 661,
+        "quote": "    def __init__(\n        self,\n        *,\n        auth: AuthTypes | None = None,\n        params: QueryParamTypes | None = None,\n        headers: HeaderTypes | None = None,\n        cookies: CookieTypes | None = None,\n        verify: ssl.SSLContext | str | bool = True,\n        cert: CertTypes | None = None,\n        trust_env: bool = True,\n        http1: bool = True,\n        http2: bool = False,\n        proxy: ProxyTypes | None = None,\n        mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,\n        timeout: TimeoutTypes = DEFAULT_TIMEOUT_CONFIG,\n        follow_redirects: bool = False,\n        limits: Limits = DEFAULT_LIMITS,\n        max_redirects: int = DEFAULT_MAX_REDIRECTS,\n        event_hooks: None | (typing.Mapping[str, list[EventHook]]) = None,\n        base_url: URL | str = \"\",\n        transport: BaseTransport | None = None,\n        default_encoding: str | typing.Callable[[bytes], str] = \"utf-8\",\n    ) -> None:"
+      },
+      "suggested_doc_fix": "Remove the `httpx.Client(app=app)` example and show configuring the app through `httpx.Client(transport=httpx.WSGITransport(app=app))`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "httpx-400000:DD-2"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "httpx-400000:DD-2",
+    "doc_path": "httpx/_transports/wsgi.py",
+    "doc_line": 49,
+    "doc_end": 51,
+    "doc_text": "    ```\n    client = httpx.Client(app=app)\n    ```",
+    "claim": "The WSGITransport docstring still shows `httpx.Client(app=app)`, but `Client` does not accept an `app` argument; WSGI apps must be passed through `WSGITransport(app=app)`.",
+    "code_hint": "httpx/_client.py:639-661 '    def __init__(\\n        self,\\n        *,\\n        auth: AuthTypes | None = None,\\n        params: QueryParamTypes | None = None,\\n        headers: HeaderTypes | None = None,\\n        cookies: CookieTypes | None = None,\\n        verify: ssl.SSLContext | str | bool = True,\\n        cert: CertTypes | None = None,\\n        trust_env: bool = True,\\n        http1: bool = True,\\n        http2: bool = False,\\n        proxy: ProxyTypes | None = None,'",
+    "candidate_id": "C09"
+  },
+  "context_files": [
+    "httpx/_models.py",
+    "httpx/__version__.py",
+    "httpx/_types.py",
+    "httpx/_config.py",
+    "httpx/_client.py",
+    "httpx/_transports/default.py",
+    "httpx/_api.py",
+    "docs/advanced/transports.md",
+    "httpx/_transports/wsgi.py",
+    "docs/advanced/resource-limits.md",
+    "tests/common.py",
+    "tests/client/test_auth.py"
+  ],
+  "file_tiers": {
+    "httpx/_client.py": "T0_local",
+    "httpx/_transports/wsgi.py": "T0_local",
+    "httpx/_transports/default.py": "T1_symbol",
+    "httpx/_api.py": "T1_symbol",
+    "httpx/_types.py": "T1_symbol",
+    "httpx/_config.py": "T1_symbol",
+    "tests/client/test_auth.py": "T1_symbol",
+    "httpx/_models.py": "T1_symbol",
+    "docs/advanced/transports.md": "T1_symbol",
+    "docs/advanced/resource-limits.md": "T1_symbol",
+    "httpx/__version__.py": "T2_imports",
+    "tests/common.py": "T2_imports"
+  },
+  "local_files": [
+    "httpx/_client.py",
+    "httpx/_transports/wsgi.py"
+  ],
+  "prompt_chars": 220512,
+  "est_prompt_tokens": 56401
+}

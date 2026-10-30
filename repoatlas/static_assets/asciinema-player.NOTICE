@@ -1,0 +1,6 @@
+asciinema-player 3.17.0
+Apache License 2.0
+https://github.com/asciinema/asciinema-player
+
+Vendored as asciinema-player.min.js and asciinema-player.css so the static Space
+does not load a CDN.
