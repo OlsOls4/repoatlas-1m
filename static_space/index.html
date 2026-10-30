@@ -28,11 +28,6 @@
       <div class="tiles" id="tiles"><div class='tile'><strong>34</strong><span>real docs bugs · 11 of 12 libraries</span></div><div class='tile'><strong>30</strong><span>crash when you run the docs</span></div><div class='tile'><strong>2</strong><span>fixes filed upstream (starlette #3746, nox #1216)</span></div></div>
       <div class="note" id="hero-note">Labels: checked against the source by an AI reviewer, not a human. Recall is measured against the 45 drifts any method found, so it flatters the methods.</div>
       <p class="links" id="hero-links"><a href="https://github.com/OlsOls4/repoatlas-1m">Code</a> · <a href="https://huggingface.co/datasets/ollymcbride4/docdrift-bugs">Dataset</a> · <a href="https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5">Thread</a></p>
-      <div id="demo-video" class="demo-video">
-        <video id="demo-video-el" src="assets/docdrift-75s.mp4" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png">
-          <track kind="captions" src="assets/docdrift-75s.vtt" srclang="en" label="English">
-        </video>
-      </div>
     </div>
     <aside class="drift" id="drift-card" aria-label="Starlette docs-drift example">
       <p class="lbl">Docs say · docs/websockets.md:74 @8aa828c</p>
@@ -44,6 +39,12 @@
       <p class="drift-foot" id="drift-foot"></p>
       <p class="drift-honest" id="drift-honest"></p>
     </aside>
+    <div id="demo-video" class="demo-video">
+      <video id="demo-video-el" src="assets/docdrift-demo.mp4" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png" width="1280" height="720" aria-label="DocDrift demo, 87 seconds, silent with on-screen captions">
+        <track kind="captions" src="assets/docdrift-demo.vtt" srclang="en" label="English (same as on-screen)">
+      </video>
+      <details class="transcript"><summary>Transcript</summary><p>DocDrift gives Beam a whole Python library in one call to find docs that lie.</p><p>starlette&#x27;s docs tell you to call receive_json(data, mode=&quot;binary&quot;)…</p><p>…and running it crashes: TypeError Real run at pinned commit 8aa828c. This repro was hand-written from Beam&#x27;s verdict.</p><p>starlette: the whole library in one Beam call · 394,577 prompt tokens</p><p>3 candidates → 2 kept as real drift, 1 rejected</p><p>The repro raises the real TypeError on the doc&#x27;s own line</p><p>Fix filed upstream: starlette PR #3746 (open, not merged) 2 filed in total: starlette #3746, nox #1216 · status checked 30 Oct 2026</p><p>Every card: Docs say · Code says · Running it gives</p><p>Bug wall: 34 real docs bugs in 11 of 12 libraries</p><p>Filter by library and badge. Every card links the pinned commit.</p><p>Does the 1M context help? Verdict accuracy is about the same whole-repo 0.839 · matched-cost retrieval 0.821 · local files 0.839</p><p>Grounding is better: right cross-file line 25/30 whole-repo vs 19/30 matched-cost vs 14/30 local</p><p>Off-file evidence cited: 11/13 whole-repo vs 6/13 matched-cost vs 0/13 local</p><p>Not significant at this n (exact McNemar p = 0.070) Suggestive, not proven</p><p>34 of 45 known drifts found · 30 crash exactly as the docs are written 45 = every real drift any method found, so it favours the methods · labels checked by an AI reviewer</p><p>Every bug ships a script that runs the documented line 38 of 41 repro badges were real (2 false + 1 unclear)</p><p>Fresh CLI run on tomlkit, a library DocDrift had never seen Real recording · sped up (96 s run)</p><p>2 findings, 1 strict-confirmed · 185,842 Beam tokens · 96 s wall time Real recording · sped up (96 s run) · final screen held</p><p>Run it on your repo: docdrift run &lt;repo&gt; · free Ollama key</p></details>
+    </div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -155,6 +156,7 @@
     <section id="repros" class="panel" role="tabpanel" aria-labelledby="tab-repros" tabindex="0" hidden>
       <h2>Repros</h2>
       <p class="lede">Each row is a script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError on a documented-usage line. The starlette headline script was written by hand from Beam's verdict; the others were written by Beam.</p>
+      <p class="lede" id="repro-caption"></p>
       <div class="table-wrap">
         <table id="repro-table" class="cards"></table>
       </div>
@@ -163,14 +165,17 @@
     <section id="run" class="panel" role="tabpanel" aria-labelledby="tab-run" tabindex="0" hidden>
       <h2>Run it on your repo</h2>
       <p id="ollama-key"></p>
-      <h3>CLI</h3>
-      <pre><code id="cli-cmd"></code></pre>
       <details id="sample-output" hidden>
-        <summary>Sample output on a library DocDrift had never seen</summary>
+        <summary>See a real run on tomlkit, a library DocDrift had never seen (96 s)</summary>
         <p class="lede" id="sample-note"></p>
         <div id="sample-cast" hidden></div>
-        <pre id="sample-pre"></pre>
+        <details>
+          <summary>Plain text</summary>
+          <pre id="sample-pre"></pre>
+        </details>
       </details>
+      <h3>CLI</h3>
+      <pre><code id="cli-cmd"></code></pre>
       <p class="links" id="run-links"></p>
     </section>
 

@@ -284,7 +284,9 @@
     "matched_ledger_calls": 57,
     "matched_mcnemar_p": "0.070",
     "gold_file_retrieved": "8/13",
-    "gold_file_missed": 5
+    "gold_file_missed": 5,
+    "accuracy_frac_matched": "46/56",
+    "accuracy_frac_whole": "47/56"
   },
   "beamv3": {
     "available": true,
@@ -468,7 +470,7 @@
     "ledger_tokens": 7713453,
     "ledger_calls": 168
   },
-  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end. Extra experimental (not in that 9.3M): ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit fresh CLI run 185,842 (together +4,143,276 for these runs).",
+  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end. Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit CLI run 185,842.",
   "pack_coverage": {
     "available": true,
     "headers": [

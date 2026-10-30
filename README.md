@@ -18,7 +18,7 @@ tags:
 
 # DocDrift
 
-Repo name: **RepoAtlas-1M**.
+Repo name: **RepoAtlas-1M**. The code in this repository is [MIT](LICENSE) (copyright 2026 Olly McBride). Dataset labels in the companion dataset are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); quoted library docs and source remain under each project's own licence.
 
 ![RepoAtlas hero](docs/hero.png)
 

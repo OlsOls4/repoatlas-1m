@@ -60,6 +60,8 @@ class AblationPayload(TypedDict):
     matched_mcnemar_p: str
     gold_file_retrieved: str
     gold_file_missed: int
+    accuracy_frac_matched: str
+    accuracy_frac_whole: str
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -105,6 +107,8 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "matched_mcnemar_p": "",
         "gold_file_retrieved": "",
         "gold_file_missed": 0,
+        "accuracy_frac_matched": "",
+        "accuracy_frac_whole": "",
     }
     if not target.exists():
         return empty
@@ -301,6 +305,8 @@ def _matched_cost_fields() -> dict[str, object]:
         "matched_mcnemar_p": "",
         "gold_file_retrieved": "",
         "gold_file_missed": 0,
+        "accuracy_frac_matched": "",
+        "accuracy_frac_whole": "",
     }
     raw = _matched_cost_payload()
     if raw is None:
@@ -364,6 +370,8 @@ def _matched_cost_fields() -> dict[str, object]:
         "matched_mcnemar_p": p_text,
         "gold_file_retrieved": f"{retrieved}/{out_n}",
         "gold_file_missed": missed,
+        "accuracy_frac_matched": f"{acc_m}/{n}",
+        "accuracy_frac_whole": f"{acc_w}/{n}",
     }
 
 

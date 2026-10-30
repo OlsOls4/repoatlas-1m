@@ -49,6 +49,12 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert any(row.get("ledger") == "fresh_run" for row in ledger)
     fresh_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "fresh_run")
     assert fresh_tokens == 185_842
+    assert any(row.get("ledger") == "first_sweep" for row in ledger)
+    first_sweep = [row for row in ledger if row.get("ledger") == "first_sweep"]
+    assert len(first_sweep) == 12
+    first_sweep_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in first_sweep)
+    assert first_sweep_tokens == 4_424_575
+    assert not any(row.get("ledger") == "recall" for row in ledger)
     ablation = [json.loads(line) for line in (target / "ablation_verdicts.jsonl").read_text(encoding="utf-8").splitlines()]
     assert len(ablation) == 56
     assert "matched_verdict" in ablation[0]
@@ -60,9 +66,12 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     card = (target / "README.md").read_text(encoding="utf-8")
     assert LABEL_SOURCE in card
     assert "7,713,453" in card
-    assert "4,143,276" in card
+    assert "4,424,575" in card
+    assert "first_sweep" in card
     assert "3,957,434" in card
     assert "185,842" in card
+    assert "Extra experimental runs, not in the 9.3M" in card
+    assert "Together +4,143,276" not in card
     assert "not shown at this n" in card
     assert "unlabelled not counted as true" in card
     assert "Unpublished" not in card

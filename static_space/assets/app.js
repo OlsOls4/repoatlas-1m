@@ -31,6 +31,7 @@
       return "";
     }
     return escapeHtml(s)
+      .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>')
       .replace(/`([^`]+)`/g, "<code>$1</code>")
       .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   }
@@ -115,23 +116,28 @@
       }
       sample.hidden = false;
       const castHost = $("sample-cast");
-      if (
-        castHost &&
-        copy.sample_cast &&
-        window.AsciinemaPlayer &&
-        typeof window.AsciinemaPlayer.create === "function" &&
-        !castHost.dataset.playerReady
-      ) {
-        castHost.hidden = false;
-        window.AsciinemaPlayer.create(copy.sample_cast, castHost, {
-          cols: 100,
-          rows: 30,
-          preload: false,
-          poster: "npt:0:08",
-          fit: "width",
-        });
-        castHost.dataset.playerReady = "1";
-      }
+      sample.addEventListener("toggle", function () {
+        if (!sample.open || !castHost || castHost.dataset.playerReady) {
+          return;
+        }
+        if (
+          copy.sample_cast &&
+          window.AsciinemaPlayer &&
+          typeof window.AsciinemaPlayer.create === "function"
+        ) {
+          castHost.hidden = false;
+          window.AsciinemaPlayer.create(copy.sample_cast, castHost, {
+            cols: 100,
+            rows: 30,
+            preload: true,
+            poster: "npt:0:08",
+            fit: "width",
+            terminalFontSize: "small",
+          });
+          castHost.dataset.playerReady = "1";
+          $("sample-pre").hidden = true;
+        }
+      });
     }
   }
 
@@ -663,9 +669,20 @@
 
   function renderRepros(repros) {
     const headers = ["Id", "Library", "Verdict", "Status", "Strict", "Error"];
+    const counts = {};
+    repros.forEach(function (row) {
+      const key = row.display_id || row.id;
+      counts[key] = (counts[key] || 0) + 1;
+    });
     const rows = repros.map(function (row) {
+      let display = row.display_id || row.id;
+      if (counts[display] > 1) {
+        const source = String(row.source_id || row.id || "");
+        const tail = source.split(":").pop() || source;
+        display = display + " · " + (tail.indexOf("S") === 0 ? "symbol" : "whole-repo");
+      }
       return [
-        { text: row.display_id || row.id, title: row.id },
+        { text: display, title: row.id },
         row.library,
         row.verdict,
         row.status,
@@ -763,6 +780,11 @@
       })
       .join("");
     $("sources").textContent = copy.sources_public || "";
+    const reproCaption = $("repro-caption");
+    if (reproCaption) {
+      reproCaption.textContent =
+        copy.repro_caption || "Some bugs have 2 scripts (one per candidate); 30 distinct bugs reproduce.";
+    }
     const cross = $("cross-file-def");
     if (cross) {
       cross.textContent = copy.cross_file_note || "";

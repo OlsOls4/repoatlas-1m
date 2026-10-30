@@ -2,6 +2,7 @@
   {
     "id": "arrow:S22",
     "library": "arrow",
+    "source_id": "S22",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -14,6 +15,7 @@
   {
     "id": "arrow:S23",
     "library": "arrow",
+    "source_id": "S23",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -26,6 +28,7 @@
   {
     "id": "arrow:S24",
     "library": "arrow",
+    "source_id": "S24",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -38,6 +41,7 @@
   {
     "id": "arrow:arrow-400000:DD-1",
     "library": "arrow",
+    "source_id": "arrow-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -50,6 +54,7 @@
   {
     "id": "attrs:S11",
     "library": "attrs",
+    "source_id": "S11",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -62,6 +67,7 @@
   {
     "id": "cattrs:S27",
     "library": "cattrs",
+    "source_id": "S27",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -74,6 +80,7 @@
   {
     "id": "cattrs:S28",
     "library": "cattrs",
+    "source_id": "S28",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -86,6 +93,7 @@
   {
     "id": "cattrs:cattrs-400000:DD-1",
     "library": "cattrs",
+    "source_id": "cattrs-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -98,6 +106,7 @@
   {
     "id": "cattrs:cattrs-400000:DD-2",
     "library": "cattrs",
+    "source_id": "cattrs-400000:DD-2",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -110,6 +119,7 @@
   {
     "id": "cattrs:cattrs-400000:DD-3",
     "library": "cattrs",
+    "source_id": "cattrs-400000:DD-3",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -122,6 +132,7 @@
   {
     "id": "click:S10",
     "library": "click",
+    "source_id": "S10",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -134,6 +145,7 @@
   {
     "id": "click:click-400000:DD-1",
     "library": "click",
+    "source_id": "click-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -146,6 +158,7 @@
   {
     "id": "httpx:ADD-AD-1",
     "library": "httpx",
+    "source_id": "ADD-AD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -158,6 +171,7 @@
   {
     "id": "httpx:ADD-AD-2",
     "library": "httpx",
+    "source_id": "ADD-AD-2",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -170,6 +184,7 @@
   {
     "id": "httpx:ADD-AD-3",
     "library": "httpx",
+    "source_id": "ADD-AD-3",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -182,6 +197,7 @@
   {
     "id": "httpx:ADD-AD-5",
     "library": "httpx",
+    "source_id": "ADD-AD-5",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -194,6 +210,7 @@
   {
     "id": "httpx:S4",
     "library": "httpx",
+    "source_id": "S4",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -206,6 +223,7 @@
   {
     "id": "httpx:S5",
     "library": "httpx",
+    "source_id": "S5",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -218,6 +236,7 @@
   {
     "id": "httpx:S6",
     "library": "httpx",
+    "source_id": "S6",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -230,6 +249,7 @@
   {
     "id": "httpx:S9",
     "library": "httpx",
+    "source_id": "S9",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -242,6 +262,7 @@
   {
     "id": "httpx:httpx-400000:DD-1",
     "library": "httpx",
+    "source_id": "httpx-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -254,6 +275,7 @@
   {
     "id": "httpx:httpx-400000:DD-2",
     "library": "httpx",
+    "source_id": "httpx-400000:DD-2",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -266,6 +288,7 @@
   {
     "id": "jinja:ADD-AD-1",
     "library": "jinja",
+    "source_id": "ADD-AD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -278,6 +301,7 @@
   {
     "id": "jinja:ADD-AD-2",
     "library": "jinja",
+    "source_id": "ADD-AD-2",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -290,6 +314,7 @@
   {
     "id": "jinja:S19",
     "library": "jinja",
+    "source_id": "S19",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -302,6 +327,7 @@
   {
     "id": "marshmallow:ADD-AD-1",
     "library": "marshmallow",
+    "source_id": "ADD-AD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -314,6 +340,7 @@
   {
     "id": "marshmallow:ADD-AD-2",
     "library": "marshmallow",
+    "source_id": "ADD-AD-2",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -326,6 +353,7 @@
   {
     "id": "marshmallow:S33",
     "library": "marshmallow",
+    "source_id": "S33",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -338,6 +366,7 @@
   {
     "id": "marshmallow:S34",
     "library": "marshmallow",
+    "source_id": "S34",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -350,6 +379,7 @@
   {
     "id": "nox:S20",
     "library": "nox",
+    "source_id": "S20",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -362,6 +392,7 @@
   {
     "id": "nox:S21",
     "library": "nox",
+    "source_id": "S21",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -374,6 +405,7 @@
   {
     "id": "nox:nox-400000:DD-1",
     "library": "nox",
+    "source_id": "nox-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -386,6 +418,7 @@
   {
     "id": "starlette:S1",
     "library": "starlette",
+    "source_id": "S1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -398,6 +431,7 @@
   {
     "id": "starlette:starlette-400000:DD-1",
     "library": "starlette",
+    "source_id": "starlette-400000:DD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -410,6 +444,7 @@
   {
     "id": "werkzeug:S35",
     "library": "werkzeug",
+    "source_id": "S35",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -422,6 +457,7 @@
   {
     "id": "werkzeug:S36",
     "library": "werkzeug",
+    "source_id": "S36",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -434,6 +470,7 @@
   {
     "id": "werkzeug:S38",
     "library": "werkzeug",
+    "source_id": "S38",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -446,6 +483,7 @@
   {
     "id": "werkzeug:S39",
     "library": "werkzeug",
+    "source_id": "S39",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -458,6 +496,7 @@
   {
     "id": "werkzeug:S40",
     "library": "werkzeug",
+    "source_id": "S40",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -470,6 +509,7 @@
   {
     "id": "werkzeug:S41",
     "library": "werkzeug",
+    "source_id": "S41",
     "verdict": "unclear",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -482,6 +522,7 @@
   {
     "id": "werkzeug:S42",
     "library": "werkzeug",
+    "source_id": "S42",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "interface_error",
@@ -494,6 +535,7 @@
   {
     "id": "arrow:ADD-AD-1",
     "library": "arrow",
+    "source_id": "ADD-AD-1",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "assertion",
@@ -506,6 +548,7 @@
   {
     "id": "arrow:ADD-AD-2",
     "library": "arrow",
+    "source_id": "ADD-AD-2",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "assertion",
@@ -518,6 +561,7 @@
   {
     "id": "arrow:ADD-AD-3",
     "library": "arrow",
+    "source_id": "ADD-AD-3",
     "verdict": "false",
     "status": "could_not_run",
     "evidence": "",
@@ -530,6 +574,7 @@
   {
     "id": "arrow:arrow-400000:DD-2",
     "library": "arrow",
+    "source_id": "arrow-400000:DD-2",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "assertion",
@@ -542,6 +587,7 @@
   {
     "id": "arrow:arrow-400000:DD-3",
     "library": "arrow",
+    "source_id": "arrow-400000:DD-3",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "other_exception",
@@ -554,6 +600,7 @@
   {
     "id": "arrow:arrow-400000:DD-4",
     "library": "arrow",
+    "source_id": "arrow-400000:DD-4",
     "verdict": "false",
     "status": "reproduced",
     "evidence": "assertion",
@@ -566,6 +613,7 @@
   {
     "id": "cattrs:S25",
     "library": "cattrs",
+    "source_id": "S25",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "other_exception",
@@ -578,6 +626,7 @@
   {
     "id": "httpx:ADD-AD-4",
     "library": "httpx",
+    "source_id": "ADD-AD-4",
     "verdict": "unclear",
     "status": "reproduced",
     "evidence": "other_exception",
@@ -590,6 +639,7 @@
   {
     "id": "httpx:S7",
     "library": "httpx",
+    "source_id": "S7",
     "verdict": "false",
     "status": "not_reproduced",
     "evidence": "",
@@ -602,6 +652,7 @@
   {
     "id": "jinja:jinja-400000:DD-1",
     "library": "jinja",
+    "source_id": "jinja-400000:DD-1",
     "verdict": "unclear",
     "status": "reproduced",
     "evidence": "assertion",
@@ -614,6 +665,7 @@
   {
     "id": "marshmallow:marshmallow-400000:DD-1",
     "library": "marshmallow",
+    "source_id": "marshmallow-400000:DD-1",
     "verdict": "false",
     "status": "not_reproduced",
     "evidence": "",
@@ -626,6 +678,7 @@
   {
     "id": "marshmallow:marshmallow-400000:DD-2",
     "library": "marshmallow",
+    "source_id": "marshmallow-400000:DD-2",
     "verdict": "true",
     "status": "could_not_run",
     "evidence": "",
@@ -638,6 +691,7 @@
   {
     "id": "werkzeug:ADD-AD-1",
     "library": "werkzeug",
+    "source_id": "ADD-AD-1",
     "verdict": "true",
     "status": "reproduced",
     "evidence": "assertion",

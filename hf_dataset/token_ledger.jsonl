@@ -1,3 +1,15 @@
+{"kind": "whole_repo", "label": "starlette", "prompt": 394577, "completion": 4733, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "httpx", "prompt": 392598, "completion": 4053, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "click", "prompt": 388719, "completion": 4698, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "structlog", "prompt": 403833, "completion": 6118, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "nox", "prompt": 346394, "completion": 7014, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "arrow", "prompt": 329026, "completion": 4457, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "cattrs", "prompt": 306549, "completion": 4107, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "marshmallow", "prompt": 294559, "completion": 4916, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "attrs", "prompt": 400648, "completion": 4102, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "jinja", "prompt": 356873, "completion": 5311, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "werkzeug", "prompt": 386415, "completion": 3446, "ledger": "first_sweep"}
+{"kind": "whole_repo", "label": "pydantic-settings", "prompt": 366051, "completion": 5378, "ledger": "first_sweep"}
 {"kind": "triage", "label": "starlette", "prompt": 395056, "completion": 3228, "at": "2026-10-26T22:05:00.594506+00:00", "ledger": "hybrid"}
 {"kind": "triage", "label": "httpx", "prompt": 393820, "completion": 9516, "at": "2026-10-26T22:05:27.487251+00:00", "ledger": "hybrid"}
 {"kind": "triage", "label": "click", "prompt": 389086, "completion": 1149, "at": "2026-10-26T22:05:43.233778+00:00", "ledger": "hybrid"}

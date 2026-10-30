@@ -22,7 +22,6 @@ from repoatlas.hybrid_view import (
 
 HF_DATASET_DIRECTORY: Path = Path("hf_dataset")
 LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "hybrid" / "beam_usage_ledger.json"
-RECALL_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "recall" / "usage_ledger.json"
 ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
 ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
 MATCHED_COST_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "results.json"
@@ -272,9 +271,9 @@ def _token_ledger() -> list[dict[str, object]]:
     """
 
     rows: list[dict[str, object]] = []
+    rows.extend(_first_sweep_ledger_rows())
     for source, path in (
         ("hybrid", LEDGER_PATH),
-        ("recall", RECALL_LEDGER_PATH),
         ("ablation", ABLATION_LEDGER_PATH),
         ("beamv3", BEAMV3_LEDGER_PATH),
         ("matched_cost", MATCHED_COST_LEDGER_PATH),
@@ -313,6 +312,51 @@ def _token_ledger() -> list[dict[str, object]]:
                     "ledger": "fresh_run",
                 }
             )
+    return rows
+
+
+def _first_sweep_ledger_rows() -> list[dict[str, object]]:
+    """
+    @brief Per-library first-sweep tokens from results_live/traces/*-400000.json summaries.
+    """
+
+    libraries = (
+        "starlette",
+        "httpx",
+        "click",
+        "structlog",
+        "nox",
+        "arrow",
+        "cattrs",
+        "marshmallow",
+        "attrs",
+        "jinja",
+        "werkzeug",
+        "pydantic-settings",
+    )
+    rows: list[dict[str, object]] = []
+    traces = RESULTS_LIVE_DIRECTORY / "traces"
+    for library in libraries:
+        path = traces / f"{library}-400000.json"
+        if not path.exists():
+            continue
+        payload: object = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            continue
+        summary = payload.get("summary") if isinstance(payload.get("summary"), dict) else {}
+        prompt = int(summary.get("input_tokens") or 0)
+        completion = int(summary.get("output_tokens") or 0)
+        if prompt + completion <= 0:
+            continue
+        rows.append(
+            {
+                "kind": "whole_repo",
+                "label": library,
+                "prompt": prompt,
+                "completion": completion,
+                "ledger": "first_sweep",
+            }
+        )
     return rows
 
 
@@ -409,7 +453,7 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 | planted_drift | {len(plants)} | Planted-drift set + ground truth | original probe fields plus `seed` |
 | ablation_verdicts | {len(ablation)} | Whole-repo vs local-file vs matched-cost retrieval triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `matched_verdict`, `stability_verdict`, citation flags |
 | beamv3_findings | {len(beamv3)} | Extra 32k-docstring-chunk and docs-pass findings (unlabelled not counted as true) | `id`, `repo`, `pass`, `doc_path`, `doc_line`, `label`, `drift_id`, `label_by`, `hand_verdict`, `hand_verdict_description`, `new_vs_hybrid`, `strict_confirmed`, `explanation` |
-| token_ledger | {len(ledger)} | Hybrid + recall + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`hybrid`, `recall`, `ablation`, `beamv3`, `matched_cost`, `fresh_run`) |
+| token_ledger | {len(ledger)} | Hybrid + first-sweep + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`first_sweep`, `hybrid`, `ablation`, `beamv3`, `matched_cost`, `fresh_run`) |
 
 `hand_verdict` means {LABEL_SOURCE}. It is not a human annotator.
 
@@ -418,10 +462,8 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. {hy
 - The 45-drift universe is the union of method output, so it favours those methods.
 - 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
-- End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
-- Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
-- Extra coverage-pass ledger (docs + 32k chunks + stability + repro, not in that 9.3M): 7,713,453 tokens over 168 calls.
-- Matched-cost retrieval control (not in that 9.3M): 3,957,434 tokens over 57 calls. tomlkit fresh `docdrift run` (not in that 9.3M): 185,842 tokens. Together +4,143,276 for these runs.
+- End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 first sweep + 4,739,392 hybrid triage + 138,138 repro. The first sweep is in `token_ledger` as `ledger=first_sweep` (12 rows from the recorded 400k traces).
+- Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit CLI run 185,842.
 - Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items.
 - 32k docstring chunks recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid + 32k chunks). Headline stays 34 of 45.
 

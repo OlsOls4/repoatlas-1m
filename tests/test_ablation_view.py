@@ -38,6 +38,8 @@ def test_ablation_payload_matches_recorded_results() -> None:
     assert "4/4 vs 0/4" in payload["subset_note"]
     assert payload["matched_available"] is True
     assert payload["accuracy_matched"] == "0.821"
+    assert payload["accuracy_frac_matched"] == "46/56"
+    assert payload["accuracy_frac_whole"] == "47/56"
     assert payload["cross_file_cite_matched"] == "19/30"
     assert payload["outside_cite_matched"] == "6/13"
     assert payload["matched_tokens"] == 3_888_241

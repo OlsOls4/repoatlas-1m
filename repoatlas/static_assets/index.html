@@ -28,11 +28,6 @@
       <div class="tiles" id="tiles"><!--TILES--></div>
       <div class="note" id="hero-note"><!--HERO_NOTE--></div>
       <p class="links" id="hero-links"><!--HERO_LINKS--></p>
-      <div id="demo-video" class="demo-video" hidden>
-        <video id="demo-video-el" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png">
-          <track kind="captions" src="assets/docdrift-75s.vtt" srclang="en" label="English">
-        </video>
-      </div>
     </div>
     <aside class="drift" id="drift-card" aria-label="Starlette docs-drift example">
       <p class="lbl">Docs say · docs/websockets.md:74 @8aa828c</p>
@@ -44,6 +39,12 @@
       <p class="drift-foot" id="drift-foot"></p>
       <p class="drift-honest" id="drift-honest"></p>
     </aside>
+    <div id="demo-video" class="demo-video" hidden>
+      <video id="demo-video-el" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png" width="1280" height="720" aria-label="DocDrift demo, 87 seconds, silent with on-screen captions">
+        <track kind="captions" src="assets/docdrift-demo.vtt" srclang="en" label="English (same as on-screen)">
+      </video>
+      <!--VIDEO_TRANSCRIPT-->
+    </div>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Sections">
@@ -155,6 +156,7 @@
     <section id="repros" class="panel" role="tabpanel" aria-labelledby="tab-repros" tabindex="0" hidden>
       <h2>Repros</h2>
       <p class="lede">Each row is a script that ran the documented usage. Strict means TypeError, AttributeError, ImportError, or NameError on a documented-usage line. The starlette headline script was written by hand from Beam's verdict; the others were written by Beam.</p>
+      <p class="lede" id="repro-caption"></p>
       <div class="table-wrap">
         <table id="repro-table" class="cards"></table>
       </div>
@@ -163,14 +165,17 @@
     <section id="run" class="panel" role="tabpanel" aria-labelledby="tab-run" tabindex="0" hidden>
       <h2>Run it on your repo</h2>
       <p id="ollama-key"></p>
-      <h3>CLI</h3>
-      <pre><code id="cli-cmd"></code></pre>
       <details id="sample-output" hidden>
-        <summary>Sample output on a library DocDrift had never seen</summary>
+        <summary>See a real run on tomlkit, a library DocDrift had never seen (96 s)</summary>
         <p class="lede" id="sample-note"></p>
         <div id="sample-cast" hidden></div>
-        <pre id="sample-pre"></pre>
+        <details>
+          <summary>Plain text</summary>
+          <pre id="sample-pre"></pre>
+        </details>
       </details>
+      <h3>CLI</h3>
+      <pre><code id="cli-cmd"></code></pre>
       <p class="links" id="run-links"></p>
     </section>
 

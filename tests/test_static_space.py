@@ -25,7 +25,10 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     stats = compute_hero_stats(payload)
     documents = build_static_payload()
     hero = documents["hero"]
-    assert hero["headline"] == headline_sentence(stats)
+    assert hero["headline"] == headline_sentence(stats).replace(
+        f"in {stats['repo_count']} Python libraries",
+        f"in {hero['true_library_count']} of {stats['repo_count']} Python libraries",
+    )
     assert hero["hybrid_true"] == stats["hybrid_true"]
     assert hero["hybrid_findings"] == stats["hybrid_findings"]
     assert hero["hybrid_true_findings"] == stats["hybrid_true_findings"]
@@ -94,13 +97,16 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "run_benchmark.py" not in copy["cli"]
     assert copy["local"] == ""
     assert copy["links"]["code"].endswith("repoatlas-1m")
-    assert copy["video"] == "assets/docdrift-75s.mp4"
+    assert copy["video"] == "assets/docdrift-demo.mp4"
     assert copy["video_poster"] == "assets/docdrift-poster.png"
+    assert copy["video_captions"] == "assets/docdrift-demo.vtt"
     assert "185,842" in copy["sample_output"]
     assert "tomlkit" in copy["sample_output"].lower()
     assert "STRICT-CONFIRMED" in copy["sample_output"]
     assert "185,842" in copy["sample_note"]
     assert "strict-confirmed" in copy["sample_note"]
+    assert "arguable as drift" in copy["sample_note"]
+    assert "both true when checked against the source" not in copy["sample_note"]
     assert copy["sample_cast"] == "assets/docdrift_tomlkit.cast"
     assert "not run yet" not in copy["why_matched_cost_note"].lower()
     assert "46/56" in copy["why_matched_cost_note"]
@@ -108,12 +114,26 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "11/13" in copy["why_matched_cost_note"] and "6/13" in copy["why_matched_cost_note"]
     assert "not shown at this n" in copy["why_matched_cost_note"]
     assert "5 of 13" in copy["why_matched_cost_note"]
-    assert "4,143,276" in documents["benchmark"]["token_footnote"]
+    assert "Extra experimental runs, not in the 9.3M" in documents["benchmark"]["token_footnote"]
     assert "3,957,434" in documents["benchmark"]["token_footnote"]
+    assert "together" not in documents["benchmark"]["token_footnote"].lower()
+    assert "4,143,276" not in documents["benchmark"]["token_footnote"]
     assert "isolated venv" in copy["ollama_key"]
     assert "--out findings" in copy["cli"]
     assert "24 + 1 + 9 = 34" in copy["how_beam"][1]
     assert "taking distinct trues from 24 to 34" not in copy["how_beam"][1]
+    assert len(copy["how_beam"]) == 3
+    assert all("Long context didn't make verdicts" not in item for item in copy["how_beam"])
+    assert "[ollama.com](https://ollama.com)" in copy["ollama_key"]
+    beam_row = next(row for row in copy["criteria"] if row["title"] == "Beam")
+    assert "46/56" in beam_row["body"] and "47/56" in beam_row["body"]
+    assert "19/30" in beam_row["body"] and "25/30" in beam_row["body"]
+    assert "not shown at this n" in beam_row["body"]
+    assert any("prompt 404,652 tokens" in item for item in copy["limits"])
+    assert "11 of 12" in hero["headline"]
+    assert "in 12 Python libraries" not in hero["headline"]
+    assert copy["repro_caption"].startswith("Some bugs have 2 scripts")
+    assert any(row.get("source_id") for row in documents["repros"])
     assert "0.926" in copy["why_subset_note"]
     assert "0.815" in copy["why_subset_note"]
     arw02 = next(bug for bug in documents["bugs"] if bug["display_id"] == "ARW-02")
@@ -206,17 +226,39 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert 'role="tab"' in index_html
     assert 'id="drift-card"' in index_html
     assert 'tabindex="-1"' in index_html
-    assert 'src="assets/docdrift-75s.mp4"' in index_html
+    assert 'src="assets/docdrift-demo.mp4"' in index_html
     assert 'preload="metadata"' in index_html
     assert "playsinline" in index_html
     assert "muted" in index_html
     assert 'poster="assets/docdrift-poster.png"' in index_html
-    assert 'src="assets/docdrift-75s.vtt"' in index_html
-    assert (target / "assets" / "docdrift-75s.mp4").exists()
+    assert 'src="assets/docdrift-demo.vtt"' in index_html
+    assert 'width="1280"' in index_html and 'height="720"' in index_html
+    assert 'aria-label="DocDrift demo, 87 seconds, silent with on-screen captions"' in index_html
+    assert 'label="English (same as on-screen)"' in index_html
+    assert '<details class="transcript">' in index_html
+    assert (target / "assets" / "docdrift-demo.mp4").exists()
     assert (target / "assets" / "docdrift-poster.png").exists()
-    assert (target / "assets" / "docdrift-75s.vtt").exists()
+    assert (target / "assets" / "docdrift-demo.vtt").exists()
+    assert not (target / "assets" / "docdrift-75s.mp4").exists()
     assert "*.mp4 filter=lfs diff=lfs merge=lfs -text" in (target / ".gitattributes").read_text(encoding="utf-8")
     assert 'id="demo-video" class="demo-video" hidden' not in index_html
+    assert index_html.find('id="demo-video"') > index_html.find('id="drift-card"')
+    assert 'content="assets/og.png"' in index_html
+    css = (target / "assets" / "app.css").read_text(encoding="utf-8")
+    assert "video{display:none}" not in css.replace(" ", "")
+    assert ".ap-player *" in css
+    assert "aspect-ratio: 16 / 9" in css or "aspect-ratio:16/9" in css
+    assert "grid-column: 1 / -1" in css or "grid-column:1/-1" in css
+    js = (target / "assets" / "app.js").read_text(encoding="utf-8")
+    assert 'sample.addEventListener("toggle"' in js
+    assert "terminalFontSize" in js
+    sample_pos = index_html.find('id="sample-output"')
+    cli_pos = index_html.find("<h3>CLI</h3>")
+    assert 0 < sample_pos < cli_pos
+    assert "See a real run on tomlkit" in index_html
+    assert Path("LICENSE").is_file()
+    assert "Copyright (c) 2026 Olly McBride" in Path("LICENSE").read_text(encoding="utf-8")
+    assert "MIT" in Path("README.md").read_text(encoding="utf-8")
     assert index_html.find('id="story"') < index_html.find('id="recorded-run"')
     assert "Loading recorded results" not in index_html
     assert "lead-full" in index_html

@@ -2,8 +2,7 @@
   "how_beam": [
     "Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.",
     "Beam's triage kept all 24 true symbol-check drifts, kept 1 extra from the whole-repo pass's own candidates, and added 9 drifts the checker missed (7 new to the union): 24 + 1 + 9 = 34.",
-    "Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.",
-    "Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers. On the same 56 candidates, whole-repo and local-file triage both kept 32/32 true and rejected 15/24 false; 6 of 56 disagreements split 3-3. Whole-repo cited the correct file:line in 25/30 cross-file cases vs 14/30 for local, and 11/13 vs 0/13 when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: 26/27 verdicts matched."
+    "Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge."
   ],
   "limits": [
     "The 45-drift universe is the union of method output, so it favours those methods.",
@@ -14,6 +13,7 @@
     "Filed by this project. Open, not merged. Status checked 30 Oct 2026.",
     "httpx #3774 and arrow #1355 were already reported upstream by others.",
     "cattrs and click have drafts in the repo; they are not listed as filed.",
+    "structlog: Beam's whole-repo reply had no parseable JSON (prompt 404,652 tokens); not retried.",
     "This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI."
   ],
   "glossary": [
@@ -23,7 +23,7 @@
   ],
   "cli": "pip install git+https://github.com/OlsOls4/repoatlas-1m\nexport OLLAMA_API_KEY=YOUR_KEY\ndocdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings",
   "cli_sweep": "",
-  "ollama_key": "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.",
+  "ollama_key": "Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.",
   "local": "",
   "links": {
     "code": "https://github.com/OlsOls4/repoatlas-1m",
@@ -45,20 +45,22 @@
     },
     {
       "title": "Beam",
-      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens)."
+      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens). At the same token budget, retrieval matched verdicts (46/56 vs 47/56) but grounded fewer cross-file cases (19/30 vs 25/30; p = 0.070, not shown at this n)."
     }
   ],
   "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
   "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\". The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for the same spend.",
   "why_subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
-  "video": "assets/docdrift-75s.mp4",
+  "video": "assets/docdrift-demo.mp4",
   "video_poster": "assets/docdrift-poster.png",
+  "video_captions": "assets/docdrift-demo.vtt",
   "sample_output": "[1/4] symbol check: tomlkit @ d7def7d\n      0 symbol flags\n[2/4] packing the whole repository (RepoAtlas packer)\n      pack 141,326 tokens, 81 files, truncated=False; projected prompt 172,418 (guard 400,000)\n[3/4] Beam whole-repo triage: 1 call, 0 candidates + open search for cross-file drift\n[4/4] executable repro: doc-literal script per true_drift / extra finding, isolated venv, no network\n[venv] installing tomlkit@d7def7d\n[tomlkit:AD-1] attempt 1: could_not_run (lint) 'line 10: try/except catching Exception is not allowed'\n[tomlkit:AD-1] attempt 2: reproduced (expected_exception) 'AssertionError: docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax'\n[tomlkit:AD-2] attempt 1: reproduced (expected_exception) \"NameError: name 'datetime' is not defined\"\n\nDocDrift report: tomlkit @ d7def7dbcc59\n============================================================\ncandidates triaged: 0  \nextra findings from the whole-repo pass: 2\n  AD-1 [other] The documentation still advertises TOML 1.0.0-compliance while the test suite an\n      docs docs/index.rst:17  code tests/test_toml_tests.py:17  (verified)\n  AD-2 [other] The quickstart writing snippet uses unqualified `datetime(...)` and `utc` names \n      docs docs/quickstart.rst:121  code tomlkit/api.py:202  (UNVERIFIED)\nexecutable repro (isolated venv, no network):\n  tomlkit:AD-1: reproduced AssertionError\n  tomlkit:AD-2: reproduced NameError  STRICT-CONFIRMED\n------------------------------------------------------------\nBeam tokens: triage 167,937 in + 4,975 out; repro 12,930 (3 calls); total 185,842\nwall time 96s (triage call 35s)\n",
   "sample_cast": "assets/docdrift_tomlkit.cast",
-  "sample_note": "tomlkit @ d7def7d · 2 findings, both true when checked against the source, 1 strict-confirmed · 185,842 tokens · 96 s",
+  "sample_note": "tomlkit @ d7def7d · 2 findings: a version-claim drift (citation verified; docs say TOML 1.0.0, tests accept 1.1.0) and a quickstart snippet missing its imports (NameError, strict-confirmed; arguable as drift) · 185,842 tokens · 96 s",
+  "repro_caption": "Some bugs have 2 scripts (one per candidate); 30 distinct bugs reproduce.",
   "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
   "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
-  "built_at": "2026-10-30T12:50:17Z",
+  "built_at": "2026-10-30T13:15:28Z",
   "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",

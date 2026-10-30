@@ -23,7 +23,7 @@ tags:
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
-This Space is a **static recording**; it makes no Beam calls.
+This Space is a **static recording**; it makes no Beam calls. Code is [MIT](https://github.com/OlsOls4/repoatlas-1m/blob/main/LICENSE) (copyright 2026 Olly McBride). Dataset labels are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## What is docs drift?
 
@@ -36,7 +36,6 @@ Numbers below come from the companion dataset.
 1. Triage filter, not a raw detector. A free AST symbol check proposes name and signature mismatches. Beam judged 56 candidates across 11 of 12 libraries (structlog failed; cattrs needed 2 calls). It rejected 0 of 32 true candidates and removed 15 of 24 false or unclear ones.
 2. Beam's triage kept all 24 true symbol-check drifts, kept 1 extra from the whole-repo pass's own candidates, and added 9 drifts the checker missed (7 new to the union): 24 + 1 + 9 = 34.
 3. Repro author. Beam wrote the doc-literal repro scripts (138,138 tokens). The starlette headline script was written by hand from Beam's verdict. 30 distinct bugs reproduce a real API error. 38 of 41 badges were real. 2 false + 1 unclear (werkzeug S38, S39 false; S41 unclear) received a strict badge.
-4. Long context didn't make verdicts more accurate here; it made them cite the real evidence across files, which is what we verify and show maintainers. On the same 56 candidates, whole-repo and local-file triage both kept 32/32 true and rejected 15/24 false; 6 of 56 disagreements split 3-3. Whole-repo cited the correct file:line in 25/30 cross-file cases vs 14/30 for local, and 11/13 vs 0/13 when the evidence lives outside the candidate's own files, at ~4.8× tokens (4,022,532 vs 830,527). Stability rerun: 26/27 verdicts matched.
 
 ## Glossary
 
@@ -54,6 +53,7 @@ Numbers below come from the companion dataset.
 - Filed by this project. Open, not merged. Status checked 30 Oct 2026.
 - httpx #3774 and arrow #1355 were already reported upstream by others.
 - cattrs and click have drafts in the repo; they are not listed as filed.
+- structlog: Beam's whole-repo reply had no parseable JSON (prompt 404,652 tokens); not retried.
 - This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI.
 
 ## Run it on your repo
@@ -64,7 +64,7 @@ export OLLAMA_API_KEY=YOUR_KEY
 docdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings
 ```
 
-Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.
+Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.
 
 ## Exclusions
 

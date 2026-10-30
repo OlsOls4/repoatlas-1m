@@ -1,5 +1,5 @@
 {
-  "headline": "34 real docs bugs in 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 30 bugs reproduce a real API error when you run the docs",
+  "headline": "34 real docs bugs in 11 of 12 Python libraries. 3 in 4 flagged findings were real (45 of 60); 30 bugs reproduce a real API error when you run the docs",
   "lead": "DocDrift gives Beam an entire Python library (docs + code, up to ~400k tokens) in one call. Beam checks every suspicious doc example against the whole codebase, then writes a script that runs it. Across 12 popular libraries (bugs in 11 of 12 libraries; pydantic-settings had none) it found 34 real docs bugs; 30 crash exactly as the docs are written.",
   "lead_short": "Beam read 12 whole Python libraries and ran their docs: 34 real bugs, 30 reproduce.",
   "tiles": [

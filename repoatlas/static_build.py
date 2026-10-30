@@ -11,7 +11,6 @@ import shutil
 from typing import TypedDict
 
 from repoatlas.ablation_view import (
-    ablation_long_context_blurb,
     load_ablation_payload,
 )
 from repoatlas.beamv3_view import load_beamv3_payload
@@ -89,6 +88,11 @@ DISPLAY_PREFIX: dict[str, str] = {
 PUBLIC_CODE_URL: str = "https://github.com/OlsOls4/repoatlas-1m"
 PUBLIC_DATASET_URL: str = "https://huggingface.co/datasets/ollymcbride4/docdrift-bugs"
 PUBLIC_THREAD_URL: str = "https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5"
+# One-line switch once the Space is public:
+OG_IMAGE_URL: str = "assets/og.png"
+# OG_IMAGE_URL: str = "https://huggingface.co/spaces/ollymcbride4/docdrift/resolve/main/assets/og.png"
+# OG_IMAGE_URL: str = "https://ollymcbride4-docdrift.static.hf.space/assets/og.png"
+VIDEO_BASENAME: str = "docdrift-demo"
 PACK_CACHE: dict[str, dict[str, list[str]]] = {}
 
 
@@ -175,7 +179,7 @@ def write_static_space(destination: Path | None = None) -> Path:
     cast_source = RESULTS_LIVE_DIRECTORY / "fresh_run" / "docdrift_tomlkit.cast"
     if cast_source.exists():
         shutil.copy2(cast_source, assets_dir / "docdrift_tomlkit.cast")
-    for media_name in ("docdrift-75s.mp4", "docdrift-poster.png", "docdrift-75s.vtt"):
+    for media_name in (f"{VIDEO_BASENAME}.mp4", "docdrift-poster.png", f"{VIDEO_BASENAME}.vtt"):
         media = ASSETS_SOURCE_DIRECTORY / media_name
         if media.exists():
             shutil.copy2(media, assets_dir / media_name)
@@ -214,7 +218,10 @@ def _build_hero(
     if none_true:
         none_clause = f"; {', '.join(none_true)} had none"
     return {
-        "headline": headline_sentence(stats),
+        "headline": headline_sentence(stats).replace(
+            f"in {stats['repo_count']} Python libraries",
+            f"in {true_n} of {stats['repo_count']} Python libraries",
+        ),
         "lead": (
             f"DocDrift gives Beam an entire Python library (docs + code, up to ~400k tokens) in one call. "
             f"Beam checks every suspicious doc example against the whole codebase, then writes a script that runs it. "
@@ -586,10 +593,13 @@ def _build_repros(payload: HybridPayload, sources: dict[str, dict[str, object]])
         if not isinstance(value, dict):
             continue
         repo: str = str(value.get("repo", key.split(":")[0]))
+        case_id = str(value.get("case_id", key))
+        source_id = case_id.split(":", 1)[-1] if ":" in case_id else case_id
         rows.append(
             {
-                "id": str(value.get("case_id", key)),
+                "id": case_id,
                 "library": repo,
+                "source_id": source_id,
                 "verdict": verdict_by_id.get(str(key), ""),
                 "status": str(value.get("status", "")),
                 "evidence": str(value.get("evidence") or ""),
@@ -757,7 +767,6 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                 f"{stats['repro_true_findings']} of {stats['repro_findings']} badges were real. "
                 f"{non_bug_badge_phrase(stats)} received a strict badge."
             ),
-            ablation_long_context_blurb(),
         ],
         "limits": [
             "The 45-drift universe is the union of method output, so it favours those methods.",
@@ -768,6 +777,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             NOX_PR_NOTE,
             "httpx #3774 and arrow #1355 were already reported upstream by others.",
             "cattrs and click have drafts in the repo; they are not listed as filed.",
+            *_structlog_failure_notes(),
             "This Space is a static recording; it makes no Beam calls. Run DocDrift yourself with the CLI.",
         ],
         "glossary": [
@@ -782,7 +792,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         ),
         "cli_sweep": "",
         "ollama_key": (
-            "Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. "
+            "Create a free Ollama Cloud account at [ollama.com](https://ollama.com), open Settings, and create an API key. "
             "Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. "
             "`docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, "
             "citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. "
@@ -824,7 +834,16 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                     f"with prompts up to {max_probe_tokens:,} tokens accepted. "
                     f"With the whole repo, Beam cited the proof in another file {ablation['outside_cite_whole']} times, "
                     f"vs {ablation['outside_cite_local']} with local files. "
-                    f"Beam also wrote the repro scripts ({stats['repro_tokens']:,} tokens)."
+                    f"Beam also wrote the repro scripts ({stats['repro_tokens']:,} tokens). "
+                    + (
+                        f"At the same token budget, retrieval matched verdicts "
+                        f"({ablation['accuracy_frac_matched']} vs {ablation['accuracy_frac_whole']}) "
+                        f"but grounded fewer cross-file cases "
+                        f"({ablation['cross_file_cite_matched']} vs {ablation['cross_file_cite_whole']}; "
+                        f"p = {ablation['matched_mcnemar_p']}, not shown at this n)."
+                        if ablation.get("matched_available")
+                        else ""
+                    )
                 ),
             },
         ],
@@ -834,9 +853,14 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         ),
         "why_matched_cost_note": ablation.get("why_matched_cost_note") or "Matched-cost local bar: not run yet.",
         "why_subset_note": ablation.get("subset_note") or "",
-        "video": "assets/docdrift-75s.mp4" if (ASSETS_SOURCE_DIRECTORY / "docdrift-75s.mp4").exists() else None,
+        "video": (
+            f"assets/{VIDEO_BASENAME}.mp4" if (ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}.mp4").exists() else None
+        ),
         "video_poster": (
             "assets/docdrift-poster.png" if (ASSETS_SOURCE_DIRECTORY / "docdrift-poster.png").exists() else None
+        ),
+        "video_captions": (
+            f"assets/{VIDEO_BASENAME}.vtt" if (ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}.vtt").exists() else None
         ),
         "sample_output": _fresh_run_sample_output(),
         "sample_cast": (
@@ -845,6 +869,9 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             else ""
         ),
         "sample_note": _fresh_run_sample_note(),
+        "repro_caption": (
+            f"Some bugs have 2 scripts (one per candidate); {stats['repro_true']} distinct bugs reproduce."
+        ),
         "cross_file_note": (
             "Cross-file means the documented claim and the cited implementation are in different files "
             "(including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, "
@@ -894,25 +921,23 @@ def _token_footnote(stats: HybridHeroStats) -> str:
     """
 
     extra = load_extra_experiment_tokens()
-    lines = [
+    ablation = load_ablation_payload()
+    beamv3 = load_beamv3_payload()
+    return (
         f"~9.2M tokens (two whole-repo passes over 12 libraries). "
         f"{stats['whole_tokens']:,} first sweep + {stats['triage_tokens']:,} hybrid triage. "
-        f"+{stats['repro_tokens']:,} for repro scripts = {stats['end_to_end_tokens']:,} end to end.",
-        "Extra experimental (not in that 9.3M): ablation 1,948,469; beam v3 7,713,453"
-        + (
-            f"; matched-cost control {extra['matched_cost']:,}; "
-            f"tomlkit fresh CLI run {extra['fresh_run']:,} "
-            f"(together +{extra['round6']:,} for these runs)."
-            if extra["round6"]
-            else "."
-        ),
-    ]
-    return " ".join(lines)
+        f"+{stats['repro_tokens']:,} for repro scripts = {stats['end_to_end_tokens']:,} end to end. "
+        "Extra experimental runs, not in the 9.3M: "
+        f"ablation {int(ablation.get('ablation_ledger_tokens') or 0):,}; "
+        f"beam v3 {int(beamv3.get('ledger_tokens') or 0):,}; "
+        f"matched-cost control {extra['matched_cost']:,}; "
+        f"tomlkit CLI run {extra['fresh_run']:,}."
+    )
 
 
 def _fresh_run_sample_note() -> str:
     """
-    @brief One-line tomlkit recording stats from findings.json / summary.
+    @brief Honest tomlkit recording note from findings.json (verified vs arguable).
     """
 
     path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
@@ -925,16 +950,25 @@ def _fresh_run_sample_note() -> str:
     triage = raw.get("triage") if isinstance(raw.get("triage"), dict) else {}
     findings = triage.get("additional_findings") if isinstance(triage.get("additional_findings"), list) else []
     repros = raw.get("repros") if isinstance(raw.get("repros"), list) else []
-    strict = sum(1 for row in repros if isinstance(row, dict) and row.get("strict_confirmed"))
     total = int(tokens.get("total") or 0)
     wall = raw.get("wall_seconds")
     ref = str(raw.get("ref") or "")[:7]
-    true_clause = ", both true when checked against the source" if len(findings) == 2 else ""
     wall_text = f" · {wall:.0f} s" if isinstance(wall, (int, float)) else ""
-    return (
-        f"tomlkit @ {ref} · {len(findings)} findings{true_clause}, "
-        f"{strict} strict-confirmed · {total:,} tokens{wall_text}"
+    ad1 = next((row for row in findings if isinstance(row, dict) and row.get("finding_id") == "AD-1"), {})
+    ad1_verified = bool(ad1.get("fully_verified")) if isinstance(ad1, dict) else False
+    ad2_strict = any(
+        isinstance(row, dict) and str(row.get("case_id") or "").endswith("AD-2") and row.get("strict_confirmed")
+        for row in repros
     )
+    if len(findings) == 2 and ad1_verified:
+        return (
+            f"tomlkit @ {ref} · {len(findings)} findings: a version-claim drift "
+            "(citation verified; docs say TOML 1.0.0, tests accept 1.1.0) and a quickstart snippet "
+            f"missing its imports (NameError, {'strict-confirmed' if ad2_strict else 'reproduced'}; "
+            f"arguable as drift) · {total:,} tokens{wall_text}"
+        )
+    strict = sum(1 for row in repros if isinstance(row, dict) and row.get("strict_confirmed"))
+    return f"tomlkit @ {ref} · {len(findings)} findings, {strict} strict-confirmed · {total:,} tokens{wall_text}"
 
 
 def _fresh_run_sample_output() -> str:
@@ -982,7 +1016,7 @@ tags:
 
 Filed upstream: [starlette #3746](https://github.com/Kludex/starlette/pull/3746) (open) and [nox #1216](https://github.com/wntrblm/nox/pull/1216) (open). httpx #3774 and arrow #1355 were already reported upstream by others.
 
-This Space is a **static recording**; it makes no Beam calls.
+This Space is a **static recording**; it makes no Beam calls. Code is [MIT](https://github.com/OlsOls4/repoatlas-1m/blob/main/LICENSE) (copyright 2026 Olly McBride). Dataset labels are [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ## What is docs drift?
 
@@ -1452,6 +1486,7 @@ def _fill_index_html(source: str, hero: dict[str, object], copy: dict[str, objec
     filled = filled.replace("<!--TILES-->", tiles)
     filled = filled.replace("<!--HERO_NOTE-->", html.escape(str(hero.get("label_note") or "")))
     filled = filled.replace("<!--HERO_LINKS-->", link_html)
+    filled = filled.replace('content="assets/og.png"', f'content="{html.escape(OG_IMAGE_URL, quote=True)}"')
     video = copy.get("video")
     if video:
         filled = filled.replace('id="demo-video" class="demo-video" hidden', 'id="demo-video" class="demo-video"')
@@ -1459,5 +1494,57 @@ def _fill_index_html(source: str, hero: dict[str, object], copy: dict[str, objec
             'id="demo-video-el"',
             f'id="demo-video-el" src="{html.escape(str(video), quote=True)}"',
         )
+        filled = filled.replace("<!--VIDEO_TRANSCRIPT-->", _video_transcript_html())
+    else:
+        filled = filled.replace("<!--VIDEO_TRANSCRIPT-->", "")
     return filled
+
+
+def _structlog_failure_notes() -> list[str]:
+    """
+    @brief Honest structlog failure from hybrid triage JSON; skip if the file is missing.
+    """
+
+    path = HYBRID_TRIAGE_DIRECTORY / "structlog.json"
+    if not path.exists():
+        return []
+    raw: object = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        return []
+    error = str(raw.get("error") or "")
+    prompt = int(raw.get("prompt_tokens") or 0)
+    if "no JSON" not in error and "parse" not in error.lower():
+        return []
+    if prompt <= 0:
+        return []
+    return [
+        f"structlog: Beam's whole-repo reply had no parseable JSON (prompt {prompt:,} tokens); not retried."
+    ]
+
+
+def _video_transcript_html() -> str:
+    """
+    @brief Collapsible transcript under the hero video, generated from the shipped WebVTT.
+    """
+
+    path = ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}.vtt"
+    if not path.exists():
+        return ""
+    cues: list[str] = []
+    pending: list[str] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if stripped in {"WEBVTT", ""} or stripped.isdigit() or "-->" in stripped:
+            if stripped == "" and pending:
+                cues.append(" ".join(pending))
+                pending = []
+            continue
+        pending.append(stripped)
+    if pending:
+        cues.append(" ".join(pending))
+    if not cues:
+        return ""
+    body = "".join(f"<p>{html.escape(cue)}</p>" for cue in cues)
+    return f'<details class="transcript"><summary>Transcript</summary>{body}</details>'
+
 
