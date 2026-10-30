@@ -60,7 +60,7 @@
   "repro_caption": "Some bugs have 2 scripts (one per candidate); 30 distinct bugs reproduce.",
   "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
   "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
-  "built_at": "2026-10-30T13:15:28Z",
+  "built_at": "2026-10-30T13:21:24Z",
   "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",

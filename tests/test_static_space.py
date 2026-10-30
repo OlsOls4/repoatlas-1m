@@ -236,6 +236,10 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert 'aria-label="DocDrift demo, 87 seconds, silent with on-screen captions"' in index_html
     assert 'label="English (same as on-screen)"' in index_html
     assert '<details class="transcript">' in index_html
+    assert "32 of the 34 bugs ship a script" in index_html
+    assert "Result of a real run at pinned commit 8aa828c" in index_html
+    assert "Every bug ships a script that ran its documented line" not in index_html
+    assert "Every bug ships a script that runs the documented line" not in index_html
     assert (target / "assets" / "docdrift-demo.mp4").exists()
     assert (target / "assets" / "docdrift-poster.png").exists()
     assert (target / "assets" / "docdrift-demo.vtt").exists()

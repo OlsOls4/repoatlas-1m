@@ -11,11 +11,12 @@ starlette's docs tell you to call receive_json(data, mode="binary")…
 3
 00:00:09.200 --> 00:00:12.700
 …and running it crashes: TypeError
-Real run at pinned commit 8aa828c. This repro was hand-written from Beam's verdict.
+Result of a real run at pinned commit 8aa828c. This repro was hand-written from Beam's verdict.
 
 4
 00:00:13.200 --> 00:00:17.000
 starlette: the whole library in one Beam call · 394,577 prompt tokens
+One call per library for 11 of 12 libraries (structlog failed; cattrs needed 2 calls)
 
 5
 00:00:17.200 --> 00:00:20.800
@@ -67,8 +68,8 @@ Suggestive, not proven
 
 16
 00:01:02.800 --> 00:01:07.200
-Every bug ships a script that runs the documented line
-38 of 41 repro badges were real (2 false + 1 unclear)
+32 of the 34 bugs ship a script that runs the docs exactly as written
+30 distinct bugs reproduce a real API error · 38 of 41 badges real (2 false + 1 unclear)
 
 17
 00:01:07.800 --> 00:01:13.400
@@ -77,8 +78,8 @@ Real recording · sped up (96 s run)
 
 18
 00:01:13.600 --> 00:01:18.700
-2 findings, 1 strict-confirmed · 185,842 Beam tokens · 96 s wall time
-Real recording · sped up (96 s run) · final screen held
+2 findings: 1 verified version drift, 1 arguable missing-imports NameError
+185,842 Beam tokens · 96 s wall time · real recording, sped up, final screen held
 
 19
 00:01:19.200 --> 00:01:22.200
