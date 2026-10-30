@@ -1,0 +1,29 @@
+{
+ "frozen_at": "2026-10-30T13:21:23.836223+00:00",
+ "sha256": {
+  "design_ext.md": "42f6b6fe970a24138b201118605e227458eecb567f783dbad0e5e3e4c9fac996",
+  "items.json": "4f454224f7c2f7a803dec410c88beb28136aea0346153c25ec73cb32b11ea888",
+  "scripts/ext_items.py": "88a2abab6af2fbcfcfad7d181783368e0f83a189ea339ea18b2e90e603f559f1",
+  "scripts/ext_run.py": "687323a39f343f69ca28234915ba11603c0ff0ad9bce0c709941375f1428cc39",
+  "scripts/ext_score.py": "c17e299d17b7b2c17d6e31ffa29d28fa025a93ee29025c3d47488caf41ba1721"
+ },
+ "reused_unchanged": {
+  "matched_cost/scripts/matched_cost.py": "bc338313e1c3de319333b46cf512804ee2d147bead6920fde51073143e27b262",
+  "ablation/scripts/ablation_triage.py": "1b0e3817e4f56406dc7b82ac6f0ad19844fb96f2909aae23ba830d783ff28b5b"
+ },
+ "packs": {
+  "planted1-click.json": "a9fd67068f3cd68231576fab7a511bb608e6468348473f40ec26c53d10a5b0f4",
+  "planted1-httpcore.json": "1f41be43b2ff8a43a10af82ce66668a812ed54805695a2b9553783d885c71ffc",
+  "planted1-httpx.json": "fcc00eac6729a8db446cd5d5659cf8e25baeab6c293e1d823a47d8b2f44e9ec2",
+  "planted1-jinja.json": "9c9c9b93923212a756f4883df35fd9af0587e74d1359625b7f50fb68dcdf22e6",
+  "planted1-structlog.json": "c51d3ef23647c235454764e8e6d5332aa945f96714d15ec74b00daa3575b99f7",
+  "planted1-werkzeug.json": "0c8258172daf722cde35ea0db269289b68c8e62326195ac94d34ff29a980ea64",
+  "planted2-click.json": "4f5bf9c750765521d6a6d19629dc87be65328e2962fb6e94fd698b02e42a38e6",
+  "planted2-httpcore.json": "7c09a07b25aa72970cdd3473e51633369657c0c5b4f49990475e99579216cb95",
+  "planted2-httpx.json": "db11c35a23fa56b30ebbd1259dc38d7a00991006498e34d10f0d61231a07a8c9",
+  "planted2-jinja.json": "4739df55ad86cbd0695d4ae49b4f4b983c83fcc3acea63605d1cf0e8f4332648",
+  "planted2-structlog.json": "902aacf78d16185d7a51838bc7261ff60521fab1e4ac1db3dda64476d7dc275d",
+  "planted2-werkzeug.json": "7db9dcbb4af79064b1dfc53e0596289978aacdf24d9bd5a25321f511c2543fbf"
+ },
+ "extension_beam_calls_before_freeze": 0
+}

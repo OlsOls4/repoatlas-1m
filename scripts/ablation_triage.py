@@ -25,6 +25,7 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 import hybrid_triage as H  # noqa: E402
 from repoatlas.client import _extract_message_content  # noqa: E402
+from repoatlas.config import load_ollama_api_key  # noqa: E402
 from repoatlas.models import Citation, RepoPack  # noqa: E402
 from repoatlas.verifier import _build_file_lookup, verify_citation  # noqa: E402
 
@@ -201,7 +202,7 @@ def main() -> None:
     ap.add_argument("--nonce", default="")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
-    key = None if a.dry_run else Path("/home/box/.secrets/ollama_api_key").read_text().strip()
+    key = None if a.dry_run else load_ollama_api_key()
     try:
         if a.mode == "local":
             run_local(a.repos.split(","), a.cap, key, set(a.only.split(",")) if a.only else None, a.nonce)

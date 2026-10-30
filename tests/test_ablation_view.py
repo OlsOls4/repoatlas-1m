@@ -56,6 +56,12 @@ def test_ablation_payload_matches_recorded_results() -> None:
     assert "not shown at this n" in note
     assert "5 of 13" in note
     assert "importers" in note.lower() or "re-export" in note.lower()
+    assert payload["matched_ext_available"] is True
+    assert payload["matched_ext_cross_whole"] == "52/78"
+    assert payload["matched_ext_cross_matched"] == "38/78"
+    assert payload["matched_ext_p"] == "0.0094"
+    assert payload["matched_ext_tokens"] == 7_528_878
+    assert "Pre-registered extension" in note and "p = 0.096" in note
     kept = next(row for row in payload["rows"] if row[0] == "True candidates kept")
     rejected = next(row for row in payload["rows"] if row[0] == "False/unclear candidates rejected")
     assert kept[1] == kept[2] == "32/32"
@@ -88,3 +94,20 @@ def test_matched_cost_scripts_are_repo_relative() -> None:
         assert "/workspace/ablation" not in src
         assert "/home/box" not in src
         assert "OLLAMA_API_KEY" in src or name.endswith("matched_score.py")
+    replay = (
+        "scripts/ablation_triage.py",
+        "scripts/baseline_chunked_beam.py",
+        "scripts/beamv3.py",
+        "scripts/beamv3_repro.py",
+        "scripts/hybrid_repro.py",
+        "scripts/hybrid_triage.py",
+        "scripts/run_recall.py",
+    )
+    for name in replay:
+        src = Path(name).read_text(encoding="utf-8")
+        assert "load_ollama_api_key" in src
+        assert 'Path("/home/box/.secrets/ollama_api_key").read_text()' not in src
+    helper = Path("repoatlas/config.py").read_text(encoding="utf-8")
+    env_pos = helper.index('os.environ.get("OLLAMA_API_KEY"')
+    fallback_use = helper.index("FALLBACK_OLLAMA_KEY_FILE.is_file()")
+    assert env_pos < fallback_use

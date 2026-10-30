@@ -1,0 +1,51 @@
+{
+ "as_scored": {
+  "n": 78,
+  "whole_right": 52,
+  "matched_right": 38,
+  "whole_only": 20,
+  "matched_only": 6,
+  "exact_mcnemar_p": 0.0094
+ },
+ "no_resends_first_attempt_only": {
+  "n": 78,
+  "whole_right": 46,
+  "matched_right": 38,
+  "whole_only": 18,
+  "matched_only": 10,
+  "exact_mcnemar_p": 0.1849
+ },
+ "as_stopped_without_resumed_S14_S15_S16": {
+  "n": 77,
+  "whole_right": 52,
+  "matched_right": 38,
+  "whole_only": 20,
+  "matched_only": 6,
+  "exact_mcnemar_p": 0.0094
+ },
+ "as_stopped_and_no_resends": {
+  "n": 77,
+  "whole_right": 46,
+  "matched_right": 38,
+  "whole_only": 18,
+  "matched_only": 10,
+  "exact_mcnemar_p": 0.1849
+ },
+ "DD1": {
+  "cross_file": true,
+  "whole_verdict": "true_drift",
+  "whole_right_and_cite": false
+ },
+ "DD1_matched_counted_wrong": {
+  "n": 79,
+  "whole_only": 20,
+  "matched_only": 6,
+  "exact_mcnemar_p": 0.0094
+ },
+ "DD1_matched_counted_right": {
+  "n": 79,
+  "whole_only": 20,
+  "matched_only": 7,
+  "exact_mcnemar_p": 0.0192
+ }
+}

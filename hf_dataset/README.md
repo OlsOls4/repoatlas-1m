@@ -54,7 +54,7 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. 34 
 | planted_drift | 58 | Planted-drift set + ground truth | original probe fields plus `seed` |
 | ablation_verdicts | 56 | Whole-repo vs local-file vs matched-cost retrieval triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `matched_verdict`, `stability_verdict`, citation flags |
 | beamv3_findings | 115 | Extra 32k-docstring-chunk and docs-pass findings (unlabelled not counted as true) | `id`, `repo`, `pass`, `doc_path`, `doc_line`, `label`, `drift_id`, `label_by`, `hand_verdict`, `hand_verdict_description`, `new_vs_hybrid`, `strict_confirmed`, `explanation` |
-| token_ledger | 352 | Hybrid + first-sweep + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`first_sweep`, `hybrid`, `ablation`, `beamv3`, `matched_cost`, `fresh_run`) |
+| token_ledger | 493 | Hybrid + first-sweep + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`first_sweep`, `hybrid`, `ablation`, `beamv3`, `matched_cost`, `matched_cost_ext`, `fresh_run`) |
 
 `hand_verdict` means checked against the source by an AI reviewer. It is not a human annotator.
 
@@ -64,8 +64,8 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. 34 
 - 11 of 12 libraries were triaged; structlog failed; cattrs needed 2 calls.
 - 2 false + 1 unclear received a strict badge (werkzeug S38, S39 false; S41 unclear).
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 first sweep + 4,739,392 hybrid triage + 138,138 repro. The first sweep is in `token_ledger` as `ledger=first_sweep` (12 rows from the recorded 400k traces).
-- Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit CLI run 185,842.
-- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items.
+- Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; matched-cost extension 7,528,878; tomlkit CLI run 185,842.
+- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items. A pre-registered extension added 63 items (57 planted renames, 6 real structlog). Pooled, retrieval grounded 38/78 cross-file cases vs 52/78 for the whole repo (McNemar p = 0.0094). Accuracy still did not differ (105/118 vs 108/119). The new items alone give p = 0.096 (not shown at this n), and the pooled p is 0.18 without one pre-registered parse-failure re-send. Pre-registration: design_ext.md sha256 42f6b6fe…c996.
 - 32k docstring chunks recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid + 32k chunks). Headline stays 34 of 45.
 
 ## Citation

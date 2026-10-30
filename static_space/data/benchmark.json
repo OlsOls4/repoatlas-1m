@@ -252,7 +252,8 @@
       "Local was given every file the candidate already named.",
       "6 of 56 disagreements split 3-3. Stability rerun: 26/27 verdicts matched.",
       "Whole-repo used 4,022,532 tokens vs 830,527 for local (~4.8×). This ablation run's own ledger is 1,948,469 tokens over 60 calls; that is extra experimental cost, not part of the 9.3M hybrid end-to-end.",
-      "Matched-cost retrieval control: 3,888,241 attributable / 3,957,434 as spent (57 calls; same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
+      "Matched-cost retrieval control: 3,888,241 attributable / 3,957,434 as spent (57 calls; same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end.",
+      "Pre-registered matched-cost extension: 7,528,878 tokens (63 more items). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
     ],
     "n": 56,
     "disagreements": 6,
@@ -275,7 +276,7 @@
     "outside_cite_local_subset": "0/4",
     "subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
     "matched_available": true,
-    "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\". The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for the same spend.",
+    "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\".\n\n**Pre-registered extension.** We then added 63 items (57 planted renames, 6 real structlog candidates), frozen before any Beam call (design sha256 42f6b6fe…c996). Pooled over 78 cross-file items, the right verdict **and** the right line came out 52/78 for the whole repo against 38/78 for retrieval (exact McNemar p = 0.0094). Verdict accuracy still did not differ (108/119 against 105/118). The new items alone give p = 0.096 (\"not shown at this n\"), and the pooled result relies on one pre-registered re-send of a whole-repo call that failed to parse (p = 0.18 without it). The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for no more spend than retrieval.",
     "cross_file_cite_matched": "19/30",
     "outside_cite_matched": "6/13",
     "accuracy_matched": "0.821",
@@ -286,7 +287,12 @@
     "gold_file_retrieved": "8/13",
     "gold_file_missed": 5,
     "accuracy_frac_matched": "46/56",
-    "accuracy_frac_whole": "47/56"
+    "accuracy_frac_whole": "47/56",
+    "matched_ext_available": true,
+    "matched_ext_cross_whole": "52/78",
+    "matched_ext_cross_matched": "38/78",
+    "matched_ext_p": "0.0094",
+    "matched_ext_tokens": 7528878
   },
   "beamv3": {
     "available": true,
@@ -470,7 +476,7 @@
     "ledger_tokens": 7713453,
     "ledger_calls": 168
   },
-  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end. Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; tomlkit CLI run 185,842.",
+  "token_footnote": "~9.2M tokens (two whole-repo passes over 12 libraries). 4,424,575 first sweep + 4,739,392 hybrid triage. +138,138 for repro scripts = 9,302,105 end to end. Extra experimental runs, not in the 9.3M: ablation 1,948,469; beam v3 7,713,453; matched-cost control 3,957,434; matched-cost extension 7,528,878; tomlkit CLI run 185,842.",
   "pack_coverage": {
     "available": true,
     "headers": [

@@ -46,6 +46,9 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert any(row.get("ledger") == "matched_cost" for row in ledger)
     matched_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "matched_cost")
     assert matched_tokens == 3_957_434
+    assert any(row.get("ledger") == "matched_cost_ext" for row in ledger)
+    ext_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "matched_cost_ext")
+    assert ext_tokens == 7_528_878
     assert any(row.get("ledger") == "fresh_run" for row in ledger)
     fresh_tokens = sum(int(row.get("prompt") or 0) + int(row.get("completion") or 0) for row in ledger if row.get("ledger") == "fresh_run")
     assert fresh_tokens == 185_842
@@ -69,6 +72,10 @@ def test_hf_dataset_row_counts_match_results(tmp_path: Path) -> None:
     assert "4,424,575" in card
     assert "first_sweep" in card
     assert "3,957,434" in card
+    assert "7,528,878" in card
+    assert "52/78" in card and "38/78" in card
+    assert "0.0094" in card
+    assert "matched_cost_ext" in card
     assert "185,842" in card
     assert "Extra experimental runs, not in the 9.3M" in card
     assert "Together +4,143,276" not in card

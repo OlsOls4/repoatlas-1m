@@ -1,0 +1,1977 @@
+{
+ "items": [
+  {
+   "key": "planted1-click:P1-02",
+   "unit": "planted1-click",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-02",
+    "doc_path": "click/src/click/testing.py",
+    "doc_line": 761,
+    "doc_end": 761,
+    "doc_text": ":param temp_dir: Create the temporary directory under this",
+    "claim": "name-check: the documentation refers to `temp_dir`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "click/src/click/testing.py",
+     742,
+     742
+    ],
+    [
+     "click/src/click/testing.py",
+     743,
+     743
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "temp_directory",
+   "doc_says": "temp_dir",
+   "kind": "code_rename_kwarg",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-02"
+  },
+  {
+   "key": "planted1-click:P1-17",
+   "unit": "planted1-click",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-17",
+    "doc_path": "click/docs/options.md",
+    "doc_line": 724,
+    "doc_end": 724,
+    "doc_text": "`1`, Click will invoke the {meth}`OptionType.split_envvar_value` method to",
+    "claim": "name-check: the documentation refers to `OptionType`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "click/src/click/types.py",
+     65,
+     65
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "ParamType",
+   "doc_says": "OptionType",
+   "kind": "doc_rename_class",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-17"
+  },
+  {
+   "key": "planted1-httpcore:P1-24",
+   "unit": "planted1-httpcore",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-24",
+    "doc_path": "httpcore/httpcore/_async/http_proxy.py",
+    "doc_line": 88,
+    "doc_end": 88,
+    "doc_text": "If not specified, the default `httpcore.default_ssl_context()`",
+    "claim": "name-check: the documentation refers to `default_ssl_context`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpcore/httpcore/_ssl.py",
+     6,
+     6
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "initial_ssl_context",
+   "doc_says": "default_ssl_context",
+   "kind": "code_rename_function",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-24"
+  },
+  {
+   "key": "planted1-httpx:P1-01",
+   "unit": "planted1-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-01",
+    "doc_path": "httpx/httpx/_urls.py",
+    "doc_line": 569,
+    "doc_end": 569,
+    "doc_text": "Return a new QueryArgs instance, removing the value of a key.",
+    "claim": "name-check: the documentation refers to `QueryArgs`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_urls.py",
+     420,
+     420
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "QueryParams",
+   "doc_says": "QueryArgs",
+   "kind": "doc_rename_class",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-01"
+  },
+  {
+   "key": "planted1-httpx:P1-06",
+   "unit": "planted1-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-06",
+    "doc_path": "httpx/httpx/_client.py",
+    "doc_line": 794,
+    "doc_end": 794,
+    "doc_text": "request = client.build_req(...)",
+    "claim": "name-check: the documentation refers to `build_req`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_client.py",
+     340,
+     340
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "build_request",
+   "doc_says": "build_req",
+   "kind": "doc_rename_function",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-06"
+  },
+  {
+   "key": "planted1-httpx:P1-26",
+   "unit": "planted1-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-26",
+    "doc_path": "httpx/docs/quickstart.md",
+    "doc_line": 540,
+    "doc_end": 540,
+    "doc_text": "response.raise_for_status()",
+    "claim": "name-check: the documentation refers to `raise_for_status`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_models.py",
+     794,
+     794
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "raise_for_state",
+   "doc_says": "raise_for_status",
+   "kind": "code_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-26"
+  },
+  {
+   "key": "planted1-httpx:P1-28",
+   "unit": "planted1-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-28",
+    "doc_path": "httpx/docs/advanced/transports.md",
+    "doc_line": 62,
+    "doc_end": 62,
+    "doc_text": "transport = httpx.WSGITransport(app=app)",
+    "claim": "name-check: the documentation refers to `WSGITransport`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_transports/wsgi.py",
+     44,
+     44
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "WSGICarrier",
+   "doc_says": "WSGITransport",
+   "kind": "code_rename_class",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-28"
+  },
+  {
+   "key": "planted1-jinja:P1-07",
+   "unit": "planted1-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-07",
+    "doc_path": "jinja/src/jinja2/runtime.py",
+    "doc_line": 973,
+    "doc_end": 973,
+    "doc_text": ":exc:`UndefinedError`.",
+    "claim": "name-check: the documentation refers to `UndefinedError`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/exceptions.py",
+     153,
+     153
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "MissingError",
+   "doc_says": "UndefinedError",
+   "kind": "code_rename_class",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-07"
+  },
+  {
+   "key": "planted1-jinja:P1-18",
+   "unit": "planted1-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-18",
+    "doc_path": "jinja/src/jinja2/filters.py",
+    "doc_line": 1634,
+    "doc_end": 1634,
+    "doc_text": "(user for user in users if probe_none(user.email))",
+    "claim": "name-check: the documentation refers to `probe_none`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/tests.py",
+     92,
+     92
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "test_none",
+   "doc_says": "probe_none",
+   "kind": "doc_rename_function",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-18"
+  },
+  {
+   "key": "planted1-jinja:P1-27",
+   "unit": "planted1-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-27",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 55,
+    "doc_end": 55,
+    "doc_text": "template = env.get_tmpl(\"mytemplate.html\")",
+    "claim": "name-check: the documentation refers to `get_tmpl`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     981,
+     981
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "get_template",
+   "doc_says": "get_tmpl",
+   "kind": "doc_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-27"
+  },
+  {
+   "key": "planted1-jinja:P1-29",
+   "unit": "planted1-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-29",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 219,
+    "doc_end": 219,
+    "doc_text": ".. autoclass:: jinja2.environment.TemplateFlow()",
+    "claim": "name-check: the documentation refers to `TemplateFlow`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     1570,
+     1570
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "TemplateStream",
+   "doc_says": "TemplateFlow",
+   "kind": "doc_rename_class",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-29"
+  },
+  {
+   "key": "planted1-jinja:P1-30",
+   "unit": "planted1-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-30",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 895,
+    "doc_end": 895,
+    "doc_text": ".. attribute:: Template.is_up_to_date",
+    "claim": "name-check: the documentation refers to `is_up_to_date`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     1486,
+     1486
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "is_up_to_datestamp",
+   "doc_says": "is_up_to_date",
+   "kind": "code_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-30"
+  },
+  {
+   "key": "planted1-structlog:P1-12",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-12",
+    "doc_path": "structlog/src/structlog/_native.py",
+    "doc_line": 103,
+    "doc_end": 103,
+    "doc_text": "`structlog.stdlib.filter_by_level` processor:",
+    "claim": "name-check: the documentation refers to `filter_by_level`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     816,
+     816
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "filter_by_severity",
+   "doc_says": "filter_by_level",
+   "kind": "code_rename_function",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-12"
+  },
+  {
+   "key": "planted1-structlog:P1-13",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-13",
+    "doc_path": "structlog/docs/standard-library.md",
+    "doc_line": 68,
+    "doc_end": 68,
+    "doc_text": "To use it, {doc}`configure <configuration>` *structlog* to use `AsyncBoundRecorder` as `wrapper_class`.",
+    "claim": "name-check: the documentation refers to `AsyncBoundRecorder`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     564,
+     564
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "AsyncBoundLogger",
+   "doc_says": "AsyncBoundRecorder",
+   "kind": "doc_rename_class",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-13"
+  },
+  {
+   "key": "planted1-structlog:P1-14",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-14",
+    "doc_path": "structlog/docs/standard-library.md",
+    "doc_line": 194,
+    "doc_end": 194,
+    "doc_text": "structlog.stdlib.add_journal_name,",
+    "claim": "name-check: the documentation refers to `add_journal_name`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     871,
+     871
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "add_logger_name",
+   "doc_says": "add_journal_name",
+   "kind": "doc_rename_function",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-14"
+  },
+  {
+   "key": "planted1-structlog:P1-16",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-16",
+    "doc_path": "structlog/docs/standard-library.md",
+    "doc_line": 424,
+    "doc_end": 424,
+    "doc_text": "However, you probably don't want to have them in your log files, thus we've added the `ProcessorFormatter.remove_processors_meta` processor to do so conveniently.",
+    "claim": "name-check: the documentation refers to `remove_processors_meta`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     1247,
+     1247
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "remove_transforms_meta",
+   "doc_says": "remove_processors_meta",
+   "kind": "code_rename_function",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-16"
+  },
+  {
+   "key": "planted1-structlog:P1-19",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-19",
+    "doc_path": "structlog/src/structlog/dev.py",
+    "doc_line": 613,
+    "doc_end": 613,
+    "doc_text": "e.g. using `structlog.processors.EventRenamer`. Ignored if",
+    "claim": "name-check: the documentation refers to `EventRenamer`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/processors.py",
+     965,
+     965
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "OccurrenceRenamer",
+   "doc_says": "EventRenamer",
+   "kind": "code_rename_class",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-19"
+  },
+  {
+   "key": "planted1-structlog:P1-21",
+   "unit": "planted1-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-21",
+    "doc_path": "structlog/src/structlog/processors.py",
+    "doc_line": 868,
+    "doc_end": 868,
+    "doc_text": "`structlog.stdlib.StageFormatter` without using it in",
+    "claim": "name-check: the documentation refers to `StageFormatter`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C06"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     1015,
+     1015
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "ProcessorFormatter",
+   "doc_says": "StageFormatter",
+   "kind": "doc_rename_class",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-21"
+  },
+  {
+   "key": "planted1-werkzeug:P1-03",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-03",
+    "doc_path": "werkzeug/src/werkzeug/formparser.py",
+    "doc_line": 78,
+    "doc_end": 78,
+    "doc_text": ":param stream_maker: A callable that returns a file in ``rb+`` mode.",
+    "claim": "name-check: the documentation refers to `stream_maker`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/formparser.py",
+     43,
+     43
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "stream_factory",
+   "doc_says": "stream_maker",
+   "kind": "doc_rename_function",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-03"
+  },
+  {
+   "key": "planted1-werkzeug:P1-04",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-04",
+    "doc_path": "werkzeug/src/werkzeug/local.py",
+    "doc_line": 254,
+    "doc_end": 254,
+    "doc_text": ":class:`LocalProxy`.",
+    "claim": "name-check: the documentation refers to `LocalProxy`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/local.py",
+     385,
+     385
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "LocalGateway",
+   "doc_says": "LocalProxy",
+   "kind": "code_rename_class",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-04"
+  },
+  {
+   "key": "planted1-werkzeug:P1-05",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-05",
+    "doc_path": "werkzeug/src/werkzeug/wsgi.py",
+    "doc_line": 481,
+    "doc_end": 481,
+    "doc_text": "Raises ``CallEntityTooLarge`` if the limit is a maximum.",
+    "claim": "name-check: the documentation refers to `CallEntityTooLarge`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/exceptions.py",
+     417,
+     417
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "RequestEntityTooLarge",
+   "doc_says": "CallEntityTooLarge",
+   "kind": "doc_rename_class",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-05"
+  },
+  {
+   "key": "planted1-werkzeug:P1-08",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-08",
+    "doc_path": "werkzeug/src/werkzeug/http.py",
+    "doc_line": 527,
+    "doc_end": 527,
+    "doc_text": "This is the reverse of :func:`dump_options_header`.",
+    "claim": "name-check: the documentation refers to `dump_options_header`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/http.py",
+     250,
+     250
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "dump_options_field",
+   "doc_says": "dump_options_header",
+   "kind": "code_rename_function",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-08"
+  },
+  {
+   "key": "planted1-werkzeug:P1-09",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-09",
+    "doc_path": "werkzeug/src/werkzeug/test.py",
+    "doc_line": 58,
+    "doc_end": 58,
+    "doc_text": ":class:`DocumentStorage` objects.) into a multipart encoded string stored",
+    "claim": "name-check: the documentation refers to `DocumentStorage`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/datastructures/file_storage.py",
+     19,
+     19
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "FileStorage",
+   "doc_says": "DocumentStorage",
+   "kind": "doc_rename_class",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-09"
+  },
+  {
+   "key": "planted1-werkzeug:P1-10",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-10",
+    "doc_path": "werkzeug/src/werkzeug/wrappers/response.py",
+    "doc_line": 105,
+    "doc_end": 105,
+    "doc_text": "checks. Use :func:`~werkzeug.utils.send_document` instead of setting",
+    "claim": "name-check: the documentation refers to `send_document`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C06"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/utils.py",
+     309,
+     309
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "send_file",
+   "doc_says": "send_document",
+   "kind": "doc_rename_function",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-10"
+  },
+  {
+   "key": "planted1-werkzeug:P1-11",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-11",
+    "doc_path": "werkzeug/src/werkzeug/test.py",
+    "doc_line": 556,
+    "doc_end": 556,
+    "doc_text": ":meth:`.FileMultiDict.close` first if that's needed.",
+    "claim": "name-check: the documentation refers to `FileMultiDict`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C07"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/datastructures/file_storage.py",
+     159,
+     159
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "StreamMultiDict",
+   "doc_says": "FileMultiDict",
+   "kind": "code_rename_class",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-11"
+  },
+  {
+   "key": "planted1-werkzeug:P1-15",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-15",
+    "doc_path": "werkzeug/docs/tutorial.rst",
+    "doc_line": 163,
+    "doc_end": 163,
+    "doc_text": "app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {",
+    "claim": "name-check: the documentation refers to `SharedDataMiddleware`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C08"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/middleware/shared_data.py",
+     29,
+     29
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "SharedPayloadMiddleware",
+   "doc_says": "SharedDataMiddleware",
+   "kind": "code_rename_class",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-15"
+  },
+  {
+   "key": "planted1-werkzeug:P1-20",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-20",
+    "doc_path": "werkzeug/src/werkzeug/http.py",
+    "doc_line": 1137,
+    "doc_end": 1137,
+    "doc_text": "``apply_range`` perform their own checks.",
+    "claim": "name-check: the documentation refers to `apply_range`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C09"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/wrappers/response.py",
+     955,
+     955
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "apply_interval",
+   "doc_says": "apply_range",
+   "kind": "code_rename_function",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-20"
+  },
+  {
+   "key": "planted1-werkzeug:P1-22",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-22",
+    "doc_path": "werkzeug/src/werkzeug/http.py",
+    "doc_line": 1552,
+    "doc_end": 1552,
+    "doc_text": "``Range.make_body_range``, and ``ContentRange.from_header`` validate",
+    "claim": "name-check: the documentation refers to `make_body_range`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C10"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/datastructures/range.py",
+     173,
+     173
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "make_content_range",
+   "doc_says": "make_body_range",
+   "kind": "doc_rename_function",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-22"
+  },
+  {
+   "key": "planted1-werkzeug:P1-23",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-23",
+    "doc_path": "werkzeug/docs/routing.rst",
+    "doc_line": 223,
+    "doc_end": 223,
+    "doc_text": ":exc:`werkzeug.routing.BuildError` and eventually cause a 500 error.",
+    "claim": "name-check: the documentation refers to `BuildError`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C11"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/routing/exceptions.py",
+     84,
+     84
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "BuildFailure",
+   "doc_says": "BuildError",
+   "kind": "code_rename_class",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-23"
+  },
+  {
+   "key": "planted1-werkzeug:P1-25",
+   "unit": "planted1-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P1-25",
+    "doc_path": "werkzeug/docs/routing.rst",
+    "doc_line": 370,
+    "doc_end": 370,
+    "doc_text": ":exc:`~werkzeug.exceptions.BadCall`) exception is raised.",
+    "claim": "name-check: the documentation refers to `BadCall`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C12"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/exceptions.py",
+     232,
+     232
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "BadRequest",
+   "doc_says": "BadCall",
+   "kind": "doc_rename_class",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed1.json P1-25"
+  },
+  {
+   "key": "planted2-click:P2-05",
+   "unit": "planted2-click",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-05",
+    "doc_path": "click/docs/commands.md",
+    "doc_line": 182,
+    "doc_end": 182,
+    "doc_text": "A straightforward way to do this is to use {func}`build_pass_decorator` to pass",
+    "claim": "name-check: the documentation refers to `build_pass_decorator`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "click/src/click/decorators.py",
+     51,
+     51
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "make_pass_decorator",
+   "doc_says": "build_pass_decorator",
+   "kind": "doc_rename_function",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-05"
+  },
+  {
+   "key": "planted2-click:P2-10",
+   "unit": "planted2-click",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-10",
+    "doc_path": "click/src/click/utils.py",
+    "doc_line": 155,
+    "doc_end": 155,
+    "doc_text": "a :exc:`FileError`.  Not handling this error will produce an error",
+    "claim": "name-check: the documentation refers to `FileError`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "click/src/click/exceptions.py",
+     342,
+     342
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "DocumentError",
+   "doc_says": "FileError",
+   "kind": "code_rename_class",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-10"
+  },
+  {
+   "key": "planted2-click:P2-11",
+   "unit": "planted2-click",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-11",
+    "doc_path": "click/docs/advanced.md",
+    "doc_line": 20,
+    "doc_end": 20,
+    "doc_text": "reusable is available in Click as {func}`click.version_option`. The code",
+    "claim": "name-check: the documentation refers to `version_option`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "click/src/click/decorators.py",
+     421,
+     421
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "version_flag",
+   "doc_says": "version_option",
+   "kind": "code_rename_function",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-11"
+  },
+  {
+   "key": "planted2-httpcore:P2-12",
+   "unit": "planted2-httpcore",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-12",
+    "doc_path": "httpcore/httpcore/_async/connection_pool.py",
+    "doc_line": 191,
+    "doc_end": 191,
+    "doc_text": "<AsyncHTTPConn ['https://example.com:443', HTTP/1.1, ACTIVE, Request Count: 6]>,",
+    "claim": "name-check: the documentation refers to `AsyncHTTPConn`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpcore/httpcore/_async/connection.py",
+     38,
+     38
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "AsyncHTTPConnection",
+   "doc_says": "AsyncHTTPConn",
+   "kind": "doc_rename_class",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-12"
+  },
+  {
+   "key": "planted2-httpx:P2-03",
+   "unit": "planted2-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-03",
+    "doc_path": "httpx/httpx/_exceptions.py",
+    "doc_line": 16,
+    "doc_end": 16,
+    "doc_text": "\u00b7 CloseError",
+    "claim": "name-check: the documentation refers to `CloseError`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_exceptions.py",
+     193,
+     193
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "ShutdownError",
+   "doc_says": "CloseError",
+   "kind": "code_rename_class",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-03"
+  },
+  {
+   "key": "planted2-httpx:P2-06",
+   "unit": "planted2-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-06",
+    "doc_path": "httpx/httpx/_client.py",
+    "doc_line": 1607,
+    "doc_end": 1607,
+    "doc_text": "Typically you'll want to build one with `AsyncClient.build_request()`",
+    "claim": "name-check: the documentation refers to `AsyncClient`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_client.py",
+     1307,
+     1307
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "AsyncSession",
+   "doc_says": "AsyncClient",
+   "kind": "code_rename_class",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-06"
+  },
+  {
+   "key": "planted2-httpx:P2-26",
+   "unit": "planted2-httpx",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-26",
+    "doc_path": "httpx/docs/quickstart.md",
+    "doc_line": 347,
+    "doc_end": 347,
+    "doc_text": "...     for data in r.iter_octets():",
+    "claim": "name-check: the documentation refers to `iter_octets`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "httpx/httpx/_models.py",
+     884,
+     884
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "iter_bytes",
+   "doc_says": "iter_octets",
+   "kind": "doc_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-26"
+  },
+  {
+   "key": "planted2-jinja:P2-16",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-16",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 499,
+    "doc_end": 499,
+    "doc_text": ".. autoclass:: jinja2.MemcachedBytecodeMemo",
+    "claim": "name-check: the documentation refers to `MemcachedBytecodeMemo`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/bccache.py",
+     327,
+     327
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "MemcachedBytecodeCache",
+   "doc_says": "MemcachedBytecodeMemo",
+   "kind": "doc_rename_class",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-16"
+  },
+  {
+   "key": "planted2-jinja:P2-17",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-17",
+    "doc_path": "jinja/src/jinja2/filters.py",
+    "doc_line": 1594,
+    "doc_end": 1594,
+    "doc_text": "(n for n in numbers if not check_odd(n))",
+    "claim": "name-check: the documentation refers to `check_odd`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/tests.py",
+     15,
+     15
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "test_odd",
+   "doc_says": "check_odd",
+   "kind": "doc_rename_function",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-17"
+  },
+  {
+   "key": "planted2-jinja:P2-18",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-18",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 437,
+    "doc_end": 437,
+    "doc_text": "All loaders are subclasses of :class:`BaseLoader`.  If you want to create your",
+    "claim": "name-check: the documentation refers to `BaseLoader`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/loaders.py",
+     42,
+     42
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "RootLoader",
+   "doc_says": "BaseLoader",
+   "kind": "code_rename_class",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-18"
+  },
+  {
+   "key": "planted2-jinja:P2-20",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-20",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 242,
+    "doc_end": 242,
+    "doc_text": "from jinja2 import Environment, PackageReader, select_autoescape",
+    "claim": "name-check: the documentation refers to `PackageReader`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/loaders.py",
+     269,
+     269
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "PackageLoader",
+   "doc_says": "PackageReader",
+   "kind": "doc_rename_class",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-20"
+  },
+  {
+   "key": "planted2-jinja:P2-25",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-25",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 64,
+    "doc_end": 64,
+    "doc_text": "or :meth:`Environment.from_str` has multiple advantages.  Besides being",
+    "claim": "name-check: the documentation refers to `from_str`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     1089,
+     1089
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "from_string",
+   "doc_says": "from_str",
+   "kind": "doc_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-25"
+  },
+  {
+   "key": "planted2-jinja:P2-27",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-27",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 214,
+    "doc_end": 214,
+    "doc_text": ".. automethod:: draw_async([context])",
+    "claim": "name-check: the documentation refers to `draw_async`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C06"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     1294,
+     1294
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "render_async",
+   "doc_says": "draw_async",
+   "kind": "doc_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-27"
+  },
+  {
+   "key": "planted2-jinja:P2-28",
+   "unit": "planted2-jinja",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-28",
+    "doc_path": "jinja/docs/api.rst",
+    "doc_line": 179,
+    "doc_end": 179,
+    "doc_text": ":members: module, make_module",
+    "claim": "name-check: the documentation refers to `make_module`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C07"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "jinja/src/jinja2/environment.py",
+     1386,
+     1386
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "create_module",
+   "doc_says": "make_module",
+   "kind": "code_rename_function",
+   "bucket": "700k+",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-28"
+  },
+  {
+   "key": "planted2-structlog:P2-13",
+   "unit": "planted2-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-13",
+    "doc_path": "structlog/docs/standard-library.md",
+    "doc_line": 104,
+    "doc_end": 104,
+    "doc_text": "{func}`~structlog.stdlib.add_log_severity_number`:",
+    "claim": "name-check: the documentation refers to `add_log_severity_number`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/stdlib.py",
+     848,
+     848
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "add_log_level_number",
+   "doc_says": "add_log_severity_number",
+   "kind": "doc_rename_function",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-13"
+  },
+  {
+   "key": "planted2-structlog:P2-15",
+   "unit": "planted2-structlog",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-15",
+    "doc_path": "structlog/docs/standard-library.md",
+    "doc_line": 159,
+    "doc_end": 159,
+    "doc_text": "{class}`~structlog.WriteLogger` writes log entries atomically to the file (for example, `file.write(log+\"\\n\")`).",
+    "claim": "name-check: the documentation refers to `WriteLogger`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "structlog/src/structlog/_output.py",
+     143,
+     143
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "WriteRecorder",
+   "doc_says": "WriteLogger",
+   "kind": "code_rename_class",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-15"
+  },
+  {
+   "key": "planted2-werkzeug:P2-01",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-01",
+    "doc_path": "werkzeug/src/werkzeug/serving.py",
+    "doc_line": 1006,
+    "doc_end": 1006,
+    "doc_text": ":param reloader_interval: How often the reloader tries to check for",
+    "claim": "name-check: the documentation refers to `reloader_interval`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/serving.py",
+     959,
+     959
+    ],
+    [
+     "werkzeug/src/werkzeug/serving.py",
+     968,
+     968
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "reloader_period",
+   "doc_says": "reloader_interval",
+   "kind": "code_rename_kwarg",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-01"
+  },
+  {
+   "key": "planted2-werkzeug:P2-02",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-02",
+    "doc_path": "werkzeug/src/werkzeug/security.py",
+    "doc_line": 123,
+    "doc_end": 123,
+    "doc_text": ":func:`generate_password_digest`, matches the given password.",
+    "claim": "name-check: the documentation refers to `generate_password_digest`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/security.py",
+     79,
+     79
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "generate_password_hash",
+   "doc_says": "generate_password_digest",
+   "kind": "doc_rename_function",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-02"
+  },
+  {
+   "key": "planted2-werkzeug:P2-04",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-04",
+    "doc_path": "werkzeug/src/werkzeug/wrappers/response.py",
+    "doc_line": 1013,
+    "doc_end": 1013,
+    "doc_text": ":param call_or_environ: The request or WSGI environ to get the",
+    "claim": "name-check: the documentation refers to `call_or_environ`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C03"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/wrappers/response.py",
+     1003,
+     1003
+    ],
+    [
+     "werkzeug/src/werkzeug/wrappers/response.py",
+     1005,
+     1005
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "request_or_environ",
+   "doc_says": "call_or_environ",
+   "kind": "doc_rename_kwarg",
+   "bucket": "~1k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-04"
+  },
+  {
+   "key": "planted2-werkzeug:P2-07",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-07",
+    "doc_path": "werkzeug/src/werkzeug/test.py",
+    "doc_line": 1375,
+    "doc_end": 1375,
+    "doc_text": "with :meth:`.Client.get_cookie` only.",
+    "claim": "name-check: the documentation refers to `get_cookie`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/test.py",
+     837,
+     837
+    ]
+   ],
+   "cross_file": false,
+   "code_says": "get_token",
+   "doc_says": "get_cookie",
+   "kind": "code_rename_function",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-07"
+  },
+  {
+   "key": "planted2-werkzeug:P2-08",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-08",
+    "doc_path": "werkzeug/src/werkzeug/routing/__init__.py",
+    "doc_line": 105,
+    "doc_end": 105,
+    "doc_text": "routing tried to match a ``POST`` request) a ``VerbNotAllowed``",
+    "claim": "name-check: the documentation refers to `VerbNotAllowed`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/exceptions.py",
+     352,
+     352
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "MethodNotAllowed",
+   "doc_says": "VerbNotAllowed",
+   "kind": "doc_rename_class",
+   "bucket": "~10k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-08"
+  },
+  {
+   "key": "planted2-werkzeug:P2-09",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-09",
+    "doc_path": "werkzeug/src/werkzeug/test.py",
+    "doc_line": 545,
+    "doc_end": 545,
+    "doc_text": "The :meth:`.FileMultiDict.add_stream` method provides a convenient way to",
+    "claim": "name-check: the documentation refers to `add_stream`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C06"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/datastructures/file_storage.py",
+     166,
+     166
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "add_file",
+   "doc_says": "add_stream",
+   "kind": "doc_rename_function",
+   "bucket": "~50k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-09"
+  },
+  {
+   "key": "planted2-werkzeug:P2-14",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-14",
+    "doc_path": "werkzeug/src/werkzeug/routing/map.py",
+    "doc_line": 310,
+    "doc_end": 310,
+    "doc_text": "using ``server_label``.",
+    "claim": "name-check: the documentation refers to `server_label`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C07"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/test.py",
+     632,
+     632
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "server_name",
+   "doc_says": "server_label",
+   "kind": "doc_rename_function",
+   "bucket": "~100k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-14"
+  },
+  {
+   "key": "planted2-werkzeug:P2-19",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-19",
+    "doc_path": "werkzeug/src/werkzeug/test.py",
+    "doc_line": 182,
+    "doc_end": 182,
+    "doc_text": "Werkzeug 0.5 (:func:`create_environ`, :meth:`Response.from_values`,",
+    "claim": "name-check: the documentation refers to `from_values`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C08"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/wrappers/request.py",
+     166,
+     166
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "from_items",
+   "doc_says": "from_values",
+   "kind": "code_rename_function",
+   "bucket": "~200k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-19"
+  },
+  {
+   "key": "planted2-werkzeug:P2-21",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-21",
+    "doc_path": "werkzeug/src/werkzeug/wsgi.py",
+    "doc_line": 54,
+    "doc_end": 54,
+    "doc_text": "``root_url``, or ``host_address`` instead.",
+    "claim": "name-check: the documentation refers to `host_address`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C09"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/sansio/request.py",
+     247,
+     247
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "host_url",
+   "doc_says": "host_address",
+   "kind": "doc_rename_function",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-21"
+  },
+  {
+   "key": "planted2-werkzeug:P2-22",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-22",
+    "doc_path": "werkzeug/docs/tutorial.rst",
+    "doc_line": 268,
+    "doc_end": 268,
+    "doc_text": ":class:`~werkzeug.routing.MapAdapter`.  The adapter can be used to match",
+    "claim": "name-check: the documentation refers to `MapAdapter`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C10"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/routing/map.py",
+     462,
+     462
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "MappingAdapter",
+   "doc_says": "MapAdapter",
+   "kind": "code_rename_class",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-22"
+  },
+  {
+   "key": "planted2-werkzeug:P2-24",
+   "unit": "planted2-werkzeug",
+   "stratum": "planted",
+   "candidate": {
+    "source": "planted",
+    "source_id": "P2-24",
+    "doc_path": "werkzeug/docs/routing.rst",
+    "doc_line": 98,
+    "doc_end": 98,
+    "doc_text": "If a duplicate rule is added to a map, a :exc:`.DuplicateRouteError` will be",
+    "claim": "name-check: the documentation refers to `DuplicateRouteError`; this name may not match the code.",
+    "code_hint": "",
+    "candidate_id": "C11"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "werkzeug/src/werkzeug/routing/exceptions.py",
+     17,
+     17
+    ]
+   ],
+   "cross_file": true,
+   "code_says": "DuplicateRuleError",
+   "doc_says": "DuplicateRouteError",
+   "kind": "doc_rename_class",
+   "bucket": "~400k",
+   "provenance": "results_live/recall/ground_truth_seed2.json P2-24"
+  },
+  {
+   "key": "real-structlog:structlog-400000:DD-2",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "whole_repo",
+    "source_id": "structlog-400000:DD-2",
+    "doc_path": "docs/standard-library.md",
+    "doc_line": 116,
+    "doc_end": 117,
+    "doc_text": "  The mapping of names to numbers is in\n  ``structlog.stdlib._log_levels._NAME_TO_LEVEL``.",
+    "claim": "The standard library documentation points to structlog.stdlib._log_levels._NAME_TO_LEVEL, but stdlib code imports NAME_TO_LEVEL from the top-level structlog._log_levels module and uses the public NAME_TO_LEVEL name.",
+    "code_hint": "src/structlog/stdlib.py:39-39 'from ._log_levels import LEVEL_TO_NAME, NAME_TO_LEVEL, add_log_level'",
+    "candidate_id": "C01"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "src/structlog/_log_levels.py",
+     27,
+     27
+    ]
+   ],
+   "cross_file": true,
+   "provenance": "handcheck.md: mapping is structlog._log_levels.NAME_TO_LEVEL (_log_levels.py:27)"
+  },
+  {
+   "key": "real-structlog:S13",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "symbol",
+    "source_id": "S13",
+    "doc_path": "docs/standard-library.md",
+    "doc_line": 117,
+    "doc_end": 117,
+    "doc_text": "The mapping of names to numbers is in `structlog.stdlib._NAME_TO_LEVEL`.",
+    "claim": "dotted: `structlog.stdlib._NAME_TO_LEVEL`: '_NAME_TO_LEVEL' not found on structlog.stdlib",
+    "code_hint": "",
+    "candidate_id": "C02"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "src/structlog/_log_levels.py",
+     27,
+     27
+    ]
+   ],
+   "cross_file": true,
+   "provenance": "_symbol_verdicts 13 (T5, same claim as DD-2); _log_levels.py:27"
+  },
+  {
+   "key": "real-structlog:structlog-400000:DD-1",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "whole_repo",
+    "source_id": "structlog-400000:DD-1",
+    "doc_path": "src/structlog/_native.py",
+    "doc_line": 121,
+    "doc_end": 123,
+    "doc_text": "            If you pass a string, it must be one of: ``critical``, ``error``,\n            ``warning``, ``info``, ``debug``, ``notset`` (upper/lower case\n            doesn't matter).",
+    "claim": "The documentation for make_filtering_bound_logger says a string min_level must be one of a limited set of names, but the implementation passes the string through NAME_TO_LEVEL, which also accepts \"warn\", \"exception\", and \"notset\".",
+    "code_hint": "src/structlog/_log_levels.py:27-36 'NAME_TO_LEVEL = {\\n    \"critical\": CRITICAL,\\n    \"exception\": ERROR,\\n    \"error\": ERROR,\\n    \"warn\": WARNING,\\n    \"warning\": WARNING,\\n    \"info\": INFO,\\n    \"debug\": DEBUG,\\n    \"notset\": NOTSET,\\n}'",
+    "candidate_id": "C03"
+   },
+   "label": "false",
+   "gold": [
+    [
+     "src/structlog/_log_levels.py",
+     27,
+     36
+    ],
+    [
+     "src/structlog/_native.py",
+     132,
+     133
+    ]
+   ],
+   "cross_file": true,
+   "provenance": "handcheck.md: doc lists a subset, code accepts a superset (NAME_TO_LEVEL _log_levels.py:27-36, looked up at _native.py:132-133)"
+  },
+  {
+   "key": "real-structlog:S16",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "symbol",
+    "source_id": "S16",
+    "doc_path": "src/structlog/dev.py",
+    "doc_line": 1008,
+    "doc_end": 1008,
+    "doc_text": "value:",
+    "claim": "docstring-param: `columns(value)`: documented param 'value' not in signature of columns (src/structlog/dev.py:999)",
+    "code_hint": "",
+    "candidate_id": "C04"
+   },
+   "label": "false",
+   "gold": [
+    [
+     "src/structlog/dev.py",
+     999,
+     1008
+    ]
+   ],
+   "cross_file": false,
+   "provenance": "_symbol_verdicts 16: property docstring documents the setter value (dev.py:999-1008)"
+  },
+  {
+   "key": "real-structlog:S14",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "symbol",
+    "source_id": "S14",
+    "doc_path": "src/structlog/stdlib.py",
+    "doc_line": 862,
+    "doc_end": 862,
+    "doc_text": "``structlog.stdlib._log_levels._NAME_TO_LEVEL``.",
+    "claim": "dotted: `structlog.stdlib._log_levels._NAME_TO_LEVEL`: '_log_levels' not found on structlog.stdlib",
+    "code_hint": "",
+    "candidate_id": "C05"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "src/structlog/_log_levels.py",
+     27,
+     27
+    ]
+   ],
+   "cross_file": true,
+   "provenance": "_symbol_verdicts 14 (T5 second site, stdlib.py:862); _log_levels.py:27"
+  },
+  {
+   "key": "real-structlog:S15",
+   "unit": "real-structlog",
+   "stratum": "real",
+   "candidate": {
+    "source": "symbol",
+    "source_id": "S15",
+    "doc_path": "src/structlog/twisted.py",
+    "doc_line": 235,
+    "doc_end": 235,
+    "doc_text": ":class:`PlainFileObserver` or Twisted's stock `FileLogObserver",
+    "claim": "role:undefined: `PlainFileObserver`: :class: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C06"
+   },
+   "label": "true",
+   "gold": [
+    [
+     "src/structlog/twisted.py",
+     202,
+     202
+    ]
+   ],
+   "cross_file": false,
+   "provenance": "_symbol_verdicts 15: class is PlainFileLogObserver (twisted.py:202)"
+  }
+ ],
+ "excluded": [
+  {
+   "plant_id": "P2-23",
+   "why": "stale doc line defines the name itself (user-defined example)",
+   "doc_text": "def open_url(ctx, param, value):"
+  }
+ ],
+ "units": {
+  "planted1-click": {
+   "pack": "packs/planted1-click.json",
+   "pack_cl100k": 103735,
+   "files": 19,
+   "pack_sha256": "c52ce8816745cfa1d8f927b4e5b503d71ec460de689bb57f38d5cfe440df0b96"
+  },
+  "planted1-httpcore": {
+   "pack": "packs/planted1-httpcore.json",
+   "pack_cl100k": 67149,
+   "files": 29,
+   "pack_sha256": "e40f8080c76cf28334504e4eff8adde1ba308217a879d2a689c95aca9deb9741"
+  },
+  "planted1-httpx": {
+   "pack": "packs/planted1-httpx.json",
+   "pack_cl100k": 82260,
+   "files": 22,
+   "pack_sha256": "eecc24dec301a39a41ca0608409316555853d4afecaca3b746d1561a0846c156"
+  },
+  "planted1-jinja": {
+   "pack": "packs/planted1-jinja.json",
+   "pack_cl100k": 168048,
+   "files": 25,
+   "pack_sha256": "380e1e7f9becfae532ed6506ee8de9d429f4caaa4e19c7594dd9a6f0c7199eae"
+  },
+  "planted1-structlog": {
+   "pack": "packs/planted1-structlog.json",
+   "pack_cl100k": 68202,
+   "files": 19,
+   "pack_sha256": "802dcc1e1605bcfc1d4877cf3ca5d256b830ce4bc09e64cffe9f708934ee4906"
+  },
+  "planted1-werkzeug": {
+   "pack": "packs/planted1-werkzeug.json",
+   "pack_cl100k": 236752,
+   "files": 50,
+   "pack_sha256": "74bca4a9dbdaf573994d6f44089c6ff5a1ec41852d64a49e878e17b67a72b12f"
+  },
+  "planted2-click": {
+   "pack": "packs/planted2-click.json",
+   "pack_cl100k": 103735,
+   "files": 19,
+   "pack_sha256": "deb52cf4fc413fd47ea1491ba8000792aa7d0aa2e0d2eacadc07b0b1597f4ec4"
+  },
+  "planted2-httpcore": {
+   "pack": "packs/planted2-httpcore.json",
+   "pack_cl100k": 67149,
+   "files": 29,
+   "pack_sha256": "3ba3bbc91e047d1158778b7daf770f6c0279c35aed6ec0f6da3339796bfa1101"
+  },
+  "planted2-httpx": {
+   "pack": "packs/planted2-httpx.json",
+   "pack_cl100k": 82258,
+   "files": 22,
+   "pack_sha256": "2d6f2c3061c5acba72ee28af3ef57baa557fd6a2eb840dc25561622e83f64b1c"
+  },
+  "planted2-jinja": {
+   "pack": "packs/planted2-jinja.json",
+   "pack_cl100k": 168061,
+   "files": 25,
+   "pack_sha256": "f672d838518baf9e98368e9079c072f21035b6d3d851fc1e07b43492a76653e9"
+  },
+  "planted2-structlog": {
+   "pack": "packs/planted2-structlog.json",
+   "pack_cl100k": 68185,
+   "files": 19,
+   "pack_sha256": "9a7ed5b88db388a1a1b160bb0e66ce5fd8feacb865af99b3a197f0af68059b05"
+  },
+  "planted2-werkzeug": {
+   "pack": "packs/planted2-werkzeug.json",
+   "pack_cl100k": 236751,
+   "files": 50,
+   "pack_sha256": "71940e42c3e7b9600bfb8b8a2abb7eb0bf1f3280435d78345cb7f9343997de93"
+  },
+  "real-structlog": {
+   "pack": "results_live/traces/structlog-400000.json (pack)",
+   "pack_cl100k": 318657,
+   "files": 115,
+   "pack_sha256": "7a266686d984f76b09edfee9722c604684d7d2f920e82b9c8eb1037de4fd7bbb"
+  }
+ }
+}

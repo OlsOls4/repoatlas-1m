@@ -88,9 +88,9 @@ DISPLAY_PREFIX: dict[str, str] = {
 PUBLIC_CODE_URL: str = "https://github.com/OlsOls4/repoatlas-1m"
 PUBLIC_DATASET_URL: str = "https://huggingface.co/datasets/ollymcbride4/docdrift-bugs"
 PUBLIC_THREAD_URL: str = "https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5"
-# One-line switch once the Space is public:
-OG_IMAGE_URL: str = "assets/og.png"
-# OG_IMAGE_URL: str = "https://huggingface.co/spaces/ollymcbride4/docdrift/resolve/main/assets/og.png"
+OG_IMAGE_URL: str = "https://huggingface.co/spaces/ollymcbride4/docdrift/resolve/main/assets/og.png"
+# Relative fallback if the Space URL changes:
+# OG_IMAGE_URL: str = "assets/og.png"
 # OG_IMAGE_URL: str = "https://ollymcbride4-docdrift.static.hf.space/assets/og.png"
 VIDEO_BASENAME: str = "docdrift-demo"
 PACK_CACHE: dict[str, dict[str, list[str]]] = {}
@@ -841,6 +841,12 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
                         f"but grounded fewer cross-file cases "
                         f"({ablation['cross_file_cite_matched']} vs {ablation['cross_file_cite_whole']}; "
                         f"p = {ablation['matched_mcnemar_p']}, not shown at this n)."
+                        + (
+                            f" A pre-registered extension pooled to {ablation['matched_ext_cross_matched']} vs "
+                            f"{ablation['matched_ext_cross_whole']} (p = {ablation['matched_ext_p']})."
+                            if ablation.get("matched_ext_available")
+                            else ""
+                        )
                         if ablation.get("matched_available")
                         else ""
                     )
@@ -899,6 +905,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
             "results_live/traces/starlette-400000.json (summary and pack metadata only)",
             "results_live/ablation/results.json",
             "results_live/ablation/matched_cost/results.json",
+            "results_live/ablation/matched_cost_ext/results.json",
             "results_live/beamv3/results.json",
             "results_live/fresh_run/findings.json",
             "results_live/fresh_run/stdout.log",
@@ -932,7 +939,12 @@ def _token_footnote(stats: HybridHeroStats) -> str:
         f"ablation {int(ablation.get('ablation_ledger_tokens') or 0):,}; "
         f"beam v3 {int(beamv3.get('ledger_tokens') or 0):,}; "
         f"matched-cost control {extra['matched_cost']:,}; "
-        f"tomlkit CLI run {extra['fresh_run']:,}."
+        + (
+            f"matched-cost extension {int(ablation.get('matched_ext_tokens') or 0):,}; "
+            if ablation.get("matched_ext_available")
+            else ""
+        )
+        + f"tomlkit CLI run {extra['fresh_run']:,}."
     )
 
 

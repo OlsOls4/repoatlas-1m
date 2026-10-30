@@ -16,6 +16,7 @@ import time
 from datetime import UTC, datetime
 
 from repoatlas import recall as R
+from repoatlas.config import load_ollama_api_key
 
 WORK = Path("/workspace/recall_work")
 OUT = Path("results_live/recall")
@@ -24,8 +25,7 @@ CALIB = float(os.environ.get("RECALL_CALIB", "1.21"))
 
 
 def _load_key() -> None:
-    if not os.environ.get("OLLAMA_API_KEY"):
-        os.environ["OLLAMA_API_KEY"] = Path("/home/box/.secrets/ollama_api_key").read_text().strip()
+    os.environ["OLLAMA_API_KEY"] = load_ollama_api_key()
 
 
 def cmd_probe(args) -> None:

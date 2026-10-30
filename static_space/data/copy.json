@@ -45,11 +45,11 @@
     },
     {
       "title": "Beam",
-      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens). At the same token budget, retrieval matched verdicts (46/56 vs 47/56) but grounded fewer cross-file cases (19/30 vs 25/30; p = 0.070, not shown at this n)."
+      "body": "One whole-repo call per library (11 of 12; structlog failed, cattrs needed 2), with prompts up to 947,446 tokens accepted. With the whole repo, Beam cited the proof in another file 11/13 times, vs 0/13 with local files. Beam also wrote the repro scripts (138,138 tokens). At the same token budget, retrieval matched verdicts (46/56 vs 47/56) but grounded fewer cross-file cases (19/30 vs 25/30; p = 0.070, not shown at this n). A pre-registered extension pooled to 38/78 vs 52/78 (p = 0.0094)."
     }
   ],
   "why_caption": "Long context didn't change verdicts here. It changed whether Beam could point to the proof in another file. Cost: ~4.8× tokens (4,022,532 vs 830,527).",
-  "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\". The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for the same spend.",
+  "why_matched_cost_note": "**Is it the whole repo, or just more tokens?** We gave a retrieval baseline the **same** Beam budget as whole-repo triage. That came to 3,957,434 against 4,022,532 tokens as spent (3,888,241 attributable; 96.7% of whole-repo) over the same 56 candidates. For each candidate, it got the local files plus the symbol definitions, imports and BM25 matches that fit in about 56k tokens.\n\nVerdict accuracy came out the same (46/56 against 47/56). Grounding still favoured the whole repo: the right verdict **and** the right cross-file line in 25/30 cases, against 19/30 for retrieval. Where the evidence lives outside the files the doc points at, the figures are 11/13 against 6/13. Retrieval pulled in importers or re-exports rather than the defining file in 5 of 13 outside-local items.\n\nThat gap is suggestive, not proven, at this sample size (exact McNemar p = 0.070). We pre-registered the test and report it as \"not shown at this n\".\n\n**Pre-registered extension.** We then added 63 items (57 planted renames, 6 real structlog candidates), frozen before any Beam call (design sha256 42f6b6fe…c996). Pooled over 78 cross-file items, the right verdict **and** the right line came out 52/78 for the whole repo against 38/78 for retrieval (exact McNemar p = 0.0094). Verdict accuracy still did not differ (108/119 against 105/118). The new items alone give p = 0.096 (\"not shown at this n\"), and the pooled result relies on one pre-registered re-send of a whole-repo call that failed to parse (p = 0.18 without it). The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the right line** more often, for no more spend than retrieval.",
   "why_subset_note": "On the 27-item rerun subset, local-only scored higher on verdict accuracy (0.926 vs 0.815). Whole-repo's advantage is citation: 4/4 vs 0/4 when the proof lives outside the candidate's files.",
   "video": "assets/docdrift-demo.mp4",
   "video_poster": "assets/docdrift-poster.png",
@@ -61,7 +61,7 @@
   "repro_caption": "Some bugs have 2 scripts (one per candidate); 30 distinct bugs reproduce.",
   "cross_file_note": "Cross-file means the documented claim and the cited implementation are in different files (including a docs/ page vs package source). It is true when recorded doc_path and code_path differ, or when the docs live under docs/ or a .md/.rst file and no code path was cited.",
   "bench_caption": "45 = all real drifts any method found. 60 = what the hybrid flagged. 30 of 34 = bugs whose doc line crashes when run.",
-  "built_at": "2026-10-30T13:27:57Z",
+  "built_at": "2026-10-30T14:26:53Z",
   "sources_public": "Every number is in the companion dataset (findings, triage verdicts, repros, ablation, token ledger).",
   "sources": [
     "results_live/hybrid/hybrid.json",
@@ -74,6 +74,7 @@
     "results_live/traces/starlette-400000.json (summary and pack metadata only)",
     "results_live/ablation/results.json",
     "results_live/ablation/matched_cost/results.json",
+    "results_live/ablation/matched_cost_ext/results.json",
     "results_live/beamv3/results.json",
     "results_live/fresh_run/findings.json",
     "results_live/fresh_run/stdout.log"

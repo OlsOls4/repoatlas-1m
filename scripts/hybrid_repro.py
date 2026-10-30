@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from repoatlas.config import load_ollama_api_key  # noqa: E402
 from repoatlas.repro import (  # noqa: E402
     BeamReproClient, ReproCase, TokenBudgetExceeded, VenvManager, network_isolation_prefix, run_case)
 from hybrid_triage import OUT, _ledger, _ledger_add  # noqa: E402
@@ -84,7 +85,7 @@ def main() -> int:
         return 0
     used = _ledger()["total_tokens"]
     client = BeamReproClient(base_url="https://ollama.com/v1", model="beam",
-                             api_key=Path("/home/box/.secrets/ollama_api_key").read_text().strip(),
+                             api_key=load_ollama_api_key(),
                              cache_dir=ROOT / ".cache/repoatlas/repro_responses", lock_path=ROOT / ".cache/repoatlas/ollama.lock",
                              max_tokens=8000, token_budget=max(0, args.total_cap - used))
     venvs = VenvManager(ROOT / ".cache/repoatlas/repro_venvs")

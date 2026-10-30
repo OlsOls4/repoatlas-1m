@@ -26,7 +26,7 @@ import time
 from datetime import UTC, datetime
 
 from repoatlas.client import OpenAICompatibleAnalysisClient, _StructuredModelResponse, _cache_key
-from repoatlas.config import RepoAtlasConfig
+from repoatlas.config import RepoAtlasConfig, load_ollama_api_key
 from repoatlas.models import RepoPack
 from repoatlas.packer import FILTER_SIGNATURE, PACK_FORMAT_VERSION, _encode_tokens
 from repoatlas.prompts import SYSTEM_PROMPT, build_analysis_user_prompt
@@ -150,8 +150,7 @@ def run_repo(repo: str, chunk_size: int, cap: int, dry_run: bool) -> dict:
         print(result["stopped"], flush=True)
         return result
 
-    key_path = Path("/home/box/.secrets/ollama_api_key")
-    os.environ["OLLAMA_API_KEY"] = key_path.read_text().strip()
+    os.environ["OLLAMA_API_KEY"] = load_ollama_api_key()
     config = RepoAtlasConfig.from_environment(provider="ollama", token_limit=chunk_size)
     client = OpenAICompatibleAnalysisClient(config)
     schema = _StructuredModelResponse.model_json_schema()

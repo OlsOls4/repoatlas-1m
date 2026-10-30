@@ -31,6 +31,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import requests  # noqa: E402
 
 from repoatlas.client import _close_truncated_json, _exclusive_lock, _extract_message_content  # noqa: E402
+from repoatlas.config import load_ollama_api_key  # noqa: E402
 from repoatlas.models import Citation, DocDriftFinding, RepoPack  # noqa: E402
 from repoatlas.verifier import _build_file_lookup, verify_citation, verify_findings  # noqa: E402
 
@@ -294,7 +295,7 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     api_key = None
     if not args.dry_run:
-        api_key = Path("/home/box/.secrets/ollama_api_key").read_text().strip()
+        api_key = load_ollama_api_key()
     for repo in args.repos.split(","):
         out_file = OUT / "triage" / f"{repo}.json"
         try:

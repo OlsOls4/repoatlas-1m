@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import os
+from pathlib import Path
+
+
+FALLBACK_OLLAMA_KEY_FILE: Path = Path("/home/box/.secrets/ollama_api_key")
 
 
 DEFAULT_TOKEN_LIMIT: int = 400_000
@@ -15,6 +19,25 @@ DEFAULT_REFLECTION_BASE_URL: str = "https://api.reflection.ai/openai/v1"
 DEFAULT_REFLECTION_MODEL: str = "Beam-1.0-501B-A23B"
 DEFAULT_OLLAMA_BASE_URL: str = "https://ollama.com/v1"
 DEFAULT_OLLAMA_MODEL: str = "beam"
+
+
+def load_ollama_api_key() -> str:
+    """
+    @brief OLLAMA_API_KEY, then OLLAMA_API_KEY_FILE, then the original-box key file.
+    """
+
+    env_key = os.environ.get("OLLAMA_API_KEY", "").strip()
+    if env_key:
+        return env_key
+    file_env = os.environ.get("OLLAMA_API_KEY_FILE", "").strip()
+    if file_env:
+        return Path(file_env).expanduser().read_text(encoding="utf-8").strip()
+    if FALLBACK_OLLAMA_KEY_FILE.is_file():
+        return FALLBACK_OLLAMA_KEY_FILE.read_text(encoding="utf-8").strip()
+    raise FileNotFoundError(
+        "OLLAMA_API_KEY is not set. Export it, or set OLLAMA_API_KEY_FILE to a file that contains the key "
+        f"(legacy fallback: {FALLBACK_OLLAMA_KEY_FILE})."
+    )
 
 
 @dataclass(slots=True)

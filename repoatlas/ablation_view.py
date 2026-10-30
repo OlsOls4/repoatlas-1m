@@ -12,6 +12,7 @@ from repoatlas.hybrid_view import LABEL_SOURCE, RESULTS_LIVE_DIRECTORY
 ABLATION_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "results.json"
 ABLATION_LEDGER_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "beam_usage_ledger.json"
 MATCHED_COST_RESULTS_PATH: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "results.json"
+MATCHED_COST_EXT_DIRECTORY: Path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost_ext"
 
 CLAIM: str = (
     "Long context didn't make verdicts more accurate here; it made them cite the real evidence "
@@ -62,6 +63,11 @@ class AblationPayload(TypedDict):
     gold_file_missed: int
     accuracy_frac_matched: str
     accuracy_frac_whole: str
+    matched_ext_available: bool
+    matched_ext_cross_whole: str
+    matched_ext_cross_matched: str
+    matched_ext_p: str
+    matched_ext_tokens: int
 
 
 def load_ablation_payload(path: Path | None = None) -> AblationPayload:
@@ -109,6 +115,11 @@ def load_ablation_payload(path: Path | None = None) -> AblationPayload:
         "gold_file_missed": 0,
         "accuracy_frac_matched": "",
         "accuracy_frac_whole": "",
+        "matched_ext_available": False,
+        "matched_ext_cross_whole": "",
+        "matched_ext_cross_matched": "",
+        "matched_ext_p": "",
+        "matched_ext_tokens": 0,
     }
     if not target.exists():
         return empty
@@ -288,6 +299,95 @@ def _matched_cost_payload() -> dict[str, object] | None:
     return raw if isinstance(raw, dict) else None
 
 
+def _read_json_dict(path: Path) -> dict[str, object]:
+    """
+    @brief Read a JSON object, or {} if the file is missing or not an object.
+    """
+
+    if not path.exists():
+        return {}
+    raw: object = json.loads(path.read_text(encoding="utf-8"))
+    return raw if isinstance(raw, dict) else {}
+
+
+def _paired(block: object) -> tuple[str, str, str]:
+    """
+    @brief (whole "a/n", matched "b/n", p text) from an ext_score.py paired-comparison block.
+    """
+
+    d = block if isinstance(block, dict) else {}
+    n = int(d.get("n") or 0)
+    p_raw = d.get("exact_mcnemar_p")
+    p_text = f"{float(p_raw):.2g}" if isinstance(p_raw, (int, float)) else ""
+    return f"{int(d.get('whole_right') or 0)}/{n}", f"{int(d.get('matched_right') or 0)}/{n}", p_text
+
+
+def _acc_frac(arm: object) -> str:
+    """
+    @brief "right/n" verdict accuracy from an ext_score.py per-arm block ([right, n, ci]).
+    """
+
+    acc = arm.get("accuracy") if isinstance(arm, dict) else None
+    return f"{int(acc[0])}/{int(acc[1])}" if isinstance(acc, list) and len(acc) >= 2 else ""
+
+
+def _matched_cost_ext_fields() -> dict[str, object]:
+    """
+    @brief Pooled pre-registered extension (results_live/ablation/matched_cost_ext), or not available.
+    """
+
+    raw = _read_json_dict(MATCHED_COST_EXT_DIRECTORY / "results.json")
+    prereg = _read_json_dict(MATCHED_COST_EXT_DIRECTORY / "preregistration_ext.json")
+    sens = _read_json_dict(MATCHED_COST_EXT_DIRECTORY / "resume" / "sensitivity.json")
+    primary = raw.get("primary") if isinstance(raw.get("primary"), dict) else {}
+    if not primary:
+        return {
+            "matched_ext_available": False,
+            "matched_ext_note": "",
+            "matched_ext_cross_whole": "",
+            "matched_ext_cross_matched": "",
+            "matched_ext_p": "",
+            "matched_ext_tokens": 0,
+        }
+    pooled = raw.get("pooled") if isinstance(raw.get("pooled"), dict) else {}
+    new_only = raw.get("new_only") if isinstance(raw.get("new_only"), dict) else {}
+    strata = raw.get("strata") if isinstance(raw.get("strata"), dict) else {}
+    tokens = raw.get("tokens") if isinstance(raw.get("tokens"), dict) else {}
+    hashes = prereg.get("sha256") if isinstance(prereg.get("sha256"), dict) else {}
+    design_sha = str(hashes.get("design_ext.md") or "")
+    xw, xm, p_text = _paired(primary)
+    arms = pooled.get("per_arm") if isinstance(pooled.get("per_arm"), dict) else {}
+    aw, am = (_acc_frac(arms.get(arm)) for arm in ("whole", "matched"))
+    _, _, p_new = _paired(new_only.get("cross_file_verdict_and_cite_whole_vs_matched"))
+    _, _, p_no_resend = _paired(sens.get("no_resends_first_attempt_only"))
+    planted = strata.get("planted") if isinstance(strata.get("planted"), dict) else {}
+    real = strata.get("real_structlog") if isinstance(strata.get("real_structlog"), dict) else {}
+    n_new = int(new_only.get("n_items") or 0)
+    note = (
+        f"**Pre-registered extension.** We then added {n_new} items "
+        f"({int(planted.get('n_items') or 0)} planted renames, {int(real.get('n_items') or 0)} real structlog "
+        f"candidates), frozen before any Beam call (design sha256 {design_sha[:8]}…{design_sha[-4:]}). "
+        f"Pooled over {int(primary.get('n') or 0)} cross-file items, the right verdict **and** the right line came out "
+        f"{xw} for the whole repo against {xm} for retrieval (exact McNemar p = {p_text}). "
+        f"Verdict accuracy still did not differ ({aw} against {am}). "
+        f'The new items alone give p = {p_new} ("not shown at this n")'
+        + (
+            f", and the pooled result relies on one pre-registered re-send of a whole-repo call that failed to parse "
+            f"(p = {p_no_resend} without it)."
+            if p_no_resend
+            else "."
+        )
+    )
+    return {
+        "matched_ext_available": True,
+        "matched_ext_note": note,
+        "matched_ext_cross_whole": xw,
+        "matched_ext_cross_matched": xm,
+        "matched_ext_p": p_text,
+        "matched_ext_tokens": int(tokens.get("ledger_total") or 0),
+    }
+
+
 def _matched_cost_fields() -> dict[str, object]:
     """
     @brief Display fields for the Why-1M matched-cost control, generated from results.json.
@@ -307,6 +407,11 @@ def _matched_cost_fields() -> dict[str, object]:
         "gold_file_missed": 0,
         "accuracy_frac_matched": "",
         "accuracy_frac_whole": "",
+        "matched_ext_available": False,
+        "matched_ext_cross_whole": "",
+        "matched_ext_cross_matched": "",
+        "matched_ext_p": "",
+        "matched_ext_tokens": 0,
     }
     raw = _matched_cost_payload()
     if raw is None:
@@ -354,9 +459,15 @@ def _matched_cost_fields() -> dict[str, object]:
         f"points at, the figures are {out_w} against {out_m}. Retrieval pulled in importers or "
         f"re-exports rather than the defining file in {missed} of {out_n} outside-local items.\n\n"
         f"That gap is suggestive, not proven, at this sample size (exact McNemar p = {p_text}). "
-        'We pre-registered the test and report it as "not shown at this n". The honest takeaway: '
-        "whole-repo context doesn't make Beam **judge** better, but it helps Beam **point at the "
-        "right line** more often, for the same spend."
+        'We pre-registered the test and report it as "not shown at this n".'
+    )
+    ext = _matched_cost_ext_fields()
+    if ext["matched_ext_available"]:
+        note += "\n\n" + str(ext["matched_ext_note"])
+    note += (
+        " The honest takeaway: whole-repo context doesn't make Beam **judge** better, but it helps Beam "
+        "**point at the right line** more often, "
+        + ("for no more spend than retrieval." if ext["matched_ext_available"] else "for the same spend.")
     )
     return {
         "matched_available": True,
@@ -372,6 +483,7 @@ def _matched_cost_fields() -> dict[str, object]:
         "gold_file_missed": missed,
         "accuracy_frac_matched": f"{acc_m}/{n}",
         "accuracy_frac_whole": f"{acc_w}/{n}",
+        **{k: v for k, v in ext.items() if k != "matched_ext_note"},
     }
 
 
@@ -386,5 +498,13 @@ def _matched_cost_caveat() -> list[str]:
     return [
         f"Matched-cost retrieval control: {int(fields['matched_tokens']):,} attributable / "
         f"{int(fields['matched_ledger_tokens']):,} as spent ({int(fields['matched_ledger_calls'])} calls; "
-        "same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
+        "same 56 candidates). Extra experimental cost, not part of the 9.3M hybrid end-to-end.",
+        *(
+            [
+                f"Pre-registered matched-cost extension: {int(fields['matched_ext_tokens']):,} tokens "
+                "(63 more items). Extra experimental cost, not part of the 9.3M hybrid end-to-end."
+            ]
+            if fields.get("matched_ext_available")
+            else []
+        ),
     ]

@@ -27,6 +27,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import hybrid_triage as ht  # noqa: E402
 from repoatlas.client import _StructuredModelResponse, _extract_message_content  # noqa: E402
+from repoatlas.config import load_ollama_api_key  # noqa: E402
 from repoatlas.models import DocDriftFinding, RepoPack  # noqa: E402
 from repoatlas.recall import build_docdrift_prompt  # noqa: E402
 from repoatlas.prompts import SYSTEM_PROMPT  # noqa: E402
@@ -232,7 +233,7 @@ def main() -> None:
     a = ap.parse_args()
     if a.cmd == "plan":
         return plan()
-    api_key = os.environ.get("OLLAMA_API_KEY") or Path("/home/box/.secrets/ollama_api_key").read_text().strip()
+    api_key = load_ollama_api_key()
     repos = [r for r in a.repos.split(",") if r] or (["httpx", "click", "cattrs"] if a.cmd == "repeat" else REPOS)
     {"docs": run_docs, "py": run_py, "repeat": run_repeat}[a.cmd](repos, a.cap, api_key)
 

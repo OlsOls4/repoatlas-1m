@@ -91,7 +91,7 @@ Honest notes, also from `hybrid.json`:
 - No prompt caching was observed on triage calls.
 - The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.
 - The docs-pass + py32k beam v3 experiment spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end. Headline coverage stays **34 of 45**.
-- The matched-cost retrieval control spent **3,957,434** extra tokens. The tomlkit `docdrift run` recording spent **185,842**. Together **4,143,276**, not part of the 9.3M hybrid end-to-end.
+- The matched-cost retrieval control spent **3,957,434** extra tokens, and its pre-registered extension **7,528,878** more. The tomlkit `docdrift run` recording spent **185,842**. Together **11,672,154**, not part of the 9.3M hybrid end-to-end.
 
 ## Does long context help?
 
@@ -129,9 +129,13 @@ Sourced from `results_live/ablation/matched_cost/results.json` (scored by `scrip
 
 **Is it the whole repo, or just more tokens?** A retrieval baseline got the *same* Beam budget as whole-repo triage: **3,957,434** against **4,022,532** tokens as spent (**3,888,241** attributable; 96.7% of whole-repo) over the same 56 candidates. Each item got the local files plus symbol definitions, imports and BM25 matches that fit in about 56k tokens.
 
-Verdict accuracy came out the same (**46/56** against **47/56**). Grounding still favoured the whole repo: right verdict *and* right cross-file line in **25/30** vs **19/30**; evidence outside the local files **11/13** vs **6/13**. Retrieval pulled in importers or re-exports rather than the defining file in **5 of 13** outside-local items. Exact McNemar p = **0.070** on the cross-file grounding gap, so this is **"not shown at this n"**. Whole-repo context doesn't make Beam *judge* better here; it helps Beam *point at the right line* more often, for the same spend.
+Verdict accuracy came out the same (**46/56** against **47/56**). Grounding still favoured the whole repo: right verdict *and* right cross-file line in **25/30** vs **19/30**; evidence outside the local files **11/13** vs **6/13**. Retrieval pulled in importers or re-exports rather than the defining file in **5 of 13** outside-local items. Exact McNemar p = **0.070** on the cross-file grounding gap, so on these 56 alone this is **"not shown at this n"**.
 
-Full write-up: `results_live/ablation/matched_cost/report.md`.
+**Pre-registered extension.** To test that gap at a larger n, 63 more items were added (57 planted synonym-swap renames across 6 libraries, plus 6 real structlog candidates). The design, items and scripts were frozen before any extension Beam call: `results_live/ablation/matched_cost_ext/preregistration_ext.json` (sha256 `design_ext.md` 42f6b6fe…c996, `items.json` 4f454224…a888, `scripts/ext_run.py` 687323a3…cc39, `scripts/ext_score.py` c17e299d…1721). Pooled over 78 cross-file items, the right verdict *and* the right line came out **52/78** for the whole repo against **38/78** for retrieval (20 vs 6 discordant; exact McNemar p = **0.0094**). That meets the pre-registered bar. Verdict accuracy still did not differ (**108/119** vs **105/118**; p = 0.55). Evidence outside the local files: **38/61** vs **25/61**. Caveats: the new items alone give p = 0.096, which is "not shown at this n". The pooled result depends on the pre-registered re-send of one whole-repo call that failed to parse (p = 0.18 without it). Planted renames hide the new name from lexical retrieval. One retrieval call timed out and was not resent (n = 78, not 79). The extension spent **7,528,878** tokens: retrieval 4,417,886, about 1.9× whole-repo's 2,279,494 on the new items.
+
+Whole-repo context doesn't make Beam *judge* better here; it helps Beam *point at the right line* more often, for no more spend than retrieval.
+
+Full write-up: `results_live/ablation/matched_cost/report.md`; extension: `results_live/ablation/matched_cost_ext/results_ext.md`.
 
 ## Catching what one whole-repo call misses
 
@@ -249,7 +253,7 @@ Or a local checkout:
 docdrift run ./my-library --max-tokens 400000 --out findings
 ```
 
-Uses the v2 pipeline: free symbol check, then one whole-repo Beam triage (full pack, 32k output tokens, citation verify) via an OpenAI-compatible endpoint (default `https://ollama.com/v1`, model `beam`, key from `OLLAMA_API_KEY` or `OLLAMA_API_KEY_FILE`), then an executable repro in an isolated venv with no network (skip with `--no-repro`; cap with `--repro-budget`). Stops on HTTP 402/quota (exit 4). The command prints a token-estimate preflight and refuses to call Beam if the estimate exceeds `--max-tokens`. Create a free Ollama Cloud key at https://ollama.com (Settings → API keys). No key is stored in this repository.
+Uses the v2 pipeline: free symbol check, then one whole-repo Beam triage (full pack, 32k output tokens, citation verify) via an OpenAI-compatible endpoint (default `https://ollama.com/v1`, model `beam`, key from `OLLAMA_API_KEY` or `OLLAMA_API_KEY_FILE`), then an executable repro in an isolated venv with no network (skip with `--no-repro`; cap with `--repro-budget`). Stops on HTTP 402/quota (exit 4). The command prints a token-estimate preflight and refuses to call Beam if the estimate exceeds `--max-tokens`. Create a free Ollama Cloud key at https://ollama.com (Settings → API keys). No key is stored in this repository. Replay scripts (`scripts/hybrid_triage.py` and friends) read **`OLLAMA_API_KEY` first**; if that is unset they try `OLLAMA_API_KEY_FILE`, then `/home/box/.secrets/ollama_api_key` (the original run box). Recorded run logs under `results_live/` contain local `/workspace` and `/tmp` paths from those runs; they are provenance, not secrets.
 
 `--docstring-chunks` is not a shipped flag (it would be a second Beam pass, not a one-liner). The experimental 32k docstring-chunk pass lives in `scripts/beamv3.py`. Recommended: symbol check + whole-repo Beam triage, plus 32k docstring chunks if you want more coverage at lower precision.
 

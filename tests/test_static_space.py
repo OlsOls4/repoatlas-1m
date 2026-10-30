@@ -115,8 +115,11 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "11/13" in copy["why_matched_cost_note"] and "6/13" in copy["why_matched_cost_note"]
     assert "not shown at this n" in copy["why_matched_cost_note"]
     assert "5 of 13" in copy["why_matched_cost_note"]
+    assert "52/78" in copy["why_matched_cost_note"] and "38/78" in copy["why_matched_cost_note"]
+    assert "0.0094" in copy["why_matched_cost_note"]
     assert "Extra experimental runs, not in the 9.3M" in documents["benchmark"]["token_footnote"]
     assert "3,957,434" in documents["benchmark"]["token_footnote"]
+    assert "7,528,878" in documents["benchmark"]["token_footnote"]
     assert "together" not in documents["benchmark"]["token_footnote"].lower()
     assert "4,143,276" not in documents["benchmark"]["token_footnote"]
     assert "isolated venv" in copy["ollama_key"]
@@ -254,7 +257,10 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert "*.mp4 filter=lfs diff=lfs merge=lfs -text" in (target / ".gitattributes").read_text(encoding="utf-8")
     assert 'id="demo-video" class="demo-video" hidden' not in index_html
     assert index_html.find('id="demo-video"') > index_html.find('id="drift-card"')
-    assert 'content="assets/og.png"' in index_html
+    og_url = "https://huggingface.co/spaces/ollymcbride4/docdrift/resolve/main/assets/og.png"
+    assert f'property="og:image" content="{og_url}"' in index_html
+    assert f'name="twitter:image" content="{og_url}"' in index_html
+    assert (target / "assets" / "og.png").is_file()
     css = (target / "assets" / "app.css").read_text(encoding="utf-8")
     assert "video{display:none}" not in css.replace(" ", "")
     assert ".ap-player *" in css
