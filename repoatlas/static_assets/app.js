@@ -98,8 +98,10 @@
     renderDrift(replay);
     if (copy && copy.video) {
       const el = $("demo-video-el");
-      el.muted = true;
+      el.controls = true;
       el.playsInline = true;
+      el.muted = false;
+      el.removeAttribute("autoplay");
       el.setAttribute("preload", "metadata");
       if (copy.video_poster) {
         el.poster = copy.video_poster;

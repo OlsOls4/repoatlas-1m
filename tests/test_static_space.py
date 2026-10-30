@@ -100,6 +100,7 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert copy["video"] == "assets/docdrift-demo.mp4"
     assert copy["video_poster"] == "assets/docdrift-poster.png"
     assert copy["video_captions"] == "assets/docdrift-demo.vtt"
+    assert copy["video_credit"] == "Voice: Kokoro-82M (Apache-2.0), generated locally"
     assert "185,842" in copy["sample_output"]
     assert "tomlkit" in copy["sample_output"].lower()
     assert "STRICT-CONFIRMED" in copy["sample_output"]
@@ -229,15 +230,21 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert 'src="assets/docdrift-demo.mp4"' in index_html
     assert 'preload="metadata"' in index_html
     assert "playsinline" in index_html
-    assert "muted" in index_html
+    assert "controls" in index_html
+    assert "autoplay" not in index_html
+    assert " muted" not in index_html and "muted=" not in index_html
     assert 'poster="assets/docdrift-poster.png"' in index_html
     assert 'src="assets/docdrift-demo.vtt"' in index_html
     assert 'width="1280"' in index_html and 'height="720"' in index_html
-    assert 'aria-label="DocDrift demo, 87 seconds, silent with on-screen captions"' in index_html
+    assert 'aria-label="DocDrift demo, 93 seconds, narrated (synthetic voice), captioned"' in index_html
+    assert "silent" not in index_html
     assert 'label="English (same as on-screen)"' in index_html
+    assert "Voice: Kokoro-82M (Apache-2.0), generated locally" in index_html
     assert '<details class="transcript">' in index_html
+    assert "DocDrift gives Beam a whole Python library in one call, to find docs that lie." in index_html
+    assert "call receive JSON with mode binary" in index_html
     assert "32 of the 34 bugs ship a script" in index_html
-    assert "Result of a real run at pinned commit 8aa828c" in index_html
+    assert "Result of a real run at pinned commit 8aa828c" not in index_html
     assert "Every bug ships a script that ran its documented line" not in index_html
     assert "Every bug ships a script that runs the documented line" not in index_html
     assert (target / "assets" / "docdrift-demo.mp4").exists()
@@ -256,6 +263,13 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     js = (target / "assets" / "app.js").read_text(encoding="utf-8")
     assert 'sample.addEventListener("toggle"' in js
     assert "terminalFontSize" in js
+    assert "el.muted = true" not in js
+    assert "el.muted = false" in js
+    assert 'el.removeAttribute("autoplay")' in js
+    vtt = (target / "assets" / "docdrift-demo.vtt").read_text(encoding="utf-8")
+    assert vtt.startswith("WEBVTT")
+    assert "00:00:45.100 --> 00:00:51.200" in vtt
+    assert "00:01:25.600 --> 00:01:29.000" in vtt
     sample_pos = index_html.find('id="sample-output"')
     cli_pos = index_html.find("<h3>CLI</h3>")
     assert 0 < sample_pos < cli_pos

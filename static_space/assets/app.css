@@ -82,6 +82,7 @@ a { color: var(--accent); }
 .tiles { min-height: 84px; }
 .demo-video { grid-column: 1 / -1; max-width: 880px; margin: 8px auto 0; width: 100%; }
 .demo-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: 10px; }
+.demo-video .video-credit { margin: 8px 0 0; color: #d7c7a5; font-size: 0.85rem; }
 .demo-video .transcript { margin-top: 8px; color: #d7c7a5; font-size: 0.92rem; }
 .demo-video .transcript summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; }
 .demo-video .transcript p { margin: 0 0 8px; }

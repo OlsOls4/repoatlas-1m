@@ -862,6 +862,7 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         "video_captions": (
             f"assets/{VIDEO_BASENAME}.vtt" if (ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}.vtt").exists() else None
         ),
+        "video_credit": "Voice: Kokoro-82M (Apache-2.0), generated locally",
         "sample_output": _fresh_run_sample_output(),
         "sample_cast": (
             "assets/docdrift_tomlkit.cast"
@@ -1522,29 +1523,39 @@ def _structlog_failure_notes() -> list[str]:
     ]
 
 
-def _video_transcript_html() -> str:
+def _spoken_transcript_paragraphs() -> list[str]:
     """
-    @brief Collapsible transcript under the hero video, generated from the shipped WebVTT.
+    @brief Spoken script lines from the shipped narration markdown (Script (plain)).
     """
 
-    path = ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}.vtt"
+    path = ASSETS_SOURCE_DIRECTORY / f"{VIDEO_BASENAME}-narration.md"
     if not path.exists():
-        return ""
-    cues: list[str] = []
-    pending: list[str] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
+        return []
+    text = path.read_text(encoding="utf-8")
+    marker = "## Script (plain)"
+    if marker not in text:
+        return []
+    body = text.split(marker, 1)[1]
+    paragraphs: list[str] = []
+    for line in body.splitlines():
         stripped = line.strip()
-        if stripped in {"WEBVTT", ""} or stripped.isdigit() or "-->" in stripped:
-            if stripped == "" and pending:
-                cues.append(" ".join(pending))
-                pending = []
-            continue
-        pending.append(stripped)
-    if pending:
-        cues.append(" ".join(pending))
-    if not cues:
-        return ""
-    body = "".join(f"<p>{html.escape(cue)}</p>" for cue in cues)
-    return f'<details class="transcript"><summary>Transcript</summary>{body}</details>'
+        if stripped.startswith("#"):
+            break
+        if stripped:
+            paragraphs.append(stripped)
+    return paragraphs
+
+
+def _video_transcript_html() -> str:
+    """
+    @brief Credit plus collapsible spoken transcript under the hero video.
+    """
+
+    credit = '<p class="video-credit">Voice: Kokoro-82M (Apache-2.0), generated locally</p>'
+    paragraphs = _spoken_transcript_paragraphs()
+    if not paragraphs:
+        return credit
+    body = "".join(f"<p>{html.escape(cue)}</p>" for cue in paragraphs)
+    return f'{credit}<details class="transcript"><summary>Transcript</summary>{body}</details>'
 
 
