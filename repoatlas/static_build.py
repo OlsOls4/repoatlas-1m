@@ -175,11 +175,16 @@ def write_static_space(destination: Path | None = None) -> Path:
     cast_source = RESULTS_LIVE_DIRECTORY / "fresh_run" / "docdrift_tomlkit.cast"
     if cast_source.exists():
         shutil.copy2(cast_source, assets_dir / "docdrift_tomlkit.cast")
+    for media_name in ("docdrift-75s.mp4", "docdrift-poster.png", "docdrift-75s.vtt"):
+        media = ASSETS_SOURCE_DIRECTORY / media_name
+        if media.exists():
+            shutil.copy2(media, assets_dir / media_name)
     if RECALL_CHART_PATH.exists():
         shutil.copy2(RECALL_CHART_PATH, assets_dir / "recall_vs_distance.png")
     og_source: Path = ASSETS_SOURCE_DIRECTORY / "og.png"
     if og_source.exists():
         shutil.copy2(og_source, assets_dir / "og.png")
+    (target / ".gitattributes").write_text("*.mp4 filter=lfs diff=lfs merge=lfs -text\n", encoding="utf-8")
     (target / "README.md").write_text(_static_readme(documents["hero"], documents["copy"]), encoding="utf-8")
     return target
 
@@ -829,7 +834,10 @@ def _build_copy(stats: HybridHeroStats) -> dict[str, object]:
         ),
         "why_matched_cost_note": ablation.get("why_matched_cost_note") or "Matched-cost local bar: not run yet.",
         "why_subset_note": ablation.get("subset_note") or "",
-        "video": None,
+        "video": "assets/docdrift-75s.mp4" if (ASSETS_SOURCE_DIRECTORY / "docdrift-75s.mp4").exists() else None,
+        "video_poster": (
+            "assets/docdrift-poster.png" if (ASSETS_SOURCE_DIRECTORY / "docdrift-poster.png").exists() else None
+        ),
         "sample_output": _fresh_run_sample_output(),
         "sample_cast": (
             "assets/docdrift_tomlkit.cast"
@@ -1444,5 +1452,12 @@ def _fill_index_html(source: str, hero: dict[str, object], copy: dict[str, objec
     filled = filled.replace("<!--TILES-->", tiles)
     filled = filled.replace("<!--HERO_NOTE-->", html.escape(str(hero.get("label_note") or "")))
     filled = filled.replace("<!--HERO_LINKS-->", link_html)
+    video = copy.get("video")
+    if video:
+        filled = filled.replace('id="demo-video" class="demo-video" hidden', 'id="demo-video" class="demo-video"')
+        filled = filled.replace(
+            'id="demo-video-el"',
+            f'id="demo-video-el" src="{html.escape(str(video), quote=True)}"',
+        )
     return filled
 

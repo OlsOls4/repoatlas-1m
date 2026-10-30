@@ -94,7 +94,8 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert "run_benchmark.py" not in copy["cli"]
     assert copy["local"] == ""
     assert copy["links"]["code"].endswith("repoatlas-1m")
-    assert copy["video"] is None
+    assert copy["video"] == "assets/docdrift-75s.mp4"
+    assert copy["video_poster"] == "assets/docdrift-poster.png"
     assert "185,842" in copy["sample_output"]
     assert "tomlkit" in copy["sample_output"].lower()
     assert "STRICT-CONFIRMED" in copy["sample_output"]
@@ -205,7 +206,17 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert 'role="tab"' in index_html
     assert 'id="drift-card"' in index_html
     assert 'tabindex="-1"' in index_html
-    assert 'src="assets/docdrift-75s.mp4"' not in index_html
+    assert 'src="assets/docdrift-75s.mp4"' in index_html
+    assert 'preload="metadata"' in index_html
+    assert "playsinline" in index_html
+    assert "muted" in index_html
+    assert 'poster="assets/docdrift-poster.png"' in index_html
+    assert 'src="assets/docdrift-75s.vtt"' in index_html
+    assert (target / "assets" / "docdrift-75s.mp4").exists()
+    assert (target / "assets" / "docdrift-poster.png").exists()
+    assert (target / "assets" / "docdrift-75s.vtt").exists()
+    assert "*.mp4 filter=lfs diff=lfs merge=lfs -text" in (target / ".gitattributes").read_text(encoding="utf-8")
+    assert 'id="demo-video" class="demo-video" hidden' not in index_html
     assert index_html.find('id="story"') < index_html.find('id="recorded-run"')
     assert "Loading recorded results" not in index_html
     assert "lead-full" in index_html

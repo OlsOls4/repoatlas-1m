@@ -96,7 +96,14 @@
     $("run-links").innerHTML = linkHtml;
     renderDrift(replay);
     if (copy && copy.video) {
-      $("demo-video-el").src = copy.video;
+      const el = $("demo-video-el");
+      el.muted = true;
+      el.playsInline = true;
+      el.setAttribute("preload", "metadata");
+      if (copy.video_poster) {
+        el.poster = copy.video_poster;
+      }
+      el.src = copy.video;
       $("demo-video").hidden = false;
     }
     const sample = $("sample-output");

@@ -28,8 +28,10 @@
       <div class="tiles" id="tiles"><div class='tile'><strong>34</strong><span>real docs bugs · 11 of 12 libraries</span></div><div class='tile'><strong>30</strong><span>crash when you run the docs</span></div><div class='tile'><strong>2</strong><span>fixes filed upstream (starlette #3746, nox #1216)</span></div></div>
       <div class="note" id="hero-note">Labels: checked against the source by an AI reviewer, not a human. Recall is measured against the 45 drifts any method found, so it flatters the methods.</div>
       <p class="links" id="hero-links"><a href="https://github.com/OlsOls4/repoatlas-1m">Code</a> · <a href="https://huggingface.co/datasets/ollymcbride4/docdrift-bugs">Dataset</a> · <a href="https://huggingface.co/reflection/Beam-1.0-501B-A23B/discussions/5">Thread</a></p>
-      <div id="demo-video" class="demo-video" hidden>
-        <video id="demo-video-el" controls preload="none" playsinline poster="assets/og.png"></video>
+      <div id="demo-video" class="demo-video">
+        <video id="demo-video-el" src="assets/docdrift-75s.mp4" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png">
+          <track kind="captions" src="assets/docdrift-75s.vtt" srclang="en" label="English">
+        </video>
       </div>
     </div>
     <aside class="drift" id="drift-card" aria-label="Starlette docs-drift example">

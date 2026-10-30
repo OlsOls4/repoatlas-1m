@@ -1,0 +1,85 @@
+WEBVTT
+
+1
+00:00:00.300 --> 00:00:04.900
+DocDrift gives Beam a whole Python library in one call to find docs that lie.
+
+2
+00:00:05.600 --> 00:00:09.000
+starlette's docs tell you to call receive_json(data, mode="binary")…
+
+3
+00:00:09.200 --> 00:00:12.700
+…and running it crashes: TypeError
+Real run at pinned commit 8aa828c. This repro was hand-written from Beam's verdict.
+
+4
+00:00:13.200 --> 00:00:17.000
+starlette: the whole library in one Beam call · 394,577 prompt tokens
+
+5
+00:00:17.200 --> 00:00:20.800
+3 candidates → 2 kept as real drift, 1 rejected
+
+6
+00:00:21.400 --> 00:00:23.800
+The repro raises the real TypeError on the doc's own line
+
+7
+00:00:24.300 --> 00:00:29.200
+Fix filed upstream: starlette PR #3746 (open, not merged)
+2 filed in total: starlette #3746, nox #1216 · status checked 30 Oct 2026
+
+8
+00:00:29.800 --> 00:00:32.600
+Every card: Docs say · Code says · Running it gives
+
+9
+00:00:32.800 --> 00:00:36.400
+Bug wall: 34 real docs bugs in 11 of 12 libraries
+
+10
+00:00:36.600 --> 00:00:40.300
+Filter by library and badge. Every card links the pinned commit.
+
+11
+00:00:40.800 --> 00:00:44.700
+Does the 1M context help? Verdict accuracy is about the same
+whole-repo 0.839 · matched-cost retrieval 0.821 · local files 0.839
+
+12
+00:00:44.900 --> 00:00:48.700
+Grounding is better: right cross-file line 25/30 whole-repo vs 19/30 matched-cost vs 14/30 local
+
+13
+00:00:48.900 --> 00:00:52.400
+Off-file evidence cited: 11/13 whole-repo vs 6/13 matched-cost vs 0/13 local
+
+14
+00:00:52.600 --> 00:00:55.800
+Not significant at this n (exact McNemar p = 0.070)
+Suggestive, not proven
+
+15
+00:00:56.300 --> 00:01:02.200
+34 of 45 known drifts found · 30 crash exactly as the docs are written
+45 = every real drift any method found, so it favours the methods · labels checked by an AI reviewer
+
+16
+00:01:02.800 --> 00:01:07.200
+Every bug ships a script that runs the documented line
+38 of 41 repro badges were real (2 false + 1 unclear)
+
+17
+00:01:07.800 --> 00:01:13.400
+Fresh CLI run on tomlkit, a library DocDrift had never seen
+Real recording · sped up (96 s run)
+
+18
+00:01:13.600 --> 00:01:18.700
+2 findings, 1 strict-confirmed · 185,842 Beam tokens · 96 s wall time
+Real recording · sped up (96 s run) · final screen held
+
+19
+00:01:19.200 --> 00:01:22.200
+Run it on your repo: docdrift run <repo> · free Ollama key

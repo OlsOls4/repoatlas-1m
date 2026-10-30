@@ -29,7 +29,9 @@
       <div class="note" id="hero-note"><!--HERO_NOTE--></div>
       <p class="links" id="hero-links"><!--HERO_LINKS--></p>
       <div id="demo-video" class="demo-video" hidden>
-        <video id="demo-video-el" controls preload="none" playsinline poster="assets/og.png"></video>
+        <video id="demo-video-el" controls muted playsinline preload="metadata" poster="assets/docdrift-poster.png">
+          <track kind="captions" src="assets/docdrift-75s.vtt" srclang="en" label="English">
+        </video>
       </div>
     </div>
     <aside class="drift" id="drift-card" aria-label="Starlette docs-drift example">
