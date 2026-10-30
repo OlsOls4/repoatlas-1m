@@ -1,0 +1,32 @@
+{
+  "label": "nox:C03:nox-400000:DD-1",
+  "payload_sha256": "84abcfdb7c2c4da273cdd6dcb48b430ca501c24924ba7c51058f22d505e1e55b",
+  "latency_seconds": 12.067098995001288,
+  "body": {
+    "id": "chatcmpl-625",
+    "object": "chat.completion",
+    "created": 1793360369,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C03\", \"verdict\": \"true_drift\", \"reason\": \"The documentation names nox.options.reuse_venvs, but the Noxfile option defined in code is reuse_venv.\", \"code_citation\": {\"path\": \"nox/_options.py\", \"start_line\": 333, \"end_line\": 333, \"quote\": \"reuse_venv: ReuseVenvType = attrs.field(\"}, \"suggested_doc_fix\": \"Change `nox.options.reuse_venvs` to `nox.options.reuse_venv`.\"}], \"additional_findings\": []}",
+          "reasoning": "We need answer JSON. Need triage. Candidate C03: docs/usage.rst:219 says override nox.options.reuse_venvs (plural) while code defines reuse_venv. Is this true_drift? Need check docs. Usage line 219 yes. Code nox/_options.py has reuse_venv singular, reuse_existing_virtualenvs alias. In docs/config.rst line 579 says Alias of nox.options.reuse_venv=yes|no. Line 578 uses reuse_venv. So usage 219 plural clearly typo. True drift. Suggested doc fix change reuse_venvs -> reuse_venv.\n\nNeed additional findings missed, cross-file, prose, do not repeat. Need identify other documentation drifts. Need inspect repo deeply but only packed files. We can reason. Need maybe find option names mismatches. docs/config lists options: nox.options.envdir, sessions, pythons, keywords, tags, default_venv_backend, force_venv_backend, reuse_venv, reuse_existing_virtualenvs, stop_on_first_error, error_on_missing_interpreters, error_on_external_run, download_python, parallel, allow_parallel, report, verbose. Code has reuse_venv. Other mismatch? nox.options.error_on_external_run exists. nox.options.reuse_existing_virtualenvs exists. Maybe default? Let's inspect docs usage.py? Usage says environment variable NOX_DEFAULT_VENV_BACKEND okay. config says `nox.options.reuse_existing_virtualenvs` alias of reuse_venv=yes|no. Code: reuse_existing_virtualenvs is alias for --reuse-venv=yes|no. Good.\n\nMaybe additional drift: docs/usage.rst line 218 \"If the Noxfile sets nox.options.reuse_existing_virtualenvs, you can override...\" true. line 219 typo. Candidate only misspelling. Additional maybe docs/config.rst:607? Let's check.\n\nLet's scan all names. Need maybe docs mention nox.options.reuse_venvs elsewhere? Packed grep mentally: usage 219 only? Candidate. Additional candidates missed: docs likely has wrong env var? Let's inspect usage and code. Option env vars:\ndefault_venv_backend env NOX_DEFAULT_VENV_BACKEND documented.\nparallel NOX_PARALLEL documented.\npythons NOXPYTHON documented.\nextra_pythons NOXEXTRAPYTHON documented forced NOXFORCEPYTHON.\nCould docs say NOXSESSION. yes.\n\nMaybe config docs line 573: nox.options.keywords equivalent - k. okay.\n\nPotential cross-file: docs/usage.rst line 63 etc good.\n\nCould be a documentation drift in docs/config.rst around `reuse_venv=True` example? It says @nox.session(python=['3.13','3.14'], reuse_venv=True) tests. Code accepts reuse_venv bool | None. okay.\n\nMaybe docs usage line 240 \"never and always options ... ignores ... @nox.session ... reuse_venv=True|False\" okay.\n\nMaybe candidate report's code line 333-333 says reuse_venv. yes.\n\nCould there be docs reference missing session.interactive? okay.\n\nNeed not overdo additional findings. We need JSON exact. Additional findings likely none? User specifically asks list any other doc drifts candidates missed, especially cross-file. Need at least maybe none. Could mention if high confidence. Need not invent. Let's search for suspicious.\n\nCandidate C03 only. Let's inspect docs usage line 218-219:\n\"If the Noxfile sets nox.options.reuse_existing_virtualenvs, you can override the Noxfile setting from the command line by using --no-reuse-existing-virtualenvs.\nSimilarly you can override nox.options.reuse_venvs from the Noxfile via command line...\" The second should `reuse_venv`. true.\n\nPotential drift in docs/usage.rst 210? \"Use -r or --reuse-existing-virtualenvs or for fine-grained use --reuse-venv=yes...\" okay.\n\nPotential issue: docs says `nox.options.reuse_existing_virtualenvs` alias of `nox.options.reuse_venv=yes|no`. Code metadata help says alias for '--reuse-venv=yes|no'. okay.\n\nCould be docs/config says `nox.options.reuse_venv` \"Preferred over...\" fine.\n\nMaybe code default of reuse_venv is \"no\", docs not state default? usage okay.\n\nLet's check `@nox.session reuse_venv=True` with `--reuse-venv=never`: code resolve says func True + global never => False (never forces creation). docs says always ignored when always/never. okay.\n\nAdditional finding maybe `docs/config.rst` line 578: `nox.options.reuse_existing_virtualenvs` alias of nox.options.reuse_venv=yes|no. says `Alias of nox.options.reuse_venv=yes|no`. True.\n\nMaybe nox.options.parallel docs usage says NOX_PARALLEL and nox.options.parallel. good.\n\nPotential docs usage 162: backend names supported includes `('none', 'uv', 'virtualenv', 'conda', 'mamba', 'micromamba', 'rattler', 'venv')`; code ALL_VENVS likely? Need inspect not packed? virtualenv.py not included. Could be drift but not enough. Search repository? only included files not ALL_VENVS. Could infer code doc in options choices list ALL_VENVS. No value. Not.\n\nCould mention ad-1 for same candidate? No.\n\nFinal JSON with one verdict, additional_findings empty. Ensure strict. Code citation candidate location exact line 333 quote \"reuse_venv: ReuseVenvType = attrs.field(\". User requests for every candidate code location relied. Use path nox/_options.py lines 333-333. Doc citation? Candidate verdict only code_citation required; no doc_citation field in verdict schema. We can include reason. suggested_doc_fix \"Replace ``nox.options.reuse_venvs`` with ``nox.options.reuse_venv``.\" Use docs usage? Could mention only output JSON.\n\nNeed output no markdown."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 66492,
+      "completion_tokens": 1484,
+      "total_tokens": 67976,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  },
+  "at": "2026-10-30T11:39:29.765209+00:00"
+}

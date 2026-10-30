@@ -102,7 +102,29 @@
     const sample = $("sample-output");
     if (sample && copy && copy.sample_output) {
       $("sample-pre").textContent = copy.sample_output;
+      const note = $("sample-note");
+      if (note) {
+        note.textContent = copy.sample_note || "";
+      }
       sample.hidden = false;
+      const castHost = $("sample-cast");
+      if (
+        castHost &&
+        copy.sample_cast &&
+        window.AsciinemaPlayer &&
+        typeof window.AsciinemaPlayer.create === "function" &&
+        !castHost.dataset.playerReady
+      ) {
+        castHost.hidden = false;
+        window.AsciinemaPlayer.create(copy.sample_cast, castHost, {
+          cols: 100,
+          rows: 30,
+          preload: false,
+          poster: "npt:0:08",
+          fit: "width",
+        });
+        castHost.dataset.playerReady = "1";
+      }
     }
   }
 
@@ -144,27 +166,44 @@
     if (!ablation || !ablation.available) {
       return;
     }
+    const matchedOn = Boolean(ablation.matched_available && (ablation.outside_cite_matched || ablation.cross_file_cite_matched));
     const pairs = [];
     if (ablation.outside_cite_whole && ablation.outside_cite_local) {
-      pairs.push(["Off-file evidence cited", ablation.outside_cite_whole, ablation.outside_cite_local]);
+      pairs.push([
+        "Off-file evidence cited",
+        ablation.outside_cite_whole,
+        ablation.outside_cite_local,
+        matchedOn ? ablation.outside_cite_matched : "",
+      ]);
     }
     if (ablation.cross_file_cite_whole && ablation.cross_file_cite_local) {
-      pairs.push(["Cross-file citations", ablation.cross_file_cite_whole, ablation.cross_file_cite_local]);
+      pairs.push([
+        "Cross-file citations",
+        ablation.cross_file_cite_whole,
+        ablation.cross_file_cite_local,
+        matchedOn ? ablation.cross_file_cite_matched : "",
+      ]);
     }
     if (ablation.accuracy_whole && ablation.accuracy_local) {
-      pairs.push(["Verdict accuracy", ablation.accuracy_whole, ablation.accuracy_local]);
+      pairs.push([
+        "Verdict accuracy",
+        ablation.accuracy_whole,
+        ablation.accuracy_local,
+        matchedOn ? ablation.accuracy_matched : "",
+      ]);
     }
     if (!pairs.length) {
       return;
     }
     const width = 640;
-    const rowH = 56;
+    const rowH = matchedOn ? 78 : 56;
     const height = 24 + pairs.length * rowH;
     let bars = "";
     pairs.forEach(function (pair, index) {
       const y = 20 + index * rowH;
       const whole = frac(pair[1]);
       const local = frac(pair[2]);
+      const matched = pair[3] ? frac(pair[3]) : 0;
       bars +=
         '<text class="bar-label" x="0" y="' +
         y +
@@ -182,16 +221,33 @@
         (y + 15) +
         '">whole ' +
         pair[1] +
-        "</text>" +
+        "</text>";
+      if (pair[3]) {
+        bars +=
+          '<rect class="bar-matched" x="0" y="' +
+          (y + 20) +
+          '" width="' +
+          Math.max(4, matched * 420) +
+          '" height="10" rx="2"></rect>' +
+          '<text class="bar-label" x="' +
+          (Math.max(4, matched * 420) + 8) +
+          '" y="' +
+          (y + 29) +
+          '">matched ' +
+          pair[3] +
+          "</text>";
+      }
+      const localY = pair[3] ? y + 34 : y + 20;
+      bars +=
         '<rect class="bar-local" x="0" y="' +
-        (y + 20) +
+        localY +
         '" width="' +
         Math.max(4, local * 420) +
         '" height="10" rx="2"></rect>' +
         '<text class="bar-label" x="' +
         (Math.max(4, local * 420) + 8) +
         '" y="' +
-        (y + 29) +
+        (localY + 9) +
         '">local ' +
         pair[2] +
         "</text>";
@@ -202,8 +258,9 @@
     if (subset) {
       subset.textContent = (copy && copy.why_subset_note) || (ablation && ablation.subset_note) || "";
     }
-    $("why-placeholder").textContent =
-      copy.why_matched_cost_note || "Matched-cost local bar: not run yet.";
+    const placeholder = $("why-placeholder");
+    const note = (copy && copy.why_matched_cost_note) || "Matched-cost local bar: not run yet.";
+    placeholder.innerHTML = md(note);
   }
 
   function frac(text) {

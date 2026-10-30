@@ -1,0 +1,53 @@
+{
+  "prompt_tokens": 67188,
+  "completion_tokens": 2205,
+  "finish_reason": "stop",
+  "latency_seconds": 18.075688549986808,
+  "error": "parse: unparseable JSON",
+  "verdicts": [],
+  "repo": "nox",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S20",
+    "doc_path": "docs/tutorial.rst",
+    "doc_line": 488,
+    "doc_end": 488,
+    "doc_text": "session.conda_install(\"pytest\", channels=[\"conda-forge\"])",
+    "claim": "method-call-signature: `session.conda_install(...)`: no parameter named 'channels'; no package method 'conda_install' accepts it (e.g. Session.conda_install at nox/sessions.py:717)",
+    "code_hint": "",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "nox/__init__.py",
+    "nox/sessions.py",
+    "nox/virtualenv.py",
+    "docs/config.rst",
+    "docs/tutorial.rst",
+    "nox/py.typed",
+    "tests/test_sessions.py"
+  ],
+  "file_tiers": {
+    "nox/sessions.py": "T0_local",
+    "docs/tutorial.rst": "T0_local",
+    "nox/virtualenv.py": "T1_symbol",
+    "docs/config.rst": "T1_symbol",
+    "tests/test_sessions.py": "T1_symbol",
+    "nox/__init__.py": "T2_imports",
+    "nox/py.typed": "T3_bm25"
+  },
+  "local_files": [
+    "nox/sessions.py",
+    "docs/tutorial.rst"
+  ],
+  "prompt_chars": 214843,
+  "est_prompt_tokens": 56395,
+  "resend": {
+    "nonce": "resend-1",
+    "first_attempt": {
+      "prompt_tokens": 67188,
+      "completion_tokens": 2005,
+      "finish_reason": "stop",
+      "error": "parse: unparseable JSON"
+    }
+  }
+}

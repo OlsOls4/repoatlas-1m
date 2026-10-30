@@ -408,6 +408,7 @@ def build_notes_markdown(payload: HybridPayload) -> str:
         "The cheaper symbol-only-candidate variant was not run.",
         "- The local-file vs whole-repo ablation spent **1,948,469** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
         "- The docs-pass + 32k docstring-chunk extra pass spent **7,713,453** extra tokens. That ledger is not part of the 9.3M hybrid end-to-end.",
+        *_round6_token_notes(),
     ]
     return "\n".join(lines)
 
@@ -755,6 +756,43 @@ def non_bug_badge_phrase(stats: HybridHeroStats) -> str:
         f"{stats['false_repro_false']} false + {stats['false_repro_unclear']} unclear "
         "(werkzeug S38, S39 false; S41 unclear)"
     )
+
+
+def load_extra_experiment_tokens() -> dict[str, int]:
+    """
+    @brief Matched-cost ledger + tomlkit fresh-run tokens; not part of the 9.3M hybrid total.
+    """
+
+    matched = 0
+    fresh = 0
+    matched_path = RESULTS_LIVE_DIRECTORY / "ablation" / "matched_cost" / "beam_usage_ledger.json"
+    if matched_path.exists():
+        payload: object = json.loads(matched_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            matched = int(payload.get("total_tokens") or 0)
+    fresh_path = RESULTS_LIVE_DIRECTORY / "fresh_run" / "findings.json"
+    if fresh_path.exists():
+        payload = json.loads(fresh_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            tokens = payload.get("tokens") if isinstance(payload.get("tokens"), dict) else {}
+            fresh = int(tokens.get("total") or 0)
+    return {"matched_cost": matched, "fresh_run": fresh, "round6": matched + fresh}
+
+
+def _round6_token_notes() -> list[str]:
+    extra = load_extra_experiment_tokens()
+    notes: list[str] = []
+    if extra["matched_cost"]:
+        notes.append(
+            f"- The matched-cost retrieval control spent **{extra['matched_cost']:,}** extra tokens. "
+            "That ledger is not part of the 9.3M hybrid end-to-end."
+        )
+    if extra["fresh_run"]:
+        notes.append(
+            f"- The tomlkit `docdrift run` recording spent **{extra['fresh_run']:,}** extra tokens. "
+            f"Together with matched-cost that is **{extra['round6']:,}**, not part of the 9.3M hybrid end-to-end."
+        )
+    return notes
 
 
 def triage_only_token_text(stats: HybridHeroStats) -> str:

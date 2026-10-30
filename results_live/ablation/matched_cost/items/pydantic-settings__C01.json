@@ -1,0 +1,62 @@
+{
+  "prompt_tokens": 66425,
+  "completion_tokens": 2884,
+  "finish_reason": "stop",
+  "latency_seconds": 24.61888338701101,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C01",
+      "verdict": "true_drift",
+      "reason": "The documentation states that CLI kebab case is enabled by default, while BaseSettings.model_config defaults cli_kebab_case to False.",
+      "code_citation": {
+        "path": "pydantic_settings/main.py",
+        "start_line": 726,
+        "end_line": 726,
+        "quote": "cli_kebab_case=False,"
+      },
+      "suggested_doc_fix": "Reword the sentence to state that `cli_kebab_case` defaults to `False` for `BaseSettings` (and is `True` by default only for `CliApp`), while `True` ignores enum fields and `'all'` converts them too.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "pydantic-settings-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "pydantic-settings",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "pydantic-settings-400000:DD-1",
+    "doc_path": "docs/index.md",
+    "doc_line": 1895,
+    "doc_end": 1895,
+    "doc_text": "Change whether CLI arguments should use kebab case by enabling `cli_kebab_case`. By default, `cli_kebab_case=True` will",
+    "claim": "Documentation states that CLI kebab case is enabled by default, while the code defaults `cli_kebab_case` to `False`.",
+    "code_hint": "pydantic_settings/main.py:726-726 'cli_kebab_case=False,'",
+    "candidate_id": "C01"
+  },
+  "context_files": [
+    "pydantic_settings/sources/__init__.py",
+    "pydantic_settings/sources/providers/__init__.py",
+    "pydantic_settings/main.py",
+    "pydantic_settings/utils.py",
+    "pydantic_settings/exceptions.py",
+    "docs/index.md"
+  ],
+  "file_tiers": {
+    "pydantic_settings/main.py": "T0_local",
+    "docs/index.md": "T0_local",
+    "pydantic_settings/exceptions.py": "T2_imports",
+    "pydantic_settings/sources/__init__.py": "T2_imports",
+    "pydantic_settings/utils.py": "T2_imports",
+    "pydantic_settings/sources/providers/__init__.py": "T2_imports"
+  },
+  "local_files": [
+    "pydantic_settings/main.py",
+    "docs/index.md"
+  ],
+  "prompt_chars": 213050,
+  "est_prompt_tokens": 56339
+}

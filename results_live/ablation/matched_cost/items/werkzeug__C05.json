@@ -1,0 +1,77 @@
+{
+  "prompt_tokens": 66772,
+  "completion_tokens": 2748,
+  "finish_reason": "stop",
+  "latency_seconds": 18.0822239019908,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "false",
+      "reason": "The 2.3 note is a historical versionchanged entry; the later 2.3.3 note and the current signature both use '/' as the default.",
+      "code_citation": {
+        "path": "src/werkzeug/http.py",
+        "start_line": 1401,
+        "end_line": 1401,
+        "quote": "    path: str | None = \"/\" ,"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "werkzeug-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "werkzeug-400000:DD-1",
+    "doc_path": "src/werkzeug/http.py",
+    "doc_line": 1464,
+    "doc_end": 1465,
+    "doc_text": ".. versionchanged:: 2.3\n    The ``path`` parameter is ``None`` by default.",
+    "claim": "The docstring for dump_cookie says the path parameter was None by default as of version 2.3, but the function signature initializes path to '/'.",
+    "code_hint": "src/werkzeug/http.py:1401-1401 '    path: str | None = \"/\" ,'",
+    "candidate_id": "C05"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/wrappers/__init__.py",
+    "src/werkzeug/sansio/__init__.py",
+    "src/werkzeug/debug/__init__.py",
+    "src/werkzeug/http.py",
+    "src/werkzeug/datastructures/headers.py",
+    "src/werkzeug/sansio/response.py",
+    "src/werkzeug/testapp.py",
+    "docs/middleware/shared_data.rst",
+    "docs/middleware/dispatcher.rst",
+    "docs/middleware/http_proxy.rst",
+    ".readthedocs.yaml",
+    "tests/test_datastructures.py"
+  ],
+  "file_tiers": {
+    "src/werkzeug/http.py": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/werkzeug/sansio/response.py": "T1_symbol",
+    "src/werkzeug/testapp.py": "T1_symbol",
+    "tests/test_datastructures.py": "T1_symbol",
+    "src/werkzeug/debug/__init__.py": "T1_symbol",
+    "src/werkzeug/datastructures/headers.py": "T1_symbol",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "src/werkzeug/sansio/__init__.py": "T2_imports",
+    "src/werkzeug/wrappers/__init__.py": "T2_imports",
+    ".readthedocs.yaml": "T3_bm25",
+    "docs/middleware/shared_data.rst": "T3_bm25",
+    "docs/middleware/dispatcher.rst": "T3_bm25",
+    "docs/middleware/http_proxy.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/http.py"
+  ],
+  "prompt_chars": 202536,
+  "est_prompt_tokens": 56402
+}

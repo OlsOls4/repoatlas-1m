@@ -1,0 +1,64 @@
+{
+  "prompt_tokens": 67851,
+  "completion_tokens": 3220,
+  "finish_reason": "stop",
+  "latency_seconds": 21.796929481992265,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "marshmallow 4 renamed the decorator argument from pass_many to pass_collection, so pass_many=True is no longer a valid keyword.",
+      "code_citation": {
+        "path": "src/marshmallow/decorators.py",
+        "start_line": 175,
+        "end_line": 193,
+        "quote": "def pre_load(\n    fn: typing.Callable[..., typing.Any] | None = None,\n    *,\n    pass_collection: bool = False,\n) -> typing.Callable[..., typing.Any]:"
+      },
+      "suggested_doc_fix": "Replace `@pre_load(pass_many=True)` with `@pre_load(pass_collection=True)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S33"
+    }
+  ],
+  "additional_findings_count": 6,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S33",
+    "doc_path": "docs/extending/pre_and_post_processing.rst",
+    "doc_line": 61,
+    "doc_end": 61,
+    "doc_text": "@pre_load(pass_many=True)",
+    "claim": "call-signature: `marshmallow.pre_load(...)`: no parameter named 'pass_many' (def src/marshmallow/decorators.py:175)",
+    "code_hint": "",
+    "candidate_id": "C06"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/marshmallow/__init__.py",
+    "src/marshmallow/schema.py",
+    "src/marshmallow/decorators.py",
+    "docs/nesting.rst",
+    "docs/extending/pre_and_post_processing.rst",
+    "CHANGELOG.rst"
+  ],
+  "file_tiers": {
+    "src/marshmallow/decorators.py": "T0_local",
+    "docs/extending/pre_and_post_processing.rst": "T0_local",
+    "src/marshmallow/__init__.py": "T2_imports",
+    "src/marshmallow/schema.py": "T2_imports",
+    "CHANGELOG.rst": "T3_bm25",
+    "docs/nesting.rst": "T3_bm25",
+    "pyproject.toml": "T3_bm25"
+  },
+  "local_files": [
+    "src/marshmallow/decorators.py",
+    "docs/extending/pre_and_post_processing.rst"
+  ],
+  "prompt_chars": 205980,
+  "est_prompt_tokens": 56406
+}

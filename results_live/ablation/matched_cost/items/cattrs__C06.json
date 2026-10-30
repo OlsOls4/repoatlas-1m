@@ -1,0 +1,81 @@
+{
+  "prompt_tokens": 66682,
+  "completion_tokens": 2371,
+  "finish_reason": "stop",
+  "latency_seconds": 14.745852783002192,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "true_drift",
+      "reason": "The docstring says `:param cache:`, but the method parameter is named `cache_result`.",
+      "code_citation": {
+        "path": "src/cattrs/converters.py",
+        "start_line": 641,
+        "end_line": 641,
+        "quote": "self, type: TypeForm[T], cache_result: bool = True"
+      },
+      "suggested_doc_fix": "Change `:param cache:` to `:param cache_result:`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-3"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "cattrs-400000:DD-3",
+    "doc_path": "src/cattrs/converters.py",
+    "doc_line": 650,
+    "doc_end": 650,
+    "doc_text": ":param cache: Whether to cache the returned hook.",
+    "claim": "The get_structure_hook docstring documents the caching parameter as `cache`, while the actual signature uses `cache_result`.",
+    "code_hint": "src/cattrs/converters.py:641-641 'self, type: TypeForm[T], cache_result: bool = True'",
+    "candidate_id": "C06"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/cattrs/__init__.py",
+    "src/cattrs/converters.py",
+    "src/cattrs/_compat.py",
+    "src/cattrs/cols.py",
+    "src/cattrs/sentinels.py",
+    "src/cattrs/gen/typeddicts.py",
+    "src/cattrs/gen/_shared.py",
+    "src/cattrs/enums.py",
+    "src/cattrs/strategies/_subclasses.py",
+    "src/cattrs/preconf/msgspec.py",
+    "docs/modules.rst",
+    "tests/untyped.py",
+    "tests/typed.py",
+    "tests/typeddicts.py",
+    "tests/test_cols.py"
+  ],
+  "file_tiers": {
+    "src/cattrs/converters.py": "T0_local",
+    "src/cattrs/preconf/msgspec.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/cattrs/__init__.py": "T1_symbol",
+    "src/cattrs/_compat.py": "T1_symbol",
+    "src/cattrs/cols.py": "T1_symbol",
+    "src/cattrs/sentinels.py": "T1_symbol",
+    "src/cattrs/gen/typeddicts.py": "T1_symbol",
+    "src/cattrs/gen/_shared.py": "T1_symbol",
+    "src/cattrs/strategies/_subclasses.py": "T1_symbol",
+    "docs/modules.rst": "T1_symbol",
+    "tests/untyped.py": "T1_symbol",
+    "tests/typed.py": "T1_symbol",
+    "tests/typeddicts.py": "T1_symbol",
+    "tests/test_cols.py": "T1_symbol",
+    "src/cattrs/enums.py": "T2_imports"
+  },
+  "local_files": [
+    "src/cattrs/converters.py"
+  ],
+  "prompt_chars": 218241,
+  "est_prompt_tokens": 56390
+}

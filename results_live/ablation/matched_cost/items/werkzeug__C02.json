@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 66843,
+  "completion_tokens": 2936,
+  "finish_reason": "stop",
+  "latency_seconds": 25.74783585901605,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "RequestRedirect is defined in werkzeug.routing.exceptions, not werkzeug.exceptions.",
+      "code_citation": {
+        "path": "src/werkzeug/routing/exceptions.py",
+        "start_line": 48,
+        "end_line": 54,
+        "quote": "class RequestRedirect(HTTPException, RoutingException):\n    \"\"\"Raise if the map requests a redirect. This is for example the case if\n    `strict_slashes` are activated and an url that requires a trailing slash.\n\n    The attribute `new_url` contains the absolute destination url.\n    \"\"\""
+      },
+      "suggested_doc_fix": "Change `:exc:`~werkzeug.exceptions.RequestRedirect`` to `:exc:`~werkzeug.routing.RequestRedirect``.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S36"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S36",
+    "doc_path": "docs/routing.rst",
+    "doc_line": 64,
+    "doc_end": 64,
+    "doc_text": "or :exc:`~werkzeug.exceptions.RequestRedirect`.  For more details about those",
+    "claim": "role: `werkzeug.exceptions.RequestRedirect`: 'RequestRedirect' not found on werkzeug.exceptions",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/utils.py",
+    "src/werkzeug/wrappers/response.py",
+    "src/werkzeug/routing/map.py",
+    "src/werkzeug/routing/rules.py",
+    "src/werkzeug/routing/exceptions.py",
+    "src/werkzeug/debug/console.py",
+    "docs/routing.rst",
+    "docs/middleware/shared_data.rst",
+    "docs/middleware/dispatcher.rst",
+    "docs/middleware/http_proxy.rst",
+    "examples/plnt/utils.py",
+    "examples/plnt/database.py",
+    "examples/i18nurls/application.py",
+    "examples/plnt/views.py"
+  ],
+  "file_tiers": {
+    "docs/routing.rst": "T0_local",
+    "src/werkzeug/routing/exceptions.py": "T1_symbol",
+    "src/werkzeug/debug/console.py": "T1_symbol",
+    "examples/plnt/views.py": "T1_symbol",
+    "src/werkzeug/exceptions.py": "T2_imports",
+    "src/werkzeug/routing/map.py": "T2_imports",
+    "src/werkzeug/routing/rules.py": "T2_imports",
+    "src/werkzeug/utils.py": "T2_imports",
+    "src/werkzeug/wrappers/response.py": "T2_imports",
+    "examples/plnt/database.py": "T2_imports",
+    "examples/plnt/utils.py": "T2_imports",
+    "examples/i18nurls/application.py": "T3_bm25",
+    "docs/middleware/shared_data.rst": "T3_bm25",
+    "docs/middleware/dispatcher.rst": "T3_bm25",
+    "docs/middleware/http_proxy.rst": "T3_bm25"
+  },
+  "local_files": [
+    "docs/routing.rst"
+  ],
+  "prompt_chars": 224230,
+  "est_prompt_tokens": 56398
+}

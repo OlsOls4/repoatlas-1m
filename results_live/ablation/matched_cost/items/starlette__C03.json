@@ -1,0 +1,94 @@
+{
+  "prompt_tokens": 65721,
+  "completion_tokens": 2206,
+  "finish_reason": "stop",
+  "latency_seconds": 19.376035895984387,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "true_drift",
+      "reason": "WebSocket.receive_json takes only a mode argument and has no first `data` parameter, so the documented call shape is invalid.",
+      "code_citation": {
+        "path": "starlette/websockets.py",
+        "start_line": 136,
+        "end_line": 136,
+        "quote": "    async def receive_json(self, mode: str = \"text\") -> Any:"
+      },
+      "suggested_doc_fix": "Use `websocket.receive_json(mode=\"binary\")` to receive JSON over binary data frames.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "starlette",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S1",
+    "doc_path": "docs/websockets.md",
+    "doc_line": 74,
+    "doc_end": 74,
+    "doc_text": "Use `websocket.receive_json(data, mode=\"binary\")` to receive JSON over binary data frames.",
+    "claim": "method-call-signature: `websocket.receive_json(...)`: keyword 'mode' would also be filled positionally (multiple values); no package method 'receive_json' accepts it (e.g. WebSocketTestSession.receive_json at starlette/testclient.py:188)",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "starlette/__init__.py",
+    "starlette/responses.py",
+    "starlette/requests.py",
+    "starlette/datastructures.py",
+    "starlette/exceptions.py",
+    "starlette/websockets.py",
+    "starlette/testclient.py",
+    "starlette/endpoints.py",
+    "starlette/middleware/sessions.py",
+    "starlette/middleware/body_limit.py",
+    "starlette/middleware/cors.py",
+    "starlette/middleware/opentelemetry.py",
+    "starlette/formparsers.py",
+    "starlette/middleware/errors.py",
+    "docs/testclient.md",
+    "docs/websockets.md",
+    "docs/background.md",
+    "docs/database.md",
+    "docs/CNAME",
+    "tests/test_websockets.py",
+    "tests/test_endpoints.py",
+    "tests/test__utils.py"
+  ],
+  "file_tiers": {
+    "starlette/testclient.py": "T0_local",
+    "docs/websockets.md": "T0_local",
+    "starlette/requests.py": "T1_symbol",
+    "starlette/websockets.py": "T1_symbol",
+    "starlette/middleware/errors.py": "T1_symbol",
+    "tests/test_websockets.py": "T1_symbol",
+    "tests/test_endpoints.py": "T1_symbol",
+    "starlette/responses.py": "T1_symbol",
+    "starlette/datastructures.py": "T1_symbol",
+    "starlette/endpoints.py": "T1_symbol",
+    "starlette/middleware/sessions.py": "T1_symbol",
+    "starlette/middleware/body_limit.py": "T1_symbol",
+    "starlette/middleware/cors.py": "T1_symbol",
+    "starlette/middleware/opentelemetry.py": "T1_symbol",
+    "starlette/formparsers.py": "T1_symbol",
+    "docs/testclient.md": "T1_symbol",
+    "docs/background.md": "T1_symbol",
+    "tests/test__utils.py": "T1_symbol",
+    "starlette/exceptions.py": "T2_imports",
+    "starlette/__init__.py": "T2_imports",
+    "docs/database.md": "T3_bm25",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "starlette/testclient.py",
+    "docs/websockets.md"
+  ],
+  "prompt_chars": 227448,
+  "est_prompt_tokens": 56406
+}

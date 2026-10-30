@@ -1,0 +1,104 @@
+{
+  "repo": "tomlkit",
+  "repo_url": "https://github.com/python-poetry/tomlkit",
+  "ref": "d7def7dbcc59b3b2d11cc73114c31d1f616523a8",
+  "pack_tokens": 141326,
+  "projected_prompt_tokens": 172418,
+  "truncated": false,
+  "symbol_flags": [],
+  "candidates": [],
+  "triage": {
+    "verdicts": [],
+    "additional_findings": [
+      {
+        "finding_id": "AD-1",
+        "drift_kind": "other",
+        "explanation": "The documentation still advertises TOML 1.0.0-compliance while the test suite and changelog cover TOML 1.1.0.",
+        "doc_citation": {
+          "path": "docs/index.rst",
+          "start_line": 17,
+          "end_line": 20,
+          "quote": ".. image:: https://img.shields.io/badge/TOML-1.0.0-9c4221\n   :target: https://toml.io/en/v1.0.0\n\nTOML Kit is a **1.0.0-compliant** `TOML <https://toml.io/>`_ library."
+        },
+        "code_citation": {
+          "path": "tests/test_toml_tests.py",
+          "start_line": 17,
+          "end_line": 17,
+          "quote": "FILES_LIST = os.path.join(TESTS_ROOT, \"files-toml-1.1.0\")"
+        },
+        "proposed_fix": "Update the badge and compliance statement in docs/index.rst to TOML 1.1.0 and target https://toml.io/en/v1.1.0.",
+        "fully_verified": true
+      },
+      {
+        "finding_id": "AD-2",
+        "drift_kind": "other",
+        "explanation": "The quickstart writing snippet uses unqualified `datetime(...)` and `utc` names that are not imported or defined in the shown snippet; tomlkit's own exported `datetime` takes an RFC 3339 string, so the example as written does not run as-is.",
+        "doc_citation": {
+          "path": "docs/quickstart.rst",
+          "start_line": 121,
+          "end_line": 136,
+          "quote": ">>> from tomlkit import comment\n>>> from tomlkit import document\n>>> from tomlkit import nl\n>>> from tomlkit import table\n\n>>> doc = document()\n>>> doc.add(comment(\"This is a TOML document.\"))\n>>> doc.add(nl())\n>>> doc.add(\"title\", \"TOML Example\")\n>>> # Using doc[\"title\"] = \"TOML Example\" is also possible\n\n>>> owner = table()\n>>> owner.add(\"name\", \"Tom Preston-Werner\")\n>>> owner.add(\"organization\", \"GitHub\")\n>>> owner.add(\"bio\", \"GitHub Cofounder & CEO\\nLikes tater tots and beer.\")\n>>> owner.add(\"dob\", datetime(1979, 5, 27, 7, 32, tzinfo=utc))\n>>> owner[\"dob\"].comment(\"First class dates? Why not?\")"
+        },
+        "code_citation": {
+          "path": "tomlkit/api.py",
+          "start_line": 202,
+          "end_line": 206,
+          "quote": "def datetime(raw: str) -> DateTime:\n    \"\"\"Create a TOML datetime.\"\"\"\n    value = parse_rfc3339(raw)\n    if not isinstance(value, _datetime.datetime):"
+        },
+        "proposed_fix": "Add the missing standard-library imports (`from datetime import datetime, timezone`, then `utc = timezone.utc`) before the writing example, or replace the line with `owner.add(\"dob\", tomlkit.datetime(\"1979-05-27T07:32:00Z\"))`.",
+        "fully_verified": false
+      }
+    ],
+    "missing_verdicts": []
+  },
+  "repros": [
+    {
+      "case_id": "tomlkit:AD-1",
+      "repo": "tomlkit",
+      "ref": "d7def7dbcc59b3b2d11cc73114c31d1f616523a8",
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "evidence": "assertion",
+      "exception_type": "AssertionError",
+      "expected_exception_type": "AssertionError",
+      "error_excerpt": "AssertionError: docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax",
+      "attempts": 2,
+      "model_verdict": "likely_true",
+      "argument_finding_is_false": "A newer parser can remain backward-compatible with the older specification, so supporting 1.1.0 does not technically invalidate a 1.0.0-compliance statement.",
+      "network_isolation": "unshare-netns",
+      "strict_confirmed": false,
+      "script": "import tomlkit\n\ntext = \"foo = {\\n  bar = 1,\\n}\\n\"\n\nparsed = tomlkit.parse(text)  # DOC-LITERAL\nassert False, \"docs claim 1.0.0 compliance but tomlkit accepts TOML 1.1.0-only inline-table syntax\"  # DOC-LITERAL\nprint(\"DOCS_OK\")\n"
+    },
+    {
+      "case_id": "tomlkit:AD-2",
+      "repo": "tomlkit",
+      "ref": "d7def7dbcc59b3b2d11cc73114c31d1f616523a8",
+      "status": "reproduced",
+      "reason": "expected_exception",
+      "evidence": "interface_error",
+      "exception_type": "NameError",
+      "expected_exception_type": "NameError",
+      "error_excerpt": "NameError: name 'datetime' is not defined",
+      "attempts": 1,
+      "model_verdict": "likely_true",
+      "argument_finding_is_false": "The cited block could theoretically be run in a doctest namespace where standard-library names were already imported by an earlier example, and tomlkit itself exports a datetime function with the same name that could shadow a stdlib import; however, the shown block begins with its own explicit imports and defines neither datetime nor utc, so as a standalone literal transcription it lacks those names.",
+      "network_isolation": "unshare-netns",
+      "strict_confirmed": true,
+      "script": "from tomlkit import comment  # DOC-LITERAL\nfrom tomlkit import document  # DOC-LITERAL\nfrom tomlkit import nl  # DOC-LITERAL\nfrom tomlkit import table  # DOC-LITERAL\n\ndoc = document()  # DOC-LITERAL\ndoc.add(comment(\"This is a TOML document.\"))  # DOC-LITERAL\ndoc.add(nl())  # DOC-LITERAL\ndoc.add(\"title\", \"TOML Example\")  # DOC-LITERAL\n\nowner = table()  # DOC-LITERAL\nowner.add(\"name\", \"Tom Preston-Werner\")  # DOC-LITERAL\nowner.add(\"organization\", \"GitHub\")  # DOC-LITERAL\nowner.add(\"bio\", \"GitHub Cofounder & CEO\\nLikes tater tots and beer.\")  # DOC-LITERAL\nowner.add(\"dob\", datetime(1979, 5, 27, 7, 32, tzinfo=utc))  # DOC-LITERAL\nowner[\"dob\"].comment(\"First class dates? Why not?\")  # DOC-LITERAL\n"
+    }
+  ],
+  "tokens": {
+    "triage_prompt": 167937,
+    "triage_completion": 4975,
+    "repro_prompt": 6648,
+    "repro_completion": 6282,
+    "repro_calls": 3,
+    "total": 185842
+  },
+  "triage_latency_seconds": 34.6,
+  "triage_finish_reason": "stop",
+  "wall_seconds": 96.2,
+  "skipped_reason": "",
+  "model": "beam",
+  "base_url": "https://ollama.com/v1"
+}

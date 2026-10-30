@@ -1,0 +1,407 @@
+{
+  "calls": 57,
+  "prompt_tokens": 3825471,
+  "completion_tokens": 131963,
+  "total_tokens": 3957434,
+  "entries": [
+    {
+      "kind": "matched",
+      "label": "starlette:C01:S0",
+      "prompt": 65859,
+      "completion": 1538,
+      "at": "2026-10-30T11:34:22.701507+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "starlette:C02:starlette-400000:DD-1",
+      "prompt": 67263,
+      "completion": 1537,
+      "at": "2026-10-30T11:34:36.145292+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "starlette:C03:S1",
+      "prompt": 65721,
+      "completion": 2206,
+      "at": "2026-10-30T11:34:55.729376+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C01:S2",
+      "prompt": 67538,
+      "completion": 1682,
+      "at": "2026-10-30T11:35:07.532184+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C02:S3",
+      "prompt": 67270,
+      "completion": 1853,
+      "at": "2026-10-30T11:35:23.220051+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C03:S4",
+      "prompt": 67654,
+      "completion": 1875,
+      "at": "2026-10-30T11:35:33.885620+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C04:S5",
+      "prompt": 67755,
+      "completion": 4106,
+      "at": "2026-10-30T11:36:00.645303+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C05:S6",
+      "prompt": 67298,
+      "completion": 4204,
+      "at": "2026-10-30T11:36:30.729723+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C06:httpx-400000:DD-1",
+      "prompt": 67364,
+      "completion": 4463,
+      "at": "2026-10-30T11:36:59.408515+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C07:S7",
+      "prompt": 67409,
+      "completion": 2410,
+      "at": "2026-10-30T11:37:16.264162+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C08:S8",
+      "prompt": 66795,
+      "completion": 2659,
+      "at": "2026-10-30T11:37:35.080799+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C09:httpx-400000:DD-2",
+      "prompt": 67628,
+      "completion": 3263,
+      "at": "2026-10-30T11:37:56.689949+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "httpx:C10:S9",
+      "prompt": 66805,
+      "completion": 1026,
+      "at": "2026-10-30T11:38:05.080476+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "click:C01:click-400000:DD-1",
+      "prompt": 66613,
+      "completion": 1744,
+      "at": "2026-10-30T11:38:21.858082+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "click:C02:S10",
+      "prompt": 66911,
+      "completion": 3612,
+      "at": "2026-10-30T11:38:45.586458+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "nox:C01:S20",
+      "prompt": 67188,
+      "completion": 2005,
+      "at": "2026-10-30T11:39:01.385247+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "nox:C02:S21",
+      "prompt": 66249,
+      "completion": 2105,
+      "at": "2026-10-30T11:39:17.475426+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "nox:C03:nox-400000:DD-1",
+      "prompt": 66492,
+      "completion": 1484,
+      "at": "2026-10-30T11:39:29.765043+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C01:S23",
+      "prompt": 68525,
+      "completion": 2934,
+      "at": "2026-10-30T11:39:57.986612+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C02:S24",
+      "prompt": 68036,
+      "completion": 2366,
+      "at": "2026-10-30T11:40:18.148607+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C03:arrow-400000:DD-1",
+      "prompt": 67793,
+      "completion": 3339,
+      "at": "2026-10-30T11:40:41.737073+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C04:arrow-400000:DD-2",
+      "prompt": 67845,
+      "completion": 3015,
+      "at": "2026-10-30T11:41:04.617730+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C05:S22",
+      "prompt": 67917,
+      "completion": 2714,
+      "at": "2026-10-30T11:41:25.618697+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C06:arrow-400000:DD-3",
+      "prompt": 68857,
+      "completion": 1315,
+      "at": "2026-10-30T11:41:36.927145+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "arrow:C07:arrow-400000:DD-4",
+      "prompt": 68506,
+      "completion": 3923,
+      "at": "2026-10-30T11:41:58.747150+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C01:S25",
+      "prompt": 66816,
+      "completion": 1177,
+      "at": "2026-10-30T11:42:08.776507+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C02:cattrs-400000:DD-1",
+      "prompt": 66683,
+      "completion": 1192,
+      "at": "2026-10-30T11:42:19.631716+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C03:S26",
+      "prompt": 66759,
+      "completion": 1831,
+      "at": "2026-10-30T11:42:39.511904+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C04:S27",
+      "prompt": 67131,
+      "completion": 1591,
+      "at": "2026-10-30T11:42:50.320861+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C05:cattrs-400000:DD-2",
+      "prompt": 66681,
+      "completion": 1307,
+      "at": "2026-10-30T11:42:59.058668+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C06:cattrs-400000:DD-3",
+      "prompt": 66682,
+      "completion": 2371,
+      "at": "2026-10-30T11:43:13.971732+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "cattrs:C07:S28",
+      "prompt": 67129,
+      "completion": 1597,
+      "at": "2026-10-30T11:43:27.680731+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C01:S29",
+      "prompt": 66870,
+      "completion": 2666,
+      "at": "2026-10-30T11:43:49.750513+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C02:S30",
+      "prompt": 67072,
+      "completion": 3139,
+      "at": "2026-10-30T11:44:09.070112+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C03:S31",
+      "prompt": 67798,
+      "completion": 1236,
+      "at": "2026-10-30T11:44:19.093450+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C04:marshmallow-400000:DD-1",
+      "prompt": 66492,
+      "completion": 913,
+      "at": "2026-10-30T11:44:28.930956+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C05:S32",
+      "prompt": 66231,
+      "completion": 1827,
+      "at": "2026-10-30T11:44:41.365932+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C06:S33",
+      "prompt": 67851,
+      "completion": 3220,
+      "at": "2026-10-30T11:45:03.247556+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C07:S34",
+      "prompt": 67497,
+      "completion": 2897,
+      "at": "2026-10-30T11:45:21.038089+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "marshmallow:C08:marshmallow-400000:DD-2",
+      "prompt": 67403,
+      "completion": 2225,
+      "at": "2026-10-30T11:45:35.262441+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "attrs:C01:S11",
+      "prompt": 67277,
+      "completion": 1544,
+      "at": "2026-10-30T11:45:48.247648+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "attrs:C02:S12",
+      "prompt": 67597,
+      "completion": 1752,
+      "at": "2026-10-30T11:46:03.740891+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "jinja:C01:jinja-400000:DD-1",
+      "prompt": 66477,
+      "completion": 2109,
+      "at": "2026-10-30T11:46:23.552457+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "jinja:C02:S17",
+      "prompt": 66890,
+      "completion": 2509,
+      "at": "2026-10-30T11:46:45.497462+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "jinja:C03:S18",
+      "prompt": 66831,
+      "completion": 1673,
+      "at": "2026-10-30T11:47:03.440858+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "jinja:C04:S19",
+      "prompt": 67164,
+      "completion": 1745,
+      "at": "2026-10-30T11:47:18.145656+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C01:S35",
+      "prompt": 66622,
+      "completion": 2862,
+      "at": "2026-10-30T11:47:36.143029+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C02:S36",
+      "prompt": 66843,
+      "completion": 2936,
+      "at": "2026-10-30T11:48:02.039840+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C03:S37",
+      "prompt": 66740,
+      "completion": 1341,
+      "at": "2026-10-30T11:48:12.651328+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C04:S42",
+      "prompt": 66998,
+      "completion": 1782,
+      "at": "2026-10-30T11:48:23.154609+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C05:werkzeug-400000:DD-1",
+      "prompt": 66772,
+      "completion": 2748,
+      "at": "2026-10-30T11:48:41.434611+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C06:S38",
+      "prompt": 67040,
+      "completion": 2840,
+      "at": "2026-10-30T11:49:01.666634+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C07:S39",
+      "prompt": 66818,
+      "completion": 1960,
+      "at": "2026-10-30T11:49:13.053089+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C08:S40",
+      "prompt": 66848,
+      "completion": 1937,
+      "at": "2026-10-30T11:49:27.695265+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "werkzeug:C09:S41",
+      "prompt": 66555,
+      "completion": 4569,
+      "at": "2026-10-30T11:49:57.539979+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "pydantic-settings:C01:pydantic-settings-400000:DD-1",
+      "prompt": 66425,
+      "completion": 2884,
+      "at": "2026-10-30T11:50:22.460437+00:00"
+    },
+    {
+      "kind": "matched",
+      "label": "nox:C01:S20:resend-1",
+      "prompt": 67188,
+      "completion": 2205,
+      "at": "2026-10-30T11:58:56.713419+00:00"
+    }
+  ]
+}

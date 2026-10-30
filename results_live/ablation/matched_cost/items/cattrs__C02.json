@@ -1,0 +1,94 @@
+{
+  "prompt_tokens": 66683,
+  "completion_tokens": 1192,
+  "finish_reason": "stop",
+  "latency_seconds": 10.677019730996108,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The documentation uses the singular exception name ForbiddenExtraKeyError, while the code defines and uses the plural ForbiddenExtraKeysError.",
+      "code_citation": {
+        "path": "src/cattrs/errors.py",
+        "start_line": 118,
+        "end_line": 118,
+        "quote": "class ForbiddenExtraKeysError(CattrsError):"
+      },
+      "suggested_doc_fix": "Replace ForbiddenExtraKeyError with ForbiddenExtraKeysError in the forbid_extra_keys traceback example.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "cattrs-400000:DD-1"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "cattrs-400000:DD-1",
+    "doc_path": "docs/customizing.md",
+    "doc_line": 279,
+    "doc_end": 279,
+    "doc_text": "ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber",
+    "claim": "The documentation example names the exception as ForbiddenExtraKeyError, but the code defines it as ForbiddenExtraKeysError.",
+    "code_hint": "src/cattrs/errors.py:118-118 'class ForbiddenExtraKeysError(CattrsError):'",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/cattrs/gen/__init__.py",
+    "src/cattrs/__init__.py",
+    "src/cattrs/_generics.py",
+    "src/cattrs/_compat.py",
+    "src/cattrs/fns.py",
+    "src/cattrs/literals.py",
+    "src/cattrs/dispatch.py",
+    "src/cattrs/errors.py",
+    "src/cattrs/cols.py",
+    "src/cattrs/gen/_generics.py",
+    "docs/customizing.md",
+    "src/cattr/errors.py",
+    "docs/modules.rst",
+    "tests/_compat.py",
+    "tests/untyped.py",
+    "tests/typed.py",
+    "tests/helpers.py",
+    "tests/__init__.py",
+    "tests/test_gen_dict.py",
+    "tests/test_generics_695.py",
+    "tests/test_tests.py"
+  ],
+  "file_tiers": {
+    "src/cattrs/errors.py": "T0_local",
+    "docs/customizing.md": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "src/cattrs/_compat.py": "T1_symbol",
+    "docs/modules.rst": "T1_symbol",
+    "tests/untyped.py": "T1_symbol",
+    "tests/typed.py": "T1_symbol",
+    "tests/test_gen_dict.py": "T1_symbol",
+    "tests/test_generics_695.py": "T1_symbol",
+    "tests/__init__.py": "T2_imports",
+    "src/cattrs/__init__.py": "T2_imports",
+    "src/cattrs/gen/__init__.py": "T2_imports",
+    "tests/helpers.py": "T2_imports",
+    "tests/_compat.py": "T2_imports",
+    "src/cattrs/_generics.py": "T2_imports",
+    "src/cattrs/fns.py": "T2_imports",
+    "src/cattrs/literals.py": "T2_imports",
+    "src/cattrs/dispatch.py": "T2_imports",
+    "src/cattrs/cols.py": "T2_imports",
+    "src/cattrs/gen/_generics.py": "T2_imports",
+    "src/cattr/errors.py": "T2_imports",
+    "tests/test_tests.py": "T2_imports"
+  },
+  "local_files": [
+    "src/cattrs/errors.py",
+    "docs/customizing.md"
+  ],
+  "prompt_chars": 211965,
+  "est_prompt_tokens": 56390
+}

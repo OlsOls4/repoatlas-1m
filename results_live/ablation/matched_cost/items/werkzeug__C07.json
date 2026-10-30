@@ -1,0 +1,73 @@
+{
+  "prompt_tokens": 66818,
+  "completion_tokens": 1960,
+  "finish_reason": "stop",
+  "latency_seconds": 11.233583531982731,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C07",
+      "verdict": "false",
+      "reason": "The reported dotted path is the literal WSGI environ key used by ProxyFix, not an import path on the werkzeug module.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/proxy_fix.py",
+        "start_line": 136,
+        "end_line": 145,
+        "quote": "        environ_get = environ.get\n        environ.update(\n            {\n                \"werkzeug.proxy_fix.orig\": {\n                    \"REMOTE_ADDR\": environ_get(\"REMOTE_ADDR\"),\n                    \"wsgi.url_scheme\": environ_get(\"wsgi.url_scheme\"),\n                    \"HTTP_HOST\": environ_get(\"HTTP_HOST\"),\n                    \"SCRIPT_NAME\": environ_get(\"SCRIPT_NAME\"),\n                }\n            }\n        )"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S39"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S39",
+    "doc_path": "src/werkzeug/middleware/proxy_fix.py",
+    "doc_line": 83,
+    "doc_end": 83,
+    "doc_text": "Original WSGI environ values are stored in the ``werkzeug.proxy_fix.orig`` dict.",
+    "claim": "dotted: `werkzeug.proxy_fix.orig`: 'proxy_fix' not found on werkzeug",
+    "code_hint": "",
+    "candidate_id": "C07"
+  },
+  "context_files": [
+    "src/werkzeug/__init__.py",
+    "src/werkzeug/wrappers/__init__.py",
+    "src/werkzeug/sansio/__init__.py",
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/wsgi.py",
+    "src/werkzeug/datastructures/structures.py",
+    "src/werkzeug/datastructures/headers.py",
+    "src/werkzeug/datastructures/auth.py",
+    "src/werkzeug/datastructures/cache_control.py",
+    "src/werkzeug/test.py",
+    "src/werkzeug/middleware/proxy_fix.py",
+    "docs/middleware/index.rst"
+  ],
+  "file_tiers": {
+    "src/werkzeug/middleware/proxy_fix.py": "T0_local",
+    "src/werkzeug/test.py": "T1_symbol",
+    "src/werkzeug/exceptions.py": "T1_symbol",
+    "src/werkzeug/wsgi.py": "T1_symbol",
+    "src/werkzeug/datastructures/structures.py": "T1_symbol",
+    "src/werkzeug/datastructures/headers.py": "T1_symbol",
+    "src/werkzeug/datastructures/auth.py": "T1_symbol",
+    "src/werkzeug/datastructures/cache_control.py": "T1_symbol",
+    "src/werkzeug/sansio/__init__.py": "T2_imports",
+    "src/werkzeug/__init__.py": "T2_imports",
+    "src/werkzeug/wrappers/__init__.py": "T2_imports",
+    "docs/middleware/index.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/middleware/proxy_fix.py"
+  ],
+  "prompt_chars": 213358,
+  "est_prompt_tokens": 56409
+}

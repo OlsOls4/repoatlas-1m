@@ -1,0 +1,83 @@
+{
+  "prompt_tokens": 67917,
+  "completion_tokens": 2714,
+  "finish_reason": "stop",
+  "latency_seconds": 20.930381481011864,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "The API guide references `arrow.locale`, but the codebase's actual module is `arrow.locales`.",
+      "code_citation": {
+        "path": "arrow/parser.py",
+        "start_line": 31,
+        "end_line": 31,
+        "quote": "from arrow import locales"
+      },
+      "suggested_doc_fix": "Change `:mod:`arrow.locale`` to `:mod:`arrow.locales`` on line 23 of docs/api-guide.rst.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S22"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S22",
+    "doc_path": "docs/api-guide.rst",
+    "doc_line": 23,
+    "doc_end": 23,
+    "doc_text": ":mod:`arrow.locale`",
+    "claim": "role: `arrow.locale`: 'locale' not found on arrow",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "docs/conf.py",
+    "README.rst",
+    "docs/index.rst",
+    "docs/api-guide.rst",
+    "CHANGELOG.rst",
+    "tests/conftest.py",
+    "tests/test_api.py",
+    ".github/ISSUE_TEMPLATE/bug_report.md"
+  ],
+  "file_tiers": {
+    "docs/api-guide.rst": "T0_local",
+    "arrow/arrow.py": "T1_symbol",
+    "arrow/factory.py": "T1_symbol",
+    "arrow/api.py": "T1_symbol",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/formatter.py": "T2_imports",
+    "arrow/parser.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "CHANGELOG.rst": "T3_bm25",
+    "README.rst": "T3_bm25",
+    "tests/test_api.py": "T3_bm25",
+    "pyproject.toml": "T3_bm25",
+    "docs/conf.py": "T3_bm25",
+    "docs/index.rst": "T3_bm25",
+    ".github/ISSUE_TEMPLATE/bug_report.md": "T3_bm25"
+  },
+  "local_files": [
+    "docs/api-guide.rst"
+  ],
+  "prompt_chars": 197790,
+  "est_prompt_tokens": 56394
+}

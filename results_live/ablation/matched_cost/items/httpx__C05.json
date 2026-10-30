@@ -1,0 +1,77 @@
+{
+  "prompt_tokens": 67298,
+  "completion_tokens": 4204,
+  "finish_reason": "stop",
+  "latency_seconds": 29.93410868299543,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C05",
+      "verdict": "true_drift",
+      "reason": "httpx has no `Mounts` class; mounts must be passed as a mapping to `Client(mounts=...)`.",
+      "code_citation": {
+        "path": "httpx/_client.py",
+        "start_line": 652,
+        "end_line": 652,
+        "quote": "mounts: None | (typing.Mapping[str, BaseTransport | None]) = None,"
+      },
+      "suggested_doc_fix": "Replace `httpx.Mounts({...})` with `mounts = {'http://': HTTPSRedirect(), 'https://': httpx.HTTPTransport()}` and pass it as `httpx.Client(mounts=mounts)`.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S6"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "httpx",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S6",
+    "doc_path": "docs/advanced/transports.md",
+    "doc_line": 178,
+    "doc_end": 178,
+    "doc_text": "Or this example, which uses a custom transport and `httpx.Mounts` to always redirect `http://` requests.",
+    "claim": "dotted: `httpx.Mounts`: 'Mounts' not found on httpx",
+    "code_hint": "",
+    "candidate_id": "C05"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "httpx/__version__.py",
+    "httpx/_client.py",
+    "httpx/_transports/default.py",
+    "docs/advanced/transports.md",
+    "httpx/_transports/asgi.py",
+    "httpx/_transports/wsgi.py",
+    "docs/CNAME",
+    "tests/common.py",
+    "tests/client/test_auth.py",
+    "tests/client/test_redirects.py",
+    "tests/test_multipart.py",
+    "tests/client/test_client.py",
+    "tests/test_asgi.py"
+  ],
+  "file_tiers": {
+    "docs/advanced/transports.md": "T0_local",
+    "pyproject.toml": "T1_symbol",
+    "httpx/_client.py": "T1_symbol",
+    "httpx/_transports/default.py": "T1_symbol",
+    "httpx/_transports/asgi.py": "T1_symbol",
+    "httpx/_transports/wsgi.py": "T1_symbol",
+    "tests/client/test_auth.py": "T1_symbol",
+    "tests/client/test_redirects.py": "T1_symbol",
+    "tests/test_multipart.py": "T1_symbol",
+    "tests/client/test_client.py": "T1_symbol",
+    "tests/test_asgi.py": "T1_symbol",
+    "httpx/__version__.py": "T2_imports",
+    "tests/common.py": "T2_imports",
+    "docs/CNAME": "T3_bm25"
+  },
+  "local_files": [
+    "docs/advanced/transports.md"
+  ],
+  "prompt_chars": 217080,
+  "est_prompt_tokens": 56363
+}

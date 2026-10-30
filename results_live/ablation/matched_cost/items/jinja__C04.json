@@ -1,0 +1,65 @@
+{
+  "prompt_tokens": 67164,
+  "completion_tokens": 1745,
+  "finish_reason": "stop",
+  "latency_seconds": 14.528971335006645,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C04",
+      "verdict": "true_drift",
+      "reason": "The docstring says the peeked value is cached in `_last`, but the code uses `_after` and no `_last` attribute exists.",
+      "code_citation": {
+        "path": "src/jinja2/runtime.py",
+        "start_line": 487,
+        "end_line": 497,
+        "quote": "\"\"\"Return the next element in the iterable, or :data:`missing`\nif the iterable is exhausted. Only peeks one item ahead, caching\nthe result in :attr:`_last` for use in subsequent checks. The\ncache is reset when :meth:`__next__` is called.\n\"\"\"\nif self._after is not missing:\n    return self._after\n\nself._after = next(self._iterator, missing)\nreturn self._after"
+      },
+      "suggested_doc_fix": "Change `:attr:`_last`` to `:attr:`_after`` in the `_peek_next` docstring.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "whitespace-normalised-match"
+      },
+      "source_id": "S19"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "jinja",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S19",
+    "doc_path": "src/jinja2/runtime.py",
+    "doc_line": 490,
+    "doc_end": 490,
+    "doc_text": "the result in :attr:`_last` for use in subsequent checks. The",
+    "claim": "role:undefined: `_last`: :attr: target defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C04"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/jinja2/environment.py",
+    "src/jinja2/utils.py",
+    "src/jinja2/runtime.py",
+    "src/jinja2/parser.py",
+    "src/jinja2/defaults.py",
+    "src/jinja2/ext.py",
+    "examples/basic/inheritance.py"
+  ],
+  "file_tiers": {
+    "src/jinja2/runtime.py": "T0_local",
+    "src/jinja2/environment.py": "T1_symbol",
+    "src/jinja2/parser.py": "T1_symbol",
+    "src/jinja2/utils.py": "T1_symbol",
+    "src/jinja2/ext.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/jinja2/defaults.py": "T2_imports",
+    "examples/basic/inheritance.py": "T2_imports"
+  },
+  "local_files": [
+    "src/jinja2/runtime.py"
+  ],
+  "prompt_chars": 222326,
+  "est_prompt_tokens": 56418
+}

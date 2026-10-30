@@ -1,0 +1,69 @@
+{
+  "prompt_tokens": 66759,
+  "completion_tokens": 1831,
+  "finish_reason": "stop",
+  "latency_seconds": 19.763274200988235,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C03",
+      "verdict": "false",
+      "reason": "The example is illustrating a user-supplied formatter and `MyInterestingException` is a placeholder exception, analogous to `KeyError` in the tests, not an undefined package API name.",
+      "code_citation": {
+        "path": "tests/test_v.py",
+        "start_line": 264,
+        "end_line": 268,
+        "quote": "def test_custom_error_fn(c: Converter) -> None:\n    def my_format(exc, type):\n        if isinstance(exc, KeyError):\n            return \"no key\"\n        return format_exception(exc, type)"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S26"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "cattrs",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S26",
+    "doc_path": "docs/validation.md",
+    "doc_line": 107,
+    "doc_end": 107,
+    "doc_text": "...     if isinstance(exc, MyInterestingException):",
+    "claim": "exception-name:undefined: `MyInterestingException`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C03"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/cattrs/gen/__init__.py",
+    "src/cattrs/converters.py",
+    "src/cattrs/literals.py",
+    "src/cattrs/dispatch.py",
+    "src/cattrs/gen/typeddicts.py",
+    "docs/validation.md",
+    "tests/typed.py",
+    "tests/test_v.py",
+    "tests/test_validation.py"
+  ],
+  "file_tiers": {
+    "docs/validation.md": "T0_local",
+    "src/cattrs/converters.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "src/cattrs/gen/__init__.py": "T1_symbol",
+    "src/cattrs/gen/typeddicts.py": "T1_symbol",
+    "tests/typed.py": "T1_symbol",
+    "tests/test_v.py": "T1_symbol",
+    "tests/test_validation.py": "T1_symbol",
+    "src/cattrs/dispatch.py": "T2_imports",
+    "src/cattrs/literals.py": "T2_imports"
+  },
+  "local_files": [
+    "docs/validation.md"
+  ],
+  "prompt_chars": 219133,
+  "est_prompt_tokens": 56411
+}

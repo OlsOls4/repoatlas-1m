@@ -1,0 +1,32 @@
+{
+  "label": "cattrs:C01:S25",
+  "payload_sha256": "526691dc03d385bd9594eaac0b177ae61becebe589405405e54ffea4cbc7b0d5",
+  "latency_seconds": 9.806862755009206,
+  "body": {
+    "id": "chatcmpl-157",
+    "object": "chat.completion",
+    "created": 1793360528,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C01\", \"verdict\": \"true_drift\", \"reason\": \"The package defines and raises `ForbiddenExtraKeysError` (plural Keys), while the documentation says `ForbiddenExtraKeyError` (singular Key).\", \"code_citation\": {\"path\": \"src/cattrs/gen/__init__.py\", \"start_line\": 26, \"end_line\": 26, \"quote\": \"    ForbiddenExtraKeysError,\"}, \"suggested_doc_fix\": \"Replace `ForbiddenExtraKeyError` with `ForbiddenExtraKeysError`.\"}], \"additional_findings\": []}",
+          "reasoning": "We need respond JSON strict. Need evaluate candidate. Need inspect docs/customizing.md line 279 and code errors. Candidate says exception-name undefined ForbiddenExtraKeyError. Code imports? From errors.py maybe defined as ForbiddenExtraKeysError (plural Keys), docs says ForbiddenExtraKeyError (singular). Let's verify. In gen __init__, errors forbidden extra keys = ForbiddenExtraKeysError (plural). Tests import ForbiddenExtraKeysError. Docs line 279 singular. Thus true drift. Need output verdict and code citation verbatim. Need code location relied on. Could use tests/test_gen_dict.py line imports? Or gen __init__ line 26. Candidate doc docs/customizing.md:279. Need code location perhaps src/cattrs/errors.py? But provided files doesn't include errors.py. We need pick available code location. We can cite src/cattrs/gen/__init__.py line 26 quote \"ForbiddenExtraKeysError,\". That proves plural actual. Better src/cattrs/errors? Not included. Use gen. Suggested fix plural. Need maybe mention docs also traceback example at docs line? Candidate only line 279? Let's inspect exact around. Docs lines 266-284 show `ForbiddenExtraKeyError`. Candidate says line 279. true. Suggested doc fix replace ForbiddenExtraKeyError with ForbiddenExtraKeysError.\n\nAdditional findings? Need look cross-file drifts. We have time. Need maybe check code imports. Docs says Converter is cattrs.Converter? Actually cattrs alias? cattrs module exports Converter? Could inspect not all. Candidate only one. Additional findings perhaps docs top says {class}`Converter <cattrs.Converter>` but module maybe cattrs exports Converter. Code? converters module defines Converter, cattrs likely re-export. Not sure. Candidate says additional cross-file. Could find docs line maybe `cattrs.structure` works? cattrs.py likely? Need review packed files only. We only have docs/customizing.md. We can scan visually. We have entire repo subset. Could identify other docs drift? Let's see.\n\nTask says list any OTHER documentation drifts especially cross-file. Need not invent. Need be confident.\n\nCandidate reason code actual exception is ForbiddenExtraKeysError plural. Docs singular. Could additionally other drift: docs line 135 maybe `cattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else`? Wait docs lines 135 uses correct plural? Let's look: docs lines 133-135:\n```\ncattrs.errors.ForbiddenExtraKeysError: Extra fields in constructor for E: else\n```\nYes at line 135 correct. Then at 279 singular wrong. Candidate only line 279. Good.\n\nCould there be docs line 362? `cattrs.override` etc. Fine.\n\nNeed perhaps code citation in src/cattrs/gen/__init__.py lines 23-30:\n```\nfrom ..errors import (\n    AttributeValidationNote,\n    ClassValidationError,\n    ForbiddenExtraKeysError,\n...\n```\nQuote start line 23? It says exact 23 `from ..errors import (` then 24 Attribute, 25 Class, 26 Forbidden. Candidate code location could line 26. We need code_citation start_line/end_line perhaps 26-26 quote \"    ForbiddenExtraKeysError,\". That's allowed and exact. Or line 23-30 quote whole import. Better single line 26. The user asks single code location relied on and verbatim quote from those lines. Use start 26 end 26.\n\nAdditional findings: maybe docs line 279 exact quote:\n`ForbiddenExtraKeyError: Extra fields in constructor for TestClass: nummber`\nCode line? The generated error message from code? In src/cattrs/gen/__init__.py line 538? Let's inspect detailed violation: `errors.append(__c_feke('', __cl, unknown_fields))` and ForbiddenExtraKeysError likely repr? Actual message line 135 shows `ForbiddenExtraKeysError: Extra fields in constructor for E: else`. Docs says singular. Candidate covers.\n\nPotential other drift: Docs example line 279 expected traceback maybe line 283? c.structure({\"nummber\":2},TestClass) result TestClass(number=1), which matches. Fine.\n\nLet's perhaps check if `ForbiddenExtraKeysError` constructor signature includes `cl` etc. docs textual only name mismatch, not message. Good.\n\nNeed final JSON. Verdict true_drift. reason \"actual public exception is ForbiddenExtraKeysError, docs uses singular ForbiddenExtraKeyError.\" suggested doc fix \"Replace `ForbiddenExtraKeyError` with `ForbiddenExtraKeysError`.\" Additional findings empty. Ensure no extra comments.\n\nCould additional finding be docs code example at line 279 has `nummber` intentional typo yes. Not drift.\n\nOutput only JSON."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 66816,
+      "completion_tokens": 1177,
+      "total_tokens": 67993,
+      "prompt_tokens_details": {
+        "cached_tokens": 576
+      }
+    }
+  },
+  "at": "2026-10-30T11:42:08.776730+00:00"
+}

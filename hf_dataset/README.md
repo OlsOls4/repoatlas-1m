@@ -52,9 +52,9 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. 34 
 | triage_verdicts | 56 | Beam triage verdicts (56 judged) | `repo`, `candidate_id`, `source_id`, `verdict`, `reason`, `code_path`, `code_line`, `code_quote` |
 | repros | 54 | Executable repro cases | `case_id`, `repo`, `status`, `strict_confirmed`, `exception_type`, `error_excerpt`, `evidence` |
 | planted_drift | 58 | Planted-drift set + ground truth | original probe fields plus `seed` |
-| ablation_verdicts | 56 | Whole-repo vs local-file triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `stability_verdict`, citation flags |
+| ablation_verdicts | 56 | Whole-repo vs local-file vs matched-cost retrieval triage on the same 56 candidates | `key`, `repo`, `candidate_id`, `label`, `hand_verdict`, `hand_verdict_description`, `cross_file`, `gold_outside_local`, `whole_verdict`, `local_verdict`, `matched_verdict`, `stability_verdict`, citation flags |
 | beamv3_findings | 115 | Extra 32k-docstring-chunk and docs-pass findings (unlabelled not counted as true) | `id`, `repo`, `pass`, `doc_path`, `doc_line`, `label`, `drift_id`, `label_by`, `hand_verdict`, `hand_verdict_description`, `new_vs_hybrid`, `strict_confirmed`, `explanation` |
-| token_ledger | 281 | Hybrid + recall + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`hybrid`, `recall`, `ablation`, `beamv3`) |
+| token_ledger | 340 | Hybrid + recall + ablation + extra-pass token ledger | original ledger fields plus `ledger` (`hybrid`, `recall`, `ablation`, `beamv3`, `matched_cost`, `fresh_run`) |
 
 `hand_verdict` means checked against the source by an AI reviewer. It is not a human annotator.
 
@@ -66,7 +66,8 @@ This dataset is the recorded output of that pipeline on 12 pinned libraries. 34 
 - End-to-end including repro is 9,302,105 (~9.3M) = 4,424,575 + 4,739,392 + 138,138.
 - Ablation ledger (local + stability, not in that 9.3M): 1,948,469 tokens over 60 calls.
 - Extra coverage-pass ledger (docs + 32k chunks + stability + repro, not in that 9.3M): 7,713,453 tokens over 168 calls.
-- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding.
+- Matched-cost retrieval control (not in that 9.3M): 3,957,434 tokens over 57 calls. tomlkit fresh `docdrift run` (not in that 9.3M): 185,842 tokens. Together +4,143,276 for these runs.
+- Long context did not change verdict accuracy on these 56 candidates; it changed citation grounding. A matched-cost retrieval control (96.7% of whole-repo spend) matched accuracy (46/56 vs 47/56) but not grounding (cross-file 19/30 vs 25/30; McNemar p = 0.070, not shown at this n). Retrieval missed the defining file in 5 of 13 outside-local items.
 - 32k docstring chunks recovered 7 of 11 hybrid misses; the docs pass recovered 1. New-item precision is a lower bound (18.5% for hybrid + 32k chunks). Headline stays 34 of 45.
 
 ## Citation

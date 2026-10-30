@@ -1,0 +1,79 @@
+{
+  "prompt_tokens": 68036,
+  "completion_tokens": 2366,
+  "finish_reason": "stop",
+  "latency_seconds": 20.062332905014046,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "true_drift",
+      "reason": "The dehumanize docstring documents a parameter named timestring, but the method signature uses input_string.",
+      "code_citation": {
+        "path": "arrow/arrow.py",
+        "start_line": 1344,
+        "end_line": 1350,
+        "quote": "    def dehumanize(self, input_string: str, locale: str = \"en_us\") -> \"Arrow\":\n        \"\"\"Returns a new :class:`Arrow <arrow.arrow.Arrow>` object, that represents\n        the time difference relative to the attributes of the\n        :class:`Arrow <arrow.arrow.Arrow>` object.\n\n        :param timestring: a ``str`` representing a humanized relative time.\n        :param locale: (optional) a ``str`` specifying a locale.  Defaults to 'en-us'.\n"
+      },
+      "suggested_doc_fix": "Change `:param timestring:` to `:param input_string:` in the `dehumanize` docstring.",
+      "code_citation_verification": {
+        "verified": false,
+        "reason": "quote-not-found-in-range"
+      },
+      "source_id": "S24"
+    }
+  ],
+  "additional_findings_count": 0,
+  "missing_verdicts": [],
+  "repo": "arrow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S24",
+    "doc_path": "arrow/arrow.py",
+    "doc_line": 1349,
+    "doc_end": 1349,
+    "doc_text": ":param timestring: a ``str`` representing a humanized relative time.",
+    "claim": "docstring-param: `dehumanize(timestring)`: documented param 'timestring' not in signature of dehumanize (arrow/arrow.py:1344)",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "arrow/__init__.py",
+    "arrow/constants.py",
+    "arrow/arrow.py",
+    "arrow/parser.py",
+    "arrow/factory.py",
+    "arrow/api.py",
+    "arrow/util.py",
+    "arrow/formatter.py",
+    "README.rst",
+    "docs/getting-started.rst",
+    ".pre-commit-config.yaml",
+    "CHANGELOG.rst",
+    "tests/test_util.py",
+    "tests/conftest.py",
+    ".github/FUNDING.yml"
+  ],
+  "file_tiers": {
+    "arrow/arrow.py": "T0_local",
+    "arrow/__init__.py": "T2_imports",
+    "arrow/constants.py": "T2_imports",
+    "arrow/formatter.py": "T2_imports",
+    "arrow/parser.py": "T2_imports",
+    "arrow/util.py": "T2_imports",
+    "arrow/factory.py": "T2_imports",
+    "arrow/api.py": "T2_imports",
+    "tests/conftest.py": "T2_imports",
+    "CHANGELOG.rst": "T3_bm25",
+    "README.rst": "T3_bm25",
+    ".pre-commit-config.yaml": "T3_bm25",
+    "tests/test_util.py": "T3_bm25",
+    ".github/FUNDING.yml": "T3_bm25",
+    "docs/getting-started.rst": "T3_bm25"
+  },
+  "local_files": [
+    "arrow/arrow.py"
+  ],
+  "prompt_chars": 198234,
+  "est_prompt_tokens": 56404
+}

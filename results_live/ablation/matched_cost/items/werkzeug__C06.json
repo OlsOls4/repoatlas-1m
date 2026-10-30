@@ -1,0 +1,69 @@
+{
+  "prompt_tokens": 67040,
+  "completion_tokens": 2840,
+  "finish_reason": "stop",
+  "latency_seconds": 20.09887854399858,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C06",
+      "verdict": "false",
+      "reason": "The doc text is the actual environ key string written by ProxyFix, not an import path, and the code uses the same key.",
+      "code_citation": {
+        "path": "src/werkzeug/middleware/proxy_fix.py",
+        "start_line": 138,
+        "end_line": 138,
+        "quote": "                \"werkzeug.proxy_fix.orig\": {"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S38"
+    }
+  ],
+  "additional_findings_count": 2,
+  "missing_verdicts": [],
+  "repo": "werkzeug",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S38",
+    "doc_path": "src/werkzeug/middleware/proxy_fix.py",
+    "doc_line": 55,
+    "doc_end": 55,
+    "doc_text": "environ as ``werkzeug.proxy_fix.orig``, a dict.",
+    "claim": "dotted: `werkzeug.proxy_fix.orig`: 'proxy_fix' not found on werkzeug",
+    "code_hint": "",
+    "candidate_id": "C06"
+  },
+  "context_files": [
+    "src/werkzeug/sansio/__init__.py",
+    "src/werkzeug/exceptions.py",
+    "src/werkzeug/wsgi.py",
+    "src/werkzeug/_internal.py",
+    "src/werkzeug/wrappers/response.py",
+    "src/werkzeug/test.py",
+    "src/werkzeug/serving.py",
+    "src/werkzeug/middleware/proxy_fix.py",
+    "docs/test.rst",
+    "docs/middleware/proxy_fix.rst"
+  ],
+  "file_tiers": {
+    "src/werkzeug/middleware/proxy_fix.py": "T0_local",
+    "src/werkzeug/exceptions.py": "T1_symbol",
+    "src/werkzeug/wsgi.py": "T1_symbol",
+    "src/werkzeug/wrappers/response.py": "T1_symbol",
+    "src/werkzeug/test.py": "T1_symbol",
+    "src/werkzeug/serving.py": "T1_symbol",
+    "docs/test.rst": "T1_symbol",
+    "src/werkzeug/_internal.py": "T2_imports",
+    "src/werkzeug/sansio/__init__.py": "T2_imports",
+    "docs/middleware/proxy_fix.rst": "T3_bm25"
+  },
+  "local_files": [
+    "src/werkzeug/middleware/proxy_fix.py"
+  ],
+  "prompt_chars": 220190,
+  "est_prompt_tokens": 56418
+}

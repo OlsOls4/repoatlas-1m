@@ -1,0 +1,32 @@
+{
+  "label": "arrow:C06:arrow-400000:DD-3",
+  "payload_sha256": "b924211921a60fdd3bff93c880931b51131804bf3595bb733cd568fab2ccc6b2",
+  "latency_seconds": 11.165284055983648,
+  "body": {
+    "id": "chatcmpl-414",
+    "object": "chat.completion",
+    "created": 1793360496,
+    "model": "beam",
+    "system_fingerprint": "fp_ollama",
+    "choices": [
+      {
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "{\"verdicts\": [{\"candidate_id\": \"C06\", \"verdict\": \"true_drift\", \"reason\": \"The HH formatting token renders datetime.hour, whose valid range is 00-23, so documenting 24 as an output is incorrect.\", \"code_citation\": {\"path\": \"arrow/formatter.py\", \"start_line\": 81, \"end_line\": 81, \"quote\": \"            return f\\\"{dt.hour:02d}\\\"\"}, \"suggested_doc_fix\": \"Change the HH row output from '00, 01, 02 ... 23, 24' to '00, 01, 02 ... 23'.\"}], \"additional_findings\": [{\"finding_id\": \"AD-1\", \"drift_kind\": \"other\", \"explanation\": \"The H token is documented with output through 24, but it also formats datetime.hour directly, which only ranges from 0 to 23.\", \"doc_citation\": {\"path\": \"docs/guide.rst\", \"start_line\": 418, \"end_line\": 418, \"quote\": \"||                                |H             |0, 1, 2 ... 23, 24                         |\"}, \"code_citation\": {\"path\": \"arrow/formatter.py\", \"start_line\": 82, \"end_line\": 82, \"quote\": \"            return f\\\"{dt.hour}\\\"\"}, \"proposed_fix\": \"Change the H row output from '0, 1, 2 ... 23, 24' to '0, 1, 2 ... 23'.\"}]}",
+          "reasoning": "We need answer JSON. Need analyze candidate C06. User asks task1 every candidate. We need decide true_drift. Docs guide.rst line 416 says HH output \"00, 01, 02 ... 23, 24\". Code formatter line 81 returns f\"{dt.hour:02d}\", Python datetime hour 0-23. So documentation wrong. But note parser supports hour=24 special midnight end of day. Docs maybe output rendering only. Candidate says true_drift. Need verdict true_drift. code citation lines 80-82 maybe. Suggested doc fix remove , 24 -> \"00, 01, 02 ... 23\". Also same for H line 418? It also says 24. The candidate only cites HH. Additional findings can include H drift. Task2 list other documentation drifts especially cross-file. We should identify obvious ones. Need not overdo. Need output strict JSON.\n\nNeed inspect docs for other token mismatches. Let's systematically compare guide tokens with formatter/parser behavior. We can propose additional findings for H (docs says 24) and ss/s says 58? docs line 432 ss \"00..58,59\" maybe correct 00..59, not 58? Let's check: lines 432 and 434 say \"00, 01, 02 ... 58, 59\" (correct includes 59). Actually output shows 58, 59 yes. Minutes likewise 58,59 correct. Day DDDD 001..365 even in leap? Code uses tm_yday max 366? docs 365 maybe missing leap? But likely documented examples. HH and H both include 24 due parser support. But formatter only 0-23, parse allows 24. Docs says \"supported tokens parsing and formatting\" and output. So both true drift if considering formatting. Could be additional finding H.\n\nCandidate C06 only HH. Additional findings not repeat candidates. The H token is separate doc text line 418, so additional finding. Maybe also doc H output \"0, 1, 2 ... 23, 24\". Could include. Is there another cross-file or prose drift? Need inspect possible API defaults. For example docs guide FF? Let's look for others that are clearly wrong:\n- dehumanize locale support says \"see constants.py for supported languages\" but locales? DEHUMANIZE_LOCALES defined constants; maybe correct.\n- docs getting started says Quick Start.\n- README perhaps not included.\n- guide says `arrow.get(datetime.utcnow())` etc.\n- Candidate expects JSON only.\nNeed maybe mention H. Could include AD-1. Ensure no duplicates.\n\nNeed decide code citation for C06. start_line 80 end_line 82 quote:\n\"        if token == \\\"HH\\\":\\n            return f\\\"{dt.hour:02d}\\\"\\n        if token == \\\"H\\\":\\n            return f\\\"{dt.hour}\\\"\"\nMaybe exact can be lines 80-83? The cited earlier candidate 81 only. For verdict code_citation can be 81. We can cite 80-82 quote:\n\"        if token == \\\"HH\\\":\\n            return f\\\"{dt.hour:02d}\\\"\\n        if token == \\\"H\\\":\\n            return f\\\"{dt.hour}\\\"\"\nBut if additional finding same location enough.\n\nWe need output one JSON object. Use escaped newlines in JSON string. Must be valid.\n\nFor additional finding drift_kind \"output\" not in allowed? Allowed drift kinds: flag|default|signature|env_var|config_key|other. Use \"other\".\n\nLet's formulate.\n\nPotential issue: Candidate verdict true_drift: \"documentation as written is wrong for this code (a user following it would hit an error or wrong behaviour, or a reference/name/parameter/default it states does not match the code)\" But docs says HH produces 24. A user formatting at 24? Impossible with Arrow except parser's hour=24 becomes 0 next day. The docs for HH formatting should be 00-23. True drift. Suggested fix line 416 replace with 00...23.\n\nAdditional H similar.\n\nLet's final."
+        },
+        "finish_reason": "stop"
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 68857,
+      "completion_tokens": 1315,
+      "total_tokens": 70172,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    }
+  },
+  "at": "2026-10-30T11:41:36.927381+00:00"
+}

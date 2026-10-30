@@ -1,0 +1,56 @@
+{"label": "starlette:C01:S0", "files": 18, "est": 56390, "tiers": {"T0_local": 2, "T1_symbol": 13, "T2_imports": 1, "T3_bm25": 2}}
+{"label": "starlette:C02:starlette-400000:DD-1", "files": 13, "est": 56410, "tiers": {"T0_local": 2, "T1_symbol": 9, "T2_imports": 1, "T3_bm25": 1}}
+{"label": "starlette:C03:S1", "files": 22, "est": 56406, "tiers": {"T0_local": 2, "T1_symbol": 16, "T2_imports": 2, "T3_bm25": 2}}
+{"label": "httpx:C01:S2", "files": 13, "est": 56417, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 2, "T3_bm25": 2}}
+{"label": "httpx:C02:S3", "files": 14, "est": 56368, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 3, "T3_bm25": 2}}
+{"label": "httpx:C03:S4", "files": 12, "est": 56271, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "httpx:C04:S5", "files": 10, "est": 56401, "tiers": {"T0_local": 2, "T1_symbol": 7, "T3_bm25": 1}}
+{"label": "httpx:C05:S6", "files": 14, "est": 56363, "tiers": {"T0_local": 1, "T1_symbol": 10, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "httpx:C06:httpx-400000:DD-1", "files": 16, "est": 56410, "tiers": {"T0_local": 2, "T1_symbol": 13, "T3_bm25": 1}}
+{"label": "httpx:C07:S7", "files": 12, "est": 56269, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "httpx:C08:S8", "files": 19, "est": 56406, "tiers": {"T0_local": 1, "T1_symbol": 8, "T2_imports": 8, "T3_bm25": 2}}
+{"label": "httpx:C09:httpx-400000:DD-2", "files": 12, "est": 56401, "tiers": {"T0_local": 2, "T1_symbol": 8, "T2_imports": 2}}
+{"label": "httpx:C10:S9", "files": 18, "est": 56372, "tiers": {"T0_local": 2, "T1_symbol": 13, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "click:C01:click-400000:DD-1", "files": 9, "est": 56385, "tiers": {"T0_local": 2, "T1_symbol": 4, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "click:C02:S10", "files": 15, "est": 56416, "tiers": {"T0_local": 1, "T1_symbol": 7, "T2_imports": 3, "T3_bm25": 4}}
+{"label": "nox:C01:S20", "files": 7, "est": 56395, "tiers": {"T0_local": 2, "T1_symbol": 3, "T2_imports": 1, "T3_bm25": 1}}
+{"label": "nox:C02:S21", "files": 15, "est": 56391, "tiers": {"T0_local": 1, "T1_symbol": 11, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "nox:C03:nox-400000:DD-1", "files": 13, "est": 56382, "tiers": {"T0_local": 2, "T1_symbol": 8, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "arrow:C01:S23", "files": 21, "est": 56298, "tiers": {"T0_local": 1, "T2_imports": 8, "T3_bm25": 12}}
+{"label": "arrow:C02:S24", "files": 15, "est": 56404, "tiers": {"T0_local": 1, "T2_imports": 8, "T3_bm25": 6}}
+{"label": "arrow:C03:arrow-400000:DD-1", "files": 17, "est": 56346, "tiers": {"T0_local": 1, "T1_symbol": 2, "T2_imports": 6, "T3_bm25": 8}}
+{"label": "arrow:C04:arrow-400000:DD-2", "files": 15, "est": 56404, "tiers": {"T0_local": 1, "T1_symbol": 2, "T2_imports": 6, "T3_bm25": 6}}
+{"label": "arrow:C05:S22", "files": 17, "est": 56394, "tiers": {"T0_local": 1, "T1_symbol": 3, "T2_imports": 6, "T3_bm25": 7}}
+{"label": "arrow:C06:arrow-400000:DD-3", "files": 17, "est": 56315, "tiers": {"T0_local": 2, "T1_symbol": 3, "T2_imports": 7, "T3_bm25": 5}}
+{"label": "arrow:C07:arrow-400000:DD-4", "files": 16, "est": 56359, "tiers": {"T0_local": 2, "T1_symbol": 3, "T2_imports": 7, "T3_bm25": 4}}
+{"label": "cattrs:C01:S25", "files": 9, "est": 56395, "tiers": {"T0_local": 1, "T1_symbol": 7, "T2_imports": 1}}
+{"label": "cattrs:C02:cattrs-400000:DD-1", "files": 22, "est": 56390, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 13}}
+{"label": "cattrs:C03:S26", "files": 10, "est": 56411, "tiers": {"T0_local": 1, "T1_symbol": 7, "T2_imports": 2}}
+{"label": "cattrs:C04:S27", "files": 17, "est": 56402, "tiers": {"T0_local": 1, "T1_symbol": 11, "T2_imports": 4, "T3_bm25": 1}}
+{"label": "cattrs:C05:cattrs-400000:DD-2", "files": 16, "est": 56389, "tiers": {"T0_local": 1, "T1_symbol": 14, "T2_imports": 1}}
+{"label": "cattrs:C06:cattrs-400000:DD-3", "files": 16, "est": 56390, "tiers": {"T0_local": 1, "T1_symbol": 14, "T2_imports": 1}}
+{"label": "cattrs:C07:S28", "files": 17, "est": 56400, "tiers": {"T0_local": 1, "T1_symbol": 11, "T2_imports": 4, "T3_bm25": 1}}
+{"label": "marshmallow:C01:S29", "files": 15, "est": 56412, "tiers": {"T0_local": 1, "T1_symbol": 13, "T2_imports": 1}}
+{"label": "marshmallow:C02:S30", "files": 11, "est": 56408, "tiers": {"T0_local": 1, "T1_symbol": 8, "T2_imports": 1, "T3_bm25": 1}}
+{"label": "marshmallow:C03:S31", "files": 7, "est": 56408, "tiers": {"T0_local": 1, "T1_symbol": 4, "T2_imports": 1, "T3_bm25": 1}}
+{"label": "marshmallow:C04:marshmallow-400000:DD-1", "files": 19, "est": 56417, "tiers": {"T0_local": 2, "T1_symbol": 10, "T2_imports": 5, "T3_bm25": 2}}
+{"label": "marshmallow:C05:S32", "files": 23, "est": 56418, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 10, "T3_bm25": 4}}
+{"label": "marshmallow:C06:S33", "files": 7, "est": 56406, "tiers": {"T0_local": 2, "T2_imports": 2, "T3_bm25": 3}}
+{"label": "marshmallow:C07:S34", "files": 9, "est": 56390, "tiers": {"T0_local": 2, "T1_symbol": 2, "T2_imports": 3, "T3_bm25": 2}}
+{"label": "marshmallow:C08:marshmallow-400000:DD-2", "files": 6, "est": 56394, "tiers": {"T0_local": 2, "T1_symbol": 4}}
+{"label": "attrs:C01:S11", "files": 7, "est": 56404, "tiers": {"T0_local": 1, "T1_symbol": 5, "T2_imports": 1}}
+{"label": "attrs:C02:S12", "files": 7, "est": 56383, "tiers": {"T0_local": 1, "T1_symbol": 5, "T3_bm25": 1}}
+{"label": "jinja:C01:jinja-400000:DD-1", "files": 12, "est": 56360, "tiers": {"T0_local": 2, "T1_symbol": 7, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "jinja:C02:S17", "files": 10, "est": 56350, "tiers": {"T0_local": 1, "T1_symbol": 8, "T2_imports": 1}}
+{"label": "jinja:C03:S18", "files": 12, "est": 56410, "tiers": {"T0_local": 1, "T1_symbol": 8, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "jinja:C04:S19", "files": 8, "est": 56418, "tiers": {"T0_local": 1, "T1_symbol": 5, "T2_imports": 2}}
+{"label": "werkzeug:C01:S35", "files": 15, "est": 56404, "tiers": {"T0_local": 1, "T1_symbol": 4, "T2_imports": 9, "T3_bm25": 1}}
+{"label": "werkzeug:C02:S36", "files": 15, "est": 56398, "tiers": {"T0_local": 1, "T1_symbol": 3, "T2_imports": 7, "T3_bm25": 4}}
+{"label": "werkzeug:C03:S37", "files": 16, "est": 56402, "tiers": {"T0_local": 1, "T1_symbol": 5, "T2_imports": 8, "T3_bm25": 2}}
+{"label": "werkzeug:C04:S42", "files": 11, "est": 56390, "tiers": {"T0_local": 1, "T1_symbol": 6, "T2_imports": 3, "T3_bm25": 1}}
+{"label": "werkzeug:C05:werkzeug-400000:DD-1", "files": 14, "est": 56402, "tiers": {"T0_local": 1, "T1_symbol": 6, "T2_imports": 3, "T3_bm25": 4}}
+{"label": "werkzeug:C06:S38", "files": 10, "est": 56418, "tiers": {"T0_local": 1, "T1_symbol": 6, "T2_imports": 2, "T3_bm25": 1}}
+{"label": "werkzeug:C07:S39", "files": 12, "est": 56409, "tiers": {"T0_local": 1, "T1_symbol": 7, "T2_imports": 3, "T3_bm25": 1}}
+{"label": "werkzeug:C08:S40", "files": 21, "est": 56415, "tiers": {"T0_local": 1, "T1_symbol": 2, "T2_imports": 11, "T3_bm25": 7}}
+{"label": "werkzeug:C09:S41", "files": 15, "est": 56407, "tiers": {"T0_local": 1, "T2_imports": 10, "T3_bm25": 4}}
+{"label": "pydantic-settings:C01:pydantic-settings-400000:DD-1", "files": 6, "est": 56339, "tiers": {"T0_local": 2, "T2_imports": 4}}

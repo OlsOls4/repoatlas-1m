@@ -1,0 +1,62 @@
+{
+  "prompt_tokens": 67403,
+  "completion_tokens": 2225,
+  "finish_reason": "stop",
+  "latency_seconds": 13.992809543997282,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C08",
+      "verdict": "true_drift",
+      "reason": "The documented fallback refers to \"default\", but deserialization returns the field's ``load_default`` value.",
+      "code_citation": {
+        "path": "src/marshmallow/fields.py",
+        "start_line": 380,
+        "end_line": 381,
+        "quote": "        if value is missing_:\n            _miss = self.load_default"
+      },
+      "suggested_doc_fix": "Change ``default`` to ``load_default`` in the `missing` documentation.",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": "line-shifted-match"
+      },
+      "source_id": "marshmallow-400000:DD-2"
+    }
+  ],
+  "additional_findings_count": 1,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "whole_repo",
+    "source_id": "marshmallow-400000:DD-2",
+    "doc_path": "docs/top_level.rst",
+    "doc_line": 10,
+    "doc_end": 14,
+    "doc_text": ".. data:: missing\n\n   Singleton value that indicates that a field's value is missing from input\n   dict passed to `Schema.load <marshmallow.Schema.load>`. If the field's value is not required,\n   its ``default`` value is used.",
+    "claim": "The top-level docs describe the missing singleton as falling back to a field's \"default\" value, while deserialization uses the `load_default` parameter.",
+    "code_hint": "src/marshmallow/fields.py:380-381 '        if value is missing_:\\n            _miss = self.load_default'",
+    "candidate_id": "C08"
+  },
+  "context_files": [
+    "src/marshmallow/fields.py",
+    "src/marshmallow/schema.py",
+    "performance/benchmark.py",
+    "docs/top_level.rst",
+    "tests/test_serialization.py",
+    "tests/test_fields.py"
+  ],
+  "file_tiers": {
+    "src/marshmallow/fields.py": "T0_local",
+    "docs/top_level.rst": "T0_local",
+    "tests/test_fields.py": "T1_symbol",
+    "src/marshmallow/schema.py": "T1_symbol",
+    "tests/test_serialization.py": "T1_symbol",
+    "performance/benchmark.py": "T1_symbol"
+  },
+  "local_files": [
+    "src/marshmallow/fields.py",
+    "docs/top_level.rst"
+  ],
+  "prompt_chars": 222262,
+  "est_prompt_tokens": 56394
+}

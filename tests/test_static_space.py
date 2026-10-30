@@ -95,7 +95,22 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     assert copy["local"] == ""
     assert copy["links"]["code"].endswith("repoatlas-1m")
     assert copy["video"] is None
-    assert copy["sample_output"] == ""
+    assert "185,842" in copy["sample_output"]
+    assert "tomlkit" in copy["sample_output"].lower()
+    assert "STRICT-CONFIRMED" in copy["sample_output"]
+    assert "185,842" in copy["sample_note"]
+    assert "strict-confirmed" in copy["sample_note"]
+    assert copy["sample_cast"] == "assets/docdrift_tomlkit.cast"
+    assert "not run yet" not in copy["why_matched_cost_note"].lower()
+    assert "46/56" in copy["why_matched_cost_note"]
+    assert "25/30" in copy["why_matched_cost_note"] and "19/30" in copy["why_matched_cost_note"]
+    assert "11/13" in copy["why_matched_cost_note"] and "6/13" in copy["why_matched_cost_note"]
+    assert "not shown at this n" in copy["why_matched_cost_note"]
+    assert "5 of 13" in copy["why_matched_cost_note"]
+    assert "4,143,276" in documents["benchmark"]["token_footnote"]
+    assert "3,957,434" in documents["benchmark"]["token_footnote"]
+    assert "isolated venv" in copy["ollama_key"]
+    assert "--out findings" in copy["cli"]
     assert "24 + 1 + 9 = 34" in copy["how_beam"][1]
     assert "taking distinct trues from 24 to 34" not in copy["how_beam"][1]
     assert "0.926" in copy["why_subset_note"]
@@ -114,6 +129,7 @@ def test_static_json_numbers_match_hybrid_results(tmp_path: Path) -> None:
     dumped = json.dumps(documents).lower()
     assert "improves accuracy" not in dumped
     assert "improves precision" not in dumped
+    assert "not run yet" not in dumped
     assert found
 
 
@@ -194,6 +210,13 @@ def test_write_static_space_emits_hf_yaml(tmp_path: Path) -> None:
     assert "Loading recorded results" not in index_html
     assert "lead-full" in index_html
     assert 'id="sample-output"' in index_html
+    assert 'id="sample-cast"' in index_html
+    assert "asciinema-player.min.js" in index_html
+    assert "cdn.jsdelivr" not in index_html
+    assert "unpkg.com" not in index_html
+    assert (target / "assets" / "asciinema-player.min.js").exists()
+    assert (target / "assets" / "asciinema-player.css").exists()
+    assert (target / "assets" / "docdrift_tomlkit.cast").exists()
     assert "Code not recorded" not in (target / "assets" / "app.js").read_text(encoding="utf-8")
     assert "Symbol not found anywhere" not in (target / "assets" / "app.js").read_text(encoding="utf-8")
     assert "False / unclear" in (target / "assets" / "app.js").read_text(encoding="utf-8")

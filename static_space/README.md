@@ -61,10 +61,10 @@ Numbers below come from the companion dataset.
 ```bash
 pip install git+https://github.com/OlsOls4/repoatlas-1m
 export OLLAMA_API_KEY=YOUR_KEY
-docdrift run https://github.com/OWNER/REPO --max-tokens 400000
+docdrift run https://github.com/OWNER/REPO --max-tokens 400000 --out findings
 ```
 
-Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY. No key is stored in this Space or in the archive.
+Create a free Ollama Cloud account at https://ollama.com, open Settings, and create an API key. Export it as OLLAMA_API_KEY, or set OLLAMA_API_KEY_FILE to a file that contains the key. `docdrift run` packs the whole repository, sends it to Beam for triage (32k output tokens, citation verify), then runs Beam-written doc-literal scripts in an isolated venv with no network. Skip the scripts with --no-repro. Cap repro tokens with --repro-budget. Stops on HTTP 402/quota (exit 4). No key is stored in this Space or in the archive.
 
 ## Exclusions
 
@@ -74,6 +74,7 @@ This static folder does not include:
 - results_live/hybrid/repros/*/attempts.json per-attempt logs
 - results_live/hybrid/triage/*.json (read at build time, not shipped)
 - results_live/ablation/raw/ API bodies
+- results_live/ablation/matched_cost/raw/ API bodies
 - results_live/beamv3/repros/*/ per-attempt logs
 - dataset/ traces and other raw sweep artifacts
 - raw pack traces (only starlette-400000 summary and pack metadata are embedded in replay.json)

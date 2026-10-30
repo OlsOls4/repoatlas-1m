@@ -1,0 +1,71 @@
+{
+  "prompt_tokens": 67072,
+  "completion_tokens": 3139,
+  "finish_reason": "stop",
+  "latency_seconds": 19.18836814101087,
+  "error": null,
+  "verdicts": [
+    {
+      "candidate_id": "C02",
+      "verdict": "false",
+      "reason": "`AppError` is defined in the same documentation example, not a package API.",
+      "code_citation": {
+        "path": "docs/extending/custom_error_handling.rst",
+        "start_line": 14,
+        "end_line": 15,
+        "quote": "    class AppError(Exception):\n        pass"
+      },
+      "suggested_doc_fix": "",
+      "code_citation_verification": {
+        "verified": true,
+        "reason": null
+      },
+      "source_id": "S30"
+    }
+  ],
+  "additional_findings_count": 3,
+  "missing_verdicts": [],
+  "repo": "marshmallow",
+  "candidate": {
+    "source": "symbol",
+    "source_id": "S30",
+    "doc_path": "docs/extending/custom_error_handling.rst",
+    "doc_line": 24,
+    "doc_end": 24,
+    "doc_text": "raise AppError(\"An error occurred with input: {0}\".format(data))",
+    "claim": "exception-name:undefined: `AppError`: exception-like name defined nowhere in package code",
+    "code_hint": "",
+    "candidate_id": "C02"
+  },
+  "context_files": [
+    "pyproject.toml",
+    "src/marshmallow/fields.py",
+    "src/marshmallow/validate.py",
+    "src/marshmallow/schema.py",
+    "docs/quickstart.rst",
+    "docs/custom_fields.rst",
+    "docs/extending/custom_error_handling.rst",
+    "docs/marshmallow.error_store.rst",
+    "tests/base.py",
+    "tests/foo_serializer.py",
+    "tests/test_options.py"
+  ],
+  "file_tiers": {
+    "docs/extending/custom_error_handling.rst": "T0_local",
+    "src/marshmallow/fields.py": "T1_symbol",
+    "src/marshmallow/validate.py": "T1_symbol",
+    "src/marshmallow/schema.py": "T1_symbol",
+    "docs/quickstart.rst": "T1_symbol",
+    "tests/base.py": "T1_symbol",
+    "tests/test_options.py": "T1_symbol",
+    "pyproject.toml": "T1_symbol",
+    "docs/custom_fields.rst": "T1_symbol",
+    "tests/foo_serializer.py": "T2_imports",
+    "docs/marshmallow.error_store.rst": "T3_bm25"
+  },
+  "local_files": [
+    "docs/extending/custom_error_handling.rst"
+  ],
+  "prompt_chars": 219396,
+  "est_prompt_tokens": 56408
+}
